@@ -16,7 +16,7 @@ public:
 
 	void LastUpdate() { SDL_memcpy(mPrevStates, mStates, SDL_NUM_SCANCODES); }
 
-	const Uint8 GetState(int scanCode) const { return mStates[scanCode]; }
+	bool GetKey(int scanCode) const { return mStates[scanCode]; }
 
 	bool GetQuitEventFlag() const { return mQuitEventFlag; }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include <list>
 
 class Actor;
 
@@ -15,7 +16,11 @@ public:
 
 	int GetPriority() const { return mPriority; }
 
+	//static void UpdateComponents();
+
 protected:
+	//static std::list<ComponentBase *> mComponentList;
+
 	Actor * mOwner;
 
 	// この値が小さい方が早く更新される。

@@ -3,8 +3,13 @@
 #include "Common.h"
 #include "DrawComponentBase.h"
 #include "Player.h"
+#include "SceneBase.h"
+#include "ComponentManager.h"
 
-System::System()
+System::System():
+	mWindow(nullptr),
+	mRenderer(nullptr),
+	mCurrentScene(nullptr)
 {
 }
 
@@ -60,7 +65,13 @@ void System::Run()
 
 		Input::GetInstance().Update();
 
-		if (Input::GetInstance().GetQuitEventFlag() || Input::GetInstance().GetState(SDL_SCANCODE_ESCAPE))
+		UpdateScene();
+
+		//UpdateActor();
+		//ComponentBase::UpdateComponents();
+		ComponentManager::GetInstance().UpdateComponents();
+
+		if (Input::GetInstance().GetQuitEventFlag() || Input::GetInstance().GetKey(SDL_SCANCODE_ESCAPE))
 		{
 			quitFlag = true;
 		}
@@ -90,6 +101,22 @@ void System::UpdateDeltaTime()
 	Uint32 ticksCount = SDL_GetTicks();
 	mDeltaTime = (ticksCount - mPrevTicksCount) / 1000.0f;
 	mPrevTicksCount = ticksCount;
+}
+
+inline void System::UpdateScene()
+{
+	if (mCurrentScene != nullptr)
+	{
+		mCurrentScene->Update();
+	}
+}
+
+void System::UpdateActor()
+{
+	for (auto actor : mActorCollection)
+	{
+		actor->Update();
+	}
 }
 
 void System::Draw()

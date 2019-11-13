@@ -188,8 +188,10 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
+    <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="DrawComponentBase.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="InputMoveComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneBase.cpp" />
@@ -202,8 +204,10 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="ComponentBase.h" />
+    <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DrawComponentBase.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="InputMoveComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SpriteComponent.h" />

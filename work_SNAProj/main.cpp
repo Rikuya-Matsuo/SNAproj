@@ -1,9 +1,12 @@
 #include "SDL/SDL.h"
 #include "System.h"
+#include "TestScene.h"
 
 int main(int argc, char ** argv)
 {
 	bool successInit = System::GetInstance().Init();
+
+	System::GetInstance().SetScene(new TestScene);
 
 	if (successInit)
 	{

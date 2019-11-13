@@ -6,6 +6,7 @@
 
 class Actor;
 class DrawComponentBase;
+class SceneBase;
 
 class System final
 {
@@ -23,6 +24,8 @@ public:
 	void Run();
 
 	void Finish();
+
+	void SetScene(SceneBase * in_scene) { mCurrentScene = in_scene; }
 
 	float GetDeltaTime() { return mDeltaTime; }
 
@@ -45,6 +48,8 @@ private:
 
 	Uint32 mPrevTicksCount;
 
+	SceneBase * mCurrentScene;
+
 	float mDeltaTime;
 
 	std::vector<Actor *> mActorCollection;
@@ -52,6 +57,10 @@ private:
 	std::list<DrawComponentBase *> mDrawComponentList;
 
 	void UpdateDeltaTime();
+	
+	void UpdateScene();
+
+	void UpdateActor();
 
 	void Draw();
 };

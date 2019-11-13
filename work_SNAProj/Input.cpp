@@ -29,12 +29,12 @@ void Input::Update()
 
 bool Input::GetKeyPressDown(int scanCode) const
 {
-	bool ret = (GetState(scanCode) && !mPrevStates[scanCode]);
+	bool ret = (GetKey(scanCode) && !mPrevStates[scanCode]);
 	return ret;
 }
 
 bool Input::GetKeyPressUp(int scanCode) const
 {
-	bool ret = (!GetState(scanCode) && mPrevStates[scanCode]);
+	bool ret = (!GetKey(scanCode) && mPrevStates[scanCode]);
 	return ret;
 }
