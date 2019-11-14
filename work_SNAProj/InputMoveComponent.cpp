@@ -1,6 +1,6 @@
 #include "InputMoveComponent.h"
 #include "Input.h"
-
+#include "System.h"
 
 InputMoveComponent::InputMoveComponent(Actor * owner , float in_speedX, float in_speedY):
 	ComponentBase(owner, 50),
@@ -18,24 +18,27 @@ void InputMoveComponent::Update()
 {
 	Vector2D nextPos = mOwner->GetPosition();
 
+	float speedX = mSpeedX * System::GetInstance().GetDeltaTime();
+	float speedY = mSpeedY * System::GetInstance().GetDeltaTime();
+
 	if (Input::GetInstance().GetKey(SDL_SCANCODE_LEFT))
 	{
-		nextPos.x -= mSpeedX;
+		nextPos.x -= speedX;
 	}
 	
 	if (Input::GetInstance().GetKey(SDL_SCANCODE_RIGHT))
 	{
-		nextPos.x += mSpeedX;
+		nextPos.x += speedX;
 	}
 
 	if (Input::GetInstance().GetKey(SDL_SCANCODE_UP))
 	{
-		nextPos.y -= mSpeedY;
+		nextPos.y -= speedY;
 	}
 
 	if (Input::GetInstance().GetKey(SDL_SCANCODE_DOWN))
 	{
-		nextPos.y += mSpeedY;
+		nextPos.y += speedY;
 	}
 
 	mOwner->SetPosition(nextPos);
