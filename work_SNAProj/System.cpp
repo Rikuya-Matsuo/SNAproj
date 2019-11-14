@@ -21,7 +21,7 @@ bool System::Init()
 {
 	SDL_Log("Start to initialize.\n");
 
-	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
+	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
 	{
 		SDL_Log("Failed to initialize SDL.\n--%s--\n", SDL_GetError());
 		return false;

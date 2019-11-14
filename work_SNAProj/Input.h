@@ -24,6 +24,8 @@ public:
 
 	bool GetKeyPressUp(int scanCode) const;
 
+	bool GetGamePadButton(SDL_GameControllerButton button) const { return mGamePadButtonFlags & (0x0001 << static_cast<int>(button)); }
+
 private:
 	Input();
 
@@ -32,4 +34,12 @@ private:
 	const Uint8 * mStates;
 
 	Uint8 mPrevStates[SDL_NUM_SCANCODES];
+
+	SDL_GameController * mGamePad;
+
+	char * mGamePadMapping;
+
+	Uint16 mGamePadButtonFlags;
+
+	void UpdateGamePad();
 };

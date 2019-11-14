@@ -21,22 +21,26 @@ void InputMoveComponent::Update()
 	float speedX = mSpeedX * System::GetInstance().GetDeltaTime();
 	float speedY = mSpeedY * System::GetInstance().GetDeltaTime();
 
-	if (Input::GetInstance().GetKey(SDL_SCANCODE_LEFT))
+	if (Input::GetInstance().GetGamePadButton(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+		|| Input::GetInstance().GetKey(SDL_SCANCODE_LEFT))
 	{
 		nextPos.x -= speedX;
 	}
 	
-	if (Input::GetInstance().GetKey(SDL_SCANCODE_RIGHT))
+	if (Input::GetInstance().GetGamePadButton(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+		|| Input::GetInstance().GetKey(SDL_SCANCODE_RIGHT))
 	{
 		nextPos.x += speedX;
 	}
 
-	if (Input::GetInstance().GetKey(SDL_SCANCODE_UP))
+	if (Input::GetInstance().GetGamePadButton(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_UP)
+		|| Input::GetInstance().GetKey(SDL_SCANCODE_UP))
 	{
 		nextPos.y -= speedY;
 	}
 
-	if (Input::GetInstance().GetKey(SDL_SCANCODE_DOWN))
+	if (Input::GetInstance().GetGamePadButton(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+		|| Input::GetInstance().GetKey(SDL_SCANCODE_DOWN))
 	{
 		nextPos.y += speedY;
 	}
