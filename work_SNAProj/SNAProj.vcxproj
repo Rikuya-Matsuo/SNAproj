@@ -187,14 +187,19 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="BoneTransform.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="DrawComponentBase.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputMoveComponent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SkeletalMeshComponent.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TestScene.cpp" />
@@ -202,14 +207,20 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="BoneTransform.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="ComponentBase.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DrawComponentBase.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputMoveComponent.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="MatrixPalette.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SkeletalMeshComponent.h" />
+    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TestScene.h" />
