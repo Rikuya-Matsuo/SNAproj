@@ -4,6 +4,7 @@
 
 namespace Common
 {
+	// 汎用性に問題を発見。削除対象のデストラクタにコンテナからの削除機能がなければエラーとなる。
 	template <class T>
 	void DeleteContainerOfPointer(std::vector<T*> & in_vec)
 	{
@@ -20,6 +21,7 @@ namespace Common
 		}
 	}
 
+	// 汎用性に問題を発見。削除対象のデストラクタにコンテナからの削除機能がなければエラーとなる。
 	template <class T>
 	void DeleteContainerOfPointer(std::list<T*> & in_lst)
 	{
