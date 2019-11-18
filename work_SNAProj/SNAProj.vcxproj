@@ -215,9 +215,11 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
     <ClInclude Include="DrawComponentBase.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputMoveComponent.h" />
+    <ClInclude Include="MathExpantion.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MatrixPalette.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="Skeleton.h" />

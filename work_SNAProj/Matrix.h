@@ -1,6 +1,18 @@
 #pragma once
 #include "SDL/SDL.h"
-/*
+#include "Vector.h"
+#include "MathExpantion.h"
+#include <cstring>
+#include <cmath>
+
+static float m4Ident[4][4] =
+{
+	{ 1.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 1.0f, 0.0f, 0.0f },
+	{ 0.0f, 0.0f, 1.0f, 0.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f }
+};
+
 // 4x4 Matrix
 class Matrix4
 {
@@ -140,36 +152,36 @@ public:
 	void Invert();
 
 	// Get the translation component of the matrix
-	Vector3 GetTranslation() const
+	Vector3D GetTranslation() const
 	{
-		return Vector3(mat[3][0], mat[3][1], mat[3][2]);
+		return Vector3D(mat[3][0], mat[3][1], mat[3][2]);
 	}
 
 	// Get the X axis of the matrix (forward)
-	Vector3 GetXAxis() const
+	Vector3D GetXAxis() const
 	{
-		return Vector3::Normalize(Vector3(mat[0][0], mat[0][1], mat[0][2]));
+		return Vector3D::Normalize(Vector3D(mat[0][0], mat[0][1], mat[0][2]));
 	}
 
 	// Get the Y axis of the matrix (left)
-	Vector3 GetYAxis() const
+	Vector3D GetYAxis() const
 	{
-		return Vector3::Normalize(Vector3(mat[1][0], mat[1][1], mat[1][2]));
+		return Vector3D::Normalize(Vector3D(mat[1][0], mat[1][1], mat[1][2]));
 	}
 
 	// Get the Z axis of the matrix (up)
-	Vector3 GetZAxis() const
+	Vector3D GetZAxis() const
 	{
-		return Vector3::Normalize(Vector3(mat[2][0], mat[2][1], mat[2][2]));
+		return Vector3D::Normalize(Vector3D(mat[2][0], mat[2][1], mat[2][2]));
 	}
 
 	// Extract the scale component from the matrix
-	Vector3 GetScale() const
+	Vector3D GetScale() const
 	{
-		Vector3 retVal;
-		retVal.x = Vector3(mat[0][0], mat[0][1], mat[0][2]).Length();
-		retVal.y = Vector3(mat[1][0], mat[1][1], mat[1][2]).Length();
-		retVal.z = Vector3(mat[2][0], mat[2][1], mat[2][2]).Length();
+		Vector3D retVal;
+		retVal.x = Vector3D(mat[0][0], mat[0][1], mat[0][2]).Length();
+		retVal.y = Vector3D(mat[1][0], mat[1][1], mat[1][2]).Length();
+		retVal.z = Vector3D(mat[2][0], mat[2][1], mat[2][2]).Length();
 		return retVal;
 	}
 
@@ -186,7 +198,7 @@ public:
 		return Matrix4(temp);
 	}
 
-	static Matrix4 CreateScale(const Vector3& scaleVector)
+	static Matrix4 CreateScale(const Vector3D& scaleVector)
 	{
 		return CreateScale(scaleVector.x, scaleVector.y, scaleVector.z);
 	}
@@ -203,8 +215,8 @@ public:
 		float temp[4][4] =
 		{
 			{ 1.0f, 0.0f, 0.0f , 0.0f },
-			{ 0.0f, Math::Cos(theta), Math::Sin(theta), 0.0f },
-			{ 0.0f, -Math::Sin(theta), Math::Cos(theta), 0.0f },
+			{ 0.0f, cosf(theta), sinf(theta), 0.0f },
+			{ 0.0f, -sinf(theta), cosf(theta), 0.0f },
 			{ 0.0f, 0.0f, 0.0f, 1.0f },
 		};
 		return Matrix4(temp);
@@ -215,9 +227,9 @@ public:
 	{
 		float temp[4][4] =
 		{
-			{ Math::Cos(theta), 0.0f, -Math::Sin(theta), 0.0f },
+			{ cosf(theta), 0.0f, -sinf(theta), 0.0f },
 			{ 0.0f, 1.0f, 0.0f, 0.0f },
-			{ Math::Sin(theta), 0.0f, Math::Cos(theta), 0.0f },
+			{ sinf(theta), 0.0f, cosf(theta), 0.0f },
 			{ 0.0f, 0.0f, 0.0f, 1.0f },
 		};
 		return Matrix4(temp);
@@ -228,8 +240,8 @@ public:
 	{
 		float temp[4][4] =
 		{
-			{ Math::Cos(theta), Math::Sin(theta), 0.0f, 0.0f },
-			{ -Math::Sin(theta), Math::Cos(theta), 0.0f, 0.0f },
+			{ cosf(theta), sinf(theta), 0.0f, 0.0f },
+			{ -sinf(theta), cosf(theta), 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 1.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f, 1.0f },
 		};
@@ -239,7 +251,7 @@ public:
 	// Create a rotation matrix from a quaternion
 	static Matrix4 CreateFromQuaternion(const class Quaternion& q);
 
-	static Matrix4 CreateTranslation(const Vector3& trans)
+	static Matrix4 CreateTranslation(const Vector3D& trans)
 	{
 		float temp[4][4] =
 		{
@@ -251,15 +263,15 @@ public:
 		return Matrix4(temp);
 	}
 
-	static Matrix4 CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
+	static Matrix4 CreateLookAt(const Vector3D& eye, const Vector3D& target, const Vector3D& up)
 	{
-		Vector3 zaxis = Vector3::Normalize(target - eye);
-		Vector3 xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
-		Vector3 yaxis = Vector3::Normalize(Vector3::Cross(zaxis, xaxis));
-		Vector3 trans;
-		trans.x = -Vector3::Dot(xaxis, eye);
-		trans.y = -Vector3::Dot(yaxis, eye);
-		trans.z = -Vector3::Dot(zaxis, eye);
+		Vector3D zaxis = Vector3D::Normalize(target - eye);
+		Vector3D xaxis = Vector3D::Normalize(Vector3D::Cross(up, zaxis));
+		Vector3D yaxis = Vector3D::Normalize(Vector3D::Cross(zaxis, xaxis));
+		Vector3D trans;
+		trans.x = -Vector3D::Dot(xaxis, eye);
+		trans.y = -Vector3D::Dot(yaxis, eye);
+		trans.z = -Vector3D::Dot(zaxis, eye);
 
 		float temp[4][4] =
 		{
@@ -285,7 +297,7 @@ public:
 
 	static Matrix4 CreatePerspectiveFOV(float fovY, float width, float height, float near, float far)
 	{
-		float yScale = Math::Cot(fovY / 2.0f);
+		float yScale = MathExpantion::Cot(fovY / 2.0f);
 		float xScale = yScale * height / width;
 		float temp[4][4] =
 		{
@@ -312,4 +324,3 @@ public:
 
 	static const Matrix4 Identity;
 };
-*/

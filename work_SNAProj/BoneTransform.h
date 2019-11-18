@@ -6,7 +6,7 @@ class BoneTransform
 public:
 	// For now, just make this data public
 	Quaternion mRotation;                      // ‰ñ“]
-	Vector3 mTranslation;                      // ˆÚ“®
+	Vector3D mTranslation;                      // ˆÚ“®
 
 	Matrix4 ToMatrix() const;                  // s—ñ‚ğo—Í
 

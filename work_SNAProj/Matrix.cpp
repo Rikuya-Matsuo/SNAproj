@@ -1,6 +1,6 @@
 #include "Matrix.h"
+#include "Quaternion.h"
 
-/*
 const Matrix4 Matrix4::Identity(m4Ident);
 
 void Matrix4::Invert()
@@ -144,5 +144,3 @@ Matrix4 Matrix4::CreateFromQuaternion(const class Quaternion& q)
 
 	return Matrix4(mat);
 }
-
-*/

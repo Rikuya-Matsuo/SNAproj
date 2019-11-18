@@ -7,3 +7,10 @@ Vector2D::Vector2D(float in_x, float in_y):
 	y(in_y)
 {
 }
+
+Vector3D::Vector3D(float in_x, float in_y, float in_z):
+	x(in_x),
+	y(in_y),
+	z(in_z)
+{
+}
