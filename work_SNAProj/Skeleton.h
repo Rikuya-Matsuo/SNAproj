@@ -2,7 +2,7 @@
 #include "BoneTransform.h"
 #include <string>
 #include <vector>
-/*
+
 class Skeleton
 {
 public:
@@ -32,4 +32,3 @@ private:
 	// The global inverse bind poses for each bone                          それぞれのボーンの逆バインドポーズ行列
 	std::vector<Matrix4> mGlobalInvBindPoses;
 };
-*/

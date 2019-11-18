@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Vector.h"
+#include "Matrix.h"
 #include <list>
 
 class ComponentBase;
@@ -12,8 +13,11 @@ public:
 
 	virtual void Update();
 
-	void SetPosition(const Vector2D & pos) { mPosition = pos; }
-	const Vector2D& GetPosition() const { return mPosition; }
+	void SetPosition(const Vector3D & pos) { mPosition = pos; }
+	const Vector3D& GetPosition() const { return mPosition; }
+
+	// とりあえず形だけでもエラー消すためにゲッターを定義
+	const Matrix4& GetWorldTransform() { return mWorldTransform; }
 
 	void SetScale(float scale) { mScale = scale; }
 	float GetScale() const { return mScale; }
@@ -25,7 +29,10 @@ public:
 protected:
 	std::list<ComponentBase *> mComponentList;
 
-	Vector2D mPosition;
+	Vector3D mPosition;
+
+	// まだ処理に関しては未実装
+	Matrix4 mWorldTransform;
 
 	float mScale;
 };

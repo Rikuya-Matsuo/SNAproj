@@ -37,4 +37,16 @@ namespace Common
 			}
 		}
 	}
+
+	// 値が大きい方を返す
+	float Larger(float a, float b)
+	{
+		return (a > b) ? a : b;
+	}
+
+	// 値が小さい方を返す
+	float Smaller(float a, float b)
+	{
+		return (!(a > b)) ? a : b;
+	}
 }

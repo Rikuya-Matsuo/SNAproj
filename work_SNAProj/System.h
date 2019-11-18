@@ -37,7 +37,7 @@ public:
 
 	void DeresisterDrawComponent(const DrawComponentBase * in_cmp);
 
-	const SDL_Renderer * const GetRenderer() const { return mRenderer; }
+	SDL_Renderer * const GetRenderer() const { return mRenderer; }
 
 private:
 	System();

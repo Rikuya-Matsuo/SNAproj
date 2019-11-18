@@ -1,9 +1,10 @@
 ﻿#pragma once
-#include "Math.h"
+#include "MathExpantion.h"
 #include "BoneTransform.h"
+#include "Matrix.h"
 #include <vector>
 #include <string>
-/*
+
 class Animation
 {
 public:
@@ -32,4 +33,3 @@ private:
 	// is a frame												 内側のベクトルはフレームです。　　　　　　　mTracks[ボーン][フレーム数]
 	std::vector<std::vector<BoneTransform>> mTracks;
 };
-*/

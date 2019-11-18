@@ -21,6 +21,8 @@ public:
 	float y;
 	float z;
 
+	static const Vector3D zero;
+
 	// Vector addition (a + b)
 	friend Vector3D operator+(const Vector3D& a, const Vector3D& b)
 	{
@@ -117,5 +119,16 @@ public:
 		Vector3D tmp = vec;
 		tmp.Normalize();
 		return tmp;
+	}
+
+	static Vector3D Lerp(const Vector3D& a, const Vector3D& b, float rate)
+	{
+		return Vector3D(a + ((b - a) *rate));
+	}
+
+	// 勉強不足ゆえに、このキャストが大丈夫な気がしない。
+	const float* GetAsFloatPtr() const
+	{
+		return reinterpret_cast<const float*>(&x);
 	}
 };

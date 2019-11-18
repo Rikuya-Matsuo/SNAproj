@@ -1,5 +1,4 @@
-﻿/*
-#pragma once
+﻿#pragma once
 #include "MeshComponent.h"
 #include "MatrixPalette.h"
 
@@ -10,7 +9,7 @@ public:
 	// Draw this mesh component                                              メッシュコンポーネントの描画
 	void Draw(class Shader* shader) override;
 
-	void Update(float deltaTime) override;
+	void Update() override;
 
 	// Setters                                                               スケルトンのセット
 	void SetSkeleton(const class Skeleton* sk) { mSkeleton = sk; }
@@ -26,4 +25,3 @@ protected:
 	float mAnimPlayRate;                                                   // アニメーションの再生速度
 	float mAnimTime;                                                       // アニメーション時間
 };
-*/

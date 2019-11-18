@@ -1,5 +1,4 @@
-﻿/*
-#include "Animation.h"
+﻿#include "Animation.h"
 #include "Skeleton.h"
 #include <fstream>
 #include <sstream>
@@ -194,4 +193,3 @@ void Animation::GetGlobalPoseAtTime(std::vector<Matrix4>& outPoses, const Skelet
 		outPoses[bone] = localMat * outPoses[bones[bone].mParent];
 	}
 }
-*/

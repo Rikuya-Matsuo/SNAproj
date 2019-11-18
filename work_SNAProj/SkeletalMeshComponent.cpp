@@ -1,9 +1,8 @@
-﻿/*
-#include "SkeletalMeshComponent.h"
+﻿#include "SkeletalMeshComponent.h"
 #include "Shader.h"
 #include "Mesh.h"
 #include "Actor.h"
-#include "Game.h"
+#include "System.h"
 #include "Renderer.h"
 #include "Texture.h"
 #include "VertexArray.h"
@@ -42,10 +41,11 @@ void SkeletalMeshComponent::Draw(Shader* shader)                         // 描�
 	}
 }
 
-void SkeletalMeshComponent::Update(float deltaTime)
+void SkeletalMeshComponent::Update()
 {
 	if (mAnimation && mSkeleton)
 	{
+		float deltaTime = System::GetInstance().GetDeltaTime();
 		mAnimTime += deltaTime * mAnimPlayRate;
 		// Wrap around anim time if past duration                         アニメを巻き戻して再生
 		while (mAnimTime > mAnimation->GetDuration())
@@ -84,4 +84,3 @@ void SkeletalMeshComponent::ComputeMatrixPalette()                              
 		mPalette.mEntry[i] = globalInvBindPoses[i] * currentPoses[i];
 	}
 }
-*/

@@ -1,6 +1,7 @@
 ﻿#pragma once
-#include "Math.h"
-/*
+#include "Matrix.h"
+#include "Quaternion.h"
+
 class BoneTransform
 {
 public:
@@ -12,4 +13,3 @@ public:
 
 	static BoneTransform Interpolate(const BoneTransform& a, const BoneTransform& b, float f);  //ボーン補間
 };
-*/

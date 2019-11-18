@@ -16,7 +16,7 @@ InputMoveComponent::~InputMoveComponent()
 
 void InputMoveComponent::Update()
 {
-	Vector2D nextPos = mOwner->GetPosition();
+	Vector3D nextPos = mOwner->GetPosition();
 
 	float speedX = mSpeedX * System::GetInstance().GetDeltaTime();
 	float speedY = mSpeedY * System::GetInstance().GetDeltaTime();

@@ -1,9 +1,9 @@
-﻿/*
-#include "Skeleton.h"
+﻿#include "Skeleton.h"
 #include <fstream>
 #include <sstream>
 #include <rapidjson/document.h>
 #include <SDL/SDL_log.h>
+#include "Matrix.h"
 #include "MatrixPalette.h"
 
 // スケルトンの読み込み
@@ -159,4 +159,3 @@ void Skeleton::ComputeGlobalInvBindPose()
 		mGlobalInvBindPoses[i].Invert();
 	}
 }
-*/

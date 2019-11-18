@@ -3,7 +3,7 @@
 #include "ComponentBase.h"
 
 Actor::Actor():
-	mPosition(Vector2D::zero),
+	mPosition(Vector3D::zero),
 	mScale(1.0f)
 {
 	System::GetInstance().ResisterActor(this);
