@@ -1,4 +1,4 @@
-#include "System.h"
+﻿#include "System.h"
 #include "Input.h"
 #include "Common.h"
 #include "DrawComponentBase.h"

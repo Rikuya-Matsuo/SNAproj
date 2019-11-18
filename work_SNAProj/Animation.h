@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Math.h"
 #include "BoneTransform.h"
 #include <vector>
@@ -7,29 +7,29 @@
 class Animation
 {
 public:
-	bool Load(const std::string& fileName);                                          // ƒAƒjƒ[ƒVƒ‡ƒ““Ç‚İ‚İ
+	bool Load(const std::string& fileName);                                          // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³èª­ã¿è¾¼ã¿
 
-	size_t GetNumBones() const { return mNumBones; }                                 // ƒ{[ƒ“”‚Ìæ“¾
-	size_t GetNumFrames() const { return mNumFrames; }                               // ƒtƒŒ[ƒ€”‚Ìæ“¾
-	float  GetDuration() const { return mDuration; }                                 // ƒAƒjƒ[ƒVƒ‡ƒ“ŠúŠÔ‚Ìæ“¾
-	float  GetFrameDuration() const { return mFrameDuration; }                       // ƒtƒŒ[ƒ€ŠúŠÔ‚Ìæ“¾
+	size_t GetNumBones() const { return mNumBones; }                                 // ãƒœãƒ¼ãƒ³æ•°ã®å–å¾—
+	size_t GetNumFrames() const { return mNumFrames; }                               // ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã®å–å¾—
+	float  GetDuration() const { return mDuration; }                                 // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æœŸé–“ã®å–å¾—
+	float  GetFrameDuration() const { return mFrameDuration; }                       // ãƒ•ãƒ¬ãƒ¼ãƒ æœŸé–“ã®å–å¾—
 
-	// Fills the provided vector with the global (current) pose matrices for each   w’è‚³‚ê‚½”z—ñ‚ğAƒAƒjƒ[ƒVƒ‡ƒ“‚Ìw’è‚³‚ê‚½ŠÔ‚ÉA
-	// bone at the specified time in the animation. It is expected that the time	Šeƒ{[ƒ“‚ÌƒOƒ[ƒoƒ‹iŒ»İ‚Ìjƒ|[ƒYƒ}ƒgƒŠƒbƒNƒX‚Å–„‚ß‚Ü‚·B
-	// is >= 0.0f and <= mDuration													ŠÔ‚Í > = 0.0f‚©‚Â <= ŠúŠÔ‚Å‚ ‚é‚Æ—\‘z‚³‚ê‚é
+	// Fills the provided vector with the global (current) pose matrices for each   æŒ‡å®šã•ã‚ŒãŸé…åˆ—ã‚’ã€ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æŒ‡å®šã•ã‚ŒãŸæ™‚é–“ã«ã€
+	// bone at the specified time in the animation. It is expected that the time	å„ãƒœãƒ¼ãƒ³ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ï¼ˆç¾åœ¨ã®ï¼‰ãƒãƒ¼ã‚ºãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã§åŸ‹ã‚ã¾ã™ã€‚
+	// is >= 0.0f and <= mDuration													æ™‚é–“ã¯ > = 0.0fã‹ã¤ <= æœŸé–“ã§ã‚ã‚‹ã¨äºˆæƒ³ã•ã‚Œã‚‹
 	void GetGlobalPoseAtTime(std::vector<Matrix4>& outPoses, const class Skeleton* inSkeleton, float inTime) const;
 private:
-	// Number of bones for the animation                         ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‚½‚ß‚Ìƒ{[ƒ“”
+	// Number of bones for the animation                         ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãŸã‚ã®ãƒœãƒ¼ãƒ³æ•°
 	size_t mNumBones;
-	// Number of frames in the animation                         ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒtƒŒ[ƒ€”
+	// Number of frames in the animation                         ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
 	size_t mNumFrames;
-	// Duration of the animation in seconds                      ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶ŠÔ
+	// Duration of the animation in seconds                      ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿæ™‚é–“
 	float mDuration;
-	// Duration of each frame in the animation                   ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒtƒŒ[ƒ€ŠÔ‚Ì
+	// Duration of each frame in the animation                   ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ãƒ¬ãƒ¼ãƒ é–“ã®æ™‚åˆ»
 	float mFrameDuration;
-	// Transform information for each frame on the track         ƒgƒ‰ƒbƒNã‚ÌŠeƒtƒŒ[ƒ€‚Ì•ÏŠ·î•ñB
-	// Each index in the outer vector is a bone, inner vector	 ŠO‘¤‚ÌƒxƒNƒgƒ‹‚ÌŠeƒCƒ“ƒfƒbƒNƒX‚Íƒ{[ƒ“A
-	// is a frame												 “à‘¤‚ÌƒxƒNƒgƒ‹‚ÍƒtƒŒ[ƒ€‚Å‚·B@@@@@@@mTracks[ƒ{[ƒ“][ƒtƒŒ[ƒ€”]
+	// Transform information for each frame on the track         ãƒˆãƒ©ãƒƒã‚¯ä¸Šã®å„ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¤‰æ›æƒ…å ±ã€‚
+	// Each index in the outer vector is a bone, inner vector	 å¤–å´ã®ãƒ™ã‚¯ãƒˆãƒ«ã®å„ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯ãƒœãƒ¼ãƒ³ã€
+	// is a frame												 å†…å´ã®ãƒ™ã‚¯ãƒˆãƒ«ã¯ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã™ã€‚ã€€ã€€ã€€ã€€ã€€ã€€ã€€mTracks[ãƒœãƒ¼ãƒ³][ãƒ•ãƒ¬ãƒ¼ãƒ æ•°]
 	std::vector<std::vector<BoneTransform>> mTracks;
 };
 */

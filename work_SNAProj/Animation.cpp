@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 #include "Animation.h"
 #include "Skeleton.h"
 #include <fstream>
@@ -7,10 +7,10 @@
 #include <SDL/SDL_log.h>
 
 
-// ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì“Ç‚İ‚İ
+// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®èª­ã¿è¾¼ã¿
 bool Animation::Load(const std::string& fileName)
 {
-	// filename‚©‚çƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Æ‚µ‚Ä“Ç‚İ‚İArapidJSON‚É‰ğÍ‚³‚¹‚é
+	// filenameã‹ã‚‰ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã¨ã—ã¦èª­ã¿è¾¼ã¿ã€rapidJSONã«è§£æã•ã›ã‚‹
 	std::ifstream file(fileName);
 	if (!file.is_open())
 	{
@@ -25,7 +25,7 @@ bool Animation::Load(const std::string& fileName)
 	rapidjson::Document doc;
 	doc.ParseStream(jsonStr);
 
-	// JSONƒIƒuƒWƒFƒNƒg‚©H
+	// JSONã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ï¼Ÿ
 	if (!doc.IsObject())
 	{
 		SDL_Log("Animation %s is not valid json", fileName.c_str());
@@ -34,14 +34,14 @@ bool Animation::Load(const std::string& fileName)
 
 	int ver = doc["version"].GetInt();
 
-	// Check the metadata@ƒƒ^ƒf[ƒ^‚Ìƒ`ƒFƒbƒNBƒo[ƒWƒ‡ƒ“‚Í‚P‚©H
+	// Check the metadataã€€ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿ã®ãƒã‚§ãƒƒã‚¯ã€‚ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¯ï¼‘ã‹ï¼Ÿ
 	if (ver != 1)
 	{
 		SDL_Log("Animation %s unknown format", fileName.c_str());
 		return false;
 	}
 
-	// "sequece"î•ñ“Ç‚İ‚ß‚é‚©H
+	// "sequece"æƒ…å ±èª­ã¿è¾¼ã‚ã‚‹ã‹ï¼Ÿ
 	const rapidjson::Value& sequence = doc["sequence"];
 	if (!sequence.IsObject())
 	{
@@ -49,7 +49,7 @@ bool Animation::Load(const std::string& fileName)
 		return false;
 	}
 
-	// "frames" "length" "bonecount"‚Í‚ ‚é‚©H
+	// "frames" "length" "bonecount"ã¯ã‚ã‚‹ã‹ï¼Ÿ
 	const rapidjson::Value& frames = sequence["frames"];
 	const rapidjson::Value& length = sequence["length"];
 	const rapidjson::Value& bonecount = sequence["bonecount"];
@@ -60,16 +60,16 @@ bool Animation::Load(const std::string& fileName)
 		return false;
 	}
 
-	// ƒtƒŒ[ƒ€”AƒAƒjƒ[ƒVƒ‡ƒ“ŠÔAƒ{[ƒ“”AƒtƒŒ[ƒ€‚ ‚½‚è‚ÌŠÔ‚ğæ“¾
+	// ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã€ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã€ãƒœãƒ¼ãƒ³æ•°ã€ãƒ•ãƒ¬ãƒ¼ãƒ ã‚ãŸã‚Šã®æ™‚é–“ã‚’å–å¾—
 	mNumFrames = frames.GetUint();
 	mDuration = static_cast<float>(length.GetDouble());
 	mNumBones = bonecount.GetUint() ;
 	mFrameDuration = mDuration / (mNumFrames - 1);
 
-	// ƒgƒ‰ƒbƒN”z—ñ‚ğŠm•Û
+	// ãƒˆãƒ©ãƒƒã‚¯é…åˆ—ã‚’ç¢ºä¿
 	mTracks.resize(mNumBones);
 
-	// ƒgƒ‰ƒbƒN”z—ñ‚ªæ“¾‚Å‚«‚é‚©H
+	// ãƒˆãƒ©ãƒƒã‚¯é…åˆ—ãŒå–å¾—ã§ãã‚‹ã‹ï¼Ÿ
 	const rapidjson::Value& tracks = sequence["tracks"];
 
 	if (!tracks.IsArray())
@@ -78,20 +78,20 @@ bool Animation::Load(const std::string& fileName)
 		return false;
 	}
 
-	// ƒgƒ‰ƒbƒN”•ªƒ‹[ƒv
+	// ãƒˆãƒ©ãƒƒã‚¯æ•°åˆ†ãƒ«ãƒ¼ãƒ—
 	for (rapidjson::SizeType i = 0; i < tracks.Size(); i++)
 	{
-		// tracs[i]‚ÍƒIƒuƒWƒFƒNƒg‚©H
+		// tracs[i]ã¯ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ï¼Ÿ
 		if (!tracks[i].IsObject())
 		{
 			SDL_Log("Animation %s: Track element %d is invalid.", fileName.c_str(), i);
 			return false;
 		}
 
-		// tracks[i]‚Ì’†‚Ì "bone"‚ğuint‚Å“Ç‚İ‚İBƒ{[ƒ“”Ô†‚ğæ“¾
+		// tracks[i]ã®ä¸­ã® "bone"ã‚’uintã§èª­ã¿è¾¼ã¿ã€‚ãƒœãƒ¼ãƒ³ç•ªå·ã‚’å–å¾—
 		size_t boneIndex = tracks[i]["bone"].GetUint();
 
-		// tracks[i]‚Ì’†‚Ì "transforms"‚ªæ“¾‚Å‚«‚é‚©H
+		// tracks[i]ã®ä¸­ã® "transforms"ãŒå–å¾—ã§ãã‚‹ã‹ï¼Ÿ
 		const rapidjson::Value& transforms = tracks[i]["transforms"];
 		if (!transforms.IsArray())
 		{
@@ -100,18 +100,18 @@ bool Animation::Load(const std::string& fileName)
 		}
 
 		BoneTransform temp;
-		// transform‚ÌƒTƒCƒY‚ÆƒAƒjƒ[ƒVƒ‡ƒ“ƒtƒŒ[ƒ€”‚ª•s‹ï‡‚È‚¢‚©H
+		// transformã®ã‚µã‚¤ã‚ºã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ãŒä¸å…·åˆãªã„ã‹ï¼Ÿ
 		if (transforms.Size() < mNumFrames)
 		{
 			SDL_Log("Animation %s: Track element %d has fewer frames than expected.", fileName.c_str(), i);
 			return false;
 		}
 
-		// transforms‚ÌƒTƒCƒY•ªƒ‹[ƒvBƒ{[ƒ“”Ô†boneIndex‚Ì•ÏŠ·î•ñ‚Æ‚µ‚Äæ‚è‚Ş
+		// transformsã®ã‚µã‚¤ã‚ºåˆ†ãƒ«ãƒ¼ãƒ—ã€‚ãƒœãƒ¼ãƒ³ç•ªå·boneIndexã®å¤‰æ›æƒ…å ±ã¨ã—ã¦å–ã‚Šè¾¼ã‚€
 		int transSize = transforms.Size();
 		for (int j = 0; j < transSize; j++)
 		{
-			// ƒ[ƒe[ƒVƒ‡ƒ“(quaternion)‚Ætrans(•½sˆÚ“®¬•ª)‚ğ“Ç‚İ‚Ş
+			// ãƒ­ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³(quaternion)ã¨trans(å¹³è¡Œç§»å‹•æˆåˆ†)ã‚’èª­ã¿è¾¼ã‚€
 			const rapidjson::Value& rot = transforms[j]["rot"];
 			const rapidjson::Value& trans = transforms[j]["trans"];
 
@@ -121,18 +121,18 @@ bool Animation::Load(const std::string& fileName)
 				return false;
 			}
 
-			// temp.mRotation‚É@quaternion‚Æ‚µ‚ÄƒRƒs[A
+			// temp.mRotationã«ã€€quaternionã¨ã—ã¦ã‚³ãƒ”ãƒ¼ã€
 			temp.mRotation.x = static_cast<float>(rot[0].GetDouble());
 			temp.mRotation.y = static_cast<float>(rot[1].GetDouble());
 			temp.mRotation.z = static_cast<float>(rot[2].GetDouble());
 			temp.mRotation.w = static_cast<float>(rot[3].GetDouble());
 
-			// temp.mTranslation‚É•½sˆÚ“®¬•ª‚Æ‚µ‚ÄƒRƒs[
+			// temp.mTranslationã«å¹³è¡Œç§»å‹•æˆåˆ†ã¨ã—ã¦ã‚³ãƒ”ãƒ¼
 			temp.mTranslation.x = static_cast<float>(trans[0].GetDouble());
 			temp.mTranslation.y = static_cast<float>(trans[1].GetDouble());
 			temp.mTranslation.z = static_cast<float>(trans[2].GetDouble());
 
-			// ƒ{[ƒ“”Ô†boneIndex‚Ìp¨ƒf[ƒ^‚Æ‚µ‚ÄAmTracks”z—ñ‚É“ü‚ê‚éB
+			// ãƒœãƒ¼ãƒ³ç•ªå·boneIndexã®å§¿å‹¢ãƒ‡ãƒ¼ã‚¿ã¨ã—ã¦ã€mTracksé…åˆ—ã«å…¥ã‚Œã‚‹ã€‚
 			mTracks[boneIndex].emplace_back(temp);
 			//mTracks[i].emplace_back(temp);
 
@@ -142,7 +142,7 @@ bool Animation::Load(const std::string& fileName)
 	return true;
 }
 
-// inTime“_‚ÌƒOƒ[ƒoƒ‹ƒ|[ƒY”z—ñ‚Ìæ“¾
+// inTimeæ™‚åˆ»æ™‚ç‚¹ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒãƒ¼ã‚ºé…åˆ—ã®å–å¾—
 void Animation::GetGlobalPoseAtTime(std::vector<Matrix4>& outPoses, const Skeleton* inSkeleton, float inTime) const
 {
 	if (outPoses.size() != mNumBones)
@@ -152,20 +152,20 @@ void Animation::GetGlobalPoseAtTime(std::vector<Matrix4>& outPoses, const Skelet
 
 	// Figure out the current frame index and next frame
 	// (This assumes inTime is bounded by [0, AnimDuration]
-	// Œ»İ‚ÌƒtƒŒ[ƒ€‚ÆŸ‚ÌƒtƒŒ[ƒ€‚ğŒ©‚Â‚¯o‚·B
-	// ‚±‚ê‚ÍinTime‚ª [0`AnimDuration] ‚ÌŠÔ‚É‚¢‚é‚±‚Æ‚ğ‘O’ñ‚Æ‚µ‚Ä‚¢‚Ü‚·B
+	// ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã¨æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’è¦‹ã¤ã‘å‡ºã™ã€‚
+	// ã“ã‚Œã¯inTimeãŒ [0ï½AnimDuration] ã®é–“ã«ã„ã‚‹ã“ã¨ã‚’å‰æã¨ã—ã¦ã„ã¾ã™ã€‚
 	size_t frame = static_cast<size_t>(inTime / mFrameDuration);
 	size_t nextFrame = frame + 1;
 	// Calculate fractional value between frame and next frame
-	// ƒtƒŒ[ƒ€‚ÆŸ‚ÌƒtƒŒ[ƒ€‚ÌŠÔ‚Ì¬”’l‚ğŒvZ‚µ‚Ü‚·B
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã¨æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®é–“ã®å°æ•°å€¤ã‚’è¨ˆç®—ã—ã¾ã™ã€‚
 	float pct = inTime / mFrameDuration - frame;
 
 	// Setup the pose for the root
-	// ƒ‹[ƒg‚Ìƒ|[ƒY‚ğƒZƒbƒgƒAƒbƒv
+	// ãƒ«ãƒ¼ãƒˆã®ãƒãƒ¼ã‚ºã‚’ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 	if (mTracks[0].size() > 0)
 	{
 		// Interpolate between the current frame's pose and the next frame
-		// Œ»İ‚ÌƒtƒŒ[ƒ€‚Ìƒ|[ƒY‚ÆŸ‚ÌƒtƒŒ[ƒ€‚ÌŠÔ‚ğ•âŠÔ‚·‚é
+		// ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒãƒ¼ã‚ºã¨æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®é–“ã‚’è£œé–“ã™ã‚‹
 		BoneTransform interp = BoneTransform::Interpolate(mTracks[0][frame],
 			mTracks[0][nextFrame], pct);
 		outPoses[0] = interp.ToMatrix();
@@ -177,20 +177,20 @@ void Animation::GetGlobalPoseAtTime(std::vector<Matrix4>& outPoses, const Skelet
 
 	const std::vector<Skeleton::Bone>& bones = inSkeleton->GetBones();
 	// Now setup the poses for the rest
-	// c‚è‚Ìƒ|[ƒY‚ğİ’è‚µ‚Ü‚·
+	// æ®‹ã‚Šã®ãƒãƒ¼ã‚ºã‚’è¨­å®šã—ã¾ã™
 	for (size_t bone = 1; bone < mNumBones; bone++)
 	{
-		Matrix4 localMat; // (Defaults to identity)@iƒfƒtƒHƒ‹ƒg‚Í’PˆÊs—ñj
+		Matrix4 localMat; // (Defaults to identity)ã€€ï¼ˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯å˜ä½è¡Œåˆ—ï¼‰
 		if (mTracks[bone].size() > 0)
 		{
-			// [bone][frame]‚Ìƒ{[ƒ“p¨‚Æ[bone][nextframe]‚ğ ¬”“_ˆÈ‰º‚Ì pct‚Å•âŠÔ‚µ‚½p¨‚ğ interp‚ÉZo
+			// [bone][frame]ã®ãƒœãƒ¼ãƒ³å§¿å‹¢ã¨[bone][nextframe]ã‚’ å°æ•°ç‚¹ä»¥ä¸‹ã® pctã§è£œé–“ã—ãŸå§¿å‹¢ã‚’ interpã«ç®—å‡º
 			BoneTransform interp = BoneTransform::Interpolate(mTracks[bone][frame],
 				mTracks[bone][nextFrame], pct);
-			// interp ‚ğs—ñ‚É•ÏŠ·‚µ‚ÄAlocalMat‚É•ÏŠ·‚·‚é
+			// interp ã‚’è¡Œåˆ—ã«å¤‰æ›ã—ã¦ã€localMatã«å¤‰æ›ã™ã‚‹
 			localMat = interp.ToMatrix();
 		}
 
-		// o—Íƒ|[ƒYs—ñ[bone] = ƒ[ƒJƒ‹ƒ|[ƒYs—ñ * o—Íƒ|[ƒYs—ñ[ebone]
+		// å‡ºåŠ›ãƒãƒ¼ã‚ºè¡Œåˆ—[bone] = ãƒ­ãƒ¼ã‚«ãƒ«ãƒãƒ¼ã‚ºè¡Œåˆ— * å‡ºåŠ›ãƒãƒ¼ã‚ºè¡Œåˆ—[è¦ªbone]
 		outPoses[bone] = localMat * outPoses[bones[bone].mParent];
 	}
 }

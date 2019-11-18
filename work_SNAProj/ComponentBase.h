@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Actor.h"
 #include <list>
 
@@ -23,6 +23,6 @@ protected:
 
 	Actor * mOwner;
 
-	// ‚±‚Ì’l‚ª¬‚³‚¢•û‚ª‘‚­XV‚³‚ê‚éB
+	// ã“ã®å€¤ãŒå°ã•ã„æ–¹ãŒæ—©ãæ›´æ–°ã•ã‚Œã‚‹ã€‚
 	int mPriority;
 };

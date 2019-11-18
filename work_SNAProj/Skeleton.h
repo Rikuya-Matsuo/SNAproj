@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "BoneTransform.h"
 #include <string>
 #include <vector>
@@ -6,30 +6,30 @@
 class Skeleton
 {
 public:
-	// Definition for each bone in the skeleton                           ‚»‚ê‚¼‚ê‚Ìƒ{[ƒ“‚ÌœŠi’è‹`
+	// Definition for each bone in the skeleton                           ãã‚Œãã‚Œã®ãƒœãƒ¼ãƒ³ã®éª¨æ ¼å®šç¾©
 	struct Bone
 	{
-		BoneTransform mLocalBindPose;                                     // ƒ[ƒJƒ‹ƒoƒCƒ“ƒhƒ|[ƒY
-		std::string mName;                                                // ƒ{[ƒ“–¼
-		int mParent;                                                      // eID
+		BoneTransform mLocalBindPose;                                     // ãƒ­ãƒ¼ã‚«ãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚º
+		std::string mName;                                                // ãƒœãƒ¼ãƒ³å
+		int mParent;                                                      // è¦ªID
 	};
 
-	// Load from a file                                                   // ƒtƒ@ƒCƒ‹‚©‚ç‚Ìƒ[ƒh
+	// Load from a file                                                   // ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã®ãƒ­ãƒ¼ãƒ‰
 	bool Load(const std::string& fileName);
 
-	// Getter functions                                                   // ƒQƒbƒ^[
-	size_t GetNumBones() const { return mBones.size(); }                  // ƒ{[ƒ“”‚Ìæ“¾
-	const Bone& GetBone(size_t idx) const { return mBones[idx]; }         // id‚É‚æ‚éƒ{[ƒ“‚Ìæ“¾
-	const std::vector<Bone>& GetBones() const { return mBones; }          // ƒ{[ƒ“”z—ñ‚Ìæ“¾
-	const std::vector<Matrix4>& GetGlobalInvBindPoses() const { return mGlobalInvBindPoses; } // ƒOƒ[ƒoƒ‹‹tƒoƒCƒ“ƒhs—ñ”z—ñ‚Ìæ“¾
+	// Getter functions                                                   // ã‚²ãƒƒã‚¿ãƒ¼
+	size_t GetNumBones() const { return mBones.size(); }                  // ãƒœãƒ¼ãƒ³æ•°ã®å–å¾—
+	const Bone& GetBone(size_t idx) const { return mBones[idx]; }         // idã«ã‚ˆã‚‹ãƒœãƒ¼ãƒ³ã®å–å¾—
+	const std::vector<Bone>& GetBones() const { return mBones; }          // ãƒœãƒ¼ãƒ³é…åˆ—ã®å–å¾—
+	const std::vector<Matrix4>& GetGlobalInvBindPoses() const { return mGlobalInvBindPoses; } // ã‚°ãƒ­ãƒ¼ãƒãƒ«é€†ãƒã‚¤ãƒ³ãƒ‰è¡Œåˆ—é…åˆ—ã®å–å¾—
 protected:
-	// Called automatically when the skeleton is loaded                     ƒXƒPƒ‹ƒgƒ“‚ªƒ[ƒh‚³‚ê‚½‚Æ‚«‚É©“®“I‚ÉŒÄ‚Ño‚³‚ê‚Ü‚·B       
-	// Computes the global inverse bind pose for each bone                  Šeƒ{[ƒ“‚ÌƒOƒ[ƒoƒ‹‹tƒoƒCƒ“ƒhƒ|[ƒY‚ğŒvZ‚µ‚Ü‚·       
+	// Called automatically when the skeleton is loaded                     ã‚¹ã‚±ãƒ«ãƒˆãƒ³ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸã¨ãã«è‡ªå‹•çš„ã«å‘¼ã³å‡ºã•ã‚Œã¾ã™ã€‚       
+	// Computes the global inverse bind pose for each bone                  å„ãƒœãƒ¼ãƒ³ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«é€†ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’è¨ˆç®—ã—ã¾ã™       
 	void ComputeGlobalInvBindPose();
 private:
-	// The bones in the skeleton                                            ƒ{[ƒ“”z—ñ
+	// The bones in the skeleton                                            ãƒœãƒ¼ãƒ³é…åˆ—
 	std::vector<Bone> mBones;
-	// The global inverse bind poses for each bone                          ‚»‚ê‚¼‚ê‚Ìƒ{[ƒ“‚Ì‹tƒoƒCƒ“ƒhƒ|[ƒYs—ñ
+	// The global inverse bind poses for each bone                          ãã‚Œãã‚Œã®ãƒœãƒ¼ãƒ³ã®é€†ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºè¡Œåˆ—
 	std::vector<Matrix4> mGlobalInvBindPoses;
 };
 */

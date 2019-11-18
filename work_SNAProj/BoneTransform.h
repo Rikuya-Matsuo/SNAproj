@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 #include "Math.h"
 /*
 class BoneTransform
 {
 public:
 	// For now, just make this data public
-	Quaternion mRotation;                      // ‰ñ“]
-	Vector3D mTranslation;                      // ˆÚ“®
+	Quaternion mRotation;                      // å›è»¢
+	Vector3D mTranslation;                      // ç§»å‹•
 
-	Matrix4 ToMatrix() const;                  // s—ñ‚ğo—Í
+	Matrix4 ToMatrix() const;                  // è¡Œåˆ—ã‚’å‡ºåŠ›
 
-	static BoneTransform Interpolate(const BoneTransform& a, const BoneTransform& b, float f);  //ƒ{[ƒ“•âŠÔ
+	static BoneTransform Interpolate(const BoneTransform& a, const BoneTransform& b, float f);  //ãƒœãƒ¼ãƒ³è£œé–“
 };
 */

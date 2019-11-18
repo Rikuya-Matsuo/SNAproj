@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 #include "SkeletalMeshComponent.h"
 #include "Shader.h"
 #include "Mesh.h"
@@ -16,28 +16,28 @@ SkeletalMeshComponent::SkeletalMeshComponent(Actor* owner)
 {
 }
 
-void SkeletalMeshComponent::Draw(Shader* shader)                         // •`‰æ
+void SkeletalMeshComponent::Draw(Shader* shader)                         // æç”»
 {
 	if (mMesh)
 	{
-		// Set the world transform                                        ƒ[ƒ‹ƒh•ÏŠ·‚ğƒZƒbƒg
+		// Set the world transform                                        ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ã‚’ã‚»ãƒƒãƒˆ
 		shader->SetMatrixUniform("uWorldTransform",
 			mOwner->GetWorldTransform());
-		// Set the matrix palette                                         s—ñƒpƒŒƒbƒg‚ğƒZƒbƒg    
+		// Set the matrix palette                                         è¡Œåˆ—ãƒ‘ãƒ¬ãƒƒãƒˆã‚’ã‚»ãƒƒãƒˆ    
 		shader->SetMatrixUniforms("uMatrixPalette", &mPalette.mEntry[0],
 			MAX_SKELETON_BONES);
-		// Set specular power                                             ƒXƒyƒLƒ…ƒ‰[‹­“x‚ğƒZƒbƒg
+		// Set specular power                                             ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼å¼·åº¦ã‚’ã‚»ãƒƒãƒˆ
 		shader->SetFloatUniform("uSpecPower", 100);
-		// Set the active texture                                         ƒeƒNƒXƒ`ƒƒ‚ğƒZƒbƒg 
+		// Set the active texture                                         ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚»ãƒƒãƒˆ 
 		Texture* t = mMesh->GetTexture(mTextureIndex);
 		if (t)
 		{
 			t->SetActive();
 		}
-		// Set the mesh's vertex array as active                          ƒƒbƒVƒ…‚Ì’¸“_”z—ñ‚ğƒAƒNƒeƒBƒu‚É
+		// Set the mesh's vertex array as active                          ãƒ¡ãƒƒã‚·ãƒ¥ã®é ‚ç‚¹é…åˆ—ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«
 		VertexArray* va = mMesh->GetVertexArray();
 		va->SetActive();
-		// Draw                                                           •`‰æ
+		// Draw                                                           æç”»
 		glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 	}
 }
@@ -47,18 +47,18 @@ void SkeletalMeshComponent::Update(float deltaTime)
 	if (mAnimation && mSkeleton)
 	{
 		mAnimTime += deltaTime * mAnimPlayRate;
-		// Wrap around anim time if past duration                         ƒAƒjƒ‚ğŠª‚«–ß‚µ‚ÄÄ¶
+		// Wrap around anim time if past duration                         ã‚¢ãƒ‹ãƒ¡ã‚’å·»ãæˆ»ã—ã¦å†ç”Ÿ
 		while (mAnimTime > mAnimation->GetDuration())
 		{
 			mAnimTime -= mAnimation->GetDuration();
 		}
 
-		// Recompute matrix palette                                      s—ñƒpƒŒƒbƒg‚ÌÄŒvZ
+		// Recompute matrix palette                                      è¡Œåˆ—ãƒ‘ãƒ¬ãƒƒãƒˆã®å†è¨ˆç®—
 		ComputeMatrixPalette();
 	}
 }
 
-float SkeletalMeshComponent::PlayAnimation(const Animation* anim, float playRate)  // ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶
+float SkeletalMeshComponent::PlayAnimation(const Animation* anim, float playRate)  // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿ
 {
 	mAnimation = anim;
 	mAnimTime = 0.0f;
@@ -71,16 +71,16 @@ float SkeletalMeshComponent::PlayAnimation(const Animation* anim, float playRate
 	return mAnimation->GetDuration();
 }
 
-void SkeletalMeshComponent::ComputeMatrixPalette()                              // s—ñƒpƒŒƒbƒg‚ÌŒvZ
+void SkeletalMeshComponent::ComputeMatrixPalette()                              // è¡Œåˆ—ãƒ‘ãƒ¬ãƒƒãƒˆã®è¨ˆç®—
 {
-	const std::vector<Matrix4>& globalInvBindPoses = mSkeleton->GetGlobalInvBindPoses();   // ƒOƒ[ƒoƒ‹‹tƒoƒCƒ“ƒhs—ñ”z—ñ‚Ìæ“¾
-	std::vector<Matrix4> currentPoses;                                         // Œ»İ‚Ìƒ|[ƒYs—ñ
-	mAnimation->GetGlobalPoseAtTime(currentPoses, mSkeleton, mAnimTime);       // ƒAƒjƒ“_‚ÌƒOƒ[ƒoƒ‹ƒ|[ƒY‚Ìæ“¾
+	const std::vector<Matrix4>& globalInvBindPoses = mSkeleton->GetGlobalInvBindPoses();   // ã‚°ãƒ­ãƒ¼ãƒãƒ«é€†ãƒã‚¤ãƒ³ãƒ‰è¡Œåˆ—é…åˆ—ã®å–å¾—
+	std::vector<Matrix4> currentPoses;                                         // ç¾åœ¨ã®ãƒãƒ¼ã‚ºè¡Œåˆ—
+	mAnimation->GetGlobalPoseAtTime(currentPoses, mSkeleton, mAnimTime);       // ã‚¢ãƒ‹ãƒ¡æ™‚åˆ»æ™‚ç‚¹ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒãƒ¼ã‚ºã®å–å¾—
 
-	// Setup the palette for each bone                                        ‚»‚ê‚¼‚ê‚Ìƒ{[ƒ“‚Ìs—ñƒpƒŒƒbƒg‚ÌƒZƒbƒg
+	// Setup the palette for each bone                                        ãã‚Œãã‚Œã®ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ãƒ‘ãƒ¬ãƒƒãƒˆã®ã‚»ãƒƒãƒˆ
 	for (size_t i = 0; i < mSkeleton->GetNumBones(); i++)
 	{
-		// Global inverse bind pose matrix times current pose matrix @@@@@s—ñƒpƒŒƒbƒg[i] = ƒOƒ[ƒoƒ‹‹tƒoƒCƒ“ƒhs—ñ[i]@~@Œ»İ‚Ìƒ|[ƒYs—ñ[i]  (i‚Íƒ{[ƒ“ID)         
+		// Global inverse bind pose matrix times current pose matrix ã€€ã€€ã€€ã€€ã€€è¡Œåˆ—ãƒ‘ãƒ¬ãƒƒãƒˆ[i] = ã‚°ãƒ­ãƒ¼ãƒãƒ«é€†ãƒã‚¤ãƒ³ãƒ‰è¡Œåˆ—[i]ã€€Ã—ã€€ç¾åœ¨ã®ãƒãƒ¼ã‚ºè¡Œåˆ—[i]  (iã¯ãƒœãƒ¼ãƒ³ID)         
 		mPalette.mEntry[i] = globalInvBindPoses[i] * currentPoses[i];
 	}
 }

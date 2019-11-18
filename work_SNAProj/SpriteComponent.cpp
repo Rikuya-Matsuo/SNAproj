@@ -1,4 +1,4 @@
-#include "SpriteComponent.h"
+ï»¿#include "SpriteComponent.h"
 
 SpriteComponent::SpriteComponent(Actor * owner) :
 	DrawComponentBase(owner, 100)
@@ -15,14 +15,14 @@ void SpriteComponent::Update()
 
 void SpriteComponent::Draw() const
 {
-	// •`‰æ‹éŒ`‚Ìİ’è
+	// æç”»çŸ©å½¢ã®è¨­å®š
 	SDL_Rect rect;
 	rect.x = static_cast<int>(mOwner->GetPosition().x);
 	rect.y = static_cast<int>(mOwner->GetPosition().y);
 	rect.w = static_cast<int>(mTextureWidth * mOwner->GetScale());
 	rect.h = static_cast<int>(mTextureHeight * mOwner->GetScale());
 
-	// •`‰æ
+	// æç”»
 	SDL_RenderCopy(mRenderer, mTexture, nullptr, &rect);
 }
 

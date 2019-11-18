@@ -1,9 +1,9 @@
-/*
+ï»¿/*
 #include "BoneTransform.h"
 
 Matrix4 BoneTransform::ToMatrix() const
 {
-	// ‰ñ“]‚Æ•½sˆÚ“®‚©‚çAs—ñ‚ğ•Ô‚·
+	// å›è»¢ã¨å¹³è¡Œç§»å‹•ã‹ã‚‰ã€è¡Œåˆ—ã‚’è¿”ã™
 	Matrix4 rot = Matrix4::CreateFromQuaternion(mRotation);
 	Matrix4 trans = Matrix4::CreateTranslation(mTranslation);
 
@@ -13,8 +13,8 @@ Matrix4 BoneTransform::ToMatrix() const
 BoneTransform BoneTransform::Interpolate(const BoneTransform& a, const BoneTransform& b, float f)
 {
 	BoneTransform retVal;
-	retVal.mRotation = Quaternion::Slerp(a.mRotation, b.mRotation, f);        // a‚©‚çb ‚É”’lf‚Å‹…–ÊüŒ`•âŠÔ(slerp)‚·‚é
-	retVal.mTranslation = Vector3::Lerp(a.mTranslation, b.mTranslation, f);   // •½sˆÚ“®¬•ª‚Íf ‚ÅüŒ`•âŠÔ(lerp)‚·‚é
+	retVal.mRotation = Quaternion::Slerp(a.mRotation, b.mRotation, f);        // aã‹ã‚‰b ã«æ•°å€¤fã§çƒé¢ç·šå½¢è£œé–“(slerp)ã™ã‚‹
+	retVal.mTranslation = Vector3::Lerp(a.mTranslation, b.mTranslation, f);   // å¹³è¡Œç§»å‹•æˆåˆ†ã¯f ã§ç·šå½¢è£œé–“(lerp)ã™ã‚‹
 	return retVal;
 }
 */

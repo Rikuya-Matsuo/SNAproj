@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Vector.h"
 #include <list>
 
@@ -18,7 +18,7 @@ public:
 	void SetScale(float scale) { mScale = scale; }
 	float GetScale() const { return mScale; }
 
-	// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì“o˜^E“o˜^‰ğœ
+	// ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®ç™»éŒ²ãƒ»ç™»éŒ²è§£é™¤
 	void ResisterComponent(const ComponentBase * in_cmp);
 	void DeresisterComponent(const ComponentBase * in_cmp);
 

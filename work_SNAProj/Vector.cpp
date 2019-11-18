@@ -1,4 +1,4 @@
-#include "Vector.h"
+﻿#include "Vector.h"
 
 const Vector2D Vector2D::zero = Vector2D(0.0f, 0.0f);
 

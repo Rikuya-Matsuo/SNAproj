@@ -1,4 +1,4 @@
-#include "Input.h"
+ï»¿#include "Input.h"
 
 Input::Input() :
 	mQuitEventFlag(false),
@@ -11,7 +11,7 @@ Input::Input() :
 		mPrevStates[i] = 0;
 	}
 
-	// ƒQ[ƒ€ƒRƒ“ƒgƒ[ƒ‰[æ“¾
+	// ã‚²ãƒ¼ãƒ ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å–å¾—
 	mGamePad = SDL_GameControllerOpen(0);
 	if (mGamePad == NULL)
 	{
@@ -58,10 +58,10 @@ bool Input::GetKeyPressUp(int scanCode) const
 
 void Input::UpdateGamePad()
 {
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	mGamePadButtonFlags = 0;
 
-	// ƒ{ƒ^ƒ“î•ñ‚ğæ“¾
+	// ãƒœã‚¿ãƒ³æƒ…å ±ã‚’å–å¾—
 	for (int i = 0; i < SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_MAX; ++i)
 	{
 		Uint16 mask = 0x0001 << i;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 #include "Skeleton.h"
 #include <fstream>
 #include <sstream>
@@ -6,10 +6,10 @@
 #include <SDL/SDL_log.h>
 #include "MatrixPalette.h"
 
-// ƒXƒPƒ‹ƒgƒ“‚Ì“Ç‚İ‚İ
+// ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®èª­ã¿è¾¼ã¿
 bool Skeleton::Load(const std::string& fileName)
 {
-	// ƒtƒ@ƒCƒ‹–¼‚©‚çƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“‚µ‚ÄARapidJSON‚É‰ğÍ‚³‚¹‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã—ã¦ã€RapidJSONã«è§£æã•ã›ã‚‹
 	std::ifstream file(fileName);
 	if (!file.is_open())
 	{
@@ -24,7 +24,7 @@ bool Skeleton::Load(const std::string& fileName)
 	rapidjson::Document doc;
 	doc.ParseStream(jsonStr);
 
-	// JSONƒIƒuƒWƒFƒNƒg‚©
+	// JSONã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹
 	if (!doc.IsObject())
 	{
 		SDL_Log("Skeleton %s is not valid json", fileName.c_str());
@@ -33,14 +33,14 @@ bool Skeleton::Load(const std::string& fileName)
 
 	int ver = doc["version"].GetInt();
 
-	// Check the metadata@ƒƒ^ƒf[ƒ^‚Ìƒ`ƒFƒbƒNiƒo[ƒWƒ‡ƒ“ƒ`ƒFƒbƒNj
+	// Check the metadataã€€ãƒ¡ã‚¿ãƒ‡ãƒ¼ã‚¿ã®ãƒã‚§ãƒƒã‚¯ï¼ˆãƒãƒ¼ã‚¸ãƒ§ãƒ³ãƒã‚§ãƒƒã‚¯ï¼‰
 	if (ver != 1)
 	{
 		SDL_Log("Skeleton %s unknown format", fileName.c_str());
 		return false;
 	}
 
-	// bonecount ƒ{[ƒ“”‚Ìæ“¾
+	// bonecount ãƒœãƒ¼ãƒ³æ•°ã®å–å¾—
 	const rapidjson::Value& bonecount = doc["bonecount"];
 	if (!bonecount.IsUint())
 	{
@@ -50,7 +50,7 @@ bool Skeleton::Load(const std::string& fileName)
 
 	size_t count = bonecount.GetUint();
 
-	// ƒ{[ƒ“”‚ªMAX_SKELETON_BONES‚ğ’´‚¦‚Ä‚¢‚½ê‡ (196–{‚ªÅ‘å)
+	// ãƒœãƒ¼ãƒ³æ•°ãŒMAX_SKELETON_BONESã‚’è¶…ãˆã¦ã„ãŸå ´åˆ (196æœ¬ãŒæœ€å¤§)
 	if (count > MAX_SKELETON_BONES)
 	{
 		SDL_Log("Skeleton %s exceeds maximum bone count.", fileName.c_str());
@@ -59,7 +59,7 @@ bool Skeleton::Load(const std::string& fileName)
 
 	mBones.reserve(count);
 
-	// ƒ{[ƒ“”z—ñ‚Ìæ“¾
+	// ãƒœãƒ¼ãƒ³é…åˆ—ã®å–å¾—
 	const rapidjson::Value& bones = doc["bones"];
 	if (!bones.IsArray())
 	{
@@ -67,7 +67,7 @@ bool Skeleton::Load(const std::string& fileName)
 		return false;
 	}
 
-	// ƒ{[ƒ“”z—ñ‚ÌƒTƒCƒY‚Æƒ{[ƒ“”‚ªˆÙ‚È‚éê‡‚ÍƒGƒ‰[‚ğ•Ô‚·
+	// ãƒœãƒ¼ãƒ³é…åˆ—ã®ã‚µã‚¤ã‚ºã¨ãƒœãƒ¼ãƒ³æ•°ãŒç•°ãªã‚‹å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™
 	if (bones.Size() != count)
 	{
 		SDL_Log("Skeleton %s has a mismatch between the bone count and number of bones", fileName.c_str());
@@ -76,25 +76,25 @@ bool Skeleton::Load(const std::string& fileName)
 
 	Bone temp;
 
-	// ƒ{[ƒ“”z—ñ”•ªƒ‹[ƒv
+	// ãƒœãƒ¼ãƒ³é…åˆ—æ•°åˆ†ãƒ«ãƒ¼ãƒ—
 	for (rapidjson::SizeType i = 0; i < count; i++)
 	{
-		// ƒ{[ƒ“‚ª“Ç‚ß‚é‚©H
+		// ãƒœãƒ¼ãƒ³ãŒèª­ã‚ã‚‹ã‹ï¼Ÿ
 		if (!bones[i].IsObject())
 		{
 			SDL_Log("Skeleton %s: Bone %d is invalid.", fileName.c_str(), i);
 			return false;
 		}
 
-		// "name" ƒ{[ƒ“–¼
+		// "name" ãƒœãƒ¼ãƒ³å
 		const rapidjson::Value& name = bones[i]["name"];
 		temp.mName = name.GetString();
 
-		// "parent" eƒ{[ƒ“ID
+		// "parent" è¦ªãƒœãƒ¼ãƒ³ID
 		const rapidjson::Value& parent = bones[i]["parent"];
 		temp.mParent = parent.GetInt();
 
-		// "bindpose" ƒoƒCƒ“ƒhƒ|[ƒY
+		// "bindpose" ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚º
 		const rapidjson::Value& bindpose = bones[i]["bindpose"];
 		if (!bindpose.IsObject())
 		{
@@ -102,58 +102,58 @@ bool Skeleton::Load(const std::string& fileName)
 			return false;
 		}
 
-		// ƒoƒCƒ“ƒhƒ|[ƒY‚Ì‰ñ“]AˆÊ’u
+		// ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®å›è»¢ã€ä½ç½®
 		const rapidjson::Value& rot = bindpose["rot"];
 		const rapidjson::Value& trans = bindpose["trans"];
 
-		// ‰ñ“]‚ÆˆÊ’u‚ª”z—ñ‚¶‚á‚È‚©‚Á‚½‚çƒGƒ‰[•Ô‚·
+		// å›è»¢ã¨ä½ç½®ãŒé…åˆ—ã˜ã‚ƒãªã‹ã£ãŸã‚‰ã‚¨ãƒ©ãƒ¼è¿”ã™
 		if (!rot.IsArray() || !trans.IsArray())
 		{
 			SDL_Log("Skeleton %s: Bone %d is invalid.", fileName.c_str(), i);
 			return false;
 		}
 
-		// ƒoƒCƒ“ƒhƒ|[ƒY‚Ì‰ñ“]¬•ª
+		// ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®å›è»¢æˆåˆ†
 		temp.mLocalBindPose.mRotation.x = static_cast<float>(rot[0].GetDouble());
 		temp.mLocalBindPose.mRotation.y = static_cast<float>(rot[1].GetDouble());
 		temp.mLocalBindPose.mRotation.z = static_cast<float>(rot[2].GetDouble());
 		temp.mLocalBindPose.mRotation.w = static_cast<float>(rot[3].GetDouble());
 
-		// ƒoƒCƒ“ƒhƒ|[ƒY‚ÌˆÚ“®¬•ª
+		// ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®ç§»å‹•æˆåˆ†
 		temp.mLocalBindPose.mTranslation.x = static_cast<float>(trans[0].GetDouble());
 		temp.mLocalBindPose.mTranslation.y = static_cast<float>(trans[1].GetDouble());
 		temp.mLocalBindPose.mTranslation.z = static_cast<float>(trans[2].GetDouble());
 
-		// ƒ{[ƒ“”z—ñ‚ÉŠi”[‚·‚é
+		// ãƒœãƒ¼ãƒ³é…åˆ—ã«æ ¼ç´ã™ã‚‹
 		mBones.emplace_back(temp);
 	}
 
-	// Now that we have the bones@‚±‚±‚Åƒ{[ƒ“”z—ñ‚Í“Ç‚İ‚±‚Ü‚ê‚Ä‚¢‚é‚Ì‚ÅA‹tƒoƒCƒ“ƒhƒ|[ƒYs—ñ‚ğŒvZ‚·‚é
+	// Now that we have the bonesã€€ã“ã“ã§ãƒœãƒ¼ãƒ³é…åˆ—ã¯èª­ã¿ã“ã¾ã‚Œã¦ã„ã‚‹ã®ã§ã€é€†ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºè¡Œåˆ—ã‚’è¨ˆç®—ã™ã‚‹
 	ComputeGlobalInvBindPose();
 
 	return true;
 }
 
-// ‹tƒoƒCƒ“ƒhƒ|[ƒYs—ñ‚ÌŒvZ
+// é€†ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºè¡Œåˆ—ã®è¨ˆç®—
 void Skeleton::ComputeGlobalInvBindPose()
 {
-	// Resize to number of bones, which automatically fills identity    mGlobalInvIndPoses”z—ñ‚ğAƒ{[ƒ“”•ªŠm•Û•©“®“I‚É’PˆÊs—ñ‚Å‰Šú‰»
+	// Resize to number of bones, which automatically fills identity    mGlobalInvIndPosesé…åˆ—ã‚’ã€ãƒœãƒ¼ãƒ³æ•°åˆ†ç¢ºä¿ï¼†è‡ªå‹•çš„ã«å˜ä½è¡Œåˆ—ã§åˆæœŸåŒ–
 	mGlobalInvBindPoses.resize(GetNumBones());
 
-	// Step 1: Compute global bind pose for each bone@@@@@@@@@@@ƒXƒeƒbƒv‚PF‚»‚ê‚¼‚ê‚Ìƒ{[ƒ“‚ÌƒOƒ[ƒoƒ‹ƒoƒCƒ“ƒhƒ|[ƒY‚ğŒvZ
+	// Step 1: Compute global bind pose for each boneã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã‚¹ãƒ†ãƒƒãƒ—ï¼‘ï¼šãã‚Œãã‚Œã®ãƒœãƒ¼ãƒ³ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’è¨ˆç®—
 
-	// The global bind pose for root is just the local bind pose         root ([0]‚Ì‚±‚Æ) ‚ÌƒOƒ[ƒoƒ‹ƒoƒCƒ“ƒhƒ|[ƒY‚ÍAƒ[ƒJƒ‹ƒoƒCƒ“ƒhƒ|[ƒY‚Ì‚±‚Æ‚Å‚·B
+	// The global bind pose for root is just the local bind pose         root ([0]ã®ã“ã¨) ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã¯ã€ãƒ­ãƒ¼ã‚«ãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®ã“ã¨ã§ã™ã€‚
 	mGlobalInvBindPoses[0] = mBones[0].mLocalBindPose.ToMatrix();
 
-	// Each remaining bone's global bind pose is its local pose          c‚è‚ÌŠeƒ{[ƒ“‚ÌƒOƒ[ƒoƒ‹ƒoƒCƒ“ƒhƒ|[ƒY‚ÍA
-	// multiplied by the parent's global bind pose                       ‚»‚Ìƒ[ƒJƒ‹ƒ|[ƒY‚Ée‚ÌƒOƒ[ƒoƒ‹ƒoƒCƒ“ƒhƒ|[ƒY‚ğŠ|‚¯‚½‚à‚Ì‚Å‚·B
+	// Each remaining bone's global bind pose is its local pose          æ®‹ã‚Šã®å„ãƒœãƒ¼ãƒ³ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã¯ã€
+	// multiplied by the parent's global bind pose                       ãã®ãƒ­ãƒ¼ã‚«ãƒ«ãƒãƒ¼ã‚ºã«è¦ªã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’æ›ã‘ãŸã‚‚ã®ã§ã™ã€‚
 	for (size_t i = 1; i < mGlobalInvBindPoses.size(); i++)
 	{
-		Matrix4 localMat = mBones[i].mLocalBindPose.ToMatrix();                     // ‚»‚Ìƒ{[ƒ“‚Ìƒ[ƒJƒ‹ƒoƒCƒ“ƒhƒ|[ƒY‚ğs—ñ‚É•ÏŠ·‚µ‚Ä locakMat‚É‘ã“ü
-		mGlobalInvBindPoses[i] = localMat * mGlobalInvBindPoses[mBones[i].mParent]; // localMat * ©•ª‚Ìe‚ÌƒOƒ[ƒoƒ‹ƒoƒCƒ“ƒhƒ|[ƒYs—ñ
+		Matrix4 localMat = mBones[i].mLocalBindPose.ToMatrix();                     // ãã®ãƒœãƒ¼ãƒ³ã®ãƒ­ãƒ¼ã‚«ãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’è¡Œåˆ—ã«å¤‰æ›ã—ã¦ locakMatã«ä»£å…¥
+		mGlobalInvBindPoses[i] = localMat * mGlobalInvBindPoses[mBones[i].mParent]; // localMat * è‡ªåˆ†ã®è¦ªã®ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºè¡Œåˆ—
 	}
 
-	// Step 2: Invert                                                   ƒXƒeƒbƒv‚QF‹ts—ñ‚É‚·‚é
+	// Step 2: Invert                                                   ã‚¹ãƒ†ãƒƒãƒ—ï¼’ï¼šé€†è¡Œåˆ—ã«ã™ã‚‹
 	for (size_t i = 0; i < mGlobalInvBindPoses.size(); i++)
 	{
 		mGlobalInvBindPoses[i].Invert();

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "SDL/SDL.h"
 #include "ComponentBase.h"
 class DrawComponentBase : public ComponentBase
@@ -12,7 +12,7 @@ public:
 	int GetDrawOrder() const { return mDrawOrder; }
 
 protected:
-	// ‚±‚Ì’l‚ª’á‚¢‚à‚Ì‚©‚ç‡‚É•`‰æ‚·‚é
+	// ã“ã®å€¤ãŒä½ã„ã‚‚ã®ã‹ã‚‰é †ã«æç”»ã™ã‚‹
 	int mDrawOrder;
 
 	SDL_Renderer * mRenderer;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 #pragma once
 #include "MeshComponent.h"
 #include "MatrixPalette.h"
@@ -7,23 +7,23 @@ class SkeletalMeshComponent : public MeshComponent
 {
 public:
 	SkeletalMeshComponent(class Actor* owner);
-	// Draw this mesh component                                              ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì•`‰æ
+	// Draw this mesh component                                              ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æç”»
 	void Draw(class Shader* shader) override;
 
 	void Update(float deltaTime) override;
 
-	// Setters                                                               ƒXƒPƒ‹ƒgƒ“‚ÌƒZƒbƒg
+	// Setters                                                               ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ã‚»ãƒƒãƒˆ
 	void SetSkeleton(const class Skeleton* sk) { mSkeleton = sk; }
 
-	// Play an animation. Returns the length of the animation                 ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶BƒAƒjƒ[ƒVƒ‡ƒ“‚Ìc‚è’·‚³‚ğ•Ô‚·
+	// Play an animation. Returns the length of the animation                 ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿã€‚ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æ®‹ã‚Šé•·ã•ã‚’è¿”ã™
 	float PlayAnimation(const class Animation* anim, float playRate = 1.0f);
 protected:
-	void ComputeMatrixPalette();                                           // s—ñƒpƒŒƒbƒg‚ÌŒvZ
+	void ComputeMatrixPalette();                                           // è¡Œåˆ—ãƒ‘ãƒ¬ãƒƒãƒˆã®è¨ˆç®—
 
-	MatrixPalette mPalette;                                                // s—ñƒpƒŒƒbƒg
-	const class Skeleton* mSkeleton;                                       // ƒXƒPƒ‹ƒgƒ“
-	const class Animation* mAnimation;                                     // ƒAƒjƒ[ƒVƒ‡ƒ“
-	float mAnimPlayRate;                                                   // ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶‘¬“x
-	float mAnimTime;                                                       // ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ
+	MatrixPalette mPalette;                                                // è¡Œåˆ—ãƒ‘ãƒ¬ãƒƒãƒˆ
+	const class Skeleton* mSkeleton;                                       // ã‚¹ã‚±ãƒ«ãƒˆãƒ³
+	const class Animation* mAnimation;                                     // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+	float mAnimPlayRate;                                                   // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿé€Ÿåº¦
+	float mAnimTime;                                                       // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“
 };
 */

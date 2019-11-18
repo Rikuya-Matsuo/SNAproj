@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include <list>
 
 namespace Common
 {
-	// �ėp���ɖ��𔭌��B�폜�Ώۂ̃f�X�g���N�^�ɃR���e�i����̍폜�@�\���Ȃ���΃G���[�ƂȂ�B
+	// 汎用性に問題を発見。削除対象のデストラクタにコンテナからの削除機能がなければエラーとなる。
 	template <class T>
 	void DeleteContainerOfPointer(std::vector<T*> & in_vec)
 	{
@@ -21,7 +21,7 @@ namespace Common
 		}
 	}
 
-	// �ėp���ɖ��𔭌��B�폜�Ώۂ̃f�X�g���N�^�ɃR���e�i����̍폜�@�\���Ȃ���΃G���[�ƂȂ�B
+	// 汎用性に問題を発見。削除対象のデストラクタにコンテナからの削除機能がなければエラーとなる。
 	template <class T>
 	void DeleteContainerOfPointer(std::list<T*> & in_lst)
 	{

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SDL/SDL.h"
 #include "Vector.h"
 #include "MathExpantion.h"

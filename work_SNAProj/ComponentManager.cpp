@@ -1,4 +1,4 @@
-#include "ComponentManager.h"
+﻿#include "ComponentManager.h"
 #include "ComponentBase.h"
 
 ComponentManager::ComponentManager()

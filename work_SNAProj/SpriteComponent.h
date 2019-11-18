@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DrawComponentBase.h"
 #include <string>
 #include <SDL/SDL_image.h>
