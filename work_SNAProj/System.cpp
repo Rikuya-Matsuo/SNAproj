@@ -5,11 +5,15 @@
 #include "Player.h"
 #include "SceneBase.h"
 #include "ComponentManager.h"
+#include "Renderer.h"
 
 System::System():
-	mWindow(nullptr),
+	//mWindow(nullptr),
+	//mSDLRenderer(nullptr),
+	mCurrentScene(nullptr),
 	mRenderer(nullptr),
-	mCurrentScene(nullptr)
+	mWindowWidth(1024),
+	mWindowHeight(768)
 {
 }
 
@@ -26,21 +30,21 @@ bool System::Init()
 		SDL_Log("Failed to initialize SDL.\n--%s--\n", SDL_GetError());
 		return false;
 	}
-
-	mWindow = SDL_CreateWindow("Test", 100, 100, 1024, 768, 0);
+	/*
+	mWindow = SDL_CreateWindow("Test", 100, 100, mWindowWidth, mWindowHeight, 0);
 	if (!mWindow)
 	{
 		SDL_Log("Failed to create a window.\n--%s--\n", SDL_GetError());
 		return false;
 	}
 
-	mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (!mRenderer)
+	mSDLRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (!mSDLRenderer)
 	{
 		SDL_Log("Failed to create renderer.\n--%s--\n", SDL_GetError());
 		return false;
 	}
-
+	*/
 	if (IMG_Init(IMG_INIT_PNG) == 0)
 	{
 		SDL_Log("Failed to initialize SDL_image.\n--%s--\n", SDL_GetError());
@@ -50,6 +54,12 @@ bool System::Init()
 	mPrevTicksCount = SDL_GetTicks();
 
 	SDL_Log("Success to initialize SDL\n");
+
+	mRenderer = new Renderer;
+	if (!mRenderer->Initialize(mWindowWidth, mWindowHeight, false))
+	{
+		SDL_Log("Failed to initialize the renderer.\n");
+	}
 
 	return true;
 }
@@ -67,9 +77,8 @@ void System::Run()
 
 		UpdateScene();
 
-		//UpdateActor();
-		//ComponentBase::UpdateComponents();
-		ComponentManager::GetInstance().UpdateComponents();
+		UpdateActor();
+		//ComponentManager::GetInstance().UpdateComponents();
 
 		if (Input::GetInstance().GetQuitEventFlag() || Input::GetInstance().GetKey(SDL_SCANCODE_ESCAPE))
 		{
@@ -89,8 +98,8 @@ void System::Finish()
 	Common::DeleteContainerOfPointer(mActorCollection);
 
 	IMG_Quit();
-	SDL_DestroyRenderer(mRenderer);
-	SDL_DestroyWindow(mWindow);
+	//SDL_DestroyRenderer(mSDLRenderer);
+	//SDL_DestroyWindow(mWindow);
 	SDL_Quit();
 
 	SDL_Log("System finish to shut down");
@@ -121,15 +130,17 @@ void System::UpdateActor()
 
 void System::Draw()
 {
-	SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
-	SDL_RenderClear(mRenderer);
+	SDL_SetRenderDrawColor(GetSDLRenderer(), 0, 0, 0, 255);
+	SDL_RenderClear(GetSDLRenderer());
 
-	for (auto drawCmp : mDrawComponentList)
+	for (auto sprCmp : mSpriteComponentList)
 	{
-		drawCmp->Draw();
+		sprCmp->Draw();
 	}
 
-	SDL_RenderPresent(mRenderer);
+	mRenderer->Draw();
+
+	SDL_RenderPresent(GetSDLRenderer());
 }
 
 void System::ResisterActor(const Actor * in_act)
@@ -152,12 +163,12 @@ void System::ResisterDrawComponent(const DrawComponentBase * in_cmp)
 	const int drawOrder = in_cmp->GetDrawOrder();
 
 	bool inserted = false;
-	for (auto itr : mDrawComponentList)
+	for (auto itr : mSpriteComponentList)
 	{
 		if (drawOrder < itr->GetDrawOrder())
 		{
-			auto insertPoint = std::find(mDrawComponentList.begin(), mDrawComponentList.end(), itr);
-			mDrawComponentList.insert(insertPoint, const_cast<DrawComponentBase*>(in_cmp));
+			auto insertPoint = std::find(mSpriteComponentList.begin(), mSpriteComponentList.end(), itr);
+			mSpriteComponentList.insert(insertPoint, const_cast<DrawComponentBase*>(in_cmp));
 			inserted = true;
 			break;
 		}
@@ -165,16 +176,16 @@ void System::ResisterDrawComponent(const DrawComponentBase * in_cmp)
 
 	if (!inserted)
 	{
-		mDrawComponentList.emplace_back(const_cast<DrawComponentBase*>(in_cmp));
+		mSpriteComponentList.emplace_back(const_cast<DrawComponentBase*>(in_cmp));
 	}
 }
 
 void System::DeresisterDrawComponent(const DrawComponentBase * in_cmp)
 {
-	auto target = std::find(mDrawComponentList.begin(), mDrawComponentList.end(), in_cmp);
+	auto target = std::find(mSpriteComponentList.begin(), mSpriteComponentList.end(), in_cmp);
 
-	if (target != mDrawComponentList.end())
+	if (target != mSpriteComponentList.end())
 	{
-		mDrawComponentList.erase(target);
+		mSpriteComponentList.erase(target);
 	}
 }

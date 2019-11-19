@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------
 
 #include "MeshComponent.h"
+#include "System.h"
 #include "Shader.h"
 #include "Mesh.h"
 #include "Actor.h"
@@ -24,14 +25,14 @@ MeshComponent::MeshComponent(Actor* owner, bool isSkeletal)
 	, mVisible(true)
 	, mIsSkeletal(isSkeletal)
 {
-	//GAMEINSTANCE.GetRenderer()->AddMeshComponent(this);
+	System::GetInstance().GetRenderer()->AddMeshComponent(this);
 	//printf("new MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), owner);
 }
 
 MeshComponent::~MeshComponent()
 {
 	//printf("remove MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), mOwner);
-	//GAMEINSTANCE.GetRenderer()->RemoveMeshComponent(this);
+	System::GetInstance().GetRenderer()->RemoveMeshComponent(this);
 }
 
 void MeshComponent::Draw(Shader* shader)

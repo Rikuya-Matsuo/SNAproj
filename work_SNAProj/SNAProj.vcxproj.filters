@@ -93,9 +93,6 @@
     <ClCompile Include="BoneTransform.cpp">
       <Filter>ソース ファイル\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="SkeletalMeshComponent.cpp">
-      <Filter>ソース ファイル\Animation</Filter>
-    </ClCompile>
     <ClCompile Include="Skeleton.cpp">
       <Filter>ソース ファイル\Animation</Filter>
     </ClCompile>
@@ -117,14 +114,17 @@
     <ClCompile Include="VertexArray.cpp">
       <Filter>ソース ファイル\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="MeshComponent.cpp">
-      <Filter>ソース ファイル\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>ソース ファイル\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Quaternion.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
+      <Filter>ソース ファイル\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshComponent.cpp">
+      <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +173,6 @@
     <ClInclude Include="MatrixPalette.h">
       <Filter>ヘッダー ファイル\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletalMeshComponent.h">
-      <Filter>ヘッダー ファイル\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="Skeleton.h">
       <Filter>ヘッダー ファイル\Animation</Filter>
     </ClInclude>
@@ -203,11 +200,14 @@
     <ClInclude Include="Mesh.h">
       <Filter>ヘッダー ファイル\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="MeshComponent.h">
-      <Filter>ヘッダー ファイル\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>ヘッダー ファイル\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>ヘッダー ファイル\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshComponent.h">
+      <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

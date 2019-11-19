@@ -16,10 +16,6 @@ Actor::~Actor()
 
 void Actor::Update()
 {
-	for (auto component : mComponentList)
-	{
-		component->Update();
-	}
 }
 
 void Actor::ResisterComponent(const ComponentBase * in_cmp)
@@ -52,4 +48,16 @@ void Actor::DeresisterComponent(const ComponentBase * in_cmp)
 	{
 		mComponentList.erase(target);
 	}
+}
+
+void Actor::UpdateComponents()
+{
+	for (auto component : mComponentList)
+	{
+		component->Update();
+	}
+}
+
+void Actor::UpdateActor()
+{
 }

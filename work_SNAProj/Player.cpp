@@ -1,13 +1,12 @@
 ﻿#include "Player.h"
 #include "Common.h"
-#include "SpriteComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "InputMoveComponent.h"
 
 Player::Player():
 	Actor()
 {
-	SpriteComponent * spriteCmp = new SpriteComponent(this);
-	spriteCmp->LoadTexture("Assets/Enemy01.png");
+	SkeletalMeshComponent * smc = new SkeletalMeshComponent(this);
 
 	InputMoveComponent * imc = new InputMoveComponent(this);
 }
@@ -17,4 +16,15 @@ Player::~Player()
 	Common::DeleteContainerOfPointer(mComponentList);
 
 	SDL_Log("Player is deleted\n");
+}
+
+void Player::Update()
+{
+	UpdateComponents();
+	UpdateActor();
+}
+
+void Player::UpdateActor()
+{
+	
 }

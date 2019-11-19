@@ -6,7 +6,7 @@ DrawComponentBase::DrawComponentBase(Actor * owner, int drawOrder) :
 	mDrawOrder(drawOrder),
 	mRenderer(nullptr)
 {
-	mRenderer = const_cast<SDL_Renderer*>(System::GetInstance().GetRenderer());
+	mRenderer = const_cast<SDL_Renderer*>(System::GetInstance().GetSDLRenderer());
 
 	System::GetInstance().ResisterDrawComponent(this);
 }

@@ -1,12 +1,14 @@
 ﻿#pragma once
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
+#include "Renderer.h"
 #include <vector>
 #include <list>
 
 class Actor;
 class DrawComponentBase;
 class SceneBase;
+class Renderer;
 
 class System final
 {
@@ -37,14 +39,18 @@ public:
 
 	void DeresisterDrawComponent(const DrawComponentBase * in_cmp);
 
-	SDL_Renderer * const GetRenderer() const { return mRenderer; }
+	Renderer * GetRenderer() const { return mRenderer; }
+
+	SDL_Renderer * GetSDLRenderer() const { return mRenderer->GetSDLRenderer(); }
 
 private:
 	System();
 
-	SDL_Window * mWindow;
+	//SDL_Window * mWindow;
 
-	SDL_Renderer * mRenderer;
+	//SDL_Renderer * mSDLRenderer;
+
+	Renderer * mRenderer;
 
 	Uint32 mPrevTicksCount;
 
@@ -52,9 +58,13 @@ private:
 
 	float mDeltaTime;
 
+	int mWindowWidth;
+
+	int mWindowHeight;
+
 	std::vector<Actor *> mActorCollection;
 
-	std::list<DrawComponentBase *> mDrawComponentList;
+	std::list<DrawComponentBase *> mSpriteComponentList;
 
 	void UpdateDeltaTime();
 	

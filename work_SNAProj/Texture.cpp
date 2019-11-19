@@ -39,7 +39,7 @@ bool Texture::Load(const std::string& fileName)
 	}
 
 	// サーフェスからテクスチャを作る
-	tex = SDL_CreateTextureFromSurface(System::GetInstance().GetRenderer(), surf);
+	tex = SDL_CreateTextureFromSurface(System::GetInstance().GetSDLRenderer(), surf);
 	if (!tex)
 	{
 		printf("サーフェスからテクスチャの作成に失敗 : %s", fileName.c_str());

@@ -35,4 +35,8 @@ protected:
 	Matrix4 mWorldTransform;
 
 	float mScale;
+
+	void UpdateComponents();
+
+	virtual void UpdateActor();
 };
