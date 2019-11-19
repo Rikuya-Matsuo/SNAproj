@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "SDL/SDL.h"
 #include "ComponentBase.h"
+
 class DrawComponentBase : public ComponentBase
 {
 public:
@@ -17,4 +18,3 @@ protected:
 
 	SDL_Renderer * mRenderer;
 };
-

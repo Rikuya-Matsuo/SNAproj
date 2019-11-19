@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Actor.h"
+class SkeletalMeshComponent;
 
 class Player : public Actor
 {
@@ -11,4 +12,6 @@ public:
 
 private:
 	void UpdateActor() override;
+
+	SkeletalMeshComponent * mMeshComponent;
 };

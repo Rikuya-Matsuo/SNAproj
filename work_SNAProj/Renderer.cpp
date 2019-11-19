@@ -6,8 +6,10 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "MeshComponent.h"
+#include "Skeleton.h"
 #include "SkeletalMeshComponent.h"
-#include "MathExpantion.h"
+#include "Animation.h"
+
 
 Renderer::Renderer()
 	:mWindow(nullptr)
@@ -30,8 +32,8 @@ bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
 	// OpenGL アトリビュートのセット
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	// GL version 3.1
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
 	// 8Bit RGBA チャンネル
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE  , 8);
@@ -127,6 +129,18 @@ void Renderer::Shutdown()
 
 	//シェーダー破棄
 	mMeshShader->Unload();
+
+	// スケルトンの破棄
+	for (auto s : mSkeletons)
+	{
+		delete s.second;
+	}
+
+	// アニメーションの破棄
+	for (auto a : mAnims)
+	{
+		delete a.second;
+	}
 
 	// SDL系の破棄
 	SDL_GL_DeleteContext(mContext);
@@ -310,6 +324,70 @@ void Renderer::SetLightUniforms(Shader* shader)
 	shader->SetVectorUniform("uDirLight.mDiffuseColor", mDirectionalLight.mDiffuseColor);
 	shader->SetVectorUniform("uDirLight.mSpecColor", mDirectionalLight.mSpecColor);
 }
+
+//////////////////////////////////////////////////////////////
+// スケルタル情報の取得
+// in  : スケルタル情報 .gpskelファイル名
+// out : Skeleton情報へのポインタ
+// Desc: gpskelファイル名より、スケルタル情報を返す。ない場合はそのファイル名で
+//       読み込みを行う。読み込みを行ってもファイルが存在しない場合 nullptrを返す
+//       内部でgpskelファイル名をキーとするスケルタル情報のmapが作成される
+//////////////////////////////////////////////////////////////
+const Skeleton* Renderer::GetSkeleton(const char* fileName)
+{
+	std::string file(fileName);
+	auto iter = mSkeletons.find(file);
+	if (iter != mSkeletons.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Skeleton* sk = new Skeleton();
+		if (sk->Load(file))
+		{
+			mSkeletons.emplace(file, sk);
+		}
+		else
+		{
+			delete sk;
+			sk = nullptr;
+		}
+		return sk;
+	}
+}
+
+//////////////////////////////////////////////////////////////
+// アニメーション情報の取得
+// in  : アニメーションデータが格納されている .gpanimファイル名
+// out : アニメーション情報へのポインタ
+// Desc: gpanimファイル名よりアニメーションデータを返す。ない場合はそのファイル名で
+//       読み込みを行う。読み込みを行ってもファイルが存在しない場合 nullptrを返す
+//       内部でgpanimファイル名をキーとするアニメーション情報のmapが作成される
+//////////////////////////////////////////////////////////////
+const Animation* Renderer::GetAnimation(const char* fileName, bool loop)
+{
+	auto iter = mAnims.find(fileName);
+	if (iter != mAnims.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		Animation* anim = new Animation();
+		if (anim->Load(fileName, loop))
+		{
+			mAnims.emplace(fileName, anim);
+		}
+		else
+		{
+			delete anim;
+			anim = nullptr;
+		}
+		return anim;
+	}
+}
+
 
 bool GLErrorHandle(const char* location)
 {

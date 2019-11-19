@@ -5,10 +5,12 @@
 #include <rapidjson/document.h>
 #include <SDL/SDL_log.h>
 
-
 // アニメーションの読み込み
-bool Animation::Load(const std::string& fileName)
+bool Animation::Load(const std::string& fileName, bool loop)
 {
+	// アニメーションループさせるか？
+	mIsLoopAnimation = loop;
+
 	// filenameからテキストファイルとして読み込み、rapidJSONに解析させる
 	std::ifstream file(fileName);
 	if (!file.is_open())
@@ -62,7 +64,7 @@ bool Animation::Load(const std::string& fileName)
 	// フレーム数、アニメーション時間、ボーン数、フレームあたりの時間を取得
 	mNumFrames = frames.GetUint();
 	mDuration = static_cast<float>(length.GetDouble());
-	mNumBones = bonecount.GetUint() ;
+	mNumBones = bonecount.GetUint();
 	mFrameDuration = mDuration / (mNumFrames - 1);
 
 	// トラック配列を確保
@@ -166,7 +168,7 @@ void Animation::GetGlobalPoseAtTime(std::vector<Matrix4>& outPoses, const Skelet
 		// Interpolate between the current frame's pose and the next frame
 		// 現在のフレームのポーズと次のフレームの間を補間する
 		BoneTransform interp = BoneTransform::Interpolate(mTracks[0][frame],
-			mTracks[0][nextFrame], pct);
+			mTracks[0][nextFrame % mNumFrames], pct);
 		outPoses[0] = interp.ToMatrix();
 	}
 	else
@@ -184,7 +186,7 @@ void Animation::GetGlobalPoseAtTime(std::vector<Matrix4>& outPoses, const Skelet
 		{
 			// [bone][frame]のボーン姿勢と[bone][nextframe]を 小数点以下の pctで補間した姿勢を interpに算出
 			BoneTransform interp = BoneTransform::Interpolate(mTracks[bone][frame],
-				mTracks[bone][nextFrame], pct);
+				mTracks[bone][nextFrame % mNumFrames], pct);
 			// interp を行列に変換して、localMatに変換する
 			localMat = interp.ToMatrix();
 		}
