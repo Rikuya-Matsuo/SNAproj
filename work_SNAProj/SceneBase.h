@@ -3,6 +3,7 @@
 
 // 前方宣言
 class Actor;
+class Camera;
 
 class SceneBase
 {
@@ -16,4 +17,6 @@ public:
 
 protected:
 	std::vector<Actor *> mActors;
+
+	std::vector<Camera *> mCameras;
 };

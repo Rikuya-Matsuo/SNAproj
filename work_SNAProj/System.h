@@ -6,6 +6,7 @@
 #include <list>
 
 class Actor;
+class Camera;
 class DrawComponentBase;
 class SceneBase;
 class Renderer;
@@ -43,6 +44,10 @@ public:
 
 	SDL_Renderer * GetSDLRenderer() const { return mRenderer->GetSDLRenderer(); }
 
+	void SetActiveCamera(const Camera * cam) { mActiveCamera = const_cast<Camera *>(cam); }
+
+	void ReportCameraDelete(const Camera * cam);
+
 private:
 	System();
 
@@ -55,6 +60,8 @@ private:
 	Uint32 mPrevTicksCount;
 
 	SceneBase * mCurrentScene;
+
+	Camera * mActiveCamera;
 
 	float mDeltaTime;
 

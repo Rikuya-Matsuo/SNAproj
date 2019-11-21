@@ -6,6 +6,15 @@
 #include "SceneBase.h"
 #include "ComponentManager.h"
 #include "Renderer.h"
+#include "Camera.h"
+
+void System::ReportCameraDelete(const Camera * cam)
+{
+	if (mActiveCamera == cam)
+	{
+		mActiveCamera = nullptr;
+	}
+}
 
 System::System():
 	//mWindow(nullptr),
@@ -80,6 +89,13 @@ void System::Run()
 		UpdateActor();
 		//ComponentManager::GetInstance().UpdateComponents();
 
+		if (mActiveCamera != nullptr)
+		{
+			Matrix4 viewMatrix = mActiveCamera->GetViewMatrix();
+			mRenderer->SetViewMatrix(viewMatrix);
+		}
+
+
 		if (Input::GetInstance().GetQuitEventFlag() || Input::GetInstance().GetKey(SDL_SCANCODE_ESCAPE))
 		{
 			quitFlag = true;
@@ -131,7 +147,7 @@ void System::UpdateActor()
 void System::Draw()
 {
 	SDL_SetRenderDrawColor(GetSDLRenderer(), 0, 0, 0, 255);
-	SDL_RenderClear(GetSDLRenderer());
+	mRenderer->WindowClear();
 
 	for (auto sprCmp : mSpriteComponentList)
 	{
@@ -140,7 +156,7 @@ void System::Draw()
 
 	mRenderer->Draw();
 
-	SDL_RenderPresent(GetSDLRenderer());
+	mRenderer->WindowFlip();
 }
 
 void System::ResisterActor(const Actor * in_act)

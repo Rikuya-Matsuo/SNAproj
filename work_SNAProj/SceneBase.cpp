@@ -3,6 +3,7 @@
 
 SceneBase::SceneBase()
 {
+	mCameras.reserve(1);
 }
 
 SceneBase::~SceneBase()

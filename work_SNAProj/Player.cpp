@@ -30,11 +30,14 @@ Player::~Player()
 
 void Player::Update()
 {
+	CalculateWorldTransform();
+
 	UpdateComponents();
 	UpdateActor();
+
+	CalculateWorldTransform();
 }
 
 void Player::UpdateActor()
 {
-	
 }

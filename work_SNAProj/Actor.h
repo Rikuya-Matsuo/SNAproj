@@ -39,4 +39,6 @@ protected:
 	void UpdateComponents();
 
 	virtual void UpdateActor();
+
+	void CalculateWorldTransform();
 };
