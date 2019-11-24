@@ -19,6 +19,9 @@ Player::Player():
 	mMeshComponent->SetSkeleton(System::GetInstance().GetRenderer()->GetSkeleton("Assets/SK_Mannequin.gpskel"));
 
 	InputMoveComponent * imc = new InputMoveComponent(this);
+
+	// スケール値の調整
+	mScale = 0.5f;
 }
 
 Player::~Player()

@@ -14,7 +14,7 @@ public:
 
 	void Update();
 
-	void LastUpdate() { SDL_memcpy(mPrevStates, mStates, SDL_NUM_SCANCODES); }
+	void LastUpdate();
 
 	bool GetKey(int scanCode) const { return mStates[scanCode]; }
 
@@ -40,6 +40,9 @@ private:
 	char * mGamePadMapping;
 
 	Uint16 mGamePadButtonFlags;
+
+	// 起動時にボタンが押しっぱなしだった時に押下判定にならないよう、初期値は全ビットを立てる
+	Uint16 mPrevGamePadButtonFlags;
 
 	void UpdateGamePad();
 };

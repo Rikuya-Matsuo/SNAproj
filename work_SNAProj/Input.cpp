@@ -2,7 +2,8 @@
 
 Input::Input() :
 	mQuitEventFlag(false),
-	mGamePadButtonFlags(0)
+	mGamePadButtonFlags(0),
+	mPrevGamePadButtonFlags(0xFFFF)
 {
 	mStates = SDL_GetKeyboardState(NULL);
 
@@ -41,7 +42,20 @@ void Input::Update()
 		}
 	}
 
-	UpdateGamePad();
+	// ゲームパッド入力受け取り
+	if (mGamePad != NULL)
+	{
+		UpdateGamePad();
+	}
+}
+
+void Input::LastUpdate()
+{
+	// キーの状態を保存
+	SDL_memcpy(mPrevStates, mStates, SDL_NUM_SCANCODES);
+
+	// ボタンの状態を保存
+	mPrevGamePadButtonFlags = mGamePadButtonFlags;
 }
 
 bool Input::GetKeyPressDown(int scanCode) const

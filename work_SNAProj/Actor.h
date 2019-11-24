@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Vector.h"
 #include "Matrix.h"
+#include "Quaternion.h"
 #include <list>
 
 class ComponentBase;
@@ -16,7 +17,6 @@ public:
 	void SetPosition(const Vector3D & pos) { mPosition = pos; }
 	const Vector3D& GetPosition() const { return mPosition; }
 
-	// とりあえず形だけでもエラー消すためにゲッターを定義
 	const Matrix4& GetWorldTransform() { return mWorldTransform; }
 
 	void SetScale(float scale) { mScale = scale; }
@@ -31,8 +31,9 @@ protected:
 
 	Vector3D mPosition;
 
-	// まだ処理に関しては未実装
 	Matrix4 mWorldTransform;
+
+	Quaternion mRotation;
 
 	float mScale;
 
