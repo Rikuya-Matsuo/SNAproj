@@ -145,6 +145,16 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 			        static_cast<float>(vert[2].GetDouble()));
 		mRadius = Common::Larger(mRadius, pos.LengthSq());
 
+		// バウンディングボックス算出
+		if (i == 0)
+		{
+			mBox.InitMinMax(pos);
+		}
+		else
+		{
+			mBox.RenewalMinMax(pos);
+		}
+
 		// 頂点レイアウトが PosNormTexなら（ボーンが無い）
 		if (layout == VertexArray::PosNormTex)
 		{

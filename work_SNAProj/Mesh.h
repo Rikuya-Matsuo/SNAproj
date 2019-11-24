@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------
 
 #pragma once
+#include "Collision.h"
 #include <vector>
 #include <string>
 
@@ -24,6 +25,8 @@ public:
 
 	float GetRadius() const { return mRadius; }                             // バウンディングスフィアの半径を取得
 
+	const AABB & GetCollisionBox() const { return mBox; }
+
 private:
 	std::vector<class Texture*> mTextures;                                 	// メッシュのテクスチャ
 	class VertexArray* mVertexArray;                                        // メッシュの頂点配列
@@ -32,4 +35,5 @@ private:
 	float mRadius;	                                                        // バウンディングスフィアの半径
 	float mSpecPower;	                                                    // 表面のスペキュラー値
 
+	AABB mBox;																// バウンディングボックス
 };
