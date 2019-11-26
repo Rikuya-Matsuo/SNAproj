@@ -36,6 +36,7 @@ void Input::Update()
 		// パッドが接続されたとき
 		if (sdlEvent.type == SDL_CONTROLLERDEVICEADDED)
 		{
+			// ゲーム内で使えるパッドは１つに限る
 			if (mGamePad == NULL && sdlEvent.cdevice.which == 0)
 			{
 				ConnectGamePad(0);
@@ -45,19 +46,12 @@ void Input::Update()
 		// パッドが抜かれたとき
 		if (sdlEvent.type == SDL_CONTROLLERDEVICEREMOVED)
 		{
-			// この判定分で正しいのかどうかは知らん。
-			if (sdlEvent.cdevice.which == 0)
-			{
-				DisconnectGamePad(0);
-			}
+			// 認証されていないパッドが抜かれてもイベントは呼ばれないようだ
+			DisconnectGamePad(0);
 		}
 	}
 
-	// ゲームパッド入力受け取り
-	if (mGamePad != NULL)
-	{
-		UpdateGamePad();
-	}
+	UpdateGamePad();
 }
 
 void Input::LastUpdate()
@@ -88,11 +82,19 @@ void Input::ConnectGamePad(int padIndex)
 	{
 		SDL_Log("Failed to get game controller.\n--%s--\n", SDL_GetError());
 	}
+	else
+	{
+		SDL_Log("Success to get game controller.\n");
+	}
 
 	mGamePadMapping = SDL_GameControllerMapping(mGamePad);
 	if (mGamePadMapping == NULL)
 	{
 		SDL_Log("Failed to get mapping of game controller.\n--%s--\n", SDL_GetError());
+	}
+	else
+	{
+		SDL_Log("Success to get mapping of game controller.\n");
 	}
 }
 
@@ -119,10 +121,12 @@ void Input::DisconnectGamePad(int padIndex)
 	if (mGamePad != NULL)
 	{
 		SDL_GameControllerClose(mGamePad);
+		mGamePad = NULL;
 	}
 
 	if (mGamePadMapping != NULL)
 	{
 		SDL_free(mGamePadMapping);
+		mGamePadMapping = NULL;
 	}
 }
