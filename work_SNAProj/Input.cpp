@@ -13,22 +13,14 @@ Input::Input() :
 	}
 
 	// ゲームコントローラー取得
-	mGamePad = SDL_GameControllerOpen(0);
-	if (mGamePad == NULL)
-	{
-		SDL_Log("Failed to get game controller.\n--%s--\n", SDL_GetError());
-	}
+	ConnectGamePad(0);
 
-	mGamePadMapping = SDL_GameControllerMapping(mGamePad);
-	if (mGamePadMapping == NULL)
-	{
-		SDL_Log("Failed to get mapping of game controller.\n--%s--\n", SDL_GetError());
-	}
+	SDL_GameControllerEventState(SDL_IGNORE);
 }
 
 Input::~Input()
 {
-	SDL_free(mGamePadMapping);
+	DisconnectGamePad(0);
 }
 
 void Input::Update()
@@ -39,6 +31,25 @@ void Input::Update()
 		if (sdlEvent.type == SDL_QUIT)
 		{
 			mQuitEventFlag = true;
+		}
+
+		// パッドが接続されたとき
+		if (sdlEvent.type == SDL_CONTROLLERDEVICEADDED)
+		{
+			if (mGamePad == NULL && sdlEvent.cdevice.which == 0)
+			{
+				ConnectGamePad(0);
+			}
+		}
+
+		// パッドが抜かれたとき
+		if (sdlEvent.type == SDL_CONTROLLERDEVICEREMOVED)
+		{
+			// この判定分で正しいのかどうかは知らん。
+			if (sdlEvent.cdevice.which == 0)
+			{
+				DisconnectGamePad(0);
+			}
 		}
 	}
 
@@ -70,8 +81,25 @@ bool Input::GetKeyPressUp(int scanCode) const
 	return ret;
 }
 
+void Input::ConnectGamePad(int padIndex)
+{
+	mGamePad = SDL_GameControllerOpen(padIndex);
+	if (mGamePad == NULL)
+	{
+		SDL_Log("Failed to get game controller.\n--%s--\n", SDL_GetError());
+	}
+
+	mGamePadMapping = SDL_GameControllerMapping(mGamePad);
+	if (mGamePadMapping == NULL)
+	{
+		SDL_Log("Failed to get mapping of game controller.\n--%s--\n", SDL_GetError());
+	}
+}
+
 void Input::UpdateGamePad()
 {
+	SDL_GameControllerUpdate();
+
 	// 初期化
 	mGamePadButtonFlags = 0;
 
@@ -83,5 +111,18 @@ void Input::UpdateGamePad()
 		{
 			mGamePadButtonFlags |= mask;
 		}
+	}
+}
+
+void Input::DisconnectGamePad(int padIndex)
+{
+	if (mGamePad != NULL)
+	{
+		SDL_GameControllerClose(mGamePad);
+	}
+
+	if (mGamePadMapping != NULL)
+	{
+		SDL_free(mGamePadMapping);
 	}
 }

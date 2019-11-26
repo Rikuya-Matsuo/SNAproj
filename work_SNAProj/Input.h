@@ -44,5 +44,9 @@ private:
 	// 起動時にボタンが押しっぱなしだった時に押下判定にならないよう、初期値は全ビットを立てる
 	Uint16 mPrevGamePadButtonFlags;
 
+	void ConnectGamePad(int padIndex);
+
 	void UpdateGamePad();
+
+	void DisconnectGamePad(int padIndex);
 };
