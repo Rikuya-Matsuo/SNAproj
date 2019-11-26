@@ -24,7 +24,14 @@ public:
 
 	bool GetKeyPressUp(int scanCode) const;
 
-	bool GetGamePadButton(SDL_GameControllerButton button) const { return mGamePadButtonFlags & (0x0001 << static_cast<int>(button)); }
+	bool GetGamePadButtonPressDown(SDL_GameControllerButton button)
+	{ return !GetGamePadButton(mPrevGamePadButtonFlags, button) && GetGamePadButton(mGamePadButtonFlags, button); }
+
+	bool GetGamePadButtonPressed(SDL_GameControllerButton button)
+	{ return mPrevGamePadButtonFlags & mGamePadButtonFlags & (0x0001 << static_cast<int>(button)); }
+
+	bool GetGamePadButtonRelease(SDL_GameControllerButton button)
+	{ return GetGamePadButton(mPrevGamePadButtonFlags, button) && !GetGamePadButton(mGamePadButtonFlags, button); }
 
 private:
 	Input();
@@ -49,4 +56,6 @@ private:
 	void UpdateGamePad();
 
 	void DisconnectGamePad(int padIndex);
+
+	bool GetGamePadButton(Uint16 flag, SDL_GameControllerButton button) const { return flag & (0x0001 << static_cast<int>(button)); }
 };
