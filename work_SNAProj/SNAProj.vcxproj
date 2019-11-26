@@ -191,6 +191,7 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
     <ClCompile Include="BoneTransform.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ColliderComponentBase.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
@@ -201,6 +202,7 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshComponent.cpp" />
+    <ClCompile Include="PhysicManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -221,6 +223,7 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
     <ClInclude Include="BoneTransform.h" />
     <ClInclude Include="BoxColliderComponent.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ColliderComponentBase.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="ComponentBase.h" />
@@ -233,6 +236,7 @@ xcopy "$(ProjectDir)\..\..\external\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
     <ClInclude Include="MatrixPalette.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="PhysicManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Renderer.h" />

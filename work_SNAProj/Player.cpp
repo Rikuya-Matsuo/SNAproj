@@ -1,6 +1,7 @@
 ﻿#include "Player.h"
 #include "Common.h"
 #include "SkeletalMeshComponent.h"
+#include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 #include "Mesh.h"
 #include "Skeleton.h"
@@ -17,6 +18,10 @@ Player::Player():
 
 	// スケルトンのロード
 	mMeshComponent->SetSkeleton(System::GetInstance().GetRenderer()->GetSkeleton("Assets/SK_Mannequin.gpskel"));
+
+	// コライダーの設定
+	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
+	bcc->SetObjectBox(msh->GetCollisionBox());
 
 	InputMoveComponent * imc = new InputMoveComponent(this);
 
