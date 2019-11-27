@@ -29,13 +29,20 @@ public:
 	void RequestSortComponents() { mFlags |= mRequestComponentSortMask; }
 
 	void SetVisible(bool value) { value ? mFlags &= ~mStopDrawFlagMask : mFlags |= mStopDrawFlagMask; }
-
 	bool GetVisibleFlag() const { return !(mFlags & mStopDrawFlagMask); }
 
-protected:
-	static const Uint8 mRequestComponentSortMask;
+	void SetBeyondSceneFlag(bool value) { value ? mFlags |= mBeyondSceneFlagMask : mFlags &= ~mBeyondSceneFlagMask; }
+	bool GetBeyondSceneFlag() const { return mFlags & mBeyondSceneFlagMask; }
 
-	static const Uint8 mStopDrawFlagMask;
+protected:
+	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
+	typedef Uint8 FlagType;
+
+	static const FlagType mRequestComponentSortMask;
+
+	static const FlagType mStopDrawFlagMask;
+
+	static const FlagType mBeyondSceneFlagMask;
 
 	std::list<ComponentBase *> mComponentList;
 
@@ -47,7 +54,7 @@ protected:
 
 	float mScale;
 
-	Uint8 mFlags;
+	FlagType mFlags;
 
 	void UpdateComponents();
 

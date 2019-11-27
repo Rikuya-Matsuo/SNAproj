@@ -112,10 +112,9 @@ void System::Run()
 void System::Finish()
 {
 	Common::DeleteContainerOfPointer(mActorCollection);
+	std::vector<Actor *>().swap(mActorCollection);
 
 	IMG_Quit();
-	//SDL_DestroyRenderer(mSDLRenderer);
-	//SDL_DestroyWindow(mWindow);
 	SDL_Quit();
 
 	SDL_Log("System finish to shut down");

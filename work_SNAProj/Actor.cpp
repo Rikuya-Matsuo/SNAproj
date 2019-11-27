@@ -1,10 +1,12 @@
 ﻿#include "Actor.h"
 #include "System.h"
+#include "Common.h"
 #include "ComponentBase.h"
 #include <algorithm>
 
-const Uint8 Actor::mRequestComponentSortMask = 0x01;
-const Uint8 Actor::mStopDrawFlagMask = 0x02;
+const Actor::FlagType Actor::mRequestComponentSortMask = 0x01;
+const Actor::FlagType Actor::mStopDrawFlagMask = 0x02;
+const Actor::FlagType Actor::mBeyondSceneFlagMask = 0x04;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
@@ -16,6 +18,9 @@ Actor::Actor():
 
 Actor::~Actor()
 {
+	Common::DeleteContainerOfPointer(mComponentList);
+	std::list<ComponentBase *>().swap(mComponentList);
+
 	System::GetInstance().DeresisterActor(this);
 }
 
@@ -74,6 +79,7 @@ void Actor::UpdateComponents()
 
 void Actor::SortComponents()
 {
+	// 見よ！これがラムダ式を使ったソートである！
 	mComponentList.sort([](ComponentBase * lhs, ComponentBase * rhs) { return lhs->GetPriority() < rhs->GetPriority(); });
 }
 

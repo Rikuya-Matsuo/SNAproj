@@ -14,6 +14,10 @@ public:
 		return instance;
 	}
 
+	void ResisterCollider(const ColliderComponentBase * in_colCmp);
+
+	void DeresisterCollider(const ColliderComponentBase * in_colCmp);
+
 private:
 	PhysicManager();
 
