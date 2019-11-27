@@ -2,6 +2,13 @@
 #include "Vector.h"
 #include "Common.h"
 
+struct Sphere
+{
+	Vector3D mCenter;
+
+	float mRadius;
+};
+
 struct AABB
 {
 	AABB();

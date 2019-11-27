@@ -1,12 +1,9 @@
 #include "ColliderComponentBase.h"
 
-
-
-ColliderComponentBase::ColliderComponentBase(Actor * owner):
-	ComponentBase(owner, 500)
+ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute colAtt) :
+	ComponentBase(owner, 300)
 {
 }
-
 
 ColliderComponentBase::~ColliderComponentBase()
 {

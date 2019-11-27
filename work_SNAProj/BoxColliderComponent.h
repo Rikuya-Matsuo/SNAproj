@@ -1,21 +1,12 @@
 #pragma once
-#include "ComponentBase.h"
+#include "ColliderComponentBase.h"
 #include "Vector.h"
 #include "Collision.h"
 
-// Unity‚ÅŒ¾‚¤‚Æ‚±‚ë‚ÌTag
-enum ColliderAttribute
-{
-	ColAtt_Player = 0,
-	ColAtt_Enemy,
-	ColAtt_Candle,
-	ColAtt_Invalid
-};
-
-class BoxColliderComponent final : public ComponentBase
+class BoxColliderComponent final : public ColliderComponentBase
 {
 public:
-	BoxColliderComponent(Actor * owner, ColliderAttribute colAttribute = ColliderAttribute::ColAtt_Invalid);
+	BoxColliderComponent(Actor * owner, ColliderAttribute colAttribute);
 	~BoxColliderComponent();
 	
 	void SetObjectBox(const AABB & objBox) { mObjectBox = objBox; }
@@ -27,6 +18,4 @@ public:
 private:
 	AABB mObjectBox;
 	AABB mWorldBox;
-
-	Uint8 mAttribute;
 };
