@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-class BoxColliderComponent;
+class ColliderComponentBase;
 
 class PhysicManager final
 {
@@ -17,5 +17,5 @@ public:
 private:
 	PhysicManager();
 
-	std::vector<BoxColliderComponent *> mColliders;
+	std::vector<ColliderComponentBase *> mColliders;
 };

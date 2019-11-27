@@ -17,7 +17,7 @@ public:
 	void SetPosition(const Vector3D & pos) { mPosition = pos; }
 	const Vector3D& GetPosition() const { return mPosition; }
 
-	const Matrix4& GetWorldTransform() { return mWorldTransform; }
+	const Matrix4& GetWorldTransform() const { return mWorldTransform; }
 
 	void SetScale(float scale) { mScale = scale; }
 	float GetScale() const { return mScale; }
@@ -26,7 +26,17 @@ public:
 	void ResisterComponent(const ComponentBase * in_cmp);
 	void DeresisterComponent(const ComponentBase * in_cmp);
 
+	void RequestSortComponents() { mFlags |= mRequestComponentSortMask; }
+
+	void SetVisible(bool value) { value ? mFlags &= ~mStopDrawFlagMask : mFlags |= mStopDrawFlagMask; }
+
+	bool GetVisibleFlag() const { return !(mFlags & mStopDrawFlagMask); }
+
 protected:
+	static const Uint8 mRequestComponentSortMask;
+
+	static const Uint8 mStopDrawFlagMask;
+
 	std::list<ComponentBase *> mComponentList;
 
 	Vector3D mPosition;
@@ -37,7 +47,11 @@ protected:
 
 	float mScale;
 
+	Uint8 mFlags;
+
 	void UpdateComponents();
+
+	void SortComponents();
 
 	virtual void UpdateActor();
 

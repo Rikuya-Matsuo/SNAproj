@@ -1,10 +1,15 @@
 ﻿#include "Actor.h"
 #include "System.h"
 #include "ComponentBase.h"
+#include <algorithm>
+
+const Uint8 Actor::mRequestComponentSortMask = 0x01;
+const Uint8 Actor::mStopDrawFlagMask = 0x02;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
-	mScale(1.0f)
+	mScale(1.0f),
+	mFlags(0)
 {
 	System::GetInstance().ResisterActor(this);
 }
@@ -52,10 +57,24 @@ void Actor::DeresisterComponent(const ComponentBase * in_cmp)
 
 void Actor::UpdateComponents()
 {
+	// コンポーネントのソートがリクエストされていた場合はソートを行う
+	if (mFlags & mRequestComponentSortMask)
+	{
+		SortComponents();
+
+		// フラグを下す
+		mFlags &= ~mRequestComponentSortMask;
+	}
+
 	for (auto component : mComponentList)
 	{
 		component->Update();
 	}
+}
+
+void Actor::SortComponents()
+{
+	mComponentList.sort([](ComponentBase * lhs, ComponentBase * rhs) { return lhs->GetPriority() < rhs->GetPriority(); });
 }
 
 void Actor::UpdateActor()

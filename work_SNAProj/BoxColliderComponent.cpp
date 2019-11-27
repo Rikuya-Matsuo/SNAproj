@@ -1,7 +1,7 @@
 #include "BoxColliderComponent.h"
 
 BoxColliderComponent::BoxColliderComponent(Actor * owner, ColliderAttribute colAttribute):
-	ColliderComponentBase(owner, colAttribute)
+	ColliderComponentBase(owner, colAttribute, ColliderShape::ColShape_Box)
 {
 }
 
