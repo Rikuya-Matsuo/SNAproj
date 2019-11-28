@@ -80,4 +80,6 @@ private:
 	void UpdateActor();
 
 	void Draw();
+
+	void ChangeScene(bool & quitFlag);
 };

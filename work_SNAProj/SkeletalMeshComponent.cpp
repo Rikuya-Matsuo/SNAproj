@@ -15,6 +15,21 @@ SkeletalMeshComponent::SkeletalMeshComponent(Actor* owner)
 {
 }
 
+SkeletalMeshComponent::~SkeletalMeshComponent()
+{
+	if (mSkeleton != nullptr)
+	{
+		delete mSkeleton;
+		mSkeleton = nullptr;
+	}
+
+	if (mAnimation != nullptr)
+	{
+		delete mAnimation;
+		mAnimation = nullptr;
+	}
+}
+
 void SkeletalMeshComponent::Draw(Shader* shader)                         // 描画
 {
 	if (mMesh)

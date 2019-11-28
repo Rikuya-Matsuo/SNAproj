@@ -1,20 +1,28 @@
 ﻿#include "SceneBase.h"
 #include "Actor.h"
+#include "Camera.h"
 
-SceneBase::SceneBase()
+const SceneBase::FlagType SceneBase::mSceneChangeFlagMask = 0x01 << 0;
+
+SceneBase::SceneBase():
+	mNextScene(nullptr),
+	mFlags(0)
 {
 	mCameras.reserve(1);
 }
 
 SceneBase::~SceneBase()
 {
-	for (auto actor : mActors)
+	// カメラの削除
+	while (!mCameras.empty())
 	{
-		delete actor;
+		delete mCameras.back();
+		mCameras.pop_back();
 	}
-	mActors.clear();
 
+	// ベクターコンテナのメモリ開放
 	std::vector<Actor *>().swap(mActors);
+	std::vector<Camera *>().swap(mCameras);
 }
 
 void SceneBase::Draw()

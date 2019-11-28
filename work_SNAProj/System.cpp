@@ -8,17 +8,7 @@
 #include "Renderer.h"
 #include "Camera.h"
 
-void System::ReportCameraDelete(const Camera * cam)
-{
-	if (mActiveCamera == cam)
-	{
-		mActiveCamera = nullptr;
-	}
-}
-
 System::System():
-	//mWindow(nullptr),
-	//mSDLRenderer(nullptr),
 	mCurrentScene(nullptr),
 	mRenderer(nullptr),
 	mWindowWidth(1024),
@@ -39,21 +29,7 @@ bool System::Init()
 		SDL_Log("Failed to initialize SDL.\n--%s--\n", SDL_GetError());
 		return false;
 	}
-	/*
-	mWindow = SDL_CreateWindow("Test", 100, 100, mWindowWidth, mWindowHeight, 0);
-	if (!mWindow)
-	{
-		SDL_Log("Failed to create a window.\n--%s--\n", SDL_GetError());
-		return false;
-	}
 
-	mSDLRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (!mSDLRenderer)
-	{
-		SDL_Log("Failed to create renderer.\n--%s--\n", SDL_GetError());
-		return false;
-	}
-	*/
 	if (IMG_Init(IMG_INIT_PNG) == 0)
 	{
 		SDL_Log("Failed to initialize SDL_image.\n--%s--\n", SDL_GetError());
@@ -95,7 +71,13 @@ void System::Run()
 			mRenderer->SetViewMatrix(viewMatrix);
 		}
 
+		// シーン遷移処理
+		if (mCurrentScene->GetSceneChangeFlag())
+		{
+			ChangeScene(quitFlag);
+		}
 
+		// ゲーム終了処理
 		if (Input::GetInstance().GetQuitEventFlag() || Input::GetInstance().GetKey(SDL_SCANCODE_ESCAPE))
 		{
 			quitFlag = true;
@@ -113,6 +95,20 @@ void System::Finish()
 {
 	Common::DeleteContainerOfPointer(mActorCollection);
 	std::vector<Actor *>().swap(mActorCollection);
+
+	std::list<DrawComponentBase *>().swap(mSpriteComponentList);
+
+	if (mCurrentScene != nullptr)
+	{
+		delete mCurrentScene;
+		mCurrentScene = nullptr;
+	}
+
+	if (mRenderer != nullptr)
+	{
+		delete mRenderer;
+		mRenderer = nullptr;
+	}
 
 	IMG_Quit();
 	SDL_Quit();
@@ -156,6 +152,33 @@ void System::Draw()
 	mRenderer->Draw();
 
 	mRenderer->WindowFlip();
+}
+
+void System::ChangeScene(bool & quitFlag)
+{
+	SceneBase * nextScene = mCurrentScene->GetNextScene();
+	if (nextScene != nullptr)
+	{
+		delete mCurrentScene;
+		mCurrentScene = nextScene;
+
+		for (int i = 0; i < (int)mActorCollection.size(); ++i)
+		{
+			if (!mActorCollection[i]->GetBeyondSceneFlag())
+			{
+				// アクターを削除しつつ添え字を一つ戻す
+				delete mActorCollection[i--];
+			}
+			else
+			{
+				mActorCollection[i]->SetBeyondSceneFlag(false);
+			}
+		}
+	}
+	else
+	{
+		quitFlag = true;
+	}
 }
 
 void System::ResisterActor(const Actor * in_act)
@@ -202,5 +225,13 @@ void System::DeresisterDrawComponent(const DrawComponentBase * in_cmp)
 	if (target != mSpriteComponentList.end())
 	{
 		mSpriteComponentList.erase(target);
+	}
+}
+
+void System::ReportCameraDelete(const Camera * cam)
+{
+	if (mActiveCamera == cam)
+	{
+		mActiveCamera = nullptr;
 	}
 }

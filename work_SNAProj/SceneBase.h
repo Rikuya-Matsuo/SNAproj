@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "SDL/SDL.h"
 #include <vector>
 
 // 前方宣言
@@ -15,8 +16,22 @@ public:
 
 	void Draw();
 
+	SceneBase * GetNextScene() const { return mNextScene; }
+
+	void RequestSceneChange() { mFlags |= mSceneChangeFlagMask; }
+
+	bool GetSceneChangeFlag() const { return mFlags & mSceneChangeFlagMask; }
+
 protected:
+	typedef Uint8 FlagType;
+
+	static const FlagType mSceneChangeFlagMask;
+
+	FlagType mFlags;
+
 	std::vector<Actor *> mActors;
 
 	std::vector<Camera *> mCameras;
+
+	SceneBase * mNextScene;
 };
