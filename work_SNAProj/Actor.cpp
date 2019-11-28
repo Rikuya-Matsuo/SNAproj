@@ -4,9 +4,9 @@
 #include "ComponentBase.h"
 #include <algorithm>
 
-const Actor::FlagType Actor::mRequestComponentSortMask = 0x01 << 0;
-const Actor::FlagType Actor::mStopDrawFlagMask = 0x01 << 1;
-const Actor::FlagType Actor::mBeyondSceneFlagMask = 0x01 << 2;
+const Actor::FlagType Actor::mRequestComponentSortMask = 1 << 0;
+const Actor::FlagType Actor::mStopDrawFlagMask = 1 << 1;
+const Actor::FlagType Actor::mBeyondSceneFlagMask = 1 << 2;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),

@@ -18,6 +18,8 @@ public:
 
 	void DeresisterCollider(const ColliderComponentBase * in_colCmp);
 
+	void CheckHit();
+
 private:
 	PhysicManager();
 

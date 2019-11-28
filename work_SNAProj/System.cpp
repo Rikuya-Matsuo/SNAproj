@@ -101,13 +101,11 @@ void System::Finish()
 	if (mCurrentScene != nullptr)
 	{
 		delete mCurrentScene;
-		mCurrentScene = nullptr;
 	}
 
 	if (mRenderer != nullptr)
 	{
 		delete mRenderer;
-		mRenderer = nullptr;
 	}
 
 	IMG_Quit();

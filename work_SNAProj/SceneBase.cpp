@@ -2,7 +2,7 @@
 #include "Actor.h"
 #include "Camera.h"
 
-const SceneBase::FlagType SceneBase::mSceneChangeFlagMask = 0x01 << 0;
+const SceneBase::FlagType SceneBase::mSceneChangeFlagMask = 1 << 0;
 
 SceneBase::SceneBase():
 	mNextScene(nullptr),

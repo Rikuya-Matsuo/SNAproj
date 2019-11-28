@@ -3,9 +3,12 @@
 #include "Actor.h"
 #include "ComponentManager.h"
 
+const ComponentBase::FlagType ComponentBase::mNotActiveFlagMask = 1 << 0;
+
 ComponentBase::ComponentBase(Actor * owner, int priority) :
 	mOwner(owner),
-	mPriority(priority)
+	mPriority(priority),
+	mFlags(0)
 {
 	mOwner->ResisterComponent(this);
 

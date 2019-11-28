@@ -24,9 +24,9 @@ public:
 	ColliderComponentBase(Actor * owner, ColliderAttribute colAtt, ColliderShape colShape);
 	virtual ~ColliderComponentBase();
 
-	ColliderAttribute GetColliderAttribute() { return static_cast<ColliderAttribute>(mAttribute); }
+	ColliderAttribute GetColliderAttribute() const { return static_cast<ColliderAttribute>(mAttribute); }
 
-	ColliderShape GetColliderShape() { return static_cast<ColliderShape>(mShape); }
+	ColliderShape GetColliderShape() const { return static_cast<ColliderShape>(mShape); }
 
 protected:
 	const Uint8 mAttribute;

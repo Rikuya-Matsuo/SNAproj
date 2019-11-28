@@ -1,5 +1,4 @@
 #include "Renderer.h"
-//#include "Game.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "Texture.h"
@@ -22,6 +21,11 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+	SDL_DestroyRenderer(mSDLRenderer);
+	SDL_DestroyWindow(mWindow);
+
+	mSDLRenderer = nullptr;
+	mWindow = nullptr;
 }
 
 bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
