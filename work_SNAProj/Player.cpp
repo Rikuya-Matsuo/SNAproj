@@ -22,6 +22,7 @@ Player::Player():
 	// コライダーの設定
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	bcc->SetObjectBox(msh->GetCollisionBox());
+	//bcc->SetHitReaction(OnHit);
 
 	InputMoveComponent * imc = new InputMoveComponent(this);
 
@@ -48,4 +49,9 @@ void Player::Update()
 
 void Player::UpdateActor()
 {
+}
+
+void Player::OnHit(ColliderAttribute colAtt)
+{
+	
 }

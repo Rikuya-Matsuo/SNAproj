@@ -92,3 +92,8 @@ void Actor::CalculateWorldTransform()
 	mWorldTransform = Matrix4::CreateScale(mScale);
 	mWorldTransform *= Matrix4::CreateTranslation(mPosition);
 }
+
+void Actor::OnHit(ColliderAttribute colAtt)
+{
+
+}

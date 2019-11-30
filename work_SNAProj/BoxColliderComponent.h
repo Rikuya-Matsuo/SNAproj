@@ -1,7 +1,6 @@
 #pragma once
 #include "ColliderComponentBase.h"
 #include "Vector.h"
-#include "Collision.h"
 
 class BoxColliderComponent final : public ColliderComponentBase
 {
@@ -14,6 +13,8 @@ public:
 	void Update() override;
 
 	void CalculateWorldBox();
+
+	const AABB * GetBox() const override { return &mWorldBox; }
 
 private:
 	AABB mObjectBox;

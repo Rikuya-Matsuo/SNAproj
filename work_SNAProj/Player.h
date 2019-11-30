@@ -15,4 +15,6 @@ private:
 	void UpdateActor() override;
 
 	SkeletalMeshComponent * mMeshComponent;
+
+	void OnHit(ColliderAttribute colAtt) override;
 };

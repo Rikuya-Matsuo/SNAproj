@@ -67,30 +67,3 @@ float AABB::MinimumDistanceSq(const Vector3D & point) const
 
 	return v.LengthSq();
 }
-
-bool Collision::CheckHit(const AABB & box1, const AABB & box2)
-{
-	bool notHit =
-		box1.mMax.x < box2.mMin.x ||
-		box1.mMax.y < box2.mMin.y ||
-		box1.mMax.z < box2.mMin.z ||
-		box2.mMax.x < box1.mMin.x ||
-		box2.mMax.y < box1.mMin.y ||
-		box2.mMax.z < box1.mMin.z;
-
-	// ˆê‚Â‚àtrue‚ª‚È‚¯‚ê‚ÎA“ñ‚Â‚ÍÕ“Ë‚µ‚Ä‚¢‚é
-	return !notHit;
-}
-
-bool Collision::CheckHit(const Sphere & sphere, const AABB & box)
-{
-	float distanceSq = box.MinimumDistanceSq(sphere.mCenter);
-	return distanceSq <= (sphere.mRadius * sphere.mRadius);
-}
-
-bool Collision::CheckHit(const Sphere & s1, const Sphere & s2)
-{
-	float radiusSum = s1.mRadius + s2.mRadius;
-	float distanceSq = (s1.mCenter - s2.mCenter).LengthSq();
-	return distanceSq <= (radiusSum * radiusSum);
-}

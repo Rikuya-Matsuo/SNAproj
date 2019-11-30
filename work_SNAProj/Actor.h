@@ -5,6 +5,7 @@
 #include <list>
 
 class ComponentBase;
+enum ColliderAttribute;
 
 class Actor
 {
@@ -63,4 +64,6 @@ protected:
 	virtual void UpdateActor();
 
 	void CalculateWorldTransform();
+
+	virtual void OnHit(ColliderAttribute colAtt);
 };
