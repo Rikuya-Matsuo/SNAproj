@@ -23,6 +23,7 @@ void SpriteComponent::Draw() const
 	rect.h = static_cast<int>(mTextureHeight * mOwner->GetScale());
 
 	// 描画
+	// すでにOpenGLの描画システムを使っているため、画面に描画されてくれない
 	SDL_RenderCopy(mRenderer, mTexture, nullptr, &rect);
 }
 

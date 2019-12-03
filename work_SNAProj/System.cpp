@@ -145,12 +145,12 @@ void System::Draw()
 	SDL_SetRenderDrawColor(GetSDLRenderer(), 0, 0, 0, 255);
 	mRenderer->WindowClear();
 
+	mRenderer->Draw();
+
 	for (auto sprCmp : mSpriteComponentList)
 	{
 		sprCmp->Draw();
 	}
-
-	mRenderer->Draw();
 
 	mRenderer->WindowFlip();
 }

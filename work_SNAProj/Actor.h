@@ -42,12 +42,10 @@ public:
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
 	typedef Uint8 FlagType;
-
 	static const FlagType mRequestComponentSortMask;
-
 	static const FlagType mStopDrawFlagMask;
-
 	static const FlagType mBeyondSceneFlagMask;
+
 
 	std::list<ComponentBase *> mComponentList;
 
