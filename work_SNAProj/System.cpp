@@ -1,10 +1,10 @@
 ﻿#include "System.h"
 #include "Input.h"
+#include "PhysicManager.h"
 #include "Common.h"
 #include "DrawComponentBase.h"
 #include "Player.h"
 #include "SceneBase.h"
-#include "ComponentManager.h"
 #include "Renderer.h"
 #include "Camera.h"
 
@@ -63,8 +63,11 @@ void System::Run()
 		UpdateScene();
 
 		UpdateActor();
-		//ComponentManager::GetInstance().UpdateComponents();
+		
+		// 当たり判定
+		PhysicManager::GetInstance().CheckHit();
 
+		// カメラ更新
 		if (mActiveCamera != nullptr)
 		{
 			Matrix4 viewMatrix = mActiveCamera->GetViewMatrix();
@@ -198,22 +201,17 @@ void System::ResisterDrawComponent(const DrawComponentBase * in_cmp)
 {
 	const int drawOrder = in_cmp->GetDrawOrder();
 
-	bool inserted = false;
 	for (auto itr : mSpriteComponentList)
 	{
 		if (drawOrder < itr->GetDrawOrder())
 		{
 			auto insertPoint = std::find(mSpriteComponentList.begin(), mSpriteComponentList.end(), itr);
 			mSpriteComponentList.insert(insertPoint, const_cast<DrawComponentBase*>(in_cmp));
-			inserted = true;
-			break;
+			return;
 		}
 	}
 
-	if (!inserted)
-	{
-		mSpriteComponentList.emplace_back(const_cast<DrawComponentBase*>(in_cmp));
-	}
+	mSpriteComponentList.emplace_back(const_cast<DrawComponentBase*>(in_cmp));
 }
 
 void System::DeresisterDrawComponent(const DrawComponentBase * in_cmp)

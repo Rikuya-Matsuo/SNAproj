@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Actor.h"
 #include "SDL/SDL.h"
+#include "BitFlagFunc.h"
 #include <list>
 
 class Actor;
@@ -17,13 +18,13 @@ public:
 
 	int GetPriority() const { return mPriority; }
 
-	void SetActive(bool value) { (!value) ? mFlags |= mNotActiveFlagMask : mFlags &= ~mNotActiveFlagMask; }
-	bool GetActiveFlag() const { return !(mFlags & mNotActiveFlagMask); }
+	void SetActive(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mActiveFlagMask); }
+	bool GetActiveFlag() const { return !(mFlags & mActiveFlagMask); }
 
 protected:
 	typedef Uint8 FlagType;
 
-	static const FlagType mNotActiveFlagMask;
+	static const FlagType mActiveFlagMask;
 
 	FlagType mFlags;
 

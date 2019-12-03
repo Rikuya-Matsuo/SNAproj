@@ -36,14 +36,10 @@ public:
 
 	virtual const Sphere * GetSphere() const { return nullptr; }
 
-	void SetHitReaction(void(*func)(ColliderAttribute colAtt)) { mHitReaction = func; }
-
-	void ReactionOnHit(ColliderAttribute colAtt) { if (mHitReaction != nullptr) mHitReaction(colAtt); }
+	void OnHit(ColliderAttribute colAtt) { mOwner->OnHit(this, colAtt); };
 
 protected:
 	const Uint8 mAttribute;
 
 	const Uint8 mShape;
-
-	void(*mHitReaction)(ColliderAttribute colAtt);
 };

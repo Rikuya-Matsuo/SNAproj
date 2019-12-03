@@ -51,10 +51,6 @@ public:
 private:
 	System();
 
-	//SDL_Window * mWindow;
-
-	//SDL_Renderer * mSDLRenderer;
-
 	Renderer * mRenderer;
 
 	Uint32 mPrevTicksCount;

@@ -92,8 +92,8 @@ void PhysicManager::CheckHit()
 			{
 				const ColliderAttribute iAtt = mColliders[i]->GetColliderAttribute();
 				const ColliderAttribute jAtt = mColliders[j]->GetColliderAttribute();
-				mColliders[i]->ReactionOnHit(jAtt);
-				mColliders[j]->ReactionOnHit(iAtt);
+				mColliders[i]->OnHit(jAtt);
+				mColliders[j]->OnHit(iAtt);
 			}
 		}
 	}

@@ -22,7 +22,6 @@ Player::Player():
 	// コライダーの設定
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	bcc->SetObjectBox(msh->GetCollisionBox());
-	//bcc->SetHitReaction(OnHit);
 
 	InputMoveComponent * imc = new InputMoveComponent(this);
 
@@ -47,11 +46,11 @@ void Player::Update()
 	CalculateWorldTransform();
 }
 
-void Player::UpdateActor()
+void Player::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
 {
+	SDL_Log("Hit!\n");
 }
 
-void Player::OnHit(ColliderAttribute colAtt)
+void Player::UpdateActor()
 {
-	
 }

@@ -2,9 +2,11 @@
 #include "Vector.h"
 #include "Matrix.h"
 #include "Quaternion.h"
+#include "BitFlagFunc.h"
 #include <list>
 
 class ComponentBase;
+class ColliderComponentBase;
 enum ColliderAttribute;
 
 class Actor
@@ -29,11 +31,13 @@ public:
 
 	void RequestSortComponents() { mFlags |= mRequestComponentSortMask; }
 
-	void SetVisible(bool value) { value ? mFlags &= ~mStopDrawFlagMask : mFlags |= mStopDrawFlagMask; }
+	void SetVisible(bool value) { BitFlagFunc::SetFlagByBool(!value, mFlags, mStopDrawFlagMask); }
 	bool GetVisibleFlag() const { return !(mFlags & mStopDrawFlagMask); }
 
-	void SetBeyondSceneFlag(bool value) { value ? mFlags |= mBeyondSceneFlagMask : mFlags &= ~mBeyondSceneFlagMask; }
+	void SetBeyondSceneFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mBeyondSceneFlagMask); }
 	bool GetBeyondSceneFlag() const { return mFlags & mBeyondSceneFlagMask; }
+
+	virtual void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt);
 
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
@@ -64,6 +68,4 @@ protected:
 	virtual void UpdateActor();
 
 	void CalculateWorldTransform();
-
-	virtual void OnHit(ColliderAttribute colAtt);
 };
