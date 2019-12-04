@@ -2,6 +2,7 @@
 #include "DrawComponentBase.h"
 #include <string>
 #include <SDL/SDL_image.h>
+#include <GL/glew.h>
 
 class SpriteComponent : public DrawComponentBase
 {
@@ -19,5 +20,5 @@ protected:
 	int mTextureHeight;
 
 private:
-	SDL_Texture * mTexture;
+	GLuint mTexture;
 };

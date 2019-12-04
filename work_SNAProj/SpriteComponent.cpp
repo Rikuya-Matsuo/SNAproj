@@ -24,7 +24,6 @@ void SpriteComponent::Draw() const
 
 	// 描画
 	// すでにOpenGLの描画システムを使っているため、画面に描画されてくれない
-	SDL_RenderCopy(mRenderer, mTexture, nullptr, &rect);
 }
 
 void SpriteComponent::LoadTexture(const std::string & filePath)
@@ -32,14 +31,9 @@ void SpriteComponent::LoadTexture(const std::string & filePath)
 	SDL_Surface* surface = nullptr;
 	surface = IMG_Load(filePath.c_str());
 
-	if (surface)
+	if (!surface)
 	{
-		mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
+		return;
+	}
 
-		SDL_QueryTexture(mTexture, nullptr, nullptr, &mTextureWidth, &mTextureHeight);
-	}
-	else
-	{
-		SDL_Log("Failed to load texture\n");
-	}
 }
