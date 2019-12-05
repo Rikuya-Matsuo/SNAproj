@@ -86,9 +86,9 @@ void System::Run()
 			quitFlag = true;
 		}
 
-		Input::GetInstance().LastUpdate();
-
 		Draw();
+
+		Input::GetInstance().LastUpdate();
 	}
 
 	SDL_Log("System quit running\n");

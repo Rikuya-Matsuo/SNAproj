@@ -24,4 +24,5 @@ protected:
 	Sprite * mSprite;
 
 private:
+	SDL_Texture * mTexture;
 };

@@ -6,5 +6,7 @@ class SpriteTest : public Actor
 public:
 	SpriteTest();
 	~SpriteTest();
+
+	void Update() override;
 };
 

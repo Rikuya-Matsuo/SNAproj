@@ -60,11 +60,6 @@ void Sprite::ConvertSDLSurface(SDL_Surface * surface)
 		GLuint* pixel = &mPixels[pixelMass - (i + 1)];
 		*pixel = 0;
 
-		if (pixel == mPixels)
-		{
-			printf("");
-		}
-
 		// ÉRÉsÅ[
 		for (char j = 0; j < 4; ++j)
 		{

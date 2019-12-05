@@ -1,5 +1,6 @@
 ﻿#include "SpriteComponent.h"
 #include "Sprite.h"
+#include "Input.h"
 
 SpriteComponent::SpriteComponent(Actor * owner) :
 	DrawComponentBase(owner, 100),
@@ -17,7 +18,11 @@ void SpriteComponent::Update()
 
 void SpriteComponent::Draw() const
 {
-	/*
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
+	{
+		printf("");
+	}
+
 	// 描画矩形の設定
 	SDL_Rect rect;
 	rect.x = static_cast<int>(mOwner->GetPosition().x);
@@ -27,12 +32,14 @@ void SpriteComponent::Draw() const
 
 	// 描画
 	// すでにOpenGLの描画システムを使っているため、画面に描画されてくれない
-	*/
+	SDL_RenderCopy(mRenderer, mTexture, nullptr, &rect);
 
+	/*
 	if (mSprite)
 	{
 		mSprite->Draw(mOwner->GetPosition());
 	}
+	*/
 }
 
 void SpriteComponent::LoadSprite(const std::string & filePath)
@@ -43,16 +50,27 @@ void SpriteComponent::LoadSprite(const std::string & filePath)
 	// 失敗なら関数を終了
 	if (!surface)
 	{
+		SDL_Log("wesrctgyhjnu\n");
 		return;
 	}
 
-	// 元のスプライトを削除
-	if (mSprite)
+	// テクスチャ使用
 	{
-		delete mSprite;
+		mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
+
+		SDL_QueryTexture(mTexture, nullptr, nullptr, &mTextureWidth, &mTextureHeight);
 	}
 
-	// 新たなスプライトを生成＆SDL_Surfaceから変換
-	mSprite = new Sprite;
-	mSprite->ConvertSDLSurface(surface);
+	// スプライト使用
+	{
+		// 元のスプライトを削除
+		if (mSprite)
+		{
+			delete mSprite;
+		}
+
+		// 新たなスプライトを生成＆SDL_Surfaceから変換
+		mSprite = new Sprite;
+		mSprite->ConvertSDLSurface(surface);
+	}
 }
