@@ -46,6 +46,10 @@ bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
+	// 透過色の有効化
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+
 	// ダブルバッファリング
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 

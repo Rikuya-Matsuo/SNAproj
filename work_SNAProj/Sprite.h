@@ -9,13 +9,21 @@ public:
 	Sprite();
 	~Sprite();
 
-	void Draw(const Vector2D& pos);
+	void Draw(const Vector2D& pos) const;
 
 	void ConvertSDLSurface(SDL_Surface * surface);
 
+	void XFlip();
+
 private:
+	typedef Uint8 FlagType;
+	static const FlagType mXFlipFlagMask;
+	//static const FlagType mPrevXFlipFlagMask;
+
 	GLuint * mPixels;
 
 	GLuint mWidth;
 	GLuint mHeight;
+
+	Uint8 mFlags;
 };

@@ -24,5 +24,4 @@ protected:
 	Sprite * mSprite;
 
 private:
-	//GLuint mTexture;
 };
