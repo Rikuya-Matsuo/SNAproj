@@ -4,6 +4,8 @@
 #include <SDL/SDL_image.h>
 #include <GL/glew.h>
 
+class Sprite;
+
 class SpriteComponent : public DrawComponentBase
 {
 public:
@@ -13,12 +15,14 @@ public:
 	void Update() override;
 	void Draw() const override;
 
-	void LoadTexture(const std::string & filePath);
+	void LoadSprite(const std::string & filePath);
 
 protected:
 	int mTextureWidth;
 	int mTextureHeight;
 
+	Sprite * mSprite;
+
 private:
-	GLuint mTexture;
+	//GLuint mTexture;
 };

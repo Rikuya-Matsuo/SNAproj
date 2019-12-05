@@ -1,5 +1,6 @@
 #include "Sprite.h"
 #include <cmath>
+#include <cstdio>
 
 Sprite::Sprite():
 	mPixels(nullptr)
@@ -10,8 +11,10 @@ Sprite::~Sprite()
 {
 }
 
-void Sprite::Draw()
+void Sprite::Draw(const Vector2D& pos)
 {
+	glRasterPos2f(pos.x, pos.y);
+	glDrawPixels(mWidth, mHeight, GL_RGBA, GL_UNSIGNED_BYTE, mPixels);
 }
 
 void Sprite::ConvertSDLSurface(SDL_Surface * surface)
@@ -23,11 +26,14 @@ void Sprite::ConvertSDLSurface(SDL_Surface * surface)
 	mWidth = abs(surface->w);
 	mHeight = abs(surface->h);
 
+	// ピクセル数計算
+	const unsigned int pixelMass = mWidth * mHeight;
+
 	// メモリ確保
-	mPixels = new GLuint[mWidth * mHeight];
+	mPixels = new GLuint[pixelMass];
 
 	// ピクセルのコピー
-	for (unsigned int i = 0; i < mWidth * mHeight; ++i)
+	for (unsigned int i = 0; i < pixelMass; ++i)
 	{
 		// サーフェイスのピクセル色を取得
 		Uint8 r, b, g, a;
@@ -35,7 +41,14 @@ void Sprite::ConvertSDLSurface(SDL_Surface * surface)
 		SDL_GetRGBA(surfacePixel, surface->format, &r, &b, &g, &a);
 
 		// ピクセル初期化
-		mPixels[i] = 0;
+		// Windowsならこっち
+		GLuint* pixel = &mPixels[pixelMass - (i + 1)];
+		*pixel = 0;
+
+		if (pixel == mPixels)
+		{
+			printf("");
+		}
 
 		// コピー
 		for (char j = 0; j < 4; ++j)
@@ -59,7 +72,7 @@ void Sprite::ConvertSDLSurface(SDL_Surface * surface)
 				break;
 			}
 
-			mPixels[i] |= color << ((3 - j) * 8);
+			*pixel |= color << ((3 - j) * 8);
 		}
 	}
 

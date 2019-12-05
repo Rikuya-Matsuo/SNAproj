@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <cmath>
 
+class Vector3D;
+
 class Vector2D
 {
 public:
@@ -10,6 +12,8 @@ public:
 	float y;
 
 	static const Vector2D zero;
+
+	operator Vector3D() const;
 };
 
 class Vector3D
@@ -79,6 +83,9 @@ public:
 		z -= right.z;
 		return *this;
 	}
+
+	// Cast
+	operator Vector2D() const;
 
 	// Dot product between two vectors (a dot b)
 	static float Dot(const Vector3D& a, const Vector3D& b)

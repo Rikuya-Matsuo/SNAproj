@@ -4,7 +4,7 @@
 SpriteTest::SpriteTest()
 {
 	SpriteComponent * sc = new SpriteComponent(this);
-	sc->LoadTexture("Assets/Enemy01.png");
+	sc->LoadSprite("Assets/Enemy01.png");
 }
 
 SpriteTest::~SpriteTest()
