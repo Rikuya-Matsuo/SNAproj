@@ -23,7 +23,7 @@ Player::Player():
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	bcc->SetObjectBox(msh->GetCollisionBox());
 
-	//InputMoveComponent * imc = new InputMoveComponent(this);
+	InputMoveComponent * imc = new InputMoveComponent(this);
 
 	// スケール値の調整
 	mScale = 0.5f;

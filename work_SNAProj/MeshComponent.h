@@ -16,6 +16,8 @@ public:
 	MeshComponent(class Actor* owner, bool isSkeletal = false);       // メッシュコンポーネントコンストラクタ。（要：親アクター）
 	~MeshComponent();
 
+	void Update() override;
+
 	virtual void Draw(class Shader* shader);                          // メッシュコンポーネントの描画
 	virtual void SetMesh(class Mesh* mesh) { mMesh = mesh; }          // メッシュコンポーネントで使用するメッシュのセット
 	void SetTextureIndex(size_t index) { mTextureIndex = index; }     // テクスチャのセット

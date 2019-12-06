@@ -147,6 +147,9 @@
     <ClCompile Include="SpriteTest.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="SpriteTest.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -29,6 +29,7 @@ protected:
 
 	FlagType mFlags;
 
+	// 次のシーンに引き渡すアクターは、これにポインタを格納する
 	std::vector<Actor *> mActors;
 
 	std::vector<Camera *> mCameras;

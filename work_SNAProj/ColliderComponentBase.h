@@ -8,9 +8,7 @@ enum ColliderAttribute
 	ColAtt_Player = 0,
 	ColAtt_Enemy,
 	ColAtt_Candle,
-	ColAtt_Wall,
-	ColAtt_Floor,
-	ColAtt_Ceiling,
+	ColAtt_Block,
 	ColAtt_Detector,		// トリガー。接近検知装置。ヒット時の押し返しなし。
 	ColAtt_Invalid
 };

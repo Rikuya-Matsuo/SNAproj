@@ -11,7 +11,6 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "Actor.h"
-//#include "Game.h"
 #include "Renderer.h"
 #include "Texture.h"
 #include "VertexArray.h"
@@ -33,6 +32,10 @@ MeshComponent::~MeshComponent()
 {
 	//printf("remove MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), mOwner);
 	System::GetInstance().GetRenderer()->RemoveMeshComponent(this);
+}
+
+void MeshComponent::Update()
+{
 }
 
 void MeshComponent::Draw(Shader* shader)

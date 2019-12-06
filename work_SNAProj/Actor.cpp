@@ -26,6 +26,9 @@ Actor::~Actor()
 
 void Actor::Update()
 {
+	UpdateActor();
+
+	UpdateComponents();
 }
 
 void Actor::ResisterComponent(const ComponentBase * in_cmp)
