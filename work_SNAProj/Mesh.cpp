@@ -114,7 +114,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 				t = renderer->GetTexture("Assets/Default.png");
 			}
 		}
-		mTextures.emplace_back(t);
+		mTextures[0] = t;
 	}
 
 	// 頂点読み込み
@@ -236,6 +236,21 @@ void Mesh::Unload()
 
 }
 
+int Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
+{
+	Texture * tex = renderer->GetTexture(fileName);
+	if (tex == nullptr)
+	{
+		return -1;
+	}
+
+	// 返却値としてテクスチャ番号を記録
+	int ret = mTextures.size();
+	mTextures[ret] = tex;
+
+	return ret;
+}
+
 Texture* Mesh::GetTexture(size_t index)
 {
 	if (index < mTextures.size())
@@ -246,4 +261,14 @@ Texture* Mesh::GetTexture(size_t index)
 	{
 		return nullptr;
 	}
+}
+
+bool Mesh::IsAssigned(int index)
+{
+	if (mTextures.find(index) != mTextures.end())
+	{
+		return true;
+	}
+
+	return false;
 }

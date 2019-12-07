@@ -48,7 +48,9 @@ void Player::Update()
 
 void Player::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
 {
-	SDL_Log("Hit!\n");
+	static char test = 0;
+	SDL_Log("Hit!%d\n", test);
+	test ^= 1;
 }
 
 void Player::UpdateActor()

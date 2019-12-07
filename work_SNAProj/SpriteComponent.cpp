@@ -3,8 +3,8 @@
 #include "Input.h"
 
 SpriteComponent::SpriteComponent(Actor * owner) :
-	DrawComponentBase(owner, 100),
-	mSprite(nullptr)
+	DrawComponentBase(owner, 100)
+	//mSprite(nullptr)
 {
 }
 
@@ -61,16 +61,19 @@ void SpriteComponent::LoadSprite(const std::string & filePath)
 		SDL_QueryTexture(mTexture, nullptr, nullptr, &mTextureWidth, &mTextureHeight);
 	}
 
-	// スプライト使用
-	{
-		// 元のスプライトを削除
-		if (mSprite)
-		{
-			delete mSprite;
-		}
+	//// スプライト使用
+	//{
+	//	// 元のスプライトを削除
+	//	if (mSprite)
+	//	{
+	//		delete mSprite;
+	//	}
 
-		// 新たなスプライトを生成＆SDL_Surfaceから変換
-		mSprite = new Sprite;
-		mSprite->ConvertSDLSurface(surface);
-	}
+	//	// 新たなスプライトを生成＆SDL_Surfaceから変換
+	//	mSprite = new Sprite;
+	//	mSprite->ConvertSDLSurface(surface);
+	//}
+
+	// メモリ解放
+	SDL_FreeSurface(surface);
 }

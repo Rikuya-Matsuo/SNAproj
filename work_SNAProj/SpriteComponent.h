@@ -21,7 +21,7 @@ protected:
 	int mTextureWidth;
 	int mTextureHeight;
 
-	Sprite * mSprite;
+	//Sprite * mSprite;
 
 private:
 	SDL_Texture * mTexture;
