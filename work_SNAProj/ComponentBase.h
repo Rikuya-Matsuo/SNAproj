@@ -19,7 +19,7 @@ public:
 	int GetPriority() const { return mPriority; }
 
 	void SetActive(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mActiveFlagMask); }
-	bool GetActiveFlag() const { return !(mFlags & mActiveFlagMask); }
+	bool GetActiveFlag() const { return mFlags & mActiveFlagMask; }
 
 protected:
 	typedef Uint8 FlagType;

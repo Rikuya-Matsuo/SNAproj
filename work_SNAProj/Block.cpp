@@ -20,9 +20,9 @@ Block::Block():
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
 	bcc->SetObjectBox(msh->GetCollisionBox());
 
-	mScale *= 100.0f;
+	mScale = 0.1f;
 
-	InputMoveComponent * imc = new InputMoveComponent(this);
+	//InputMoveComponent * imc = new InputMoveComponent(this);
 }
 
 Block::~Block()

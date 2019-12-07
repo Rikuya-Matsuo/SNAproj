@@ -11,6 +11,7 @@ BoxColliderComponent::~BoxColliderComponent()
 
 void BoxColliderComponent::Update()
 {
+	CalculateWorldBox();
 }
 
 void BoxColliderComponent::CalculateWorldBox()

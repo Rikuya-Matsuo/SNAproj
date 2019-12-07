@@ -148,7 +148,7 @@
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Block.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,7 +258,36 @@
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Block.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\BasicMesh.frag">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\BasicMesh.vert">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\Line.frag">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\Line.vert">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\Phong.frag">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\Phong.vert">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\Skinned.vert">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\Sprite.frag">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Shaders\Sprite.vert">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
 </Project>

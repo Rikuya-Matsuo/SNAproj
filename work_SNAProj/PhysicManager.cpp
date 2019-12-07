@@ -1,5 +1,6 @@
 #include "PhysicManager.h"
 #include "ColliderComponentBase.h"
+#include "BoxColliderComponent.h"
 #include "Collision.h"
 
 void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
@@ -35,18 +36,30 @@ void PhysicManager::CheckHit()
 		// 最下位ビットがi, 下から2番目のビットがjの、球取得フラグ
 		Uint8 sphereFlag = 0;
 
-		if (IBox == nullptr && ISphere != nullptr)
+		// 形を判別
+		if (ISphere != nullptr)
 		{
-			sphereFlag |= 1;
+			// 球だけ取得できたなら、それは間違いなく球である。
+			// どちらも取得出来たらエラー。このコライダーの判定を飛ばす。
+			if (IBox == nullptr)
+			{
+				sphereFlag |= 1;
+			}
+			else
+			{
+				continue;
+			}
 		}
 		else
 		{
-			// この時、両方取得できたorできなかった。
-			// よってエラー。この物体の当たり判定を行わない。
-			continue;
+			// どちらも取得できなかった場合もエラーとし、コライダーの判定を飛ばす。
+			if (IBox == nullptr)
+			{
+				continue;
+			}
 		}
 
-		for (int j = i + 1; i < (int)mColliders.size(); ++j)
+		for (int j = i + 1; j < (int)mColliders.size(); ++j)
 		{
 			// コライダーのアクティブ判定
 			if (!mColliders[j]->GetActiveFlag())
@@ -62,9 +75,23 @@ void PhysicManager::CheckHit()
 			sphereFlag &= ~2;
 
 			// 受け取った形を判定
-			if (JBox == nullptr && JSphere != nullptr)
+			if (JSphere != nullptr)
 			{
-				sphereFlag |= 2;
+				if (JBox == nullptr)
+				{
+					sphereFlag |= 2;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			else
+			{
+				if (JBox == nullptr)
+				{
+					continue;
+				}
 			}
 			
 			// 当たっているかを判定

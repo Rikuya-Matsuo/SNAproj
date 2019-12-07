@@ -26,9 +26,13 @@ Actor::~Actor()
 
 void Actor::Update()
 {
-	UpdateActor();
+	CalculateWorldTransform();
 
 	UpdateComponents();
+
+	UpdateActor();
+
+	CalculateWorldTransform();
 }
 
 void Actor::ResisterComponent(const ComponentBase * in_cmp)
