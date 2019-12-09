@@ -37,7 +37,7 @@ public:
 	bool IsAssigned(int index);
 
 private:
-	//std::vector<Texture*> mTextures;                                 	// メッシュのテクスチャ
+	// メッシュのテクスチャ
 	std::unordered_map<int, Texture *> mTextures;
 
 	VertexArray* mVertexArray;                                        // メッシュの頂点配列

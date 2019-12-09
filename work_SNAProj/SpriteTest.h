@@ -7,6 +7,5 @@ public:
 	SpriteTest();
 	~SpriteTest();
 
-	void Update() override;
 };
 

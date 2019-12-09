@@ -15,8 +15,8 @@ TestScene::TestScene()
 	Block * bk = new Block;
 	bk->SetPosition(Vector3D(30.0f, 0.0f, 0.0f));
 
-	/*SpriteTest * st = new SpriteTest;
-	st->SetPosition(Vector3D(0.0f, 0.0f));*/
+	SpriteTest * st = new SpriteTest;
+	st->SetPosition(Vector3D(0.0f, 0.0f));
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);

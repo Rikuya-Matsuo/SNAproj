@@ -33,6 +33,7 @@ Mesh::Mesh()
 	, mRadius(0.0f)
 	, mSpecPower(100.0f)
 {
+	mTextures.clear();
 }
 
 Mesh::~Mesh()
@@ -59,7 +60,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 	// JSONオブジェクトか？
 	if (!doc.IsObject())
 	{
-		printf("Mesh %s is not valid json", fileName.c_str());
+		printf("Mesh %s is not valid json\n", fileName.c_str());
 		return false;
 	}
 
@@ -245,7 +246,16 @@ int Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
 	}
 
 	// 返却値としてテクスチャ番号を記録
-	int ret = mTextures.size();
+	int ret;
+	if (!mTextures.empty())
+	{
+		ret = mTextures.size();
+	}
+	else
+	{
+		ret = 0;
+	}
+
 	mTextures[ret] = tex;
 
 	return ret;
