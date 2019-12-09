@@ -2,7 +2,7 @@
 #include "ColliderComponentBase.h"
 #include "BoxColliderComponent.h"
 #include "Collision.h"
-#include <list>
+#include <cstdlib>
 
 void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 {
@@ -10,14 +10,38 @@ void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 
 	mColliders.emplace_back(collider);
 
-	// ハッシュ値（と呼べるのか？）生成のため、IDを設定する
-	mColliderID[collider] = mForAssignColliderID++;
-
-	/*
-	std::list<unsigned short> assignedIDArray;
-	for (int i = 0; i < mColliders.size(); ++i)
+	// ループを減らすため、ランダムを使ってIDを設定する方法を使う。
+	bool loop = true;
+	while (loop)
 	{
-		
+		// IDをランダム生成
+		unsigned short id = static_cast<unsigned short>(rand() % (UINT16_MAX + 1));
+
+		// まだ割り当てられていない値なら、それをIDに設定し、ループを終了
+		auto itr = std::find(mAssignedIDList.begin(), mAssignedIDList.end(), id);
+
+		if (itr == mAssignedIDList.end())
+		{
+			mColliderID[collider] = id;
+			mAssignedIDList.emplace_back(id);
+			loop = false;
+		}
+	}
+
+	// ↓もう一つのID設定方法。ループ使うのがちょっと気に入らないのでもう少し検討する。
+	/*
+	unsigned short i = 0;
+	bool loop = true;
+	while (loop)
+	{
+		// その数字が割り当てられていないとき
+		auto itr = std::find(mAssignedIDList.begin(), mAssignedIDList.end(), i);
+		if (itr == mAssignedIDList.end())
+		{
+			mColliderID[collider] = i;
+			mAssignedIDList.emplace_back(i++);
+			loop = false;
+		}
 	}
 	*/
 }
@@ -26,14 +50,39 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 {
 	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
 
-	auto target = std::find(mColliders.begin(), mColliders.end(), collider);
-
-	if (target != mColliders.end())
+	// 対象を含むコライダーペアの削除
+	for (int i = 0; mColliders[i] != collider; ++i)
 	{
-		mColliders.erase(target);
+		ColliderPair pair = std::make_pair(mColliders[i], collider);
+
+		if (mHitColliderPairState.count(pair))
+		{
+			mHitColliderPairState.erase(pair);
+		}
 	}
 
+	for (int i = mColliders.size() - 1; mColliders[i] != collider; --i)
+	{
+		ColliderPair pair = std::make_pair(collider, mColliders[i]);
+
+		if (mHitColliderPairState.count(pair))
+		{
+			mHitColliderPairState.erase(pair);
+		}
+	}
+
+	// IDを削除
+	auto target0 = std::find(mAssignedIDList.begin(), mAssignedIDList.end(), mColliderID[collider]);
+	mAssignedIDList.erase(target0);
 	mColliderID.erase(collider);
+
+	// コライダー配列から削除
+	auto target1 = std::find(mColliders.begin(), mColliders.end(), collider);
+	if (target1 != mColliders.end())
+	{
+		mColliders.erase(target1);
+	}
+
 }
 
 void PhysicManager::CheckHit()
@@ -226,9 +275,10 @@ void PhysicManager::ApartProcess(ColliderPair & pair)
 	pair.second->OnApart(att1st);
 }
 
-PhysicManager::PhysicManager():
-	mForAssignColliderID(0)
+PhysicManager::PhysicManager()
 {
+	mColliders.reserve(128);
+	mColliderID.reserve(128);
 	mHitColliderPairState.reserve(32);
 }
 
@@ -243,6 +293,7 @@ size_t HashColliderPair::operator()(const ColliderPair & pair) const
 {
 	PhysicManager& physic = PhysicManager::GetInstance();
 
+	// ハッシュ値として、上２バイトと下２バイトにそれぞれのID値を入れたunsigned int型の値を生成する
 	union Hash
 	{
 		size_t uInt;
