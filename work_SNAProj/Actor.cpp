@@ -99,3 +99,11 @@ void Actor::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt
 {
 
 }
+
+void Actor::OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+{
+}
+
+void Actor::OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+{
+}

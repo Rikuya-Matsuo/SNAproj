@@ -17,6 +17,7 @@ SpriteTest::SpriteTest():
 	else
 	{
 		SDL_Log("SpriteTest : Failed to load Mesh data.\n");
+		delete mc;
 	}
 
 	//InputMoveComponent * imc = new InputMoveComponent(this);

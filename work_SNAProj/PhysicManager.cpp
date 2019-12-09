@@ -83,6 +83,7 @@ void PhysicManager::CheckHit()
 				}
 				else
 				{
+					// エラー：どちらも取得できた
 					continue;
 				}
 			}
@@ -90,10 +91,17 @@ void PhysicManager::CheckHit()
 			{
 				if (JBox == nullptr)
 				{
+					// エラー：どちらも取得できなかった
 					continue;
 				}
 			}
-			
+
+			// ペアを作成
+			ColliderPair pair = std::make_pair(mColliders[i], mColliders[j]);
+
+			// 前のフレームでの接触状態を判定
+			bool prevHit = CheckPrevHit(pair);
+
 			// 当たっているかを判定
 			bool hit = false;
 			switch (sphereFlag)
@@ -117,18 +125,92 @@ void PhysicManager::CheckHit()
 			// ヒット時のリアクション
 			if (hit)
 			{
-				const ColliderAttribute iAtt = mColliders[i]->GetColliderAttribute();
-				const ColliderAttribute jAtt = mColliders[j]->GetColliderAttribute();
-				mColliders[i]->OnHit(jAtt);
-				mColliders[j]->OnHit(iAtt);
+				HitProcess(pair);
+			}
+
+			// 接触していなかった時の処理
+			// ただし、前フレームで接触していた場合のみ
+			else if (prevHit)
+			{
+				ApartProcess(pair);
 			}
 		}
 	}
 }
 
+bool PhysicManager::CheckPrevHit(const ColliderPair& pair)
+{
+	// ペアを検索
+	auto itr = mHitColliderPairState.find(pair);
+
+	// 検索にヒットしなかった
+	if (itr == mHitColliderPairState.end())
+	{
+		return false;
+	}
+
+	// 返却値
+	bool ret = false;
+
+	// 前フレームの接触を判定
+	const char state = mHitColliderPairState[pair];
+	if (state == HitState::HitState_Touching || state == HitState::HitState_Hit)
+	{
+		ret = true;
+	}
+
+	return ret;
+}
+
+void PhysicManager::HitProcess(ColliderPair& pair)
+{
+	const ColliderAttribute att1st = pair.first->GetColliderAttribute();
+	const ColliderAttribute att2nd = pair.second->GetColliderAttribute();
+
+	// コリジョンの組み合わせを検索
+	auto itr = mHitColliderPairState.find(pair);
+
+	// 検索がヒットしなかった or 接触状態が未接触だった場合
+	if (itr == mHitColliderPairState.end() ||
+		mHitColliderPairState[pair] == HitState::HitState_NoTouch)
+	{
+		// このフレームでの衝突
+		mHitColliderPairState[pair] = HitState::HitState_Hit;
+
+		// 衝突関数の呼び出し
+		pair.first->OnHit(att2nd);
+		pair.second->OnHit(att1st);
+	}
+
+	// 前フレームで衝突した or 前フレームから接触していた場合
+	else if (mHitColliderPairState[pair] == HitState::HitState_Hit ||
+		mHitColliderPairState[pair] == HitState::HitState_Touching)
+	{
+		// 継続した接触
+		mHitColliderPairState[pair] = HitState::HitState_Touching;
+
+		// 接触関数の呼び出し
+		pair.first->OnTouching(att2nd);
+		pair.second->OnTouching(att1st);
+	}
+}
+
+void PhysicManager::ApartProcess(ColliderPair & pair)
+{
+	const ColliderAttribute att1st = pair.first->GetColliderAttribute();
+	const ColliderAttribute att2nd = pair.second->GetColliderAttribute();
+
+	// 状態記録を未接触に変更
+	mHitColliderPairState[pair] = HitState::HitState_NoTouch;
+
+	// 接触解除処理
+	pair.first->OnApart(att2nd);
+	pair.second->OnApart(att1st);
+}
+
 PhysicManager::PhysicManager()
 {
-
+	mHitColliderPairState.reserve(32);
 }
 
 PhysicManager::~PhysicManager()

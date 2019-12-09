@@ -38,6 +38,8 @@ public:
 	bool GetBeyondSceneFlag() const { return mFlags & mBeyondSceneFlagMask; }
 
 	virtual void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt);
+	virtual void OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt);
+	virtual void OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt);
 
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
