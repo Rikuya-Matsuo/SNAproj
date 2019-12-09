@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <unordered_map>
 
@@ -6,7 +6,7 @@ class ColliderComponentBase;
 
 typedef std::pair<ColliderComponentBase *, ColliderComponentBase *> ColliderPair;
 
-// ƒtƒ@ƒ“ƒNƒ^
+// ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
 class HashColliderPair final
 {
 public:

@@ -1,4 +1,4 @@
-#include "Sprite.h"
+ï»¿#include "Sprite.h"
 #include <cmath>
 #include <cstdio>
 
@@ -23,28 +23,28 @@ void Sprite::Draw(const Vector2D& pos) const
 
 void Sprite::ConvertSDLSurface(SDL_Surface * surface)
 {
-	// ƒƒbƒN‚ğ‰ğœ
+	// ãƒ­ãƒƒã‚¯ã‚’è§£é™¤
 	SDL_LockSurface(surface);
 
-	// ‰æ‘œƒTƒCƒY‚ğİ’è
+	// ç”»åƒã‚µã‚¤ã‚ºã‚’è¨­å®š
 	mWidth = abs(surface->w);
 	mHeight = abs(surface->h);
 
-	// ƒsƒNƒZƒ‹”ŒvZ
+	// ãƒ”ã‚¯ã‚»ãƒ«æ•°è¨ˆç®—
 	const unsigned int pixelMass = mWidth * mHeight;
 
-	// ƒƒ‚ƒŠŠm•Û
+	// ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	mPixels = new GLuint[pixelMass];
 
-	// ƒsƒNƒZƒ‹‚ÌƒRƒs[
+	// ãƒ”ã‚¯ã‚»ãƒ«ã®ã‚³ãƒ”ãƒ¼
 	for (unsigned int i = 0; i < pixelMass; ++i)
 	{
-		// ƒT[ƒtƒFƒCƒX‚ÌƒsƒNƒZƒ‹F‚ğæ“¾
+		// ã‚µãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ã®ãƒ”ã‚¯ã‚»ãƒ«è‰²ã‚’å–å¾—
 		Uint8 r, g, b, a;
 		Uint32 surfacePixel = reinterpret_cast<Uint32*>(surface->pixels)[i];
 		SDL_GetRGBA(surfacePixel, surface->format, &r, &g, &b, &a);
 
-		// ‹KŠi‚ªˆá‚¤H255‚©‚çˆø‚¢‚Ä‚İ‚é
+		// è¦æ ¼ãŒé•ã†ï¼Ÿ255ã‹ã‚‰å¼•ã„ã¦ã¿ã‚‹
 		auto adjust = [](Uint8 & value) { value = 255 - value; };
 		adjust(r);
 		adjust(g);
@@ -55,12 +55,12 @@ void Sprite::ConvertSDLSurface(SDL_Surface * surface)
 			r = g = b = 0;
 		}
 
-		// ƒsƒNƒZƒ‹‰Šú‰»
-		// Windows‚È‚ç‚±‚Á‚¿
+		// ãƒ”ã‚¯ã‚»ãƒ«åˆæœŸåŒ–
+		// Windowsãªã‚‰ã“ã£ã¡
 		GLuint* pixel = &mPixels[pixelMass - (i + 1)];
 		*pixel = 0;
 
-		// ƒRƒs[
+		// ã‚³ãƒ”ãƒ¼
 		for (char j = 0; j < 4; ++j)
 		{
 			GLuint color;
@@ -86,10 +86,10 @@ void Sprite::ConvertSDLSurface(SDL_Surface * surface)
 		}
 	}
 
-	// ‰¡‚ª”½“]‚³‚ê‚½ó‘Ô‚Åƒ[ƒh‚³‚ê‚Ä‚¢‚é‚Ì‚Å”½“]
+	// æ¨ªãŒåè»¢ã•ã‚ŒãŸçŠ¶æ…‹ã§ãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ã‚‹ã®ã§åè»¢
 	XFlip();
 
-	// ƒƒbƒN‰ğœ
+	// ãƒ­ãƒƒã‚¯è§£é™¤
 	SDL_UnlockSurface(surface);
 }
 

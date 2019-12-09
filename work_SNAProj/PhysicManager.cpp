@@ -1,4 +1,4 @@
-#include "PhysicManager.h"
+ï»¿#include "PhysicManager.h"
 #include "ColliderComponentBase.h"
 #include "BoxColliderComponent.h"
 #include "Collision.h"
@@ -10,7 +10,7 @@ void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 
 	mColliders.emplace_back(collider);
 
-	// ƒnƒbƒVƒ…’li‚ÆŒÄ‚×‚é‚Ì‚©Hj¶¬‚Ì‚½‚ßAID‚ğİ’è‚·‚é
+	// ãƒãƒƒã‚·ãƒ¥å€¤ï¼ˆã¨å‘¼ã¹ã‚‹ã®ã‹ï¼Ÿï¼‰ç”Ÿæˆã®ãŸã‚ã€IDã‚’è¨­å®šã™ã‚‹
 	mColliderID[collider] = mForAssignColliderID++;
 
 	/*
@@ -40,25 +40,25 @@ void PhysicManager::CheckHit()
 {
 	for (int i = 0; i < (int)mColliders.size() - 1; ++i)
 	{
-		// ƒRƒ‰ƒCƒ_[‚ªƒAƒNƒeƒBƒu‚Å‚È‚¯‚ê‚Î’†’f
+		// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã§ãªã‘ã‚Œã°ä¸­æ–­
 		if (!mColliders[i]->GetActiveFlag())
 		{
 			continue;
 		}
 
-		// Œ`‚Ìƒf[ƒ^‚ğó‚¯æ‚é
+		// å½¢ã®ãƒ‡ãƒ¼ã‚¿ã‚’å—ã‘å–ã‚‹
 		const AABB * IBox = mColliders[i]->GetBox();
 		const Sphere * ISphere = mColliders[i]->GetSphere();
 
-		// ‚Ç‚ÌŒ`‚ªó‚¯æ‚ê‚½‚©‚ğ”»’è‚µAƒrƒbƒgƒtƒ‰ƒO‚ÉŠi”[
-		// Å‰ºˆÊƒrƒbƒg‚ªi, ‰º‚©‚ç2”Ô–Ú‚Ìƒrƒbƒg‚ªj‚ÌA‹…æ“¾ƒtƒ‰ƒO
+		// ã©ã®å½¢ãŒå—ã‘å–ã‚ŒãŸã‹ã‚’åˆ¤å®šã—ã€ãƒ“ãƒƒãƒˆãƒ•ãƒ©ã‚°ã«æ ¼ç´
+		// æœ€ä¸‹ä½ãƒ“ãƒƒãƒˆãŒi, ä¸‹ã‹ã‚‰2ç•ªç›®ã®ãƒ“ãƒƒãƒˆãŒjã®ã€çƒå–å¾—ãƒ•ãƒ©ã‚°
 		Uint8 sphereFlag = 0;
 
-		// Œ`‚ğ”»•Ê
+		// å½¢ã‚’åˆ¤åˆ¥
 		if (ISphere != nullptr)
 		{
-			// ‹…‚¾‚¯æ“¾‚Å‚«‚½‚È‚çA‚»‚ê‚ÍŠÔˆá‚¢‚È‚­‹…‚Å‚ ‚éB
-			// ‚Ç‚¿‚ç‚àæ“¾o—ˆ‚½‚çƒGƒ‰[B‚±‚ÌƒRƒ‰ƒCƒ_[‚Ì”»’è‚ğ”ò‚Î‚·B
+			// çƒã ã‘å–å¾—ã§ããŸãªã‚‰ã€ãã‚Œã¯é–“é•ã„ãªãçƒã§ã‚ã‚‹ã€‚
+			// ã©ã¡ã‚‰ã‚‚å–å¾—å‡ºæ¥ãŸã‚‰ã‚¨ãƒ©ãƒ¼ã€‚ã“ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®åˆ¤å®šã‚’é£›ã°ã™ã€‚
 			if (IBox == nullptr)
 			{
 				sphereFlag |= 1;
@@ -70,7 +70,7 @@ void PhysicManager::CheckHit()
 		}
 		else
 		{
-			// ‚Ç‚¿‚ç‚àæ“¾‚Å‚«‚È‚©‚Á‚½ê‡‚àƒGƒ‰[‚Æ‚µAƒRƒ‰ƒCƒ_[‚Ì”»’è‚ğ”ò‚Î‚·B
+			// ã©ã¡ã‚‰ã‚‚å–å¾—ã§ããªã‹ã£ãŸå ´åˆã‚‚ã‚¨ãƒ©ãƒ¼ã¨ã—ã€ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®åˆ¤å®šã‚’é£›ã°ã™ã€‚
 			if (IBox == nullptr)
 			{
 				continue;
@@ -79,20 +79,20 @@ void PhysicManager::CheckHit()
 
 		for (int j = i + 1; j < (int)mColliders.size(); ++j)
 		{
-			// ƒRƒ‰ƒCƒ_[‚ÌƒAƒNƒeƒBƒu”»’è
+			// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åˆ¤å®š
 			if (!mColliders[j]->GetActiveFlag())
 			{
 				continue;
 			}
 
-			// Œ`‚Ìƒf[ƒ^‚ğó‚¯æ‚é
+			// å½¢ã®ãƒ‡ãƒ¼ã‚¿ã‚’å—ã‘å–ã‚‹
 			const AABB * JBox = mColliders[j]->GetBox();
 			const Sphere * JSphere = mColliders[j]->GetSphere();
 
-			// ƒtƒ‰ƒO‰Šú‰»
+			// ãƒ•ãƒ©ã‚°åˆæœŸåŒ–
 			sphereFlag &= ~2;
 
-			// ó‚¯æ‚Á‚½Œ`‚ğ”»’è
+			// å—ã‘å–ã£ãŸå½¢ã‚’åˆ¤å®š
 			if (JSphere != nullptr)
 			{
 				if (JBox == nullptr)
@@ -101,7 +101,7 @@ void PhysicManager::CheckHit()
 				}
 				else
 				{
-					// ƒGƒ‰[F‚Ç‚¿‚ç‚àæ“¾‚Å‚«‚½
+					// ã‚¨ãƒ©ãƒ¼ï¼šã©ã¡ã‚‰ã‚‚å–å¾—ã§ããŸ
 					continue;
 				}
 			}
@@ -109,18 +109,18 @@ void PhysicManager::CheckHit()
 			{
 				if (JBox == nullptr)
 				{
-					// ƒGƒ‰[F‚Ç‚¿‚ç‚àæ“¾‚Å‚«‚È‚©‚Á‚½
+					// ã‚¨ãƒ©ãƒ¼ï¼šã©ã¡ã‚‰ã‚‚å–å¾—ã§ããªã‹ã£ãŸ
 					continue;
 				}
 			}
 
-			// ƒyƒA‚ğì¬
+			// ãƒšã‚¢ã‚’ä½œæˆ
 			ColliderPair pair = std::make_pair(mColliders[i], mColliders[j]);
 
-			// ‘O‚ÌƒtƒŒ[ƒ€‚Å‚ÌÚGó‘Ô‚ğ”»’è
+			// å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã®æ¥è§¦çŠ¶æ…‹ã‚’åˆ¤å®š
 			bool prevHit = CheckPrevHit(pair);
 
-			// “–‚½‚Á‚Ä‚¢‚é‚©‚ğ”»’è
+			// å½“ãŸã£ã¦ã„ã‚‹ã‹ã‚’åˆ¤å®š
 			bool hit = false;
 			switch (sphereFlag)
 			{
@@ -140,14 +140,14 @@ void PhysicManager::CheckHit()
 				break;
 			}
 
-			// ƒqƒbƒg‚ÌƒŠƒAƒNƒVƒ‡ƒ“
+			// ãƒ’ãƒƒãƒˆæ™‚ã®ãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³
 			if (hit)
 			{
 				HitProcess(pair);
 			}
 
-			// ÚG‚µ‚Ä‚¢‚È‚©‚Á‚½‚Ìˆ—
-			// ‚½‚¾‚µA‘OƒtƒŒ[ƒ€‚ÅÚG‚µ‚Ä‚¢‚½ê‡‚Ì‚İ
+			// æ¥è§¦ã—ã¦ã„ãªã‹ã£ãŸæ™‚ã®å‡¦ç†
+			// ãŸã ã—ã€å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã§æ¥è§¦ã—ã¦ã„ãŸå ´åˆã®ã¿
 			else if (prevHit)
 			{
 				ApartProcess(pair);
@@ -158,19 +158,19 @@ void PhysicManager::CheckHit()
 
 bool PhysicManager::CheckPrevHit(const ColliderPair& pair)
 {
-	// ƒyƒA‚ğŒŸõ
+	// ãƒšã‚¢ã‚’æ¤œç´¢
 	auto itr = mHitColliderPairState.find(pair);
 
-	// ŒŸõ‚Éƒqƒbƒg‚µ‚È‚©‚Á‚½
+	// æ¤œç´¢ã«ãƒ’ãƒƒãƒˆã—ãªã‹ã£ãŸ
 	if (itr == mHitColliderPairState.end())
 	{
 		return false;
 	}
 
-	// •Ô‹p’l
+	// è¿”å´å€¤
 	bool ret = false;
 
-	// ‘OƒtƒŒ[ƒ€‚ÌÚG‚ğ”»’è
+	// å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®æ¥è§¦ã‚’åˆ¤å®š
 	const char state = mHitColliderPairState[pair];
 	if (state == HitState::HitState_Touching || state == HitState::HitState_Hit)
 	{
@@ -185,29 +185,29 @@ void PhysicManager::HitProcess(ColliderPair& pair)
 	const ColliderAttribute att1st = pair.first->GetColliderAttribute();
 	const ColliderAttribute att2nd = pair.second->GetColliderAttribute();
 
-	// ƒRƒŠƒWƒ‡ƒ“‚Ì‘g‚İ‡‚í‚¹‚ğŒŸõ
+	// ã‚³ãƒªã‚¸ãƒ§ãƒ³ã®çµ„ã¿åˆã‚ã›ã‚’æ¤œç´¢
 	auto itr = mHitColliderPairState.find(pair);
 
-	// ŒŸõ‚ªƒqƒbƒg‚µ‚È‚©‚Á‚½ or ÚGó‘Ô‚ª–¢ÚG‚¾‚Á‚½ê‡
+	// æ¤œç´¢ãŒãƒ’ãƒƒãƒˆã—ãªã‹ã£ãŸ or æ¥è§¦çŠ¶æ…‹ãŒæœªæ¥è§¦ã ã£ãŸå ´åˆ
 	if (itr == mHitColliderPairState.end() ||
 		mHitColliderPairState[pair] == HitState::HitState_NoTouch)
 	{
-		// ‚±‚ÌƒtƒŒ[ƒ€‚Å‚ÌÕ“Ë
+		// ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã®è¡çª
 		mHitColliderPairState[pair] = HitState::HitState_Hit;
 
-		// Õ“ËŠÖ”‚ÌŒÄ‚Ño‚µ
+		// è¡çªé–¢æ•°ã®å‘¼ã³å‡ºã—
 		pair.first->OnHit(att2nd);
 		pair.second->OnHit(att1st);
 	}
 
-	// ‘OƒtƒŒ[ƒ€‚ÅÕ“Ë‚µ‚½ or ‘OƒtƒŒ[ƒ€‚©‚çÚG‚µ‚Ä‚¢‚½ê‡
+	// å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã§è¡çªã—ãŸ or å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰æ¥è§¦ã—ã¦ã„ãŸå ´åˆ
 	else if (mHitColliderPairState[pair] == HitState::HitState_Hit ||
 		mHitColliderPairState[pair] == HitState::HitState_Touching)
 	{
-		// Œp‘±‚µ‚½ÚG
+		// ç¶™ç¶šã—ãŸæ¥è§¦
 		mHitColliderPairState[pair] = HitState::HitState_Touching;
 
-		// ÚGŠÖ”‚ÌŒÄ‚Ño‚µ
+		// æ¥è§¦é–¢æ•°ã®å‘¼ã³å‡ºã—
 		pair.first->OnTouching(att2nd);
 		pair.second->OnTouching(att1st);
 	}
@@ -218,10 +218,10 @@ void PhysicManager::ApartProcess(ColliderPair & pair)
 	const ColliderAttribute att1st = pair.first->GetColliderAttribute();
 	const ColliderAttribute att2nd = pair.second->GetColliderAttribute();
 
-	// ó‘Ô‹L˜^‚ğ–¢ÚG‚É•ÏX
+	// çŠ¶æ…‹è¨˜éŒ²ã‚’æœªæ¥è§¦ã«å¤‰æ›´
 	mHitColliderPairState[pair] = HitState::HitState_NoTouch;
 
-	// ÚG‰ğœˆ—
+	// æ¥è§¦è§£é™¤å‡¦ç†
 	pair.first->OnApart(att2nd);
 	pair.second->OnApart(att1st);
 }

@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -40,7 +40,7 @@ Mesh::~Mesh()
 {
 }
 
-//ƒƒbƒVƒ…‚Ìƒ[ƒh
+//ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ­ãƒ¼ãƒ‰
 bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 {
 	std::ifstream file(fileName);
@@ -49,7 +49,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 		printf("File not found: Mesh %s", fileName.c_str());
 		return false;
 	}
-	// JSON‚Ì‰ğÍ‚ğs‚¤
+	// JSONã®è§£æã‚’è¡Œã†
 	std::stringstream fileStream;
 	fileStream << file.rdbuf();
 	std::string contents = fileStream.str();
@@ -57,7 +57,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 	rapidjson::Document doc;
 	doc.ParseStream(jsonStr);
 
-	// JSONƒIƒuƒWƒFƒNƒg‚©H
+	// JSONã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ï¼Ÿ
 	if (!doc.IsObject())
 	{
 		printf("Mesh %s is not valid json\n", fileName.c_str());
@@ -66,7 +66,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 
 	int ver = doc["version"].GetInt();
 
-	// ƒo[ƒWƒ‡ƒ“ƒ`ƒFƒbƒN
+	// ãƒãƒ¼ã‚¸ãƒ§ãƒ³ãƒã‚§ãƒƒã‚¯
 	if (ver != 1)
 	{
 		printf("Mesh %s not version 1", fileName.c_str());
@@ -75,7 +75,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 
 	mShaderName = doc["shader"].GetString();
 
-	// ’¸“_ƒŒƒCƒAƒEƒg‚ÆƒTƒCƒY‚ğƒtƒ@ƒCƒ‹‚©‚çƒZƒbƒg
+	// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã¨ã‚µã‚¤ã‚ºã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã‚»ãƒƒãƒˆ
 	VertexArray::Layout layout = VertexArray::PosNormTex;
 	size_t vertSize = 8;
 
@@ -83,12 +83,12 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 	if (vertexFormat == "PosNormSkinTex")
 	{
 		layout = VertexArray::PosNormSkinTex;
-		// This is the number of "Vertex" unions, which is 8 + 2 (for skinning)s@1ŒÂ‚Ì’¸“_‚ÌW‡‚Ì”@‚W@{@‚QiƒXƒLƒjƒ“ƒO•ªj
-		// 3 (ˆÊ’uxyz) + 3(–@üxyz) + 2(Bone‚Æd‚İj{@2(UV)  ‚ÌŒv@10ŒÂ•ªi40byte) @
+		// This is the number of "Vertex" unions, which is 8 + 2 (for skinning)sã€€1å€‹ã®é ‚ç‚¹ã®é›†åˆã®æ•°ã€€ï¼˜ã€€ï¼‹ã€€ï¼’ï¼ˆã‚¹ã‚­ãƒ‹ãƒ³ã‚°åˆ†ï¼‰
+		// 3 (ä½ç½®xyz) + 3(æ³•ç·šxyz) + 2(Boneã¨é‡ã¿ï¼‰ï¼‹ã€€2(UV)  ã®è¨ˆã€€10å€‹åˆ†ï¼ˆ40byte) ã€€
 		vertSize = 10;
 	}
 
-	// ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰
 	const rapidjson::Value& textures = doc["textures"];
 	if (!textures.IsArray() || textures.Size() < 1)
 	{
@@ -96,29 +96,29 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 		return false;
 	}
 
-	// ƒXƒyƒLƒ…ƒ‰[‹­“x
+	// ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼å¼·åº¦
 	mSpecPower = static_cast<float>(doc["specularPower"].GetDouble());
 
-	// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	for (rapidjson::SizeType i = 0; i < textures.Size(); i++)
 	{
-		// ‚±‚ÌƒeƒNƒXƒ`ƒƒŠù‚É“Ç‚İ‚±‚ñ‚Å‚éH
+		// ã“ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£æ—¢ã«èª­ã¿ã“ã‚“ã§ã‚‹ï¼Ÿ
 		std::string texName = textures[i].GetString();
 		Texture* t = renderer->GetTexture(texName);
 		if (t == nullptr)
 		{
-			// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ‚Ìƒgƒ‰ƒC
+			// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿ã®ãƒˆãƒ©ã‚¤
 			t = renderer->GetTexture(texName);
 			if (t == nullptr)
 			{
-				// NULL‚Ì‚Ü‚Ü‚Å‚ ‚ê‚ÎƒfƒtƒHƒ‹ƒgƒeƒNƒXƒ`ƒƒ‚ğƒZƒbƒg
+				// NULLã®ã¾ã¾ã§ã‚ã‚Œã°ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚»ãƒƒãƒˆ
 				t = renderer->GetTexture("Assets/Default.png");
 			}
 		}
 		mTextures[0] = t;
 	}
 
-	// ’¸“_“Ç‚İ‚İ
+	// é ‚ç‚¹èª­ã¿è¾¼ã¿
 	const rapidjson::Value& vertsJson = doc["vertices"];
 	if (!vertsJson.IsArray() || vertsJson.Size() < 1)
 	{
@@ -126,13 +126,13 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 		return false;
 	}
 
-	// ’¸“_ƒf[ƒ^
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	std::vector<Vertex> vertices;
 	vertices.reserve(vertsJson.Size() * vertSize);
 	mRadius = 0.0f;
 	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
 	{
-		// Œ»“_‚ÅA‚W‚Â‚Ì—v‘f(ˆÊ’uxyz –@üxyz ƒeƒNƒXƒ`ƒƒuv‚Ì—v‘fj‚ª“ü‚Á‚Ä‚¢‚é
+		// ç¾æ™‚ç‚¹ã§ã€ï¼˜ã¤ã®è¦ç´ (ä½ç½®xyz æ³•ç·šxyz ãƒ†ã‚¯ã‚¹ãƒãƒ£uvã®è¦ç´ ï¼‰ãŒå…¥ã£ã¦ã„ã‚‹
 		const rapidjson::Value& vert = vertsJson[i];
 		if (!vert.IsArray())
 		{
@@ -140,13 +140,13 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 			return false;
 		}
 
-		// ’¸“_ˆÊ’u‚©‚ç@ƒoƒEƒ“ƒfƒBƒ“ƒOƒXƒtƒBƒA‚Ì”¼Œa‚ğŒvZ‚·‚éiŒ´“_‚©‚ç‚Ì‹——£‚ªÅ‘å‚Ì‚à‚Ì‚ğ”¼Œa‚Æ‚·‚éj
+		// é ‚ç‚¹ä½ç½®ã‹ã‚‰ã€€ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚¹ãƒ•ã‚£ã‚¢ã®åŠå¾„ã‚’è¨ˆç®—ã™ã‚‹ï¼ˆåŸç‚¹ã‹ã‚‰ã®è·é›¢ãŒæœ€å¤§ã®ã‚‚ã®ã‚’åŠå¾„ã¨ã™ã‚‹ï¼‰
 		Vector3D pos(static_cast<float>(vert[0].GetDouble()),
 			        static_cast<float>(vert[1].GetDouble()),
 			        static_cast<float>(vert[2].GetDouble()));
 		mRadius = Common::Larger(mRadius, pos.LengthSq());
 
-		// ƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒXZo
+		// ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ç®—å‡º
 		if (i == 0)
 		{
 			mBox.InitMinMax(pos);
@@ -156,29 +156,29 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 			mBox.RenewalMinMax(pos);
 		}
 
-		// ’¸“_ƒŒƒCƒAƒEƒg‚ª PosNormTex‚È‚çiƒ{[ƒ“‚ª–³‚¢j
+		// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆãŒ PosNormTexãªã‚‰ï¼ˆãƒœãƒ¼ãƒ³ãŒç„¡ã„ï¼‰
 		if (layout == VertexArray::PosNormTex)
 		{
 			Vertex v;
-			// Add the floats@float’l‚ğ’Ç‰Á
+			// Add the floatsã€€floatå€¤ã‚’è¿½åŠ 
 			for (rapidjson::SizeType j = 0; j < vert.Size(); j++)
 			{
 				v.f = static_cast<float>(vert[j].GetDouble());
 				vertices.emplace_back(v);
 			}
 		}
-		else // ƒ{[ƒ“ƒf[ƒ^“ü‚è‚È‚ç@PosNormSkinTex‚È‚ç
+		else // ãƒœãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿å…¥ã‚Šãªã‚‰ã€€PosNormSkinTexãªã‚‰
 		{
 			Vertex v;
-			// Add pos/normal@’¸“_‚Æ–@ü‚ğ’Ç‰Á@6ŒÂ•ª
+			// Add pos/normalã€€é ‚ç‚¹ã¨æ³•ç·šã‚’è¿½åŠ ã€€6å€‹åˆ†
 			for (rapidjson::SizeType j = 0; j < 6; j++)
 			{
 				v.f = static_cast<float>(vert[j].GetDouble());
 				vertices.emplace_back(v);
 			}
 
-			// Add skin information@ƒXƒLƒ“î•ñ’Ç‰Áiƒ{[ƒ“”Ô†:unsigned char‚Ì1ƒoƒCƒg•ªj
-			for (rapidjson::SizeType j = 6; j < 14; j += 4)  //ƒ‹[ƒv‚Æ‚µ‚Ä‚Í2‰ñ“]‚·‚é@1‰ñ“]–Ú‚Íƒ{[ƒ“”Ô†A2‰ñ“]–Ú‚Íƒ{[ƒ“ƒEƒFƒCƒg‚ğint‚Æ‚µ‚Äæ‚Á‚Ä‚­‚éig—p‚É•‚“®¬”‰»‚·‚é‚Á‚Û‚¢j
+			// Add skin informationã€€ã‚¹ã‚­ãƒ³æƒ…å ±è¿½åŠ ï¼ˆãƒœãƒ¼ãƒ³ç•ªå·:unsigned charã®1ãƒã‚¤ãƒˆåˆ†ï¼‰
+			for (rapidjson::SizeType j = 6; j < 14; j += 4)  //ãƒ«ãƒ¼ãƒ—ã¨ã—ã¦ã¯2å›è»¢ã™ã‚‹ã€€1å›è»¢ç›®ã¯ãƒœãƒ¼ãƒ³ç•ªå·ã€2å›è»¢ç›®ã¯ãƒœãƒ¼ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã‚’intã¨ã—ã¦å–ã£ã¦ãã‚‹ï¼ˆä½¿ç”¨æ™‚ã«æµ®å‹•å°æ•°åŒ–ã™ã‚‹ã£ã½ã„ï¼‰
 			{
 				v.b[0] = vert[j].GetUint();
 				v.b[1] = vert[j + 1].GetUint();
@@ -187,7 +187,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 				vertices.emplace_back(v);
 			}
 
-			// Add tex coords@ƒeƒNƒXƒ`ƒƒÀ•W
+			// Add tex coordsã€€ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™
 			for (rapidjson::SizeType j = 14; j < vert.Size(); j++)
 			{
 				v.f = static_cast<float>(vert[j].GetDouble());
@@ -196,10 +196,10 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 		}
 	}
 
-	// We were computing length squared earlier@ƒoƒEƒ“ƒfƒBƒ“ƒOƒXƒtƒBƒA‚Ì”¼Œa‚ğŒvZ
+	// We were computing length squared earlierã€€ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚¹ãƒ•ã‚£ã‚¢ã®åŠå¾„ã‚’è¨ˆç®—
 	mRadius = sqrt(mRadius);
 
-	// Load in the indices@’¸“_ƒCƒ“ƒfƒbƒNƒX‚ğƒ[ƒh
+	// Load in the indicesã€€é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ãƒ­ãƒ¼ãƒ‰
 	const rapidjson::Value& indJson = doc["indices"];
 	if (!indJson.IsArray() || indJson.Size() < 1)
 	{
@@ -207,7 +207,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 		return false;
 	}
 
-	//’¸“_ƒCƒ“ƒfƒbƒNƒX‚ğˆø‚Á’£‚Á‚Ä‚­‚é
+	//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å¼•ã£å¼µã£ã¦ãã‚‹
 	std::vector<unsigned int> indices;
 	indices.reserve(indJson.Size() * 3);
 	for (rapidjson::SizeType i = 0; i < indJson.Size(); i++)
@@ -224,7 +224,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 		indices.emplace_back(ind[2].GetUint());
 	}
 
-	// Now create a vertex array@’¸“_”z—ñ‚ğì¬‚·‚é
+	// Now create a vertex arrayã€€é ‚ç‚¹é…åˆ—ã‚’ä½œæˆã™ã‚‹
 	mVertexArray = new VertexArray(vertices.data(), static_cast<unsigned>(vertices.size()) / vertSize,
 		layout, indices.data(), static_cast<unsigned>(indices.size()));
 	return true;
@@ -245,7 +245,7 @@ int Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
 		return -1;
 	}
 
-	// •Ô‹p’l‚Æ‚µ‚ÄƒeƒNƒXƒ`ƒƒ”Ô†‚ğ‹L˜^
+	// è¿”å´å€¤ã¨ã—ã¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·ã‚’è¨˜éŒ²
 	int ret;
 	if (!mTextures.empty())
 	{

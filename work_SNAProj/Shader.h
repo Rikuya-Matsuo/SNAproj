@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -18,23 +18,23 @@ class Shader
 public:
 	Shader();
 	~Shader();
-	bool Load(const std::string& vertName, const std::string& fragName);          // ’¸“_ƒVƒF[ƒ_[Aƒtƒ‰ƒOƒƒ“ƒgƒVƒF[ƒ_[ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
-	void Unload();                                                                // ƒVƒF[ƒ_[”jŠü
-	void SetActive();                                                             // ‚±‚ÌƒVƒF[ƒ_[‚ğƒAƒNƒeƒBƒu‚É‚·‚é
-	void SetMatrixUniform(const char* name, const Matrix4& matrix);               // s—ñ‚ÌƒVƒF[ƒ_[•Ï” name‚É’l‚ğƒZƒbƒg‚·‚é
-	void SetMatrixUniforms(const char* name, Matrix4* matrices, unsigned count);  // ƒVƒF[ƒ_[s—ñ”z—ñ–¼‚És—ñ‚ğƒZƒbƒg‚·‚é
-	void SetVectorUniform(const char* name, const Vector3D& vector);               // ƒxƒNƒgƒ‹’l‚ğƒVƒF[ƒ_[•Ï”name‚ÉƒZƒbƒg‚·‚é
-	void SetFloatUniform(const char* name, float value);                          // •Ï”’l‚ğƒVƒF[ƒ_•Ï”name‚ÉƒZƒbƒg‚·‚é
+	bool Load(const std::string& vertName, const std::string& fragName);          // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã€ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
+	void Unload();                                                                // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ç ´æ£„
+	void SetActive();                                                             // ã“ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹
+	void SetMatrixUniform(const char* name, const Matrix4& matrix);               // è¡Œåˆ—ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¤‰æ•° nameã«å€¤ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
+	void SetMatrixUniforms(const char* name, Matrix4* matrices, unsigned count);  // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼è¡Œåˆ—é…åˆ—åã«è¡Œåˆ—ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
+	void SetVectorUniform(const char* name, const Vector3D& vector);               // ãƒ™ã‚¯ãƒˆãƒ«å€¤ã‚’ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¤‰æ•°nameã«ã‚»ãƒƒãƒˆã™ã‚‹
+	void SetFloatUniform(const char* name, float value);                          // å¤‰æ•°å€¤ã‚’ã‚·ã‚§ãƒ¼ãƒ€å¤‰æ•°nameã«ã‚»ãƒƒãƒˆã™ã‚‹
 private:
-	bool CompileShader(const std::string& fileName,                               // “Ç‚İ‚Ü‚ê‚½ƒVƒF[ƒ_[‚ÌƒRƒ“ƒpƒCƒ‹
+	bool CompileShader(const std::string& fileName,                               // èª­ã¿è¾¼ã¾ã‚ŒãŸã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 		GLenum shaderType,
 		GLuint& outShader);
 
-	bool IsCompiled(GLuint shader);                                               // ƒRƒ“ƒpƒCƒ‹¬Œ÷‚µ‚½‚©H
-	bool IsValidProgram();                                                        // vertex,fragment‚Æ‚à‚ÉƒŠƒ“ƒN¬Œ÷‚µ‚Ä‚é‚©H
+	bool IsCompiled(GLuint shader);                                               // ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æˆåŠŸã—ãŸã‹ï¼Ÿ
+	bool IsValidProgram();                                                        // vertex,fragmentã¨ã‚‚ã«ãƒªãƒ³ã‚¯æˆåŠŸã—ã¦ã‚‹ã‹ï¼Ÿ
 private:
 	// Store the shader object IDs
-	GLuint mVertexShader;                                                         // ’¸“_ƒVƒF[ƒ_[ID
-	GLuint mFragShader;                                                           // ƒtƒ‰ƒOƒƒ“ƒgƒVƒF[ƒ_[ID
-	GLuint mShaderProgram;                                                        // ƒVƒF[ƒ_[ƒvƒƒOƒ‰ƒ€i’¸“_{ƒtƒ‰ƒOƒƒ“ƒgjID 
+	GLuint mVertexShader;                                                         // é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ID
+	GLuint mFragShader;                                                           // ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ID
+	GLuint mShaderProgram;                                                        // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ—ãƒ­ã‚°ãƒ©ãƒ ï¼ˆé ‚ç‚¹ï¼‹ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆï¼‰ID 
 };

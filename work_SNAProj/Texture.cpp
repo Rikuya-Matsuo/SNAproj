@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+﻿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -29,29 +29,29 @@ bool Texture::Load(const std::string& fileName)
 {
 	int channels = 0;
 
-	// SDL�T�[�t�F�X���e�N�X�`������쐬
+	// SDLサーフェスをテクスチャから作成
 	SDL_Texture* tex = nullptr;
 	SDL_Surface* surf = IMG_Load(fileName.c_str());
 	if (!surf)
 	{
-		printf("�e�N�X�`���ǂݍ��݂Ɏ��s %s", fileName.c_str());
+		printf("テクスチャ読み込みに失敗 %s", fileName.c_str());
 		return false;
 	}
 
-	// �T�[�t�F�X����e�N�X�`�������
+	// サーフェスからテクスチャを作る
 	tex = SDL_CreateTextureFromSurface(System::GetInstance().GetSDLRenderer(), surf);
 	if (!tex)
 	{
-		printf("�T�[�t�F�X����e�N�X�`���̍쐬�Ɏ��s : %s", fileName.c_str());
+		printf("サーフェスからテクスチャの作成に失敗 : %s", fileName.c_str());
 		return false;
 	}
 
-	// �摜�̕��A�������擾
+	// 画像の幅、高さを取得
 	mWidth = surf->w;
 	mHeight = surf->h;
 	channels = surf->format->BytesPerPixel;
 	
-	// OpenGL�Ƀe�N�X�`���o�^
+	// OpenGLにテクスチャ登録
 	int format = GL_RGB;
 	if (channels == 4)
 	{
@@ -64,10 +64,10 @@ bool Texture::Load(const std::string& fileName)
 	glTexImage2D(GL_TEXTURE_2D, 0, format, mWidth, mHeight, 0, format,
 		GL_UNSIGNED_BYTE, surf->pixels);
 
-	// SDL�T�[�t�F�X�͗p�ς݂Ȃ̂ŉ��
+	// SDLサーフェスは用済みなので解放
 	SDL_FreeSurface(surf);
 
-	// �e�N�X�`���t�B���^�����O�ݒ�
+	// テクスチャフィルタリング設定
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

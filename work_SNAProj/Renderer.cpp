@@ -1,4 +1,4 @@
-#include "Renderer.h"
+ï»¿#include "Renderer.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "Texture.h"
@@ -33,82 +33,82 @@ bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
 	mScreenWidth  = screenWidth;
 	mScreenHeight = screenHeight;
 
-	// OpenGL ƒAƒgƒŠƒrƒ…[ƒg‚ÌƒZƒbƒg
+	// OpenGL ã‚¢ãƒˆãƒªãƒ“ãƒ¥ãƒ¼ãƒˆã®ã‚»ãƒƒãƒˆ
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	// GL version 3.1
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-	// 8Bit RGBA ƒ`ƒƒƒ“ƒlƒ‹
+	// 8Bit RGBA ãƒãƒ£ãƒ³ãƒãƒ«
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE  , 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE , 8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-	// “§‰ßF‚Ì—LŒø‰»
+	// é€éŽè‰²ã®æœ‰åŠ¹åŒ–
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
-	// ƒ_ƒuƒ‹ƒoƒbƒtƒ@ƒŠƒ“ƒO
+	// ãƒ€ãƒ–ãƒ«ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	// ƒn[ƒhƒEƒFƒAƒAƒNƒZƒ‰ƒŒ[ƒVƒ‡ƒ“‚ð‹­§
+	// ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢ã‚¢ã‚¯ã‚»ãƒ©ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å¼·åˆ¶
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
-	// Window‚Ìì¬
+	// Windowã®ä½œæˆ
 	mWindow = SDL_CreateWindow("SDL & GL Window",
 		                       100, 80,
 		                       mScreenWidth, mScreenHeight, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 	if (!mWindow)
 	{
-		printf("Window‚Ìì¬‚ÉŽ¸”s: %s", SDL_GetError());
+		printf("Windowã®ä½œæˆã«å¤±æ•—: %s", SDL_GetError());
 		return false;
 	}
 	if (fullScreen)
 	{
 		if (SDL_SetWindowFullscreen(mWindow, SDL_WINDOW_FULLSCREEN_DESKTOP))
 		{
-			printf("(%d, %d) ƒTƒCƒY‚Ìƒtƒ‹ƒXƒNƒŠ[ƒ“‰»‚ÉŽ¸”s\n", screenWidth, screenHeight);
+			printf("(%d, %d) ã‚µã‚¤ã‚ºã®ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åŒ–ã«å¤±æ•—\n", screenWidth, screenHeight);
 			return false;
 		}
 		glViewport(0, 0, mScreenWidth, mScreenHeight);
 	}
 
-	//SDLRenderer‚Ìì¬
+	//SDLRendererã®ä½œæˆ
 	mSDLRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (!mSDLRenderer)
 	{
-		printf("SDLRenderer‚Ìì¬‚ÉŽ¸”s : %s", SDL_GetError());
+		printf("SDLRendererã®ä½œæˆã«å¤±æ•— : %s", SDL_GetError());
 		return false;
 	}
 	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
 	{
-		printf("SDLImageInitPNG‚Ì‰Šú‰»‚ÉŽ¸”s : %s", SDL_GetError());
+		printf("SDLImageInitPNGã®åˆæœŸåŒ–ã«å¤±æ•— : %s", SDL_GetError());
 		return false;
 	}
 
-	// OpenGLContext‚Ìì¬
+	// OpenGLContextã®ä½œæˆ
 	mContext = SDL_GL_CreateContext(mWindow);
 
-	// Glew‚Ì‰Šú‰»
+	// Glewã®åˆæœŸåŒ–
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
-		printf("GLEW‚Ì‰Šú‰»‚ÉŽ¸”s");
+		printf("GLEWã®åˆæœŸåŒ–ã«å¤±æ•—");
 		return false;
 	}
-	// Šô‚Â‚©‚Ìƒvƒ‰ƒbƒgƒz[ƒ€‚Å‚ÍAGLEW‚ª–³ŠQ‚ÈƒGƒ‰[ƒR[ƒh‚ð“f‚­‚Ì‚ÅƒNƒŠƒA‚µ‚Ä‚¨‚­
+	// å¹¾ã¤ã‹ã®ãƒ—ãƒ©ãƒƒãƒˆãƒ›ãƒ¼ãƒ ã§ã¯ã€GLEWãŒç„¡å®³ãªã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã‚’åãã®ã§ã‚¯ãƒªã‚¢ã—ã¦ãŠã
 	glGetError();
 
-	// ƒVƒF[ƒ_[ƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®åˆæœŸåŒ–
 	if (!LoadShaders())
 	{
-		printf("ƒVƒF[ƒ_[‚Ì‰Šú‰»‚ÉŽ¸”s");
+		printf("ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®åˆæœŸåŒ–ã«å¤±æ•—");
 		return false;
 	}
 
-	// ƒJƒŠƒ“ƒO
+	// ã‚«ãƒªãƒ³ã‚°
 	glFrontFace(GL_CCW);
 	glEnable(GL_CULL_FACE);
 
@@ -117,7 +117,7 @@ bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
 
 void Renderer::Shutdown()
 {
-	//ƒeƒNƒXƒ`ƒƒ”jŠü
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ç ´æ£„
 	for (auto i : mTextures)
 	{
 		printf("Texture Release : %s\n", i.first.c_str());
@@ -126,7 +126,7 @@ void Renderer::Shutdown()
 	}
 	mTextures.clear();
 
-	// ƒƒbƒVƒ…”jŠü
+	// ãƒ¡ãƒƒã‚·ãƒ¥ç ´æ£„
 	for (auto i : mMeshs)
 	{
 		printf("Mesh Release : %s\n", i.first.c_str());
@@ -135,22 +135,22 @@ void Renderer::Shutdown()
 	}
 	mMeshs.clear();
 
-	//ƒVƒF[ƒ_[”jŠü
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ç ´æ£„
 	mMeshShader->Unload();
 
-	// ƒXƒPƒ‹ƒgƒ“‚Ì”jŠü
+	// ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ç ´æ£„
 	for (auto s : mSkeletons)
 	{
 		delete s.second;
 	}
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì”jŠü
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ç ´æ£„
 	for (auto a : mAnims)
 	{
 		delete a.second;
 	}
 
-	// SDLŒn‚Ì”jŠü
+	// SDLç³»ã®ç ´æ£„
 	SDL_GL_DeleteContext(mContext);
 	SDL_DestroyWindow(mWindow);
 }
@@ -160,12 +160,12 @@ void Renderer::Draw()
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
-	//ƒƒbƒVƒ…ƒVƒF[ƒ_[‚Å•`‰æ‚·‚é‘ÎÛ‚Ì•Ï”‚ðƒZƒbƒg
+	//ãƒ¡ãƒƒã‚·ãƒ¥ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã§æç”»ã™ã‚‹å¯¾è±¡ã®å¤‰æ•°ã‚’ã‚»ãƒƒãƒˆ
 	mMeshShader->SetActive();
 	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
-    // ƒ‰ƒCƒeƒBƒ“ƒO•Ï”‚ðƒZƒbƒg
+    // ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°å¤‰æ•°ã‚’ã‚»ãƒƒãƒˆ
 	SetLightUniforms(mMeshShader);
-	// ‘S‚Ä‚ÌƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg‚ð•`‰æ
+	// å…¨ã¦ã®ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’æç”»
 	for (auto mc : mMeshComponents)
 	{
 		if (mc->GetVisible())
@@ -291,7 +291,7 @@ void Renderer::SetWindowTitle(const std::string & title)
 
 bool Renderer::LoadShaders()
 {
-	// ƒƒbƒVƒ…ƒVƒF[ƒ_[
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 	mMeshShader = new Shader();
 	if (!mMeshShader->Load("Shaders/Phong.vert", "Shaders/Phong.frag"))
 	{
@@ -319,27 +319,27 @@ bool Renderer::LoadShaders()
 
 void Renderer::SetLightUniforms(Shader* shader)
 {
-	// ƒrƒ…[s—ñ‚©‚çƒJƒƒ‰ˆÊ’u‚ð‹tŽZo‚·‚é
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã‹ã‚‰ã‚«ãƒ¡ãƒ©ä½ç½®ã‚’é€†ç®—å‡ºã™ã‚‹
 	Matrix4 invView = mView;
 	invView.Invert();
 	shader->SetVectorUniform("uCameraPos", invView.GetTranslation());
 
-	//ƒAƒ“ƒrƒGƒ“ƒgƒ‰ƒCƒg
+	//ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
 	shader->SetVectorUniform("uAmbientLight", mAmbientLight);
 
-	//ƒfƒBƒŒƒNƒVƒ‡ƒiƒ‹ƒ‰ƒCƒg
+	//ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒŠãƒ«ãƒ©ã‚¤ãƒˆ
 	shader->SetVectorUniform("uDirLight.mDirection", mDirectionalLight.mDirection);
 	shader->SetVectorUniform("uDirLight.mDiffuseColor", mDirectionalLight.mDiffuseColor);
 	shader->SetVectorUniform("uDirLight.mSpecColor", mDirectionalLight.mSpecColor);
 }
 
 //////////////////////////////////////////////////////////////
-// ƒXƒPƒ‹ƒ^ƒ‹î•ñ‚ÌŽæ“¾
-// in  : ƒXƒPƒ‹ƒ^ƒ‹î•ñ .gpskelƒtƒ@ƒCƒ‹–¼
-// out : Skeletonî•ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-// Desc: gpskelƒtƒ@ƒCƒ‹–¼‚æ‚èAƒXƒPƒ‹ƒ^ƒ‹î•ñ‚ð•Ô‚·B‚È‚¢ê‡‚Í‚»‚Ìƒtƒ@ƒCƒ‹–¼‚Å
-//       “Ç‚Ýž‚Ý‚ðs‚¤B“Ç‚Ýž‚Ý‚ðs‚Á‚Ä‚àƒtƒ@ƒCƒ‹‚ª‘¶Ý‚µ‚È‚¢ê‡ nullptr‚ð•Ô‚·
-//       “à•”‚Ågpskelƒtƒ@ƒCƒ‹–¼‚ðƒL[‚Æ‚·‚éƒXƒPƒ‹ƒ^ƒ‹î•ñ‚Ìmap‚ªì¬‚³‚ê‚é
+// ã‚¹ã‚±ãƒ«ã‚¿ãƒ«æƒ…å ±ã®å–å¾—
+// in  : ã‚¹ã‚±ãƒ«ã‚¿ãƒ«æƒ…å ± .gpskelãƒ•ã‚¡ã‚¤ãƒ«å
+// out : Skeletonæƒ…å ±ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+// Desc: gpskelãƒ•ã‚¡ã‚¤ãƒ«åã‚ˆã‚Šã€ã‚¹ã‚±ãƒ«ã‚¿ãƒ«æƒ…å ±ã‚’è¿”ã™ã€‚ãªã„å ´åˆã¯ãã®ãƒ•ã‚¡ã‚¤ãƒ«åã§
+//       èª­ã¿è¾¼ã¿ã‚’è¡Œã†ã€‚èª­ã¿è¾¼ã¿ã‚’è¡Œã£ã¦ã‚‚ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã„å ´åˆ nullptrã‚’è¿”ã™
+//       å†…éƒ¨ã§gpskelãƒ•ã‚¡ã‚¤ãƒ«åã‚’ã‚­ãƒ¼ã¨ã™ã‚‹ã‚¹ã‚±ãƒ«ã‚¿ãƒ«æƒ…å ±ã®mapãŒä½œæˆã•ã‚Œã‚‹
 //////////////////////////////////////////////////////////////
 const Skeleton* Renderer::GetSkeleton(const char* fileName)
 {
@@ -366,12 +366,12 @@ const Skeleton* Renderer::GetSkeleton(const char* fileName)
 }
 
 //////////////////////////////////////////////////////////////
-// ƒAƒjƒ[ƒVƒ‡ƒ“î•ñ‚ÌŽæ“¾
-// in  : ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^‚ªŠi”[‚³‚ê‚Ä‚¢‚é .gpanimƒtƒ@ƒCƒ‹–¼
-// out : ƒAƒjƒ[ƒVƒ‡ƒ“î•ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-// Desc: gpanimƒtƒ@ƒCƒ‹–¼‚æ‚èƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^‚ð•Ô‚·B‚È‚¢ê‡‚Í‚»‚Ìƒtƒ@ƒCƒ‹–¼‚Å
-//       “Ç‚Ýž‚Ý‚ðs‚¤B“Ç‚Ýž‚Ý‚ðs‚Á‚Ä‚àƒtƒ@ƒCƒ‹‚ª‘¶Ý‚µ‚È‚¢ê‡ nullptr‚ð•Ô‚·
-//       “à•”‚Ågpanimƒtƒ@ƒCƒ‹–¼‚ðƒL[‚Æ‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“î•ñ‚Ìmap‚ªì¬‚³‚ê‚é
+// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®å–å¾—
+// in  : ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ãŒæ ¼ç´ã•ã‚Œã¦ã„ã‚‹ .gpanimãƒ•ã‚¡ã‚¤ãƒ«å
+// out : ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+// Desc: gpanimãƒ•ã‚¡ã‚¤ãƒ«åã‚ˆã‚Šã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ã‚’è¿”ã™ã€‚ãªã„å ´åˆã¯ãã®ãƒ•ã‚¡ã‚¤ãƒ«åã§
+//       èª­ã¿è¾¼ã¿ã‚’è¡Œã†ã€‚èª­ã¿è¾¼ã¿ã‚’è¡Œã£ã¦ã‚‚ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ãªã„å ´åˆ nullptrã‚’è¿”ã™
+//       å†…éƒ¨ã§gpanimãƒ•ã‚¡ã‚¤ãƒ«åã‚’ã‚­ãƒ¼ã¨ã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®mapãŒä½œæˆã•ã‚Œã‚‹
 //////////////////////////////////////////////////////////////
 const Animation* Renderer::GetAnimation(const char* fileName, bool loop)
 {

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <unordered_map>
 #include <SDL/SDL.h>
@@ -7,9 +7,9 @@
 
 typedef struct _DirectionalLight
 {
-	Vector3D mDirection;     // ƒ‰ƒCƒg•ûŒü
-	Vector3D mDiffuseColor;	// ƒ‰ƒCƒgƒJƒ‰[
-	Vector3D mSpecColor;	    // ƒXƒyƒLƒ…ƒ‰[ƒJƒ‰[
+	Vector3D mDirection;     // ãƒ©ã‚¤ãƒˆæ–¹å‘
+	Vector3D mDiffuseColor;	// ãƒ©ã‚¤ãƒˆã‚«ãƒ©ãƒ¼
+	Vector3D mSpecColor;	    // ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼ã‚«ãƒ©ãƒ¼
 }DirectionalLight;
 
 
@@ -18,65 +18,65 @@ class Renderer
 public:
 	Renderer();
 	~Renderer();
-	bool                   Initialize(int screenWidth, int screenHeight, bool fullScreen);     // SDL & GL‰Šú‰»
-	void                   Shutdown();                                                         // I—¹
-	void                   Draw();                                                             // •`‰æ
+	bool                   Initialize(int screenWidth, int screenHeight, bool fullScreen);     // SDL & GLåˆæœŸåŒ–
+	void                   Shutdown();                                                         // çµ‚äº†
+	void                   Draw();                                                             // æç”»
 
-	// ƒZƒbƒ^[Œn
-	void                   SetViewMatrix(const Matrix4& view) { mView = view; }                // ƒrƒ…[s—ñ‚ÌƒZƒbƒg
-	void                   SetAmbientLight(const Vector3D& ambientColor)                        // ƒAƒ“ƒrƒGƒ“ƒgƒ‰ƒCƒg‚ÌƒZƒbƒg
+	// ã‚»ãƒƒã‚¿ãƒ¼ç³»
+	void                   SetViewMatrix(const Matrix4& view) { mView = view; }                // ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã®ã‚»ãƒƒãƒˆ
+	void                   SetAmbientLight(const Vector3D& ambientColor)                        // ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®ã‚»ãƒƒãƒˆ
 	                                       { mAmbientLight = ambientColor; }
-	// ƒQƒbƒ^[Œn
-	SDL_Renderer*          GetSDLRenderer() { return mSDLRenderer; }                           // SDLŒn‚Ì•`‰æ‚É•K—v‚ÈSDLrenderer‚ğ“¾‚é
-	class Texture*         GetTexture(const std::string& fileName);                            // ƒeƒNƒXƒ`ƒƒ‚ğƒtƒ@ƒCƒ‹–¼‚©‚ç•Ô‚·
-	class Mesh*            GetMesh(const std::string& fileName);                               // ƒƒbƒVƒ…‚ğƒtƒ@ƒCƒ‹–¼‚©‚ç•Ô‚·
-	const class Skeleton*  GetSkeleton(const char* fileName);                                  // ƒXƒPƒ‹ƒ^ƒ‹ƒ‚ƒfƒ‹‚Ìæ“¾
-	const class Animation* GetAnimation(const char* fileName, bool loop);                      // ƒXƒPƒ‹ƒ^ƒ‹ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìæ“¾
+	// ã‚²ãƒƒã‚¿ãƒ¼ç³»
+	SDL_Renderer*          GetSDLRenderer() { return mSDLRenderer; }                           // SDLç³»ã®æç”»ã«å¿…è¦ãªSDLrendererã‚’å¾—ã‚‹
+	class Texture*         GetTexture(const std::string& fileName);                            // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰è¿”ã™
+	class Mesh*            GetMesh(const std::string& fileName);                               // ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰è¿”ã™
+	const class Skeleton*  GetSkeleton(const char* fileName);                                  // ã‚¹ã‚±ãƒ«ã‚¿ãƒ«ãƒ¢ãƒ‡ãƒ«ã®å–å¾—
+	const class Animation* GetAnimation(const char* fileName, bool loop);                      // ã‚¹ã‚±ãƒ«ã‚¿ãƒ«ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å–å¾—
 
-	float                  GetScreenWidth() { return static_cast<float>(mScreenWidth); }       // ƒXƒNƒŠ[ƒ“•
-	float                  GetScreenHeight() { return static_cast<float>(mScreenHeight); }     // ƒXƒNƒŠ[ƒ“‚‚³
-	DirectionalLight&      GetDirectionalLight() { return mDirectionalLight; }                 // ƒfƒBƒŒƒNƒVƒ‡ƒiƒ‹ƒ‰ƒCƒg
+	float                  GetScreenWidth() { return static_cast<float>(mScreenWidth); }       // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³å¹…
+	float                  GetScreenHeight() { return static_cast<float>(mScreenHeight); }     // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³é«˜ã•
+	DirectionalLight&      GetDirectionalLight() { return mDirectionalLight; }                 // ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒŠãƒ«ãƒ©ã‚¤ãƒˆ
 	const Matrix4&         GetViewMatrix() { return mView; }
 	const Matrix4&         GetProjectionMatrix() { return mProjection; }
 
-	void                   AddMeshComponent(class MeshComponent* mesh);                        // ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì’Ç‰Á
-	void                   RemoveMeshComponent(class MeshComponent* mesh);                     // ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìíœ
-	void                   ShowResource();                                                     // “o˜^‚³‚ê‚Ä‚¢‚é ƒeƒNƒXƒ`ƒƒEƒƒbƒVƒ…ƒŠƒ\[ƒX‚Ì•\¦iƒfƒoƒbƒO—pj
-	void                   WindowClear(){ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);} // ƒEƒBƒ“ƒhƒE•`‰æƒNƒŠƒA
-	void                   WindowFlip() { SDL_GL_SwapWindow(mWindow); }                        // ƒEƒBƒ“ƒhƒEƒtƒŠƒbƒv
-	void                   SetWindowTitle(const std::string& title);                           // ƒEƒBƒ“ƒhƒEƒ^ƒCƒgƒ‹‚ÌƒZƒbƒg
+	void                   AddMeshComponent(class MeshComponent* mesh);                        // ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®è¿½åŠ 
+	void                   RemoveMeshComponent(class MeshComponent* mesh);                     // ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å‰Šé™¤
+	void                   ShowResource();                                                     // ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ»ãƒ¡ãƒƒã‚·ãƒ¥ãƒªã‚½ãƒ¼ã‚¹ã®è¡¨ç¤ºï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
+	void                   WindowClear(){ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);} // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æç”»ã‚¯ãƒªã‚¢
+	void                   WindowFlip() { SDL_GL_SwapWindow(mWindow); }                        // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ•ãƒªãƒƒãƒ—
+	void                   SetWindowTitle(const std::string& title);                           // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¿ã‚¤ãƒˆãƒ«ã®ã‚»ãƒƒãƒˆ
 
 private:
 
-	bool                                              LoadShaders();                          // ƒVƒF[ƒ_[‚Ì‰Šú‰»
-	void                                              SetLightUniforms(class Shader* shader); // ƒ‰ƒCƒg’l‚ğƒVƒF[ƒ_[‚ÉƒZƒbƒg
+	bool                                              LoadShaders();                          // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®åˆæœŸåŒ–
+	void                                              SetLightUniforms(class Shader* shader); // ãƒ©ã‚¤ãƒˆå€¤ã‚’ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã«ã‚»ãƒƒãƒˆ
 
-	int                                               mScreenWidth;      // ƒXƒNƒŠ[ƒ“•                                                           
-	int                                               mScreenHeight;     // ƒXƒNƒŠ[ƒ“‚‚³
-	std::unordered_map<std::string, class Texture*>   mTextures;         // ƒeƒNƒXƒ`ƒƒ“o˜^”z—ñ
-	std::unordered_map<std::string, class Mesh*>      mMeshs;            // ƒƒbƒVƒ…“o˜^”z—ñ
-	std::vector<class MeshComponent*>                 mMeshComponents;   // ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg“o˜^”z—ñ
-	std::vector<class SkeletalMeshComponent*>         mSkeletalMeshes;   // ƒXƒPƒ‹ƒ^ƒ‹ƒƒbƒVƒ…‚Ì•`‰æ‚Ég‚í‚ê‚é
-	std::unordered_map<std::string, class Skeleton*>  mSkeletons; // ƒXƒPƒ‹ƒ^ƒ‹ƒf[ƒ^
-	std::unordered_map<std::string, class Animation*> mAnims;    // ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^
+	int                                               mScreenWidth;      // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³å¹…                                                           
+	int                                               mScreenHeight;     // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³é«˜ã•
+	std::unordered_map<std::string, class Texture*>   mTextures;         // ãƒ†ã‚¯ã‚¹ãƒãƒ£ç™»éŒ²é…åˆ—
+	std::unordered_map<std::string, class Mesh*>      mMeshs;            // ãƒ¡ãƒƒã‚·ãƒ¥ç™»éŒ²é…åˆ—
+	std::vector<class MeshComponent*>                 mMeshComponents;   // ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆç™»éŒ²é…åˆ—
+	std::vector<class SkeletalMeshComponent*>         mSkeletalMeshes;   // ã‚¹ã‚±ãƒ«ã‚¿ãƒ«ãƒ¡ãƒƒã‚·ãƒ¥ã®æç”»ã«ä½¿ã‚ã‚Œã‚‹
+	std::unordered_map<std::string, class Skeleton*>  mSkeletons; // ã‚¹ã‚±ãƒ«ã‚¿ãƒ«ãƒ‡ãƒ¼ã‚¿
+	std::unordered_map<std::string, class Animation*> mAnims;    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿
 
 
-	//ƒVƒF[ƒ_[ŠÖ˜A
-	class Shader*                                     mMeshShader;       // ƒƒbƒVƒ…ƒVƒF[ƒ_[
-	class Shader*                                     mSkinnedShader;    // ƒXƒLƒ“ƒƒbƒVƒ…ƒVƒF[ƒ_[
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼é–¢é€£
+	class Shader*                                     mMeshShader;       // ãƒ¡ãƒƒã‚·ãƒ¥ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	class Shader*                                     mSkinnedShader;    // ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 
-	// Šî–{s—ñŠÖ˜A
-	Matrix4                                           mView;             // ƒrƒ…[s—ñ
-	Matrix4                                           mProjection;       // ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
+	// åŸºæœ¬è¡Œåˆ—é–¢é€£
+	Matrix4                                           mView;             // ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—
+	Matrix4                                           mProjection;       // ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
 
-	// ƒ‰ƒCƒeƒBƒ“ƒOŠÖ˜A
-	Vector3D                                          mAmbientLight;     // ƒAƒ“ƒrƒGƒ“ƒgƒ‰ƒCƒg
-	DirectionalLight                                  mDirectionalLight; // ƒfƒBƒŒƒNƒVƒ‡ƒiƒ‹ƒ‰ƒCƒg
+	// ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°é–¢é€£
+	Vector3D                                          mAmbientLight;     // ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
+	DirectionalLight                                  mDirectionalLight; // ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒŠãƒ«ãƒ©ã‚¤ãƒˆ
 
-	// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒx[ƒXî•ñŠÖ˜A
-	SDL_Window*                                       mWindow;           // SDLƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹ 
-	SDL_GLContext                                     mContext;          // OpenGLƒRƒ“ƒeƒLƒXƒg
-	SDL_Renderer*                                     mSDLRenderer;      // SDLƒŒƒ“ƒ_ƒŠƒ“ƒOƒnƒ“ƒhƒ‹
+	// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ™ãƒ¼ã‚¹æƒ…å ±é–¢é€£
+	SDL_Window*                                       mWindow;           // SDLã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ« 
+	SDL_GLContext                                     mContext;          // OpenGLã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	SDL_Renderer*                                     mSDLRenderer;      // SDLãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒãƒ³ãƒ‰ãƒ«
 };
 
-bool GLErrorHandle(const char* location);                              // OpenGL‚ÌƒGƒ‰[ƒnƒ“ƒhƒ‹æ“¾
+bool GLErrorHandle(const char* location);                              // OpenGLã®ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒ«å–å¾—

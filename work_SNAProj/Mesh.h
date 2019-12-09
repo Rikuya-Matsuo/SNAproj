@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -21,30 +21,30 @@ class Mesh
 public:
 	Mesh();
 	~Mesh();
-	bool Load(const std::string& fileName, Renderer* renderer);   	// ƒƒbƒVƒ…‚Ìƒ[ƒhEƒAƒ“ƒ[ƒh
+	bool Load(const std::string& fileName, Renderer* renderer);   	// ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ­ãƒ¼ãƒ‰ãƒ»ã‚¢ãƒ³ãƒ­ãƒ¼ãƒ‰
 	void Unload();                                                         	
 
 	int LoadTexture(const std::string& fileName, Renderer* renderer);
 
-	VertexArray* GetVertexArray() { return mVertexArray; }            // ƒƒbƒVƒ…‚Ì’¸“_”z—ñ‚Ìæ“¾
-	Texture* GetTexture(size_t index);                                // w’è‚³‚ê‚½ƒCƒ“ƒfƒbƒNƒX‚©‚çƒeƒNƒXƒ`ƒƒ‚Ìæ“¾
-	const std::string& GetShaderName() const { return mShaderName; }        // ƒVƒF[ƒ_[–¼‚Ìæ“¾
+	VertexArray* GetVertexArray() { return mVertexArray; }            // ãƒ¡ãƒƒã‚·ãƒ¥ã®é ‚ç‚¹é…åˆ—ã®å–å¾—
+	Texture* GetTexture(size_t index);                                // æŒ‡å®šã•ã‚ŒãŸã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‹ã‚‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å–å¾—
+	const std::string& GetShaderName() const { return mShaderName; }        // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼åã®å–å¾—
 
-	float GetRadius() const { return mRadius; }                             // ƒoƒEƒ“ƒfƒBƒ“ƒOƒXƒtƒBƒA‚Ì”¼Œa‚ğæ“¾
+	float GetRadius() const { return mRadius; }                             // ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚¹ãƒ•ã‚£ã‚¢ã®åŠå¾„ã‚’å–å¾—
 
 	const AABB & GetCollisionBox() const { return mBox; }
 
 	bool IsAssigned(int index);
 
 private:
-	// ƒƒbƒVƒ…‚ÌƒeƒNƒXƒ`ƒƒ
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	std::unordered_map<int, Texture *> mTextures;
 
-	VertexArray* mVertexArray;                                        // ƒƒbƒVƒ…‚Ì’¸“_”z—ñ
+	VertexArray* mVertexArray;                                        // ãƒ¡ãƒƒã‚·ãƒ¥ã®é ‚ç‚¹é…åˆ—
 
-	std::string mShaderName;	                                            // ƒƒbƒVƒ…w’è‚ÌƒVƒF[ƒ_[
-	float mRadius;	                                                        // ƒoƒEƒ“ƒfƒBƒ“ƒOƒXƒtƒBƒA‚Ì”¼Œa
-	float mSpecPower;	                                                    // •\–Ê‚ÌƒXƒyƒLƒ…ƒ‰[’l
+	std::string mShaderName;	                                            // ãƒ¡ãƒƒã‚·ãƒ¥æŒ‡å®šã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	float mRadius;	                                                        // ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚¹ãƒ•ã‚£ã‚¢ã®åŠå¾„
+	float mSpecPower;	                                                    // è¡¨é¢ã®ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼å€¤
 
-	AABB mBox;																// ƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX
+	AABB mBox;																// ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹
 };

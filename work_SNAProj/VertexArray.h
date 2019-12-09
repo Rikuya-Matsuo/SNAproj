@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -10,25 +10,25 @@
 class VertexArray
 {
 public:
-	// ’¸“_ƒŒƒCƒAƒEƒg—ñ‹“
+	// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆåˆ—æŒ™
     enum Layout
 	{
-		PosNormTex,     // ˆÊ’u&–@ü&ƒeƒNƒXƒ`ƒƒUV ‚ğ‚Á‚½ƒtƒH[ƒ}ƒbƒg
-		PosNormSkinTex  // ˆÊ’u&–@ü& "ƒXƒLƒ“—p‚Ì‰e‹¿ƒ{[ƒ“•d‚İî•ñ" & ƒeƒNƒXƒ`ƒƒUV 
+		PosNormTex,     // ä½ç½®&æ³•ç·š&ãƒ†ã‚¯ã‚¹ãƒãƒ£UV ã‚’æŒã£ãŸãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+		PosNormSkinTex  // ä½ç½®&æ³•ç·š& "ã‚¹ã‚­ãƒ³ç”¨ã®å½±éŸ¿ãƒœãƒ¼ãƒ³ï¼†é‡ã¿æƒ…å ±" & ãƒ†ã‚¯ã‚¹ãƒãƒ£UV 
 	};
 
-	VertexArray(const void* verts, unsigned int numVerts, Layout layout,  // ’¸“_”z—ñƒRƒ“ƒXƒgƒ‰ƒNƒ^ 
+	VertexArray(const void* verts, unsigned int numVerts, Layout layout,  // é ‚ç‚¹é…åˆ—ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ 
 		const unsigned int* indices, unsigned int numIndices);
 	~VertexArray();
 
-	void SetActive();                                                     // ‚±‚Ì’¸“_”z—ñ‚ğƒAƒNƒeƒBƒu‚É‚µ‚Ä•`‰æ‚Åg—p‚·‚é
-	unsigned int GetNumIndices() const { return mNumIndices; }            // ƒCƒ“ƒfƒbƒNƒX”‚ğæ“¾‚·‚é
-	unsigned int GetNumVerts() const { return mNumVerts; }                // ’¸“_”‚ğæ“¾‚·‚é
+	void SetActive();                                                     // ã“ã®é ‚ç‚¹é…åˆ—ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã—ã¦æç”»ã§ä½¿ç”¨ã™ã‚‹
+	unsigned int GetNumIndices() const { return mNumIndices; }            // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•°ã‚’å–å¾—ã™ã‚‹
+	unsigned int GetNumVerts() const { return mNumVerts; }                // é ‚ç‚¹æ•°ã‚’å–å¾—ã™ã‚‹
 private:
 
-	unsigned int mNumVerts;                      // ’¸“_”
-	unsigned int mNumIndices;                    // ƒCƒ“ƒfƒbƒNƒX” iƒ|ƒŠƒSƒ“–Ê”~‚R)
-	unsigned int mVertexBuffer;                  // ’¸“_ƒoƒbƒtƒ@IDiOpenGL‚É“o˜^‚É•t—^‚³‚ê‚éj
-	unsigned int mIndexBuffer;                   // ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ID (OpenGL“o˜^‚É•t—^j
-	unsigned int mVertexArray;                   // ’¸“_”z—ñƒIƒuƒWƒFƒNƒgID
+	unsigned int mNumVerts;                      // é ‚ç‚¹æ•°
+	unsigned int mNumIndices;                    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•° ï¼ˆãƒãƒªã‚´ãƒ³é¢æ•°Ã—ï¼“)
+	unsigned int mVertexBuffer;                  // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡IDï¼ˆOpenGLã«ç™»éŒ²æ™‚ã«ä»˜ä¸ã•ã‚Œã‚‹ï¼‰
+	unsigned int mIndexBuffer;                   // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ID (OpenGLç™»éŒ²æ™‚ã«ä»˜ä¸ï¼‰
+	unsigned int mVertexArray;                   // é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆID
 }; 

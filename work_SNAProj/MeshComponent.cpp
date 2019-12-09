@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -16,7 +16,7 @@
 #include "VertexArray.h"
 #include <typeinfo>
 
-// ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg@owner‚ÆƒXƒLƒ“ƒƒbƒVƒ…‚©‚Ìî•ñ“ü‚ê‚é
+// ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã€€ownerã¨ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ã‹ã®æƒ…å ±å…¥ã‚Œã‚‹
 MeshComponent::MeshComponent(Actor* owner, bool isSkeletal)
 	:ComponentBase(owner)
 	, mMesh(nullptr)
@@ -42,21 +42,21 @@ void MeshComponent::Draw(Shader* shader)
 {
 	if (mMesh)
 	{
-		// Set the world transform@ƒ[ƒ‹ƒh•ÏŠ·‚ðƒZƒbƒg
+		// Set the world transformã€€ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ã‚’ã‚»ãƒƒãƒˆ
 		shader->SetMatrixUniform("uWorldTransform",
 			mOwner->GetWorldTransform());
-		// Set specular power@ƒXƒyƒLƒ…ƒ‰‹­“xƒZƒbƒg
+		// Set specular powerã€€ã‚¹ãƒšã‚­ãƒ¥ãƒ©å¼·åº¦ã‚»ãƒƒãƒˆ
 		shader->SetFloatUniform("uSpecPower", 100);
-		// Set the active texture@ƒAƒNƒeƒBƒuƒeƒNƒXƒ`ƒƒƒZƒbƒg
+		// Set the active textureã€€ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚»ãƒƒãƒˆ
 		Texture* t = mMesh->GetTexture(mTextureIndex);
 		if (t)
 		{
 			t->SetActive();
 		}
-		// Set the mesh's vertex array as active@’¸“_”z—ñ‚ðƒAƒNƒeƒBƒu‚É
+		// Set the mesh's vertex array as activeã€€é ‚ç‚¹é…åˆ—ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«
 		VertexArray* va = mMesh->GetVertexArray();
 		va->SetActive();
-		// Draw@•`‰æ‚·‚é[
+		// Drawã€€æç”»ã™ã‚‹ãƒ¼
 		glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 	}
 }

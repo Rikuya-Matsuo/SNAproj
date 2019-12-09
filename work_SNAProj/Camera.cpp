@@ -1,4 +1,4 @@
-#include "Camera.h"
+ï»¿#include "Camera.h"
 #include "Actor.h"
 #include "System.h"
 
@@ -25,7 +25,7 @@ Camera::~Camera()
 
 void Camera::Update()
 {
-	// ƒJƒƒ‰‹üƒxƒNƒgƒ‹AƒJƒƒ‰s—ñì¬
+	// ã‚«ãƒ¡ãƒ©è¦–ç·šãƒ™ã‚¯ãƒˆãƒ«ã€ã‚«ãƒ¡ãƒ©è¡Œåˆ—ä½œæˆ
 	mViewVector = mViewTarget - mPosition;
 	mViewMatrix = Matrix4::CreateLookAt(mPosition, mViewTarget, Vector3D(0.0f, 0.0f, 1.0f));
 }

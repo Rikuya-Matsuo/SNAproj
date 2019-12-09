@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -13,22 +13,22 @@
 class MeshComponent : public ComponentBase
 {
 public:
-	MeshComponent(class Actor* owner, bool isSkeletal = false);       // ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^Bi—vFeƒAƒNƒ^[j
+	MeshComponent(class Actor* owner, bool isSkeletal = false);       // ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚ï¼ˆè¦ï¼šè¦ªã‚¢ã‚¯ã‚¿ãƒ¼ï¼‰
 	~MeshComponent();
 
 	void Update() override;
 
-	virtual void Draw(class Shader* shader);                          // ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì•`‰æ
-	virtual void SetMesh(class Mesh* mesh) { mMesh = mesh; }          // ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒg‚Åg—p‚·‚éƒƒbƒVƒ…‚ÌƒZƒbƒg
-	void SetTextureIndex(size_t index) { mTextureIndex = index; }     // ƒeƒNƒXƒ`ƒƒ‚ÌƒZƒbƒg
+	virtual void Draw(class Shader* shader);                          // ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æç”»
+	virtual void SetMesh(class Mesh* mesh) { mMesh = mesh; }          // ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã§ä½¿ç”¨ã™ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥ã®ã‚»ãƒƒãƒˆ
+	void SetTextureIndex(size_t index) { mTextureIndex = index; }     // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚»ãƒƒãƒˆ
 
-	void SetVisible(bool visible) { mVisible = visible; }             // •\¦ƒtƒ‰ƒO‚ÌƒZƒbƒg
-	bool GetVisible() const { return mVisible; }                      // •\¦ƒtƒ‰ƒO‚ÌƒQƒbƒg
+	void SetVisible(bool visible) { mVisible = visible; }             // è¡¨ç¤ºãƒ•ãƒ©ã‚°ã®ã‚»ãƒƒãƒˆ
+	bool GetVisible() const { return mVisible; }                      // è¡¨ç¤ºãƒ•ãƒ©ã‚°ã®ã‚²ãƒƒãƒˆ
 
-	bool GetIsSkeletal() const { return mIsSkeletal; }                // ƒXƒPƒ‹ƒ^ƒ‹ƒ‚ƒfƒ‹‚©‚Ç‚¤‚©‚Ìæ“¾
+	bool GetIsSkeletal() const { return mIsSkeletal; }                // ã‚¹ã‚±ãƒ«ã‚¿ãƒ«ãƒ¢ãƒ‡ãƒ«ã‹ã©ã†ã‹ã®å–å¾—
 protected:
-	class Mesh* mMesh;                                                // ƒƒbƒVƒ…ƒIƒuƒWƒFƒNƒg‚Ìæ“¾
-	size_t mTextureIndex;                                             // ƒeƒNƒXƒ`ƒƒ[‚ÌƒCƒ“ƒfƒbƒNƒX
-	bool mVisible;                                                    // •\¦ƒtƒ‰ƒO
-	bool mIsSkeletal;                                                 // ƒXƒPƒ‹ƒ^ƒ‹ƒ‚ƒfƒ‹‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+	class Mesh* mMesh;                                                // ãƒ¡ãƒƒã‚·ãƒ¥ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
+	size_t mTextureIndex;                                             // ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	bool mVisible;                                                    // è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	bool mIsSkeletal;                                                 // ã‚¹ã‚±ãƒ«ã‚¿ãƒ«ãƒ¢ãƒ‡ãƒ«ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
 };

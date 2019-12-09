@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Vector.h"
 #include "Common.h"
 
@@ -23,8 +23,8 @@ struct AABB
 
 	void InitMinMax(const Vector3D & point) { mMin = mMax = point; }
 
-	// Šp‚ÌÀ•W‚ğXV
-	// “ü—Í‚³‚ê‚½Šp‚ÌÀ•W‚Æ¡‚ÌÅ‘åÅ¬‚ÌŠp‚ÌÀ•W‚ğ”äŠr‚µ‚ÄA’l‚ğXV‚·‚é
+	// è§’ã®åº§æ¨™ã‚’æ›´æ–°
+	// å…¥åŠ›ã•ã‚ŒãŸè§’ã®åº§æ¨™ã¨ä»Šã®æœ€å¤§æœ€å°ã®è§’ã®åº§æ¨™ã‚’æ¯”è¼ƒã—ã¦ã€å€¤ã‚’æ›´æ–°ã™ã‚‹
 	void RenewalMinMax(const Vector3D & point);
 
 	bool IsPointInside(const Vector3D& point) const;
@@ -42,7 +42,7 @@ namespace Collision
 }
 
 
-// CollisionŠÖ”ŒQ
+// Collisioné–¢æ•°ç¾¤
 bool Collision::CheckHit(const AABB & box1, const AABB & box2)
 {
 	bool notHit =
@@ -53,7 +53,7 @@ bool Collision::CheckHit(const AABB & box1, const AABB & box2)
 		box2.mMax.y < box1.mMin.y ||
 		box2.mMax.z < box1.mMin.z;
 
-	// ˆê‚Â‚àtrue‚ª‚È‚¯‚ê‚ÎA“ñ‚Â‚ÍÕ“Ë‚µ‚Ä‚¢‚é
+	// ä¸€ã¤ã‚‚trueãŒãªã‘ã‚Œã°ã€äºŒã¤ã¯è¡çªã—ã¦ã„ã‚‹
 	return !notHit;
 }
 

@@ -1,4 +1,4 @@
-#include "ColliderComponentBase.h"
+﻿#include "ColliderComponentBase.h"
 #include "PhysicManager.h"
 
 ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute colAtt, ColliderShape colShape) :

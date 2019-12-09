@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 #include "ComponentBase.h"
 #include "Collision.h"
 
-// Unity‚ÅŒ¾‚¤‚Æ‚±‚ë‚ÌTag
+// Unityã§è¨€ã†ã¨ã“ã‚ã®Tag
 enum ColliderAttribute
 {
 	ColAtt_Player = 0,
 	ColAtt_Enemy,
 	ColAtt_Candle,
 	ColAtt_Block,
-	ColAtt_Detector,		// ƒgƒŠƒK[BÚ‹ßŒŸ’m‘•’uBƒqƒbƒg‚Ì‰Ÿ‚µ•Ô‚µ‚È‚µB
+	ColAtt_Detector,		// ãƒˆãƒªã‚¬ãƒ¼ã€‚æ¥è¿‘æ¤œçŸ¥è£…ç½®ã€‚ãƒ’ãƒƒãƒˆæ™‚ã®æŠ¼ã—è¿”ã—ãªã—ã€‚
 	ColAtt_Invalid
 };
 

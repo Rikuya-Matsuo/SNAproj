@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -7,16 +7,16 @@
 // ----------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////
-// ’¸“_ƒŒƒCƒAƒEƒg
+// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ
 // PosNormTex = 8 * sizeof(float) = 32 bytes
-// | ˆÊ’u      | –@ü      | Texture|
+// | ä½ç½®      | æ³•ç·š      | Texture|
 // | x | y | z | x | y | z | u | v | 
 //
 // posNormSkinTex
 // PosNormSkinTex = (8 * sizeof(float)) + (8 * sizeof(char)) = 40 bytes
-// | ˆÊ’u      | –@ü       | Bones   | weight  |Texture|
+// | ä½ç½®      | æ³•ç·š       | Bones   | weight  |Texture|
 // | x | y | z | x | y | z | char[4] | char[4] | u | v |
-//                                    ¦weight‚ÌŠm•Û‚Íchar‚¾‚ªA¸“x‚ª•K—v‚È‚¢‚Ì‚Å8bitŒÅ’è¬”‚Æ‚µ‚Äg—p‚·‚é
+//                                    â€»weightã®ç¢ºä¿ã¯charã ãŒã€ç²¾åº¦ãŒå¿…è¦ãªã„ã®ã§8bitå›ºå®šå°æ•°ã¨ã—ã¦ä½¿ç”¨ã™ã‚‹
 
 #include "VertexArray.h"
 #include <GL/glew.h>
@@ -26,60 +26,60 @@ VertexArray::VertexArray(const void* verts, unsigned int numVerts, Layout layout
 	:mNumVerts(numVerts)
 	, mNumIndices(numIndices)
 {
-	// ’¸“_”z—ñ‚Ìì¬
+	// é ‚ç‚¹é…åˆ—ã®ä½œæˆ
 	glGenVertexArrays(1, &mVertexArray);
 	glBindVertexArray(mVertexArray);
 
-	// ’¸“_ƒŒƒCƒAƒEƒg‚ª ƒXƒPƒ‹ƒ^ƒ‹ƒ‚ƒfƒ‹‚È‚ç@ƒ{[ƒ“IDA‰e‹¿“x•ª‚ğƒTƒCƒY‘‚â‚·
+	// é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆãŒ ã‚¹ã‚±ãƒ«ã‚¿ãƒ«ãƒ¢ãƒ‡ãƒ«ãªã‚‰ã€€ãƒœãƒ¼ãƒ³IDã€å½±éŸ¿åº¦åˆ†ã‚’ã‚µã‚¤ã‚ºå¢—ã‚„ã™
 	unsigned vertexSize = 8 * sizeof(float);
 	if (layout == PosNormSkinTex)
 	{
 		vertexSize = 8 * sizeof(float) + 8 * sizeof(char);
 	}
 
-	// ’¸“_ƒoƒbƒtƒ@‚Ìì¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
 	glGenBuffers(1, &mVertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, numVerts * vertexSize, verts, GL_STATIC_DRAW);
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ìì¬
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
 	glGenBuffers(1, &mIndexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
-	// ’¸“_‘®«
+	// é ‚ç‚¹å±æ€§
 	if (layout == PosNormTex)
 	{
-		// float 3ŒÂ•ª@¨@ˆÊ’u x,y,z@ˆÊ’u‘®«‚ğƒZƒbƒg
+		// float 3å€‹åˆ†ã€€â†’ã€€ä½ç½® x,y,zã€€ä½ç½®å±æ€§ã‚’ã‚»ãƒƒãƒˆ
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexSize, 0);
-		// Ÿ‚Ìfloat 3ŒÂ•ª ¨ –@ü nx, ny, nz@–@ü‘®«‚ğƒZƒbƒg
+		// æ¬¡ã®float 3å€‹åˆ† â†’ æ³•ç·š nx, ny, nzã€€æ³•ç·šå±æ€§ã‚’ã‚»ãƒƒãƒˆ
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, vertexSize,
 			reinterpret_cast<void*>(sizeof(float) * 3));
-		// Ÿ‚Ìfloat 2ŒÂ•ª u, v  ƒeƒNƒXƒ`ƒƒÀ•W‘®«‚ğƒZƒbƒg
+		// æ¬¡ã®float 2å€‹åˆ† u, v  ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™å±æ€§ã‚’ã‚»ãƒƒãƒˆ
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, vertexSize,
 			reinterpret_cast<void*>(sizeof(float) * 6));
 	}
 	else if (layout == PosNormSkinTex)
 	{
-		// float 3ŒÂ•ª@¨@ˆÊ’u x,y,z@ˆÊ’u‘®«‚ğƒZƒbƒg
+		// float 3å€‹åˆ†ã€€â†’ã€€ä½ç½® x,y,zã€€ä½ç½®å±æ€§ã‚’ã‚»ãƒƒãƒˆ
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexSize, 0);
-		// Ÿ‚Ìfloat 3ŒÂ•ª ¨ –@ü nx, ny, nz@–@ü‘®«‚ğƒZƒbƒg
+		// æ¬¡ã®float 3å€‹åˆ† â†’ æ³•ç·š nx, ny, nzã€€æ³•ç·šå±æ€§ã‚’ã‚»ãƒƒãƒˆ
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, vertexSize,
 			reinterpret_cast<void*>(sizeof(float) * 3));
-		//@‰e‹¿ó‚¯‚éƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒX”Ô†  (intŒ^‚ğƒL[ƒv)
+		//ã€€å½±éŸ¿å—ã‘ã‚‹ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç•ªå·  (intå‹ã‚’ã‚­ãƒ¼ãƒ—)
 		glEnableVertexAttribArray(2);
 		glVertexAttribIPointer(2, 4, GL_UNSIGNED_BYTE, vertexSize,
 			reinterpret_cast<void*>(sizeof(float) * 6));
-		// ƒ{[ƒ“ƒEƒFƒCƒgî•ñ (float ‚É•ÏŠ·)
+		// ãƒœãƒ¼ãƒ³ã‚¦ã‚§ã‚¤ãƒˆæƒ…å ± (float ã«å¤‰æ›)
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, vertexSize,
 			reinterpret_cast<void*>(sizeof(float) * 6 + sizeof(char) * 4));
-		// Ÿ‚Ìfloat 2ŒÂ•ª u, v  ƒeƒNƒXƒ`ƒƒÀ•W‘®«‚ğƒZƒbƒg
+		// æ¬¡ã®float 2å€‹åˆ† u, v  ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™å±æ€§ã‚’ã‚»ãƒƒãƒˆ
 		glEnableVertexAttribArray(4);
 		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, vertexSize,
 			reinterpret_cast<void*>(sizeof(float) * 6 + sizeof(char) * 8));

@@ -1,4 +1,4 @@
-#include "Collision.h"
+ï»¿#include "Collision.h"
 #include "Common.h"
 
 Sphere::Sphere(const Vector3D & center, float radius) :
@@ -26,12 +26,12 @@ AABB::AABB(const Vector3D & min, const Vector3D & max):
 
 void AABB::RenewalMinMax(const Vector3D & point)
 {
-	// Å‘å‚ÌŠp‚ÌÀ•W‚ÌXV
+	// æœ€å¤§ã®è§’ã®åº§æ¨™ã®æ›´æ–°
 	mMax.x = Common::Larger(mMax.x, point.x);
 	mMax.y = Common::Larger(mMax.y, point.y);
 	mMax.z = Common::Larger(mMax.z, point.z);
 
-	// Å¬
+	// æœ€å°
 	mMin.x = Common::Smaller(mMin.x, point.x);
 	mMin.y = Common::Smaller(mMin.y, point.y);
 	mMin.z = Common::Smaller(mMin.z, point.z);
@@ -39,7 +39,7 @@ void AABB::RenewalMinMax(const Vector3D & point)
 
 bool AABB::IsPointInside(const Vector3D & point) const
 {
-	// “_‚ªŠO‘¤‚É‚ ‚éğŒ
+	// ç‚¹ãŒå¤–å´ã«ã‚ã‚‹æ¡ä»¶
 	bool outside =
 		point.x < mMin.x ||
 		point.y < mMin.y ||
@@ -48,13 +48,13 @@ bool AABB::IsPointInside(const Vector3D & point) const
 		point.y > mMax.y ||
 		point.z > mMax.z;
 
-	// ŠO‘¤‚É‚È‚¢‚È‚çA“à‘¤‚É‚ ‚é‚Éˆá‚¢‚È‚¢
+	// å¤–å´ã«ãªã„ãªã‚‰ã€å†…å´ã«ã‚ã‚‹ã«é•ã„ãªã„
 	return !outside;
 }
 
 float AABB::MinimumDistanceSq(const Vector3D & point) const
 {
-	// ‚»‚ê‚¼‚ê‚Ì²‚Å‚Ì·‚ğ‚Æ‚é
+	// ãã‚Œãã‚Œã®è»¸ã§ã®å·®ã‚’ã¨ã‚‹
 	Vector3D v;
 	v.x = Common::Larger(mMin.x - point.x, 0.0f);
 	v.x = Common::Larger(v.x, point.x - mMax.x);

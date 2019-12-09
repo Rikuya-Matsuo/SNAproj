@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -14,16 +14,16 @@ public:
 	Texture();
 	~Texture();
 
-	bool Load(const std::string& fileName);                      // ƒeƒNƒXƒ`ƒƒ‚ğƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh‚·‚é
-	void Unload();                                               // ƒeƒNƒXƒ`ƒƒ‰ğ•úˆ—
-	void CreateFromSurface(struct SDL_Surface* surface);         // SDLƒT[ƒtƒFƒX‚©‚çƒeƒNƒXƒ`ƒƒ‚ğì¬‚·‚é
+	bool Load(const std::string& fileName);                      // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
+	void Unload();                                               // ãƒ†ã‚¯ã‚¹ãƒãƒ£è§£æ”¾å‡¦ç†
+	void CreateFromSurface(struct SDL_Surface* surface);         // SDLã‚µãƒ¼ãƒ•ã‚§ã‚¹ã‹ã‚‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ä½œæˆã™ã‚‹
 
-	void SetActive();                                            // ‚±‚ÌƒeƒNƒXƒ`ƒƒ‚ğƒAƒNƒeƒBƒu(ƒ|ƒŠƒSƒ“•`‰æ‚Åg—pj‚É‚·‚é
+	void SetActive();                                            // ã“ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–(ãƒãƒªã‚´ãƒ³æç”»ã§ä½¿ç”¨ï¼‰ã«ã™ã‚‹
 
-	int GetWidth() const { return mWidth; }                      // ƒeƒNƒXƒ`ƒƒ•
-	int GetHeight() const { return mHeight; }                    // ƒeƒNƒXƒ`ƒƒ‚‚³
+	int GetWidth() const { return mWidth; }                      // ãƒ†ã‚¯ã‚¹ãƒãƒ£å¹…
+	int GetHeight() const { return mHeight; }                    // ãƒ†ã‚¯ã‚¹ãƒãƒ£é«˜ã•
 private:
-	unsigned int mTextureID;                                     // ƒeƒNƒXƒ`ƒƒID
-	int mWidth;                                                  // ƒeƒNƒXƒ`ƒƒ•
-	int mHeight;                                                 // ƒeƒNƒXƒ`ƒƒ‚‚³
+	unsigned int mTextureID;                                     // ãƒ†ã‚¯ã‚¹ãƒãƒ£ID
+	int mWidth;                                                  // ãƒ†ã‚¯ã‚¹ãƒãƒ£å¹…
+	int mHeight;                                                 // ãƒ†ã‚¯ã‚¹ãƒãƒ£é«˜ã•
 };

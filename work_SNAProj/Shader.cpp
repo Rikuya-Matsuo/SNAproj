@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------
+ï»¿// ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
 // 
@@ -27,7 +27,7 @@ Shader::~Shader()
 
 bool Shader::Load(const std::string& vertName, const std::string& fragName)
 {
-	// ’¸“_ƒVƒF[ƒ_[AƒsƒNƒZƒ‹iƒtƒ‰ƒOƒƒ“ƒgjƒVƒF[ƒ_[‚ğƒRƒ“ƒpƒCƒ‹
+	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã€ãƒ”ã‚¯ã‚»ãƒ«ï¼ˆãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆï¼‰ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 	if (!CompileShader(vertName,
 		GL_VERTEX_SHADER,
 		mVertexShader) ||
@@ -38,13 +38,13 @@ bool Shader::Load(const std::string& vertName, const std::string& fragName)
 		return false;
 	}
 
-	//‚±‚±‚ÅƒVƒF[ƒ_[ƒvƒƒOƒ‰ƒ€‚ª‚Å‚«‚½‚Ì‚ÅA ’¸“_ƒVƒF[ƒ_[Eƒtƒ‰ƒOƒƒ“ƒgƒVƒF[ƒ_[‚ğƒŠƒ“ƒN‚³‚¹‚é
+	//ã“ã“ã§ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãŒã§ããŸã®ã§ã€ é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ»ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ãƒªãƒ³ã‚¯ã•ã›ã‚‹
 	mShaderProgram = glCreateProgram();
 	glAttachShader(mShaderProgram, mVertexShader);
 	glAttachShader(mShaderProgram, mFragShader);
 	glLinkProgram(mShaderProgram);
 
-	// ƒvƒƒOƒ‰ƒ€‚ÌƒŠƒ“ƒN‚ª¬Œ÷‚µ‚½‚©H
+	// ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ãƒªãƒ³ã‚¯ãŒæˆåŠŸã—ãŸã‹ï¼Ÿ
 	if (!IsValidProgram())
 	{
 		return false;
@@ -55,7 +55,7 @@ bool Shader::Load(const std::string& vertName, const std::string& fragName)
 
 void Shader::Unload()
 {
-	// ƒVƒF[ƒ_AƒvƒƒOƒ‰ƒ€‚Ìdelete
+	// ã‚·ã‚§ãƒ¼ãƒ€ã€ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®delete
 	glDeleteProgram(mShaderProgram);
 	glDeleteShader(mVertexShader);
 	glDeleteShader(mFragShader);
@@ -63,36 +63,36 @@ void Shader::Unload()
 
 void Shader::SetActive()
 {
-	// ƒVƒF[ƒ_[ƒvƒƒOƒ‰ƒ€‚ğƒAƒNƒeƒBƒu‚É‚·‚é
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹
 	glUseProgram(mShaderProgram);
 }
 
 void Shader::SetMatrixUniform(const char* name, const Matrix4& matrix)
 {
-	// ƒVƒF[ƒ_[•Ï”(uniform)‚ğ–¼‘O‚ÅŒŸõ‚·‚é
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¤‰æ•°(uniform)ã‚’åå‰ã§æ¤œç´¢ã™ã‚‹
 	GLuint loc = glGetUniformLocation(mShaderProgram, name);
-	// s—ñƒf[ƒ^‚ğƒVƒF[ƒ_[•Ï”‚É‘—‚é
+	// è¡Œåˆ—ãƒ‡ãƒ¼ã‚¿ã‚’ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¤‰æ•°ã«é€ã‚‹
 	glUniformMatrix4fv(loc, 1, GL_TRUE, matrix.GetAsFloatPtr());
 }
 
 void Shader::SetMatrixUniforms(const char* name, Matrix4* matrices, unsigned count)
 {
 	GLuint loc = glGetUniformLocation(mShaderProgram, name);
-	// s—ñ”z—ñƒf[ƒ^‚ğƒVƒF[ƒ_[•Ï”‚É‘—‚é
+	// è¡Œåˆ—é…åˆ—ãƒ‡ãƒ¼ã‚¿ã‚’ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¤‰æ•°ã«é€ã‚‹
 	glUniformMatrix4fv(loc, count, GL_TRUE, matrices->GetAsFloatPtr());
 }
 
 void Shader::SetVectorUniform(const char* name, const Vector3D& vector)
 {
 	GLuint loc = glGetUniformLocation(mShaderProgram, name);
-	// ƒxƒNƒgƒ‹’l‚ğƒVƒF[ƒ_[•Ï”‚É‘—‚é
+	// ãƒ™ã‚¯ãƒˆãƒ«å€¤ã‚’ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¤‰æ•°ã«é€ã‚‹
 	glUniform3fv(loc, 1, vector.GetAsFloatPtr());
 }
 
 void Shader::SetFloatUniform(const char* name, float value)
 {
 	GLuint loc = glGetUniformLocation(mShaderProgram, name);
-	// float’l‚ğƒVƒF[ƒ_[•Ï”‚É‘—‚é
+	// floatå€¤ã‚’ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¤‰æ•°ã«é€ã‚‹
 	glUniform1f(loc, value);
 }
 
@@ -100,31 +100,31 @@ bool Shader::CompileShader(const std::string& fileName,
 	GLenum shaderType,
 	GLuint& outShader)
 {
-	// ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	std::ifstream shaderFile(fileName);
 	if (shaderFile.is_open())
 	{
-		// ƒeƒLƒXƒg‚ğ“Ç‚İ‚±‚ñ‚ÅA•¶š—ñ‚É•ÏŠ·‚·‚é
+		// ãƒ†ã‚­ã‚¹ãƒˆã‚’èª­ã¿ã“ã‚“ã§ã€æ–‡å­—åˆ—ã«å¤‰æ›ã™ã‚‹
 		std::stringstream sstream;
 		sstream << shaderFile.rdbuf();
 		std::string contents = sstream.str();
 		const char* contentsChar = contents.c_str();
 
-		// ƒVƒF[ƒ_[‚ğshaderType‚É]‚Á‚Äì¬‚·‚é
+		// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’shaderTypeã«å¾“ã£ã¦ä½œæˆã™ã‚‹
 		outShader = glCreateShader(shaderType);
-		// ƒ\[ƒX•¶š—ñ‚ÌƒRƒ“ƒpƒCƒ‹‚ğ‚İ‚é
+		// ã‚½ãƒ¼ã‚¹æ–‡å­—åˆ—ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚’è©¦ã¿ã‚‹
 		glShaderSource(outShader, 1, &(contentsChar), nullptr);
 		glCompileShader(outShader);
 
 		if (!IsCompiled(outShader))
 		{
-			printf("ƒVƒF[ƒ_[ƒRƒ“ƒpƒCƒ‹‚É¸”s %s", fileName.c_str());
+			printf("ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã«å¤±æ•— %s", fileName.c_str());
 			return false;
 		}
 	}
 	else
 	{
-		printf("ƒVƒF[ƒ_[ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½: %s", fileName.c_str());
+		printf("ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ: %s", fileName.c_str());
 		return false;
 	}
 
@@ -134,7 +134,7 @@ bool Shader::CompileShader(const std::string& fileName,
 bool Shader::IsCompiled(GLuint shader)
 {
 	GLint status;
-	// ƒRƒ“ƒpƒCƒ‹‚Ìó‘Ô‚ğ–â‚¢‡‚í‚¹‚é
+	// ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã®çŠ¶æ…‹ã‚’å•ã„åˆã‚ã›ã‚‹
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
 	if (status != GL_TRUE)
@@ -142,7 +142,7 @@ bool Shader::IsCompiled(GLuint shader)
 		char buffer[512];
 		memset(buffer, 0, 512);
 		glGetShaderInfoLog(shader, 511, nullptr, buffer);
-		printf("GLSL compile‚É¸”s:\n%s", buffer);
+		printf("GLSL compileã«å¤±æ•—:\n%s", buffer);
 		return false;
 	}
 
@@ -153,14 +153,14 @@ bool Shader::IsValidProgram()
 {
 
 	GLint status;
-	// ƒŠƒ“ƒNó‘Ô‚ğ–â‚¢‡‚í‚¹‚é
+	// ãƒªãƒ³ã‚¯çŠ¶æ…‹ã‚’å•ã„åˆã‚ã›ã‚‹
 	glGetProgramiv(mShaderProgram, GL_LINK_STATUS, &status);
 	if (status != GL_TRUE)
 	{
 		char buffer[512];
 		memset(buffer, 0, 512);
 		glGetProgramInfoLog(mShaderProgram, 511, nullptr, buffer);
-		printf("GLSL Link ó‘Ô:\n%s", buffer);
+		printf("GLSL Link çŠ¶æ…‹:\n%s", buffer);
 		return false;
 	}
 

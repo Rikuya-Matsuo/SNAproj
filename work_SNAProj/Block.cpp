@@ -1,4 +1,4 @@
-#include "Block.h"
+ï»¿#include "Block.h"
 #include "System.h"
 #include "Mesh.h"
 #include "MeshComponent.h"
@@ -12,7 +12,7 @@ Block::Block():
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/ForestGround01.gpmesh");
 	if (!msh)
 	{
-		SDL_Log("ƒuƒƒbƒNFƒƒbƒVƒ…‚Ì“Ç‚İ‚İ‚É¸”s\n");
+		SDL_Log("ãƒ–ãƒ­ãƒƒã‚¯ï¼šãƒ¡ãƒƒã‚·ãƒ¥ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—\n");
 	}
 
 	mMeshComponent->SetMesh(msh);

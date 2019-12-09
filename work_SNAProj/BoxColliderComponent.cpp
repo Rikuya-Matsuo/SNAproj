@@ -1,4 +1,4 @@
-#include "BoxColliderComponent.h"
+ï»¿#include "BoxColliderComponent.h"
 
 BoxColliderComponent::BoxColliderComponent(Actor * owner, ColliderAttribute colAttribute):
 	ColliderComponentBase(owner, colAttribute, ColliderShape::ColShape_Box)
@@ -16,16 +16,16 @@ void BoxColliderComponent::Update()
 
 void BoxColliderComponent::CalculateWorldBox()
 {
-	// ƒIƒuƒWƒFƒNƒg‹óŠÔƒ{ƒbƒNƒX‚ÉƒŠƒZƒbƒg
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç©ºé–“ãƒœãƒƒã‚¯ã‚¹ã«ãƒªã‚»ãƒƒãƒˆ
 	mWorldBox = mObjectBox;
 
-	// ƒXƒP[ƒ‹‚ðŒvŽZ‚É“ü‚ê‚é
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã‚’è¨ˆç®—ã«å…¥ã‚Œã‚‹
 	mWorldBox.mMin *= mOwner->GetScale();
 	mWorldBox.mMax *= mOwner->GetScale();
 
-	// ‰ñ“]i‚ ‚Æ‚ÅŽÀ‘•‚µ‚á‚·j
+	// å›žè»¢ï¼ˆã‚ã¨ã§å®Ÿè£…ã—ã‚ƒã™ï¼‰
 
-	// •½sˆÚ“®
+	// å¹³è¡Œç§»å‹•
 	mWorldBox.mMin += mOwner->GetPosition();
 	mWorldBox.mMax += mOwner->GetPosition();
 }
