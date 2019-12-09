@@ -2,20 +2,38 @@
 #include "ColliderComponentBase.h"
 #include "BoxColliderComponent.h"
 #include "Collision.h"
+#include <list>
 
 void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 {
-	mColliders.emplace_back(const_cast<ColliderComponentBase *>(in_colCmp));
+	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
+
+	mColliders.emplace_back(collider);
+
+	// ハッシュ値（と呼べるのか？）生成のため、IDを設定する
+	mColliderID[collider] = mForAssignColliderID++;
+
+	/*
+	std::list<unsigned short> assignedIDArray;
+	for (int i = 0; i < mColliders.size(); ++i)
+	{
+		
+	}
+	*/
 }
 
 void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 {
-	auto target = std::find(mColliders.begin(), mColliders.end(), const_cast<ColliderComponentBase *>(in_colCmp));
+	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
+
+	auto target = std::find(mColliders.begin(), mColliders.end(), collider);
 
 	if (target != mColliders.end())
 	{
 		mColliders.erase(target);
 	}
+
+	mColliderID.erase(collider);
 }
 
 void PhysicManager::CheckHit()
@@ -208,7 +226,8 @@ void PhysicManager::ApartProcess(ColliderPair & pair)
 	pair.second->OnApart(att1st);
 }
 
-PhysicManager::PhysicManager()
+PhysicManager::PhysicManager():
+	mForAssignColliderID(0)
 {
 	mHitColliderPairState.reserve(32);
 }
@@ -216,4 +235,23 @@ PhysicManager::PhysicManager()
 PhysicManager::~PhysicManager()
 {
 	std::vector<ColliderComponentBase *>().swap(mColliders);
+}
+
+
+
+size_t HashColliderPair::operator()(const ColliderPair & pair) const
+{
+	PhysicManager& physic = PhysicManager::GetInstance();
+
+	union Hash
+	{
+		size_t uInt;
+		unsigned short uShort[2];
+	};
+
+	Hash ret;
+	ret.uShort[0] = physic.mColliderID[pair.first];
+	ret.uShort[1] = physic.mColliderID[pair.second];
+
+	return ret.uInt;
 }

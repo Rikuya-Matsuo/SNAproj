@@ -4,6 +4,19 @@
 
 class ColliderComponentBase;
 
+typedef std::pair<ColliderComponentBase *, ColliderComponentBase *> ColliderPair;
+
+// ファンクタ
+class HashColliderPair final
+{
+public:
+	HashColliderPair() {}
+	
+	HashColliderPair(const ColliderPair& pair) {}
+
+	size_t operator()(const ColliderPair& pair) const;
+};
+
 class PhysicManager final
 {
 public:
@@ -21,6 +34,8 @@ public:
 
 	void CheckHit();
 
+	friend class HashColliderPair;
+
 private:
 	enum HitState
 	{
@@ -30,13 +45,15 @@ private:
 		HitState_Invalid
 	};
 
+	unsigned short mForAssignColliderID;
+
 	PhysicManager();
 
 	std::vector<ColliderComponentBase *> mColliders;
 
-	typedef std::pair<ColliderComponentBase *, ColliderComponentBase *> ColliderPair;
+	std::unordered_map<ColliderPair, char, HashColliderPair> mHitColliderPairState;
 
-	std::unordered_map<ColliderPair, char> mHitColliderPairState;
+	std::unordered_map<ColliderComponentBase *, unsigned short> mColliderID;
 
 	bool CheckPrevHit(const ColliderPair& pair);
 
