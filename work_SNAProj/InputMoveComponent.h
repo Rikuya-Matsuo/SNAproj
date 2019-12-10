@@ -9,7 +9,26 @@ public:
 
 	void Update() override;
 
+	enum AxisEnum
+	{
+		AxisEnum_x = 0,
+		AxisEnum_y,
+		AxisEnum_z
+	};
+
+	void SetHorizontalAxis(AxisEnum axis) { mHorizontalAxis = axis; }
+	void SetVerticalAxis(AxisEnum axis) { mVerticalAxis = axis; }
+
+	void SetHorizontalSpeed(float speed) { mSpeedHorizontal = speed; }
+	void SetVerticalSpeed(float speed) { mSpeedVertical = speed; }
+
+	float GetHorizontalSpeed() const { return mSpeedHorizontal; }
+	float GetVerticalSpeed() const { return mSpeedVertical; }
+
 private:
-	float mSpeedX;
-	float mSpeedY;
+	float mSpeedHorizontal;
+	float mSpeedVertical;
+
+	char mHorizontalAxis;
+	char mVerticalAxis;
 };

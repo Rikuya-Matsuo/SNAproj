@@ -15,7 +15,10 @@ SpriteTest::SpriteTest():
 		mc->SetMesh(msh);
 		mc->SetTextureIndex(texIndex);
 	}
-	//InputMoveComponent * imc = new InputMoveComponent(this);
+	
+	InputMoveComponent * imc = new InputMoveComponent(this);
+	imc->SetVerticalAxis(InputMoveComponent::AxisEnum_z);
+	imc->SetVerticalSpeed(imc->GetVerticalSpeed() * -1);
 }
 
 SpriteTest::~SpriteTest()

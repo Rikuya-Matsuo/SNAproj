@@ -20,9 +20,7 @@ TestScene::TestScene()
 
 	SpriteTest * st = new SpriteTest;
 	st->SetPosition(Vector3D(0.0f, 0.0f));
-	st->SetScale(100.0f);
-	Quaternion q(Vector3D(1.0f, 0.0f, 0.0f), static_cast<float>(M_PI / 2.0f));
-	st->SetRotation(q);
+	st->SetScale(30.0f);
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);
