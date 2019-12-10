@@ -17,4 +17,8 @@ private:
 	SkeletalMeshComponent * mMeshComponent;
 
 	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
+
+	void OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
+
+	void OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
 };

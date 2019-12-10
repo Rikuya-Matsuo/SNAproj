@@ -11,15 +11,10 @@ SpriteTest::SpriteTest():
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh");
 	if (msh != nullptr)
 	{
-		msh->LoadTexture("Assets/Cube.png", System::GetInstance().GetRenderer());
+		int texIndex = msh->LoadTexture("Assets/ForestBlock.png", System::GetInstance().GetRenderer());
 		mc->SetMesh(msh);
+		mc->SetTextureIndex(texIndex);
 	}
-	else
-	{
-		SDL_Log("SpriteTest : Failed to load Mesh data.\n");
-		delete mc;
-	}
-
 	//InputMoveComponent * imc = new InputMoveComponent(this);
 }
 

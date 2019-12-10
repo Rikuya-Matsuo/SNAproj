@@ -70,6 +70,8 @@ void System::Run()
 		// カメラ更新
 		if (mActiveCamera != nullptr)
 		{
+			mActiveCamera->Update();
+
 			Matrix4 viewMatrix = mActiveCamera->GetViewMatrix();
 			mRenderer->SetViewMatrix(viewMatrix);
 		}

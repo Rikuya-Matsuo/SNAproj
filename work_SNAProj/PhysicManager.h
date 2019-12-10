@@ -56,7 +56,7 @@ private:
 
 	std::unordered_map<ColliderComponentBase *, unsigned short> mColliderID;
 
-	std::list<unsigned short> mAssignedIDList;
+	//std::list<unsigned short> mAssignedIDList;
 
 	bool CheckPrevHit(const ColliderPair& pair);
 

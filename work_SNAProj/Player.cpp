@@ -23,7 +23,7 @@ Player::Player():
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	bcc->SetObjectBox(msh->GetCollisionBox());
 
-	InputMoveComponent * imc = new InputMoveComponent(this);
+	//InputMoveComponent * imc = new InputMoveComponent(this);
 
 	// スケール値の調整
 	mScale = 0.5f;
@@ -48,9 +48,23 @@ void Player::Update()
 
 void Player::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
 {
-	static char test = 0;
-	SDL_Log("Hit!%d\n", test);
-	test ^= 1;
+	static char HitTest = 0;
+	SDL_Log("Hit!%d\n", HitTest);
+	HitTest ^= 1;
+}
+
+void Player::OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+{
+	static char touchingTest = 0;
+	//SDL_Log("Touch!%d\n", touchingTest);
+	touchingTest ^= 1;
+}
+
+void Player::OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+{
+	static char apartTest = 0;
+	SDL_Log("Apart!%d\n", apartTest);
+	apartTest ^= 1;
 }
 
 void Player::UpdateActor()

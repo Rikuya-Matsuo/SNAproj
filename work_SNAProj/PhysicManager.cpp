@@ -8,8 +8,6 @@ void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 {
 	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
 
-	mColliders.emplace_back(collider);
-
 	// ループを減らすため、ランダムを使ってIDを設定する方法を使う。
 	bool loop = true;
 	while (loop)
@@ -17,13 +15,25 @@ void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 		// IDをランダム生成
 		unsigned short id = static_cast<unsigned short>(rand() % (UINT16_MAX + 1));
 
-		// まだ割り当てられていない値なら、それをIDに設定し、ループを終了
-		auto itr = std::find(mAssignedIDList.begin(), mAssignedIDList.end(), id);
+		// そのIDが割り当てられているかを走査
+		bool alreadyAssigned = false;
+		for (unsigned int i = 0; i < mColliders.size(); ++i)
+		{
+			// 割り当てられていた場合、ID生成からやり直し
+			if (mColliderID[mColliders[i]] == id)
+			{
+				alreadyAssigned = true;
+				break;
+			}
+		}
 
-		if (itr == mAssignedIDList.end())
+		if (alreadyAssigned)
+		{
+			continue;
+		}
+		else
 		{
 			mColliderID[collider] = id;
-			mAssignedIDList.emplace_back(id);
 			loop = false;
 		}
 	}
@@ -44,6 +54,9 @@ void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 		}
 	}
 	*/
+
+	// コライダー登録
+	mColliders.emplace_back(collider);
 }
 
 void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
@@ -72,15 +85,13 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 	}
 
 	// IDを削除
-	auto target0 = std::find(mAssignedIDList.begin(), mAssignedIDList.end(), mColliderID[collider]);
-	mAssignedIDList.erase(target0);
 	mColliderID.erase(collider);
 
 	// コライダー配列から削除
-	auto target1 = std::find(mColliders.begin(), mColliders.end(), collider);
-	if (target1 != mColliders.end())
+	auto target = std::find(mColliders.begin(), mColliders.end(), collider);
+	if (target != mColliders.end())
 	{
-		mColliders.erase(target1);
+		mColliders.erase(target);
 	}
 
 }
@@ -163,8 +174,11 @@ void PhysicManager::CheckHit()
 				}
 			}
 
-			// ペアを作成
-			ColliderPair pair = std::make_pair(mColliders[i], mColliders[j]);
+			// ペアを作成(IDの値が小さいほうをfirstとする)
+			ColliderPair pair = 
+				mColliderID[mColliders[i]] < mColliderID[mColliders[j]] ?
+				std::make_pair(mColliders[i], mColliders[j]) :
+				std::make_pair(mColliders[j], mColliders[i]);
 
 			// 前のフレームでの接触状態を判定
 			bool prevHit = CheckPrevHit(pair);

@@ -5,6 +5,9 @@
 #include <vector>
 #include <list>
 
+// リリース版ではコメントアウトする
+#define DEBUG_SNA
+
 class Actor;
 class Camera;
 class DrawComponentBase;

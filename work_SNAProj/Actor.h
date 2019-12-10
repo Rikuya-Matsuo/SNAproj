@@ -25,6 +25,9 @@ public:
 	void SetScale(float scale) { mScale = scale; }
 	float GetScale() const { return mScale; }
 
+	void SetRotation(const Quaternion & q) { mRotation = q; }
+	const Quaternion& GetRotation() { return mRotation; }
+
 	// コンポーネントの登録・登録解除
 	void ResisterComponent(const ComponentBase * in_cmp);
 	void DeresisterComponent(const ComponentBase * in_cmp);
