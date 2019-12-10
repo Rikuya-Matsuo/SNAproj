@@ -22,9 +22,10 @@ TestScene::TestScene()
 	st->SetPosition(Vector3D(0.0f, 0.0f));
 	st->SetScale(30.0f);
 
-	Camera * cam = new Camera(p);
+	Camera * cam = new Camera(st);
 	mCameras.emplace_back(cam);
 	cam->Init(Vector3D(0, 100, 100), st->GetPosition(), Vector3D(0, 0, 1));
+	cam->SetDistanceVector(Vector3D(0, 300, 50));
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);

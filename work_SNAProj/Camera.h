@@ -19,6 +19,13 @@ public:
 	const Matrix4 & GetViewMatrix() const { return mViewMatrix; }
 	const Vector3D & GetViewVector() const { return mViewVector; }
 
+	const Vector3D & GetDistanceVector() const { return mDistanceVector; }
+	void SetDistanceVector(const Vector3D & vec) { mDistanceVector = vec; }
+
+	static void SetWatchTargetFlag(bool value) { mWatchTargetFlag = value; }
+
+	static void SetChaseTargetFlag(bool value) { mChaseTargetFlag = value; }
+
 private:
 	Actor * mTargetActor;
 	
@@ -29,5 +36,11 @@ private:
 	Vector3D mViewTarget;
 
 	Vector3D mViewVector;
+
+	Vector3D mDistanceVector;
+
+	static bool mWatchTargetFlag;
+
+	static bool mChaseTargetFlag;
 };
 

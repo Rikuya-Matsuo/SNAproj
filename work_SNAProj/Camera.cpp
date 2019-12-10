@@ -3,15 +3,25 @@
 #include "System.h"
 #include "Input.h"
 
+bool Camera::mWatchTargetFlag = true;
+
+bool Camera::mChaseTargetFlag = true;
+
 Camera::Camera(Actor * target):
-	mTargetActor(target)
+	mTargetActor(target),
+	mDistanceVector(Vector3D::zero)
 {
+	// 位置の初期化
 	mPosition = Vector3D(0, 100, 100);
 
+	// カメラに写す対象の位置を取得
 	Vector3D targetVec = Vector3D::zero;
 	if (target != nullptr)
 	{
 		targetVec = target->GetPosition();
+
+		// ついでに距離ベクトルも初期化
+		mDistanceVector = mPosition - targetVec;
 	}
 	mViewMatrix = Matrix4::CreateLookAt(mPosition, targetVec, Vector3D(0, 0, 1));
 
@@ -62,6 +72,18 @@ void Camera::Update()
 		}
 	}
 #endif
+
+	// アクターを目で追う
+	if (mWatchTargetFlag && mTargetActor != nullptr)
+	{
+		mViewTarget = mTargetActor->GetPosition();
+	}
+
+	// アクターを追いかける
+	if (mChaseTargetFlag && mTargetActor != nullptr)
+	{
+		mPosition = mTargetActor->GetPosition() + mDistanceVector;
+	}
 
 	// カメラ視線ベクトル、カメラ行列作成
 	mViewVector = mViewTarget - mPosition;
