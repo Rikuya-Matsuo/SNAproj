@@ -8,6 +8,9 @@
 #include "Renderer.h"
 #include "Camera.h"
 
+#include <cstdlib>
+#include <ctime>
+
 System::System():
 	mCurrentScene(nullptr),
 	mRenderer(nullptr),
@@ -45,6 +48,13 @@ bool System::Init()
 	{
 		SDL_Log("Failed to initialize the renderer.\n");
 	}
+
+	// 乱数種設定
+	unsigned int seed = static_cast<unsigned int>(time(nullptr));
+	srand(seed);
+
+	// 本当ならここで何回か（５回ほど）rand()を空回しするとよいそうだが、
+	// 乱数予測が重要なゲームではないことを鑑みて割愛。
 
 	return true;
 }

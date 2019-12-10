@@ -13,7 +13,10 @@ void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 	while (loop)
 	{
 		// IDをランダム生成
-		unsigned short id = static_cast<unsigned short>(rand() % (UINT16_MAX + 1));
+		// rand()は15ビットの範囲で乱数を出すらしいので、
+		// 頭の1ビットをランダムで決定することで、unsigned short型の最大値までのIDを発行できるようにする。
+		unsigned short usRand = rand() | ((rand() & 1) ? 0x8000 : 0);
+		unsigned short id = usRand % (UINT16_MAX + 1);		// 念のため余剰演算法を使っておく
 
 		// そのIDが割り当てられているかを走査
 		bool alreadyAssigned = false;
