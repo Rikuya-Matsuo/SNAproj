@@ -261,6 +261,13 @@ int Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
 	return ret;
 }
 
+int * Mesh::LoadDivTexture(const std::string & fileName, Renderer * render, int allNum, int xNum, int yNum, int chipW, int chipH, size_t animIndex)
+{
+	//SDL_Surface sSurface, dSurface;
+
+	return nullptr;
+}
+
 Texture* Mesh::GetTexture(size_t index)
 {
 	if (index < mTextures.size())

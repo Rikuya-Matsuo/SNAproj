@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "MeshComponent.h"
 #include "InputMoveComponent.h"
+#include "BoxColliderComponent.h"
 
 SpriteTest::SpriteTest():
 	Actor()
@@ -19,8 +20,16 @@ SpriteTest::SpriteTest():
 	InputMoveComponent * imc = new InputMoveComponent(this);
 	imc->SetVerticalAxis(InputMoveComponent::AxisEnum_z);
 	imc->SetVerticalSpeed(imc->GetVerticalSpeed() * -1);
+
+	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
+	bcc->SetObjectBox(msh->GetCollisionBox());
 }
 
 SpriteTest::~SpriteTest()
 {
+}
+
+void SpriteTest::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+{
+	SDL_Log("Hit!");
 }

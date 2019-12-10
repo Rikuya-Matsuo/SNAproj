@@ -7,5 +7,7 @@ public:
 	SpriteTest();
 	~SpriteTest();
 
+private:
+	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
 };
 

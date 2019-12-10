@@ -26,6 +26,10 @@ public:
 
 	int LoadTexture(const std::string& fileName, Renderer* renderer);
 
+	// テクスチャ番号の配列へのポインタを返却
+	// 未完成
+	int * LoadDivTexture(const std::string& fileName, Renderer* render, int allNum, int xNum, int yNum, int chipW, int chipH, size_t animIndex);
+
 	VertexArray* GetVertexArray() { return mVertexArray; }            // メッシュの頂点配列の取得
 	Texture* GetTexture(size_t index);                                // 指定されたインデックスからテクスチャの取得
 	const std::string& GetShaderName() const { return mShaderName; }        // シェーダー名の取得
@@ -47,4 +51,6 @@ private:
 	float mSpecPower;	                                                    // 表面のスペキュラー値
 
 	AABB mBox;																// バウンディングボックス
+
+
 };
