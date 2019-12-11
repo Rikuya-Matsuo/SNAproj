@@ -10,6 +10,7 @@
 #include "Common.h"
 #include "Renderer.h"
 #include "Texture.h"
+#include "AnimationChips.h"
 #include "VertexArray.h"
 #include "Vector.h"
 #include <fstream>
@@ -18,6 +19,8 @@
 #include <SDL/SDL_log.h>
 #include "MathExpantion.h"
 #include <cmath>
+
+const Mesh::FlagType Mesh::mAnimModeFlagMask = 1 << 0;
 
 namespace
 {
@@ -32,8 +35,9 @@ Mesh::Mesh()
 	: mVertexArray(nullptr)
 	, mRadius(0.0f)
 	, mSpecPower(100.0f)
+	, mTexture(nullptr)
 {
-	mTextures.clear();
+	
 }
 
 Mesh::~Mesh()
@@ -115,7 +119,13 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 				t = renderer->GetTexture("Assets/Default.png");
 			}
 		}
-		mTextures[0] = t;
+
+		if (mTexture != nullptr)
+		{
+			delete mTexture;
+		}
+
+		mTexture = t;
 	}
 
 	// 頂点読み込み
@@ -237,55 +247,68 @@ void Mesh::Unload()
 
 }
 
-int Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
+bool Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
 {
 	Texture * tex = renderer->GetTexture(fileName);
 	if (tex == nullptr)
 	{
-		return -1;
+		return false;
 	}
 
-	// 返却値としてテクスチャ番号を記録
-	int ret;
-	if (!mTextures.empty())
+	if (mTexture != nullptr)
 	{
-		ret = mTextures.size();
-	}
-	else
-	{
-		ret = 0;
+		delete mTexture;
 	}
 
-	mTextures[ret] = tex;
+	mTexture = tex;
+
+	return true;
+}
+
+bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex)
+{
+	bool ret = false;
+
+	Texture * textures = nullptr;
+
+	AnimationChips * animChips = new AnimationChips();
+	size_t frameMass = animChips->Load(renderer, fileName, allNum, xNum, yNum, chipW, chipH, secondPerFrame, textures);
+
+	if (frameMass == allNum)
+	{
+		ret = true;
+
+		if (mAnimations.find(animIndex) == mAnimations.end())
+		{
+			SDL_Log("Specified index has already been used.\n");
+		}
+		else
+		{
+			mAnimations[animIndex] = animChips;
+
+			for (size_t i = 0; i < frameMass; ++i)
+			{
+				mAnimTex[animIndex].emplace_back(&textures[i]);
+			}
+		}
+	}
+
+	// アニメーション使用モードとして設定
+	mFlags |= mAnimModeFlagMask;
 
 	return ret;
 }
 
-int * Mesh::LoadDivTexture(const std::string & fileName, Renderer * render, int allNum, int xNum, int yNum, int chipW, int chipH, size_t animIndex)
+Texture* Mesh::GetAnimFrameTexture(int index)
 {
-	//SDL_Surface sSurface, dSurface;
+	Texture * ret = nullptr;
 
-	return nullptr;
-}
-
-Texture* Mesh::GetTexture(size_t index)
-{
-	if (index < mTextures.size())
+	if (mAnimations.count(index))
 	{
-		return mTextures[index];
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-bool Mesh::IsAssigned(int index)
-{
-	if (mTextures.find(index) != mTextures.end())
-	{
-		return true;
+		size_t frameNum = mAnimations[index]->GetCurrentTextureIndex();
+		ret = mAnimTex[index][frameNum];
 	}
 
-	return false;
+	return ret;
 }
+

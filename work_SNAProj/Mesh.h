@@ -7,7 +7,9 @@
 // ----------------------------------------------------------------
 
 #pragma once
+#include "SDL/SDL.h"
 #include "Collision.h"
+#include "BitFlagFunc.h"
 #include <vector>
 #include <string>
 #include <unordered_map>
@@ -15,6 +17,7 @@
 class Renderer;
 class Texture;
 class VertexArray;
+class AnimationChips;
 
 class Mesh
 {
@@ -22,27 +25,38 @@ public:
 	Mesh();
 	~Mesh();
 	bool Load(const std::string& fileName, Renderer* renderer);   	// メッシュのロード・アンロード
-	void Unload();                                                         	
+	void Unload();
 
-	int LoadTexture(const std::string& fileName, Renderer* renderer);
+	bool LoadTexture(const std::string& fileName, Renderer* renderer);
 
-	// テクスチャ番号の配列へのポインタを返却
-	// 未完成
-	int * LoadDivTexture(const std::string& fileName, Renderer* render, int allNum, int xNum, int yNum, int chipW, int chipH, size_t animIndex);
+	bool LoadDivTexture(const std::string& fileName, Renderer* renderer, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex);
 
 	VertexArray* GetVertexArray() { return mVertexArray; }            // メッシュの頂点配列の取得
-	Texture* GetTexture(size_t index);                                // 指定されたインデックスからテクスチャの取得
+	Texture* GetTexture() const { return mTexture; }
+	Texture* GetAnimFrameTexture(int index);                              // アニメーションのコマを取得
 	const std::string& GetShaderName() const { return mShaderName; }        // シェーダー名の取得
 
 	float GetRadius() const { return mRadius; }                             // バウンディングスフィアの半径を取得
 
 	const AABB & GetCollisionBox() const { return mBox; }
 
-	bool IsAssigned(int index);
+	void SetAnimModeFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAnimModeFlagMask); }
+	bool GetAnimModeFlag() const { return mFlags & mAnimModeFlagMask; }
 
 private:
+	typedef Uint8 FlagType;
+	static const FlagType mAnimModeFlagMask;
+
+
+	FlagType mFlags;
+
 	// メッシュのテクスチャ
-	std::unordered_map<int, Texture *> mTextures;
+	Texture * mTexture;
+
+	std::unordered_map<int, AnimationChips *> mAnimations;
+
+	// アニメーションが持ってるテクスチャをインデックスで管理
+	std::unordered_map<int, std::vector<Texture *>> mAnimTex;
 
 	VertexArray* mVertexArray;                                        // メッシュの頂点配列
 
@@ -51,6 +65,4 @@ private:
 	float mSpecPower;	                                                    // 表面のスペキュラー値
 
 	AABB mBox;																// バウンディングボックス
-
-
 };

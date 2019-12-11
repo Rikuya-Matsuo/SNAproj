@@ -16,13 +16,16 @@
 #include "VertexArray.h"
 #include <typeinfo>
 
+const MeshComponent::FlagType MeshComponent::mVisibleFlagMask = 1 << 0;
+const MeshComponent::FlagType MeshComponent::mIsSkeletalFlagMask = 1 << 1;
+const MeshComponent::FlagType MeshComponent::mAnimationModeFlagMask = 1 << 2;
+
 // メッシュコンポーネント　ownerとスキンメッシュかの情報入れる
 MeshComponent::MeshComponent(Actor* owner, bool isSkeletal)
 	:ComponentBase(owner)
 	, mMesh(nullptr)
 	, mTextureIndex(0)
-	, mVisible(true)
-	, mIsSkeletal(isSkeletal)
+	, mMeshCompFlags(mVisibleFlagMask | (isSkeletal ? mIsSkeletalFlagMask : 0))
 {
 	System::GetInstance().GetRenderer()->AddMeshComponent(this);
 	//printf("new MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), owner);
@@ -48,7 +51,7 @@ void MeshComponent::Draw(Shader* shader)
 		// Set specular power　スペキュラ強度セット
 		shader->SetFloatUniform("uSpecPower", 100);
 		// Set the active texture　アクティブテクスチャセット
-		Texture* t = mMesh->GetTexture(mTextureIndex);
+		Texture* t = mMesh->GetTexture();
 		if (t)
 		{
 			t->SetActive();
@@ -59,4 +62,11 @@ void MeshComponent::Draw(Shader* shader)
 		// Draw　描画するー
 		glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 	}
+}
+
+void MeshComponent::SetMesh(Mesh * mesh)
+{
+	mMesh = mesh;
+
+	BitFlagFunc::SetFlagByBool(mMesh->GetAnimModeFlag(), mMeshCompFlags, mAnimationModeFlagMask);
 }

@@ -43,7 +43,7 @@ void SkeletalMeshComponent::Draw(Shader* shader)                         // 描�
 		// Set specular power                                             スペキュラー強度をセット
 		shader->SetFloatUniform("uSpecPower", 100);
 		// Set the active texture                                         テクスチャをセット 
-		Texture* t = mMesh->GetTexture(mTextureIndex);
+		Texture* t = mMesh->GetTexture();
 		if (t)
 		{
 			t->SetActive();

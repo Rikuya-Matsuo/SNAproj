@@ -150,6 +150,9 @@
     <ClCompile Include="Block.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationChips.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -259,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationChips.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
