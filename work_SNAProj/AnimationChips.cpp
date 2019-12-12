@@ -1,4 +1,5 @@
 ﻿#include "AnimationChips.h"
+#include "System.h"
 #include "Renderer.h"
 #include "Texture.h"
 
@@ -17,6 +18,23 @@ AnimationChips::~AnimationChips()
 
 void AnimationChips::Update()
 {
+	// タイマー計算
+	float deltaTime = System::GetInstance().GetDeltaTime();
+
+	mTimer += deltaTime;
+
+	// タイマーに応じてフレームを進める
+	if (mTimer >= mSecondPerFrame)
+	{
+		// インクリメント後にコマ数をオーバーしていれば0に戻す
+		if (++mCurrentTextureIndex >= mChipTextures.size())
+		{
+			mCurrentTextureIndex = 0;
+		}
+
+		// タイマーリセット
+		mTimer = 0.0f;
+	}
 }
 
 void AnimationChips::Reset()

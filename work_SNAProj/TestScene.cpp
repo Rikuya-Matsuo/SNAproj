@@ -1,11 +1,11 @@
 ﻿#include "TestScene.h"
-#include "Player.h"
-#include "SpriteTest.h"
-#include "Block.h"
 #include "Camera.h"
 #include "System.h"
 #include "Renderer.h"
 #include "Quaternion.h"
+#include "AnimSpriteTest.h"
+#include "SpriteTest.h"
+#include "Block.h"
 
 #include <cmath>
 
@@ -17,10 +17,15 @@ TestScene::TestScene()
 
 	Block * bk = new Block;
 	bk->SetPosition(Vector3D(30.0f, 0.0f, 0.0f));
+	bk->SetScale(0.1f);
 
 	SpriteTest * st = new SpriteTest;
-	st->SetPosition(Vector3D(0.0f, 0.0f));
+	st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
 	st->SetScale(30.0f);
+
+	AnimSpriteTest * ast = new AnimSpriteTest();
+	ast->SetPosition(Vector3D(0.0f, 0.0f, 0.0f));
+	ast->SetScale(30.0f);
 
 	Camera * cam = new Camera(st);
 	mCameras.emplace_back(cam);

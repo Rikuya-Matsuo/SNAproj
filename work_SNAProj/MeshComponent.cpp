@@ -39,6 +39,10 @@ MeshComponent::~MeshComponent()
 
 void MeshComponent::Update()
 {
+	if (mMeshCompFlags & mAnimationModeFlagMask)
+	{
+		mMesh->Update();
+	}
 }
 
 void MeshComponent::Draw(Shader* shader)

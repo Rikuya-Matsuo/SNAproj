@@ -247,6 +247,14 @@ void Mesh::Unload()
 
 }
 
+void Mesh::Update()
+{
+	if (mAnimations.count(mActiveAnimIndex))
+	{
+		mAnimations[mActiveAnimIndex]->Update();
+	}
+}
+
 bool Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
 {
 	Texture * tex = renderer->GetTexture(fileName);

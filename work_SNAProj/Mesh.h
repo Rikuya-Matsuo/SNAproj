@@ -27,6 +27,8 @@ public:
 	bool Load(const std::string& fileName, Renderer* renderer);   	// メッシュのロード・アンロード
 	void Unload();
 
+	void Update();
+
 	bool LoadTexture(const std::string& fileName, Renderer* renderer);
 
 	bool LoadDivTexture(const std::string& fileName, Renderer* renderer, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex);
@@ -65,4 +67,6 @@ private:
 	float mSpecPower;	                                                    // 表面のスペキュラー値
 
 	AABB mBox;																// バウンディングボックス
+
+	int mActiveAnimIndex;
 };
