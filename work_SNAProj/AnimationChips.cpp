@@ -3,11 +3,13 @@
 #include "Renderer.h"
 #include "Texture.h"
 
-const AnimationChips::FlagType AnimationChips::mLoopEndFlag = 1 << 0;
+const AnimationChips::FlagType AnimationChips::mLoopEndFlagMask = 1 << 0;
+const AnimationChips::FlagType AnimationChips::mStopFlagMask = 1 << 1;
 
 AnimationChips::AnimationChips():
 	mFlags(0),
-	mCurrentTextureIndex(0)
+	mCurrentTextureIndex(0),
+	mSecondPerFrame(1.0f / 60)
 {
 }
 
@@ -18,10 +20,17 @@ AnimationChips::~AnimationChips()
 
 void AnimationChips::Update()
 {
-	// タイマー計算
-	float deltaTime = System::GetInstance().GetDeltaTime();
+	// アニメーション停止のフラグが真の場合は更新を行わない
+	if (mFlags & mStopFlagMask)
+	{
+		return;
+	}
 
-	mTimer += deltaTime;
+	// タイマー計算
+	mTimer += System::GetInstance().GetDeltaTime();
+
+	// フラグをリセット
+	mFlags &= ~mLoopEndFlagMask;
 
 	// タイマーに応じてフレームを進める
 	if (mTimer >= mSecondPerFrame)
@@ -30,6 +39,8 @@ void AnimationChips::Update()
 		if (++mCurrentTextureIndex >= mChipTextures.size())
 		{
 			mCurrentTextureIndex = 0;
+
+			mFlags |= mLoopEndFlagMask;
 		}
 
 		// タイマーリセット
@@ -120,6 +131,9 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 
 	// 転写元サーフェイスのメモリ解放
 	SDL_free(srcSurface);
+
+	// フレームごとの秒数を設定
+	mSecondPerFrame = secondPerFrame;
 
 	texArray = textures;
 	return sucessCount;

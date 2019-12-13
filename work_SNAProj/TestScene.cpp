@@ -30,7 +30,8 @@ TestScene::TestScene()
 	Camera * cam = new Camera(st);
 	mCameras.emplace_back(cam);
 	cam->Init(Vector3D(0, 100, 100), st->GetPosition(), Vector3D(0, 0, 1));
-	cam->SetDistanceVector(Vector3D(0, 300, 50));
+	//cam->SetDistanceVector(Vector3D(0, 300, 50));
+	cam->SetChaseTargetFlag(false);
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);

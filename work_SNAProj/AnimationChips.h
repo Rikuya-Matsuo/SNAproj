@@ -24,9 +24,16 @@ public:
 
 	size_t GetCurrentTextureIndex() const { return mCurrentTextureIndex; }
 
+	bool GetLoopEndFlag() const { return mFlags & mLoopEndFlagMask; }
+
+	void StopPlaying() { mFlags |= mStopFlagMask; }
+
+	void StartPlaying() { mFlags &= ~mStopFlagMask; }
+
 private:
 	typedef Uint8 FlagType;
-	static const FlagType mLoopEndFlag;
+	static const FlagType mLoopEndFlagMask;
+	static const FlagType mStopFlagMask;
 
 
 	FlagType mFlags;

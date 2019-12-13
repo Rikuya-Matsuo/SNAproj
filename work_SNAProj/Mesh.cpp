@@ -21,6 +21,7 @@
 #include <cmath>
 
 const Mesh::FlagType Mesh::mAnimModeFlagMask = 1 << 0;
+const Mesh::FlagType Mesh::mAnimLoopEndFlagMask = 1 << 1;
 
 namespace
 {
@@ -35,7 +36,8 @@ Mesh::Mesh()
 	: mVertexArray(nullptr)
 	, mRadius(0.0f)
 	, mSpecPower(100.0f)
-	, mTexture(nullptr)
+	, mDefaultTexture(nullptr)
+	, mCurrentTexture(nullptr)
 {
 	
 }
@@ -120,12 +122,16 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 			}
 		}
 
-		if (mTexture != nullptr)
+		// メッシュ読み込み時にデフォルトで設定されるテクスチャの設定
+		if (mDefaultTexture != nullptr)
 		{
-			delete mTexture;
+			delete mDefaultTexture;
 		}
 
-		mTexture = t;
+		mDefaultTexture = t;
+
+		// 現時点のテクスチャをデフォルトのものとして設定する
+		mCurrentTexture = mDefaultTexture;
 	}
 
 	// 頂点読み込み
@@ -251,7 +257,18 @@ void Mesh::Update()
 {
 	if (mAnimations.count(mActiveAnimIndex))
 	{
-		mAnimations[mActiveAnimIndex]->Update();
+		// エイリアス生成
+		AnimationChips * animChips = mAnimations[mActiveAnimIndex];
+
+		// アニメーションの更新
+		animChips->Update();
+
+		// テクスチャ取得
+		mCurrentTexture = mAnimTex[mActiveAnimIndex][animChips->GetCurrentTextureIndex()];
+
+		// アニメーションループ終了フラグの取得
+		bool loopEnd = animChips->GetLoopEndFlag();
+		BitFlagFunc::SetFlagByBool(loopEnd, mFlags, mAnimLoopEndFlagMask);
 	}
 }
 
@@ -263,12 +280,7 @@ bool Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
 		return false;
 	}
 
-	if (mTexture != nullptr)
-	{
-		delete mTexture;
-	}
-
-	mTexture = tex;
+	mCurrentTexture = tex;
 
 	return true;
 }
@@ -286,7 +298,7 @@ bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, int
 	{
 		ret = true;
 
-		if (mAnimations.find(animIndex) == mAnimations.end())
+		if (mAnimations.find(animIndex) != mAnimations.end())
 		{
 			SDL_Log("Specified index has already been used.\n");
 		}
@@ -318,5 +330,15 @@ Texture* Mesh::GetAnimFrameTexture(int index)
 	}
 
 	return ret;
+}
+
+AnimationChips * Mesh::GetAnimChips(int index)
+{
+	if (mAnimations.count(index))
+	{
+		return mAnimations[index];
+	}
+
+	return nullptr;
 }
 

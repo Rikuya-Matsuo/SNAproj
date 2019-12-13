@@ -17,9 +17,9 @@ SpriteTest::SpriteTest():
 		mc->SetTextureIndex(texIndex);
 	}
 	
-	InputMoveComponent * imc = new InputMoveComponent(this);
-	imc->SetVerticalAxis(InputMoveComponent::AxisEnum_z);
-	imc->SetVerticalSpeed(imc->GetVerticalSpeed() * -1);
+	//InputMoveComponent * imc = new InputMoveComponent(this);
+	//imc->SetVerticalAxis(InputMoveComponent::AxisEnum_z);
+	//imc->SetVerticalSpeed(imc->GetVerticalSpeed() * -1);
 
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	bcc->SetObjectBox(msh->GetCollisionBox());

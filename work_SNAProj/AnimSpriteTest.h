@@ -9,6 +9,8 @@ public:
 	AnimSpriteTest();
 	~AnimSpriteTest();
 
+	void UpdateActor() override;
+
 	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
 
 private:
