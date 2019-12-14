@@ -1,4 +1,5 @@
 ﻿#include "PhysicManager.h"
+#include "Actor.h"
 #include "ColliderComponentBase.h"
 #include "BoxColliderComponent.h"
 #include "Collision.h"
@@ -97,6 +98,15 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 		mColliders.erase(target);
 	}
 
+}
+
+void PhysicManager::GravityAffect(Actor * actor)
+{
+	Vector3D vec = actor->GetMoveVector();
+
+	vec.z -= mGravityAcceleration * actor->GetFallSpeedRate();
+
+	actor->SetMoveVector(vec);
 }
 
 void PhysicManager::CheckHit()
@@ -292,7 +302,8 @@ void PhysicManager::ApartProcess(ColliderPair & pair)
 	pair.second->OnApart(att1st);
 }
 
-PhysicManager::PhysicManager()
+PhysicManager::PhysicManager():
+	mGravityAcceleration(9.8f / 100)
 {
 	mColliders.reserve(128);
 	mColliderID.reserve(128);

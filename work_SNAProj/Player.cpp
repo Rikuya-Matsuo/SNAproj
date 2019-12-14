@@ -1,10 +1,9 @@
 ﻿#include "Player.h"
 #include "Common.h"
-#include "SkeletalMeshComponent.h"
+#include "MeshComponent.h"
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 #include "Mesh.h"
-#include "Skeleton.h"
 #include "System.h"
 #include "Renderer.h"
 
@@ -12,21 +11,20 @@ Player::Player():
 	Actor()
 {
 	// メッシュのロード
-	mMeshComponent = new SkeletalMeshComponent(this);
-	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/SK_Mannequin.gpmesh");
-	mMeshComponent->SetMesh(msh);
-
-	// スケルトンのロード
-	mMeshComponent->SetSkeleton(System::GetInstance().GetRenderer()->GetSkeleton("Assets/SK_Mannequin.gpskel"));
+	MeshComponent * mc = new MeshComponent(this);
+	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh");
+	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(),
+		10, 10, 1, 128, 128, 0.07f, 0);
+	mc->SetMesh(mMesh);
 
 	// コライダーの設定
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
-	bcc->SetObjectBox(msh->GetCollisionBox());
+	bcc->SetObjectBox(mMesh->GetCollisionBox());
 
 	//InputMoveComponent * imc = new InputMoveComponent(this);
 
-	// スケール値の調整
-	mScale = 0.5f;
+	// 落下スピード割合の調整
+	mFallSpeedRate = 0.01f;
 }
 
 Player::~Player()
@@ -65,8 +63,4 @@ void Player::OnApart(const ColliderComponentBase * caller, ColliderAttribute col
 	static char apartTest = 0;
 	SDL_Log("Apart!%d\n", apartTest);
 	apartTest ^= 1;
-}
-
-void Player::UpdateActor()
-{
 }

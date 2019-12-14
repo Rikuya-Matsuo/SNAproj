@@ -20,6 +20,9 @@ public:
 	void SetPosition(const Vector3D & pos) { mPosition = pos; }
 	const Vector3D& GetPosition() const { return mPosition; }
 
+	void SetMoveVector(const Vector3D & vec) { mMoveVector = vec; }
+	const Vector3D& GetMoveVector() const { return mMoveVector; }
+
 	const Matrix4& GetWorldTransform() const { return mWorldTransform; }
 
 	void SetScale(float scale) { mScale = scale; }
@@ -40,6 +43,11 @@ public:
 	void SetBeyondSceneFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mBeyondSceneFlagMask); }
 	bool GetBeyondSceneFlag() const { return mFlags & mBeyondSceneFlagMask; }
 
+	void SetAffectGravityFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAffectGravityFlagMask); }
+	bool GetAffectGravityFlag() const { return mFlags & mAffectGravityFlagMask; }
+
+	float GetFallSpeedRate() const { return mFallSpeedRate; }
+
 	virtual void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt);
 	virtual void OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt);
 	virtual void OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt);
@@ -50,17 +58,22 @@ protected:
 	static const FlagType mRequestComponentSortMask;
 	static const FlagType mStopDrawFlagMask;
 	static const FlagType mBeyondSceneFlagMask;
+	static const FlagType mAffectGravityFlagMask;
 
 
 	std::list<ComponentBase *> mComponentList;
 
 	Vector3D mPosition;
 
+	Vector3D mMoveVector;
+
 	Matrix4 mWorldTransform;
 
 	Quaternion mRotation;
 
 	float mScale;
+
+	float mFallSpeedRate;
 
 	FlagType mFlags;
 

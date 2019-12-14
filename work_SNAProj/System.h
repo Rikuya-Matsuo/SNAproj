@@ -81,4 +81,6 @@ private:
 	void Draw();
 
 	void ChangeScene(bool & quitFlag);
+
+	void GravityFall();
 };

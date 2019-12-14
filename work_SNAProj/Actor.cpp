@@ -7,11 +7,14 @@
 const Actor::FlagType Actor::mRequestComponentSortMask = 1 << 0;
 const Actor::FlagType Actor::mStopDrawFlagMask = 1 << 1;
 const Actor::FlagType Actor::mBeyondSceneFlagMask = 1 << 2;
+const Actor::FlagType Actor::mAffectGravityFlagMask = 1 << 3;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
+	mMoveVector(Vector3D::zero),
 	mScale(1.0f),
-	mFlags(0)
+	mFallSpeedRate(1.0f),
+	mFlags(mAffectGravityFlagMask)
 {
 	System::GetInstance().ResisterActor(this);
 }
@@ -87,6 +90,7 @@ void Actor::SortComponents()
 
 void Actor::UpdateActor()
 {
+	mPosition += mMoveVector;
 }
 
 void Actor::CalculateWorldTransform()

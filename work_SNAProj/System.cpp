@@ -70,6 +70,8 @@ void System::Run()
 
 		Input::GetInstance().Update();
 
+		GravityFall();
+
 		UpdateScene();
 
 		UpdateActor();
@@ -191,6 +193,17 @@ void System::ChangeScene(bool & quitFlag)
 	else
 	{
 		quitFlag = true;
+	}
+}
+
+void System::GravityFall()
+{
+	for (auto actor : mActorCollection)
+	{
+		if (actor->GetAffectGravityFlag())
+		{
+			PhysicManager::GetInstance().GravityAffect(actor);
+		}
 	}
 }
 

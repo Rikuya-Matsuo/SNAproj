@@ -1,4 +1,5 @@
 ﻿#include "TestScene.h"
+#include "Player.h"
 #include "Camera.h"
 #include "System.h"
 #include "Renderer.h"
@@ -11,26 +12,27 @@
 
 TestScene::TestScene()
 {
-	//Player * p = new Player;
-	//mActors.emplace_back(p);
-	//p->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
+	Player * p = new Player;
+	mActors.emplace_back(p);
+	p->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
+	p->SetScale(25.0f);
 
 	Block * bk = new Block;
 	bk->SetPosition(Vector3D(30.0f, 0.0f, 0.0f));
 	bk->SetScale(0.1f);
 
-	SpriteTest * st = new SpriteTest;
-	st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
-	st->SetScale(30.0f);
+	//SpriteTest * st = new SpriteTest;
+	//st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
+	//st->SetScale(30.0f);
 
-	AnimSpriteTest * ast = new AnimSpriteTest();
+	AnimSpriteTest * ast = new AnimSpriteTest;
 	ast->SetPosition(Vector3D(0.0f, 0.0f, 0.0f));
 	ast->SetScale(30.0f);
 
-	Camera * cam = new Camera(st);
+	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);
-	cam->Init(Vector3D(0, 100, 100), st->GetPosition(), Vector3D(0, 0, 1));
-	//cam->SetDistanceVector(Vector3D(0, 300, 50));
+	cam->Init(Vector3D(0, 100, 100), p->GetPosition(), Vector3D(0, 0, 1));
+	cam->SetDistanceVector(Vector3D(0, 300, 50));
 	cam->SetChaseTargetFlag(false);
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();

@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include "Actor.h"
 
-class SkeletalMeshComponent;
+class Mesh;
 
-class Player : public Actor
+class Player final : public Actor
 {
 public:
 	Player();
@@ -12,9 +12,7 @@ public:
 	void Update() override;
 
 private:
-	void UpdateActor() override;
-
-	SkeletalMeshComponent * mMeshComponent;
+	Mesh * mMesh;
 
 	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
 

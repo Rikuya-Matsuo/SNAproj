@@ -3,8 +3,8 @@
 #include <list>
 #include <unordered_map>
 
+class Actor;
 class ColliderComponentBase;
-
 typedef std::pair<ColliderComponentBase *, ColliderComponentBase *> ColliderPair;
 
 
@@ -35,6 +35,8 @@ public:
 
 	void DeresisterCollider(const ColliderComponentBase * in_colCmp);
 
+	void GravityAffect(Actor * actor);
+
 	void CheckHit();
 
 	friend class HashColliderPair;
@@ -49,6 +51,8 @@ private:
 	};
 
 	PhysicManager();
+
+	const float mGravityAcceleration;
 
 	std::vector<ColliderComponentBase *> mColliders;
 
