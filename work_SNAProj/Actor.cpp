@@ -3,20 +3,25 @@
 #include "Common.h"
 #include "ComponentBase.h"
 #include <algorithm>
+#include <cmath>
 
 const Actor::FlagType Actor::mRequestComponentSortMask = 1 << 0;
 const Actor::FlagType Actor::mStopDrawFlagMask = 1 << 1;
 const Actor::FlagType Actor::mBeyondSceneFlagMask = 1 << 2;
 const Actor::FlagType Actor::mAffectGravityFlagMask = 1 << 3;
+const Actor::FlagType Actor::mMovalFlagMask = 1 << 4;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
 	mMoveVector(Vector3D::zero),
+	mLimitSpeed(Vector3D(0.1f, 0.0f, 0.1f)),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
-	mFlags(mAffectGravityFlagMask)
+	mFlags(mAffectGravityFlagMask | mMovalFlagMask)
 {
 	System::GetInstance().ResisterActor(this);
+
+	mFlags &= ~mAffectGravityFlagMask;
 }
 
 Actor::~Actor()
@@ -90,6 +95,8 @@ void Actor::SortComponents()
 
 void Actor::UpdateActor()
 {
+	ClampSpeed();
+
 	mPosition += mMoveVector;
 }
 
@@ -100,6 +107,28 @@ void Actor::CalculateWorldTransform()
 	mWorldTransform *= Matrix4::CreateFromQuaternion(mRotation);
 
 	mWorldTransform *= Matrix4::CreateTranslation(mPosition);
+}
+
+void Actor::ClampSpeed()
+{
+	auto clamp = [](float & speed, const float limit)
+	{
+		// 万が一limitに負の値が入っていた時のために絶対値を取っておく
+		float limAbs = fabsf(limit);
+
+		if (speed > limAbs)
+		{
+			speed = limAbs;
+		}
+		else if (speed < -limAbs)
+		{
+			speed = -limAbs;
+		}
+	};
+
+	clamp(mMoveVector.x, mLimitSpeed.x);
+	clamp(mMoveVector.y, mLimitSpeed.y);
+	clamp(mMoveVector.z, mLimitSpeed.z);
 }
 
 void Actor::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)

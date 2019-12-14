@@ -3,6 +3,8 @@
 #include "ColliderComponentBase.h"
 #include "BoxColliderComponent.h"
 #include "Collision.h"
+#include "System.h"
+#include "Common.h"
 #include <cstdlib>
 
 void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
@@ -100,11 +102,11 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 
 }
 
-void PhysicManager::GravityAffect(Actor * actor)
+void PhysicManager::GravityAffect(Actor * actor) const
 {
 	Vector3D vec = actor->GetMoveVector();
 
-	vec.z -= mGravityAcceleration * actor->GetFallSpeedRate();
+	vec.z -= mGravityAcceleration * actor->GetFallSpeedRate() * System::GetInstance().GetDeltaTime();
 
 	actor->SetMoveVector(vec);
 }
@@ -230,6 +232,78 @@ void PhysicManager::CheckHit()
 			}
 		}
 	}
+}
+
+void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol)
+{
+	// 両方ボックス
+	if (movalCol->GetColliderShape() == ColliderShape::ColShape_Box &&
+		fixedCol->GetColliderShape() == ColliderShape::ColShape_Box)
+	{
+		// ボックス取得
+		const AABB * movalBox = movalCol->GetBox();
+		const AABB * fixedBox = fixedCol->GetBox();
+
+		// 各成分のめり込み量計算
+		// 1成分につき2方向からのめり込みを計算する必要があるので、各2個の配列を生成している
+		float x[2];
+		float y[2];
+		float z[2];
+
+		x[0] = movalBox->mMax.x - fixedBox->mMin.x;
+		x[1] = fixedBox->mMax.x - movalBox->mMin.x;
+
+		y[0] = movalBox->mMax.y - fixedBox->mMin.y;
+		y[1] = fixedBox->mMax.y - movalBox->mMin.y;
+
+		z[0] = movalBox->mMax.z - fixedBox->mMin.z;
+		z[1] = fixedBox->mMax.z - movalBox->mMin.z;
+
+		// floatの値 + ベクトルに格納していいかを示すフラグ
+		struct NeoFloat
+		{
+			float value;
+			bool flag;
+		};
+
+		// 2つのうち、めり込みが小さいものを採用
+		NeoFloat smallerX, smallerY, smallerZ;
+		smallerX.value = Common::Smaller(fabsf(x[0]), fabsf(x[1]));
+		smallerY.value = Common::Smaller(fabsf(y[0]), fabsf(y[1]));
+		smallerZ.value = Common::Smaller(fabsf(z[0]), fabsf(z[1]));
+
+		// 薄っぺらなメッシュもあるので、めり込みが0のものは不都合
+		// よって、そういったものは評価の対象外とする
+		auto checkEvaluatable = [](NeoFloat nf)
+		{
+			nf.flag = (nf.value == 0.0f) ? false : true;
+		};
+		checkEvaluatable(smallerX);
+		checkEvaluatable(smallerY);
+		checkEvaluatable(smallerZ);
+
+		// 一番移動量が小さくて済むベクトルを計算
+		Vector3D pushVec = Vector3D::zero;
+		auto isSmallestOf3 = [](NeoFloat value, NeoFloat comparison1, NeoFloat comparison2)
+		{
+			if (!value.flag)
+			{
+				return false;
+			}
+
+			///////////////////////////
+			// つぎはここから！
+			///////////////////////////
+
+		};
+
+		if (isSmallestOf3(smallerX, smallerY, smallerZ))
+		{
+
+		}
+	}
+
+	// それ以外のケースは必要に応じて実装する
 }
 
 bool PhysicManager::CheckPrevHit(const ColliderPair& pair)

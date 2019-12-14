@@ -21,7 +21,9 @@ Player::Player():
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	bcc->SetObjectBox(mMesh->GetCollisionBox());
 
-	//InputMoveComponent * imc = new InputMoveComponent(this);
+	mInputComponent = new InputMoveComponent(this);
+	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
+	mInputComponent->SetVerticalSpeed(mInputComponent->GetVerticalSpeed() * -1);
 
 	// 落下スピード割合の調整
 	mFallSpeedRate = 0.01f;
@@ -42,6 +44,33 @@ void Player::Update()
 	UpdateActor();
 
 	CalculateWorldTransform();
+}
+
+void Player::UpdateActor()
+{
+	// ブレーキ
+	if (!mInputComponent->GetHorizonInputFlag())
+	{
+		mMoveVector.x *= 0.05f;
+
+		if (fabsf(mMoveVector.x) < 0.001f)
+		{
+			mMoveVector.x = 0.0f;
+		}
+	}
+
+	if (!mInputComponent->GetVerticalInputFlag())
+	{
+		mMoveVector.z *= 0.05f;
+
+		if (fabsf(mMoveVector.z) < 0.001f)
+		{
+			mMoveVector.z = 0.0f;
+		}
+	}
+
+	// 基底クラスのほうも呼ぶ
+	Actor::UpdateActor();
 }
 
 void Player::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)

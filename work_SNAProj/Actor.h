@@ -46,6 +46,8 @@ public:
 	void SetAffectGravityFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAffectGravityFlagMask); }
 	bool GetAffectGravityFlag() const { return mFlags & mAffectGravityFlagMask; }
 
+	bool GetMovalFlag() const { return mFlags & mMovalFlagMask; }
+
 	float GetFallSpeedRate() const { return mFallSpeedRate; }
 
 	virtual void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt);
@@ -59,13 +61,18 @@ protected:
 	static const FlagType mStopDrawFlagMask;
 	static const FlagType mBeyondSceneFlagMask;
 	static const FlagType mAffectGravityFlagMask;
+	static const FlagType mMovalFlagMask;
 
+
+	FlagType mFlags;
 
 	std::list<ComponentBase *> mComponentList;
 
 	Vector3D mPosition;
 
 	Vector3D mMoveVector;
+
+	Vector3D mLimitSpeed;
 
 	Matrix4 mWorldTransform;
 
@@ -75,8 +82,6 @@ protected:
 
 	float mFallSpeedRate;
 
-	FlagType mFlags;
-
 	void UpdateComponents();
 
 	void SortComponents();
@@ -84,4 +89,6 @@ protected:
 	virtual void UpdateActor();
 
 	void CalculateWorldTransform();
+
+	void ClampSpeed();
 };

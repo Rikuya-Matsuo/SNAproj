@@ -25,7 +25,18 @@ public:
 	float GetHorizontalSpeed() const { return mSpeedHorizontal; }
 	float GetVerticalSpeed() const { return mSpeedVertical; }
 
+	bool GetHorizonInputFlag() const { return mInputFlags & (mLeftMask | mRightMask); }
+	bool GetVerticalInputFlag() const { return mInputFlags & (mUpMask | mDownMask); }
+
 private:
+	typedef Uint8 FlagType;
+	static const FlagType mLeftMask;
+	static const FlagType mRightMask;
+	static const FlagType mUpMask;
+	static const FlagType mDownMask;
+
+	FlagType mInputFlags;
+
 	float mSpeedHorizontal;
 	float mSpeedVertical;
 

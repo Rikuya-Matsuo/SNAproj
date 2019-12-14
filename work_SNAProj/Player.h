@@ -2,6 +2,7 @@
 #include "Actor.h"
 
 class Mesh;
+class InputMoveComponent;
 
 class Player final : public Actor
 {
@@ -13,6 +14,10 @@ public:
 
 private:
 	Mesh * mMesh;
+
+	InputMoveComponent * mInputComponent;
+
+	void UpdateActor() override;
 
 	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
 

@@ -22,6 +22,9 @@ Block::Block():
 
 	// 重力の影響を受けない
 	SetAffectGravityFlag(false);
+
+	// ヒット時に押し返されない
+	mFlags &= ~mMovalFlagMask;
 }
 
 Block::~Block()

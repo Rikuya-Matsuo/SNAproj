@@ -35,7 +35,7 @@ public:
 
 	void DeresisterCollider(const ColliderComponentBase * in_colCmp);
 
-	void GravityAffect(Actor * actor);
+	void GravityAffect(Actor * actor) const;
 
 	void CheckHit();
 
@@ -61,6 +61,8 @@ private:
 	std::unordered_map<ColliderComponentBase *, unsigned short> mColliderID;
 
 	//std::list<unsigned short> mAssignedIDList;
+
+	void HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol);
 
 	bool CheckPrevHit(const ColliderPair& pair);
 
