@@ -15,6 +15,7 @@ Actor::Actor():
 	mPosition(Vector3D::zero),
 	mMoveVector(Vector3D::zero),
 	mLimitSpeed(Vector3D(0.1f, 0.0f, 0.1f)),
+	mFixVector(Vector3D::zero),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
 	mFlags(mAffectGravityFlagMask | mMovalFlagMask)
@@ -129,6 +130,17 @@ void Actor::ClampSpeed()
 	clamp(mMoveVector.x, mLimitSpeed.x);
 	clamp(mMoveVector.y, mLimitSpeed.y);
 	clamp(mMoveVector.z, mLimitSpeed.z);
+}
+
+void Actor::FixPosition()
+{
+	if (mFixVector.LengthSq() >= 20.0f)
+	{
+		SDL_Delay(0);
+	}
+
+	mPosition += mFixVector;
+	mFixVector = Vector3D::zero;
 }
 
 void Actor::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)

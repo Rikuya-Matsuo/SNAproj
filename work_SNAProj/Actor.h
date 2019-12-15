@@ -50,6 +50,9 @@ public:
 
 	float GetFallSpeedRate() const { return mFallSpeedRate; }
 
+	void SetFixVector(const Vector3D& vec) { mFixVector = vec; }
+	void FixPosition();
+
 	virtual void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt);
 	virtual void OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt);
 	virtual void OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt);
@@ -73,6 +76,8 @@ protected:
 	Vector3D mMoveVector;
 
 	Vector3D mLimitSpeed;
+
+	Vector3D mFixVector;
 
 	Matrix4 mWorldTransform;
 

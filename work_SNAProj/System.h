@@ -74,6 +74,8 @@ private:
 
 	void UpdateDeltaTime();
 	
+	void FixActorPosition();
+
 	void UpdateScene();
 
 	void UpdateActor();

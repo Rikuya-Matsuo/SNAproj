@@ -222,6 +222,18 @@ void PhysicManager::CheckHit()
 			if (hit)
 			{
 				HitProcess(pair);
+
+				// 押し戻し
+				bool iMovalFlag = mColliders[i]->GetOwner()->GetMovalFlag();
+				bool jMovalFlag = mColliders[j]->GetOwner()->GetMovalFlag();
+				if (iMovalFlag)
+				{
+					HitPush(mColliders[i], mColliders[j]);
+				}
+				if (jMovalFlag)
+				{
+					HitPush(mColliders[j], mColliders[i]);
+				}
 			}
 
 			// 接触していなかった時の処理
@@ -251,13 +263,13 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 		float z[2];
 
 		x[0] = movalBox->mMax.x - fixedBox->mMin.x;
-		x[1] = fixedBox->mMax.x - movalBox->mMin.x;
+		x[1] = movalBox->mMin.x - fixedBox->mMax.x;
 
 		y[0] = movalBox->mMax.y - fixedBox->mMin.y;
-		y[1] = fixedBox->mMax.y - movalBox->mMin.y;
+		y[1] = movalBox->mMin.y - fixedBox->mMax.y;
 
 		z[0] = movalBox->mMax.z - fixedBox->mMin.z;
-		z[1] = fixedBox->mMax.z - movalBox->mMin.z;
+		z[1] = movalBox->mMin.z - fixedBox->mMax.z;
 
 		// floatの値 + ベクトルに格納していいかを示すフラグ
 		struct NeoFloat
@@ -266,15 +278,26 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 			bool flag;
 		};
 
-		// 2つのうち、めり込みが小さいものを採用
+		// 2つのうち、めり込みの絶対値が小さいものを採用
+		auto absCompete = [](float * f)
+		{
+			if (fabsf(f[0]) < fabsf(f[1]))
+			{
+				return f[0];
+			}
+			else
+			{
+				return f[1];
+			}
+		};
 		NeoFloat smallerX, smallerY, smallerZ;
-		smallerX.value = Common::Smaller(fabsf(x[0]), fabsf(x[1]));
-		smallerY.value = Common::Smaller(fabsf(y[0]), fabsf(y[1]));
-		smallerZ.value = Common::Smaller(fabsf(z[0]), fabsf(z[1]));
+		smallerX.value = absCompete(x);
+		smallerY.value = absCompete(y);
+		smallerZ.value = absCompete(z);
 
 		// 薄っぺらなメッシュもあるので、めり込みが0のものは不都合
 		// よって、そういったものは評価の対象外とする
-		auto checkEvaluatable = [](NeoFloat nf)
+		auto checkEvaluatable = [](NeoFloat& nf)
 		{
 			nf.flag = (nf.value == 0.0f) ? false : true;
 		};
@@ -284,23 +307,48 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 
 		// 一番移動量が小さくて済むベクトルを計算
 		Vector3D pushVec = Vector3D::zero;
-		auto isSmallestOf3 = [](NeoFloat value, NeoFloat comparison1, NeoFloat comparison2)
+		auto isSmallestOf3 = [](const NeoFloat& value, const NeoFloat& comparison1, const NeoFloat& comparison2)
 		{
 			if (!value.flag)
 			{
 				return false;
 			}
 
-			///////////////////////////
-			// つぎはここから！
-			///////////////////////////
+			// ビットフラグ
+			Uint8 flag = 0;
 
+			// 比較対象となりえて、値がvalueより大きい or 比較対象とならないなら真
+			if ((comparison1.flag && value.value <= comparison1.value) || !comparison1.flag)
+			{
+				// 最下位ビットを立てる
+				flag |= 1;
+			}
+
+			if ((comparison2.flag && value.value <= comparison2.value) || !comparison2.flag)
+			{
+				// 下から2ビット目を立てる
+				flag |= 2;
+			}
+
+			// 下2ビットが両方立っていれば真を返す
+			return flag == 3;
 		};
 
 		if (isSmallestOf3(smallerX, smallerY, smallerZ))
 		{
-
+			pushVec.x = -smallerX.value;
 		}
+		else if (isSmallestOf3(smallerY, smallerX, smallerZ))
+		{
+			pushVec.y = -smallerY.value;
+		}
+		else if (isSmallestOf3(smallerZ, smallerX, smallerY))
+		{
+			pushVec.z = -smallerZ.value;
+		}
+
+		// 次フレームで処理される位置修正のベクトルをアクターにセット
+		movalCol->GetOwner()->SetFixVector(pushVec);
 	}
 
 	// それ以外のケースは必要に応じて実装する

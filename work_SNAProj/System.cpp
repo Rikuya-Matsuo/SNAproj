@@ -70,6 +70,8 @@ void System::Run()
 
 		Input::GetInstance().Update();
 
+		FixActorPosition();
+
 		GravityFall();
 
 		UpdateScene();
@@ -138,7 +140,15 @@ void System::UpdateDeltaTime()
 	mPrevTicksCount = ticksCount;
 }
 
-inline void System::UpdateScene()
+void System::FixActorPosition()
+{
+	for (auto actor : mActorCollection)
+	{
+		actor->FixPosition();
+	}
+}
+
+void System::UpdateScene()
 {
 	if (mCurrentScene != nullptr)
 	{
