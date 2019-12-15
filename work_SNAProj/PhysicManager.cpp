@@ -224,15 +224,18 @@ void PhysicManager::CheckHit()
 				HitProcess(pair);
 
 				// 押し戻し
-				bool iMovalFlag = mColliders[i]->GetOwner()->GetMovalFlag();
-				bool jMovalFlag = mColliders[j]->GetOwner()->GetMovalFlag();
-				if (iMovalFlag)
+				if (mHitColliderPairState[pair] == HitState::HitState_Hit)
 				{
-					HitPush(mColliders[i], mColliders[j]);
-				}
-				if (jMovalFlag)
-				{
-					HitPush(mColliders[j], mColliders[i]);
+					bool iMovalFlag = mColliders[i]->GetOwner()->GetMovalFlag();
+					bool jMovalFlag = mColliders[j]->GetOwner()->GetMovalFlag();
+					if (iMovalFlag)
+					{
+						HitPush(mColliders[i], mColliders[j]);
+					}
+					if (jMovalFlag)
+					{
+						HitPush(mColliders[j], mColliders[i]);
+					}
 				}
 			}
 
