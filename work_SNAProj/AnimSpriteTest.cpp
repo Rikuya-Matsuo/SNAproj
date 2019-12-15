@@ -48,6 +48,8 @@ void AnimSpriteTest::UpdateActor()
 			animChips->StartPlaying();
 		}
 	}
+
+	mPosition.y = 0.0f;
 }
 
 void AnimSpriteTest::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)

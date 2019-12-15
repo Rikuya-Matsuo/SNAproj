@@ -134,12 +134,26 @@ void Actor::ClampSpeed()
 
 void Actor::FixPosition()
 {
-	if (mFixVector.LengthSq() >= 20.0f)
+	if (mFixVector.LengthSq() >= 1000.0f)
 	{
 		SDL_Delay(0);
 	}
 
 	mPosition += mFixVector;
+
+	if (mFixVector.x)
+	{
+		mMoveVector.x = 0.0f;
+	}
+	else if (mFixVector.y)
+	{
+		mMoveVector.y = 0.0f;
+	}
+	else if (mFixVector.z)
+	{
+		mMoveVector.z = 0.0f;
+	}
+
 	mFixVector = Vector3D::zero;
 }
 

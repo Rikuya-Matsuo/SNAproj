@@ -69,6 +69,9 @@ void Player::UpdateActor()
 		}
 	}
 
+	// 奥行きの情報を常に0に
+	mPosition.y = 0.0f;
+
 	// 基底クラスのほうも呼ぶ
 	Actor::UpdateActor();
 }

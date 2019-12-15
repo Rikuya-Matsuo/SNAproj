@@ -246,6 +246,8 @@ void PhysicManager::CheckHit()
 	}
 }
 
+// 奥行きを考えない押し戻し処理を使う
+#define HITPUSH_AS_2D
 void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol)
 {
 	// 両方ボックス
@@ -259,15 +261,17 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 		// 各成分のめり込み量計算
 		// 1成分につき2方向からのめり込みを計算する必要があるので、各2個の配列を生成している
 		float x[2];
-		float y[2];
-		float z[2];
 
 		x[0] = movalBox->mMax.x - fixedBox->mMin.x;
 		x[1] = movalBox->mMin.x - fixedBox->mMax.x;
 
+#ifndef HITPUSH_AS_2D
+		float y[2];
 		y[0] = movalBox->mMax.y - fixedBox->mMin.y;
 		y[1] = movalBox->mMin.y - fixedBox->mMax.y;
+#endif
 
+		float z[2];
 		z[0] = movalBox->mMax.z - fixedBox->mMin.z;
 		z[1] = movalBox->mMin.z - fixedBox->mMax.z;
 
@@ -290,9 +294,15 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 				return f[1];
 			}
 		};
-		NeoFloat smallerX, smallerY, smallerZ;
+		NeoFloat smallerX; 
 		smallerX.value = absCompete(x);
+
+#ifndef HITPUSH_AS_2D
+		NeoFloat smallerY;
 		smallerY.value = absCompete(y);
+#endif
+
+		NeoFloat smallerZ;
 		smallerZ.value = absCompete(z);
 
 		// 薄っぺらなメッシュもあるので、めり込みが0のものは不都合
@@ -302,11 +312,14 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 			nf.flag = (nf.value == 0.0f) ? false : true;
 		};
 		checkEvaluatable(smallerX);
+#ifndef HITPUSH_AS_2D
 		checkEvaluatable(smallerY);
+#endif
 		checkEvaluatable(smallerZ);
 
 		// 一番移動量が小さくて済むベクトルを計算
 		Vector3D pushVec = Vector3D::zero;
+#ifndef HITPUSH_AS_2D
 		auto isSmallestOf3 = [](const NeoFloat& value, const NeoFloat& comparison1, const NeoFloat& comparison2)
 		{
 			if (!value.flag)
@@ -346,6 +359,33 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 		{
 			pushVec.z = -smallerZ.value;
 		}
+#else
+		auto isSmallestOf2 = [](const NeoFloat& value, const NeoFloat& comparison)
+		{
+			if (!value.flag)
+			{
+				return false;
+			}
+
+			bool ret = false;
+
+			if ((comparison.flag && value.value <= comparison.value) || !comparison.flag)
+			{
+				ret = true;
+			}
+
+			return ret;
+		};
+
+		if (isSmallestOf2(smallerX, smallerZ))
+		{
+			pushVec.x = -smallerX.value;
+		}
+		else if (isSmallestOf2(smallerZ, smallerX))
+		{
+			pushVec.z = -smallerZ.value;
+		}
+#endif // !HITPUSH_AS_2D
 
 		// 次フレームで処理される位置修正のベクトルをアクターにセット
 		movalCol->GetOwner()->SetFixVector(pushVec);
