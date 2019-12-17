@@ -224,18 +224,15 @@ void PhysicManager::CheckHit()
 				HitProcess(pair);
 
 				// 押し戻し
-				if (mHitColliderPairState[pair] == HitState::HitState_Hit)
+				bool iMovalFlag = mColliders[i]->GetOwner()->GetMovalFlag();
+				bool jMovalFlag = mColliders[j]->GetOwner()->GetMovalFlag();
+				if (iMovalFlag)
 				{
-					bool iMovalFlag = mColliders[i]->GetOwner()->GetMovalFlag();
-					bool jMovalFlag = mColliders[j]->GetOwner()->GetMovalFlag();
-					if (iMovalFlag)
-					{
-						HitPush(mColliders[i], mColliders[j]);
-					}
-					if (jMovalFlag)
-					{
-						HitPush(mColliders[j], mColliders[i]);
-					}
+					HitPush(mColliders[i], mColliders[j]);
+				}
+				if (jMovalFlag)
+				{
+					HitPush(mColliders[j], mColliders[i]);
 				}
 			}
 
@@ -308,17 +305,26 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 		NeoFloat smallerZ;
 		smallerZ.value = absCompete(z);
 
+		// アクターのエイリアス取得
+		Actor & movalActor = *movalCol->GetOwner();
+
 		// 薄っぺらなメッシュもあるので、めり込みが0のものは不都合
+		// かつ、まったく動いていない方向に修正されても困るので、移動ベクトルが0の成分も不都合
 		// よって、そういったものは評価の対象外とする
-		auto checkEvaluatable = [](NeoFloat& nf)
+		auto checkEvaluatable = [](NeoFloat& nf, float axisSpeed)
 		{
-			nf.flag = (nf.value == 0.0f) ? false : true;
+			// 考え方：「評価対象となるのは、重なりも移動方向成分も非0であるもの」
+			nf.flag = (nf.value != 0.0f) && (axisSpeed != 0.0f);
 		};
-		checkEvaluatable(smallerX);
+
+		// ベクトルのエイリアス生成
+		const Vector3D & vec = movalActor.GetMoveVector();
+
+		checkEvaluatable(smallerX, vec.x);
 #ifndef HITPUSH_AS_2D
-		checkEvaluatable(smallerY);
+		checkEvaluatable(smallerY, vec.y);
 #endif
-		checkEvaluatable(smallerZ);
+		checkEvaluatable(smallerZ, vec.z);
 
 		// 一番移動量が小さくて済むベクトルを計算
 		Vector3D pushVec = Vector3D::zero;
@@ -391,7 +397,7 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 #endif // !HITPUSH_AS_2D
 
 		// 次フレームで処理される位置修正のベクトルをアクターにセット
-		movalCol->GetOwner()->SetFixVector(pushVec);
+		movalActor.SetFixVector(pushVec);
 	}
 
 	// それ以外のケースは必要に応じて実装する
