@@ -5,6 +5,8 @@
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 
+const float Block::mModelSize = 200.0f;
+
 Block::Block():
 	Actor()
 {

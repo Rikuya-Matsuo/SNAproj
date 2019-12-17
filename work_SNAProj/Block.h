@@ -9,7 +9,7 @@ public:
 	Block();
 	~Block();
 
-	
+	static const float mModelSize;
 
 private:
 	MeshComponent * mMeshComponent;

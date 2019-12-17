@@ -7,6 +7,7 @@
 #include "AnimSpriteTest.h"
 #include "SpriteTest.h"
 #include "Block.h"
+#include "TestStage.h"
 
 #include <cmath>
 
@@ -14,26 +15,26 @@ TestScene::TestScene()
 {
 	Player * p = new Player;
 	mActors.emplace_back(p);
-	p->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
+	p->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
 	p->SetScale(25.0f);
 
-	Block * bk = new Block;
-	bk->SetPosition(Vector3D(30.0f, 0.0f, 0.0f));
-	bk->SetScale(0.1f);
+	TestStage * ts = new TestStage;
+	ts->SetBlockScale(0.1f);
+	ts->Load("");
 
 	//SpriteTest * st = new SpriteTest;
 	//st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
 	//st->SetScale(30.0f);
 
-	AnimSpriteTest * ast = new AnimSpriteTest;
-	ast->SetPosition(Vector3D(0.0f, 0.0f, 0.0f));
-	ast->SetScale(30.0f);
+	//AnimSpriteTest * ast = new AnimSpriteTest;
+	//ast->SetPosition(Vector3D(0.0f, 0.0f, 0.0f));
+	//ast->SetScale(30.0f);
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);
 	cam->Init(Vector3D(0, 100, 100), p->GetPosition(), Vector3D(0, 0, 1));
 	cam->SetDistanceVector(Vector3D(0, 300, 50));
-	cam->SetChaseTargetFlag(false);
+	cam->SetChaseTargetFlag(true);
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
