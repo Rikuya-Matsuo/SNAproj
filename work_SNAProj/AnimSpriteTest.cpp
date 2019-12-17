@@ -27,7 +27,7 @@ AnimSpriteTest::~AnimSpriteTest()
 {
 }
 
-void AnimSpriteTest::UpdateActor()
+void AnimSpriteTest::UpdateActor1()
 {
 	if (mMesh->GetAnimLoopEndFlag())
 	{

@@ -5,11 +5,12 @@
 #include <algorithm>
 #include <cmath>
 
-const Actor::FlagType Actor::mRequestComponentSortMask = 1 << 0;
-const Actor::FlagType Actor::mStopDrawFlagMask = 1 << 1;
-const Actor::FlagType Actor::mBeyondSceneFlagMask = 1 << 2;
-const Actor::FlagType Actor::mAffectGravityFlagMask = 1 << 3;
-const Actor::FlagType Actor::mMovalFlagMask = 1 << 4;
+const Actor::FlagType Actor::mRequestComponentSortMask			= 1 << 0;
+const Actor::FlagType Actor::mStopDrawFlagMask					= 1 << 1;
+const Actor::FlagType Actor::mBeyondSceneFlagMask				= 1 << 2;
+const Actor::FlagType Actor::mAffectGravityFlagMask				= 1 << 3;
+const Actor::FlagType Actor::mMovalFlagMask						= 1 << 4;
+const Actor::FlagType Actor::mCalculateTransformFlagMask		= 1 << 5;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
@@ -18,7 +19,7 @@ Actor::Actor():
 	mFixVector(Vector3D::zero),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
-	mFlags(mAffectGravityFlagMask | mMovalFlagMask)
+	mFlags(mAffectGravityFlagMask | mMovalFlagMask | mCalculateTransformFlagMask)
 {
 	System::GetInstance().ResisterActor(this);
 
@@ -35,13 +36,33 @@ Actor::~Actor()
 
 void Actor::Update()
 {
-	CalculateWorldTransform();
+	if (mFlags & mCalculateTransformFlagMask)
+	{
+		CalculateWorldTransform();
+
+		mFlags &= ~mCalculateTransformFlagMask;
+	}
+	else
+	{
+		SDL_Delay(0);
+	}
+
+	UpdateActor0();
 
 	UpdateComponents();
 
-	UpdateActor();
+	UpdateActor1();
 
-	CalculateWorldTransform();
+	if (mFlags & mCalculateTransformFlagMask)
+	{
+		CalculateWorldTransform();
+
+		mFlags &= ~mCalculateTransformFlagMask;
+	}
+	else
+	{
+		SDL_Delay(0);
+	}
 }
 
 void Actor::ResisterComponent(const ComponentBase * in_cmp)
@@ -84,7 +105,10 @@ void Actor::UpdateComponents()
 
 	for (auto component : mComponentList)
 	{
-		component->Update();
+		if (component->GetActiveFlag())
+		{
+			component->Update();
+		}
 	}
 }
 
@@ -94,11 +118,20 @@ void Actor::SortComponents()
 	mComponentList.sort([](ComponentBase * lhs, ComponentBase * rhs) { return lhs->GetPriority() < rhs->GetPriority(); });
 }
 
-void Actor::UpdateActor()
+void Actor::UpdateActor0()
+{
+}
+
+void Actor::UpdateActor1()
 {
 	ClampSpeed();
 
-	mPosition += mMoveVector;
+	if (mMoveVector.LengthSq())
+	{
+		mPosition += mMoveVector;
+
+		mFlags |= mCalculateTransformFlagMask;
+	}
 }
 
 void Actor::CalculateWorldTransform()
@@ -134,27 +167,27 @@ void Actor::ClampSpeed()
 
 void Actor::FixPosition()
 {
-	if (mFixVector.LengthSq() >= 1000.0f)
+	if (mFixVector.LengthSq())
 	{
-		SDL_Delay(0);
-	}
+		mPosition += mFixVector;
 
-	mPosition += mFixVector;
+		mFlags |= mCalculateTransformFlagMask;
 
-	if (mFixVector.x)
-	{
-		mMoveVector.x = 0.0f;
-	}
-	else if (mFixVector.y)
-	{
-		mMoveVector.y = 0.0f;
-	}
-	else if (mFixVector.z)
-	{
-		mMoveVector.z = 0.0f;
-	}
+		if (mFixVector.x)
+		{
+			mMoveVector.x = 0.0f;
+		}
+		else if (mFixVector.y)
+		{
+			mMoveVector.y = 0.0f;
+		}
+		else if (mFixVector.z)
+		{
+			mMoveVector.z = 0.0f;
+		}
 
-	mFixVector = Vector3D::zero;
+		mFixVector = Vector3D::zero;
+	}
 }
 
 void Actor::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)

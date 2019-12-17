@@ -31,5 +31,5 @@ SpriteTest::~SpriteTest()
 
 void SpriteTest::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
 {
-	SDL_Log("Hit!");
+	//SDL_Log("Hit!");
 }

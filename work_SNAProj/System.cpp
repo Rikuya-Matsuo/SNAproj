@@ -59,6 +59,8 @@ bool System::Init()
 	return true;
 }
 
+#define SHOW_RUN_TIME
+
 void System::Run()
 {
 	SDL_Log("System start running...\n");
@@ -67,6 +69,10 @@ void System::Run()
 	while (!quitFlag)
 	{
 		UpdateDeltaTime();
+
+#ifdef SHOW_RUN_TIME
+		SDL_Log("%lf", mDeltaTime);
+#endif // SHOW_RUN_TIME
 
 		Input::GetInstance().Update();
 
@@ -138,6 +144,12 @@ void System::UpdateDeltaTime()
 	Uint32 ticksCount = SDL_GetTicks();
 	mDeltaTime = (ticksCount - mPrevTicksCount) / 1000.0f;
 	mPrevTicksCount = ticksCount;
+
+	// 60フレームのゲームにそぐわない値ならば調整する
+	if (mDeltaTime > 1 / 60.0f)
+	{
+		mDeltaTime = 1 / 60.0f;
+	}
 }
 
 void System::FixActorPosition()

@@ -10,14 +10,12 @@ public:
 	Player();
 	~Player();
 
-	void Update() override;
-
 private:
 	Mesh * mMesh;
 
 	InputMoveComponent * mInputComponent;
 
-	void UpdateActor() override;
+	void UpdateActor1() override;
 
 	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
 

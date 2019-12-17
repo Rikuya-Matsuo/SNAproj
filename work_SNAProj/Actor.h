@@ -15,9 +15,9 @@ public:
 	Actor();
 	virtual ~Actor();
 
-	virtual void Update();
+	virtual void Update() final;
 
-	void SetPosition(const Vector3D & pos) { mPosition = pos; }
+	void SetPosition(const Vector3D & pos) { mPosition = pos; mFlags |= mCalculateTransformFlagMask; }
 	const Vector3D& GetPosition() const { return mPosition; }
 
 	void SetMoveVector(const Vector3D & vec) { mMoveVector = vec; }
@@ -65,6 +65,7 @@ protected:
 	static const FlagType mBeyondSceneFlagMask;
 	static const FlagType mAffectGravityFlagMask;
 	static const FlagType mMovalFlagMask;
+	static const FlagType mCalculateTransformFlagMask;
 
 
 	FlagType mFlags;
@@ -87,11 +88,14 @@ protected:
 
 	float mFallSpeedRate;
 
-	void UpdateComponents();
+	virtual void UpdateComponents() final;
 
 	void SortComponents();
 
-	virtual void UpdateActor();
+	virtual void UpdateActor0();
+
+	// スピードのクランプと移動処理
+	virtual void UpdateActor1();
 
 	void CalculateWorldTransform();
 

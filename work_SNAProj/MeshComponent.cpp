@@ -39,6 +39,8 @@ MeshComponent::~MeshComponent()
 
 void MeshComponent::Update()
 {
+	BitFlagFunc::SetFlagByBool(mOwner->GetVisibleFlag(), mMeshCompFlags, mVisibleFlagMask);
+
 	if (mMeshCompFlags & mAnimationModeFlagMask)
 	{
 		mMesh->Update();
@@ -47,7 +49,7 @@ void MeshComponent::Update()
 
 void MeshComponent::Draw(Shader* shader)
 {
-	if (mMesh)
+	if ((mMeshCompFlags & mVisibleFlagMask) && mMesh)
 	{
 		// Set the world transform　ワールド変換をセット
 		shader->SetMatrixUniform("uWorldTransform",

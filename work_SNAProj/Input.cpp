@@ -118,15 +118,15 @@ void Input::UpdateGamePad()
 
 void Input::DisconnectGamePad(int padIndex)
 {
-	if (mGamePad != NULL)
-	{
-		SDL_GameControllerClose(mGamePad);
-		mGamePad = NULL;
-	}
-
 	if (mGamePadMapping != NULL)
 	{
 		SDL_free(mGamePadMapping);
 		mGamePadMapping = NULL;
+	}
+
+	if (mGamePad != NULL)
+	{
+		SDL_GameControllerClose(mGamePad);
+		mGamePad = NULL;
 	}
 }

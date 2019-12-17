@@ -6,6 +6,7 @@
 #include "System.h"
 #include "Common.h"
 #include <cstdlib>
+#include <algorithm>
 
 void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 {
@@ -113,6 +114,13 @@ void PhysicManager::GravityAffect(Actor * actor) const
 
 void PhysicManager::CheckHit()
 {
+	// コライダーのx座標を基準にソート
+	auto lambda = [](const ColliderComponentBase * lhs, const ColliderComponentBase * rhs)
+	{
+		return lhs->GetBox()->mMin.x > rhs->GetBox()->mMin.x;
+	};
+	std::sort(mColliders.begin(), mColliders.end(), lambda);
+
 	for (int i = 0; i < (int)mColliders.size() - 1; ++i)
 	{
 		// コライダーがアクティブでなければ中断
@@ -151,6 +159,11 @@ void PhysicManager::CheckHit()
 				continue;
 			}
 		}
+
+		// 連続で当たらなかった回数（ただし、一度何かと接触してからカウント開始）
+		// 何とも当たっていないときは-1
+		char noTouchCounter = -1;
+		const char breakCheck = 4;
 
 		for (int j = i + 1; j < (int)mColliders.size(); ++j)
 		{
@@ -223,6 +236,9 @@ void PhysicManager::CheckHit()
 			{
 				HitProcess(pair);
 
+				// 接触なしカウンター始動
+				noTouchCounter = 0;
+
 				// 押し戻し
 				bool iMovalFlag = mColliders[i]->GetOwner()->GetMovalFlag();
 				bool jMovalFlag = mColliders[j]->GetOwner()->GetMovalFlag();
@@ -237,10 +253,20 @@ void PhysicManager::CheckHit()
 			}
 
 			// 接触していなかった時の処理
-			// ただし、前フレームで接触していた場合のみ
-			else if (prevHit)
+			else
 			{
-				ApartProcess(pair);
+				// 前フレームで接触していた場合
+				if (prevHit)
+				{
+					ApartProcess(pair);
+				}
+
+				// 連続で接触しなかった回数をカウント
+				// 規定回数に達したらコライダーiの接触判定終了
+				if (noTouchCounter >= 0 && ++noTouchCounter >= breakCheck)
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -484,6 +510,10 @@ PhysicManager::PhysicManager():
 PhysicManager::~PhysicManager()
 {
 	std::vector<ColliderComponentBase *>().swap(mColliders);
+
+	std::unordered_map<ColliderComponentBase *, unsigned short>().swap(mColliderID);
+
+	std::unordered_map<ColliderPair, char, HashColliderPair>().swap(mHitColliderPairState);
 }
 
 

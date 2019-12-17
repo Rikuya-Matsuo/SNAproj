@@ -9,7 +9,7 @@ public:
 	AnimSpriteTest();
 	~AnimSpriteTest();
 
-	void UpdateActor() override;
+	void UpdateActor1() override;
 
 	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
 

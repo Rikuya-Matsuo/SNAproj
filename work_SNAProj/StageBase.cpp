@@ -36,6 +36,7 @@ void StageBase::Construct()
 		SDL_Log("Stage : Block is not set! Fail to construction.\n");
 		return;
 	}
+	// ステージの縦横ブロック数が設定されていない場合も行わない
 	else if (mBlockMassX <= 0 || mBlockMassY <= 0)
 	{
 		SDL_Log("Stage : Block mass is invalid value. Fail to construction.\n");
@@ -59,10 +60,10 @@ void StageBase::Construct()
 			bk->SetScale(mBlockScale);
 
 			// ブロックの高さの半分を計算
-			const float bhh = (Block::mModelSize / 2) * mBlockScale;
+			const float blockHalfHeight = (Block::mModelSize / 2) * mBlockScale;
 
 			// 一番下の段のブロックの上面が高さ0となるよう、生成する位置を計算
-			Vector3D pos(Block::mModelSize * xBlock, 0.0f, Block::mModelSize * (mBlockMassY - (yBlock + 1)) - bhh);
+			Vector3D pos(Block::mModelSize * mBlockScale * xBlock, 0.0f, Block::mModelSize * mBlockScale * (mBlockMassY - (yBlock + 1)) - blockHalfHeight);
 
 			// 位置情報代入
 			bk->SetPosition(pos);

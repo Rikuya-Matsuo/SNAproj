@@ -36,17 +36,7 @@ Player::~Player()
 	SDL_Log("Player is deleted\n");
 }
 
-void Player::Update()
-{
-	CalculateWorldTransform();
-
-	UpdateComponents();
-	UpdateActor();
-
-	CalculateWorldTransform();
-}
-
-void Player::UpdateActor()
+void Player::UpdateActor1()
 {
 	// ブレーキ
 	if (!mInputComponent->GetHorizonInputFlag())
@@ -73,7 +63,7 @@ void Player::UpdateActor()
 	mPosition.y = 0.0f;
 
 	// 基底クラスのほうも呼ぶ
-	Actor::UpdateActor();
+	Actor::UpdateActor1();
 }
 
 void Player::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
