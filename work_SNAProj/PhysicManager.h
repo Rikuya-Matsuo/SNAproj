@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "SDL/SDL.h"
 #include <vector>
 #include <list>
 #include <unordered_map>
@@ -39,6 +40,10 @@ public:
 
 	void CheckHit();
 
+	void ResisterCheckableAttributeCombination(Uint8 att1, Uint8 att2);
+
+	void ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8>& pair);
+
 	friend class HashColliderPair;
 
 private:
@@ -54,11 +59,13 @@ private:
 
 	const float mGravityAcceleration;
 
-	std::vector<ColliderComponentBase *> mColliders;
+	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>> mColliders;
 
 	std::unordered_map<ColliderPair, char, HashColliderPair> mHitColliderPairState;
 
 	std::unordered_map<ColliderComponentBase *, unsigned short> mColliderID;
+
+	std::list<std::pair<Uint8, Uint8>> mCheckableAttributeCombination;
 
 	//std::list<unsigned short> mAssignedIDList;
 
@@ -66,7 +73,11 @@ private:
 
 	bool CheckPrevHit(const ColliderPair& pair);
 
+	void CheckLoop(const std::pair<Uint8, Uint8>& attCombi);
+
 	void HitProcess(ColliderPair& pair);
 
 	void ApartProcess(ColliderPair& pair);
+
+	void SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair);
 };

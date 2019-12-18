@@ -11,11 +11,12 @@ const Actor::FlagType Actor::mBeyondSceneFlagMask				= 1 << 2;
 const Actor::FlagType Actor::mAffectGravityFlagMask				= 1 << 3;
 const Actor::FlagType Actor::mMovalFlagMask						= 1 << 4;
 const Actor::FlagType Actor::mCalculateTransformFlagMask		= 1 << 5;
+const Actor::FlagType Actor::mPlayerFlagMask					= 1 << 6;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
 	mMoveVector(Vector3D::zero),
-	mLimitSpeed(Vector3D(0.1f, 0.0f, 0.1f)),
+	mLimitSpeed(Vector3D(50.0f, 0.0f, 50.0f)),
 	mFixVector(Vector3D::zero),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
@@ -42,10 +43,6 @@ void Actor::Update()
 
 		mFlags &= ~mCalculateTransformFlagMask;
 	}
-	else
-	{
-		SDL_Delay(0);
-	}
 
 	UpdateActor0();
 
@@ -58,10 +55,6 @@ void Actor::Update()
 		CalculateWorldTransform();
 
 		mFlags &= ~mCalculateTransformFlagMask;
-	}
-	else
-	{
-		SDL_Delay(0);
 	}
 }
 
@@ -149,6 +142,9 @@ void Actor::ClampSpeed()
 	{
 		// 万が一limitに負の値が入っていた時のために絶対値を取っておく
 		float limAbs = fabsf(limit);
+
+		// デルタタイム基準に変える
+		limAbs *= System::GetInstance().GetDeltaTime();
 
 		if (speed > limAbs)
 		{

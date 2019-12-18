@@ -12,7 +12,8 @@ InputMoveComponent::InputMoveComponent(Actor * owner , float in_speedX, float in
 	mSpeedHorizontal(in_speedX),
 	mSpeedVertical(in_speedY),
 	mHorizontalAxis(AxisEnum_x),
-	mVerticalAxis(AxisEnum_y)
+	mVerticalAxis(AxisEnum_y),
+	mInputFlags(0)
 {
 
 }

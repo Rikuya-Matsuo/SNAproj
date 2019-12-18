@@ -21,7 +21,7 @@ SpriteTest::SpriteTest():
 	//imc->SetVerticalAxis(InputMoveComponent::AxisEnum_z);
 	//imc->SetVerticalSpeed(imc->GetVerticalSpeed() * -1);
 
-	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
+	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Enemy);
 	bcc->SetObjectBox(msh->GetCollisionBox());
 }
 

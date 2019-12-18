@@ -9,8 +9,6 @@
 #include "Block.h"
 #include "TestStage.h"
 
-#include <cmath>
-
 TestScene::TestScene()
 {
 	Player * p = new Player;
@@ -18,7 +16,7 @@ TestScene::TestScene()
 	p->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
 	p->SetScale(25.0f);
 
-	const bool stageGen = true;
+	const bool stageGen = false;
 	
 	if (stageGen)
 	{
@@ -28,14 +26,14 @@ TestScene::TestScene()
 	}
 	else
 	{
-		SpriteTest * st = new SpriteTest;
-		st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
-		st->SetScale(30.0f);
-	}
+		AnimSpriteTest * ast = new AnimSpriteTest;
+		ast->SetPosition(Vector3D(0.0f, 0.0f, 0.0f));
+		ast->SetScale(30.0f);
 
-	//AnimSpriteTest * ast = new AnimSpriteTest;
-	//ast->SetPosition(Vector3D(0.0f, 0.0f, 0.0f));
-	//ast->SetScale(30.0f);
+		//SpriteTest * st = new SpriteTest;
+		//st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
+		//st->SetScale(30.0f);
+	}
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);

@@ -23,10 +23,15 @@ Player::Player():
 
 	mInputComponent = new InputMoveComponent(this);
 	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
-	mInputComponent->SetVerticalSpeed(mInputComponent->GetVerticalSpeed() * -1);
+	
+	const float speed = 7500.0f;
+	mInputComponent->SetHorizontalSpeed(speed);
+	mInputComponent->SetVerticalSpeed(-speed);
 
 	// 落下スピード割合の調整
 	mFallSpeedRate = 0.01f;
+
+	mFlags |= mPlayerFlagMask;
 }
 
 Player::~Player()

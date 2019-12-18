@@ -66,7 +66,7 @@ protected:
 	static const FlagType mAffectGravityFlagMask;
 	static const FlagType mMovalFlagMask;
 	static const FlagType mCalculateTransformFlagMask;
-
+	static const FlagType mPlayerFlagMask;
 
 	FlagType mFlags;
 
@@ -76,6 +76,7 @@ protected:
 
 	Vector3D mMoveVector;
 
+	// 秒間どのくらい動くかの各成分の制限値
 	Vector3D mLimitSpeed;
 
 	Vector3D mFixVector;

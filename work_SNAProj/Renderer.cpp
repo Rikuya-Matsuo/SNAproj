@@ -21,11 +21,6 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	SDL_DestroyRenderer(mSDLRenderer);
-	SDL_DestroyWindow(mWindow);
-
-	mSDLRenderer = nullptr;
-	mWindow = nullptr;
 }
 
 bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
