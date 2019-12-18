@@ -35,16 +35,23 @@ void AnimationChips::Update()
 	// タイマーに応じてフレームを進める
 	if (mTimer >= mSecondPerFrame)
 	{
-		// インクリメント後にコマ数をオーバーしていれば0に戻す
-		if (++mCurrentTextureIndex >= mChipTextures.size())
+		// タイマーをもとにアニメーションを何枚進めるかを計算
+		int animProceed = static_cast<int>(mTimer / mSecondPerFrame);
+
+		// コマを進める
+		mCurrentTextureIndex += animProceed;
+
+		// コマ数をオーバーしていれば0に戻す
+		if (mCurrentTextureIndex >= mChipTextures.size())
 		{
 			mCurrentTextureIndex = 0;
 
+			// アニメーションのループが一周したことを示すフラグを立てる
 			mFlags |= mLoopEndFlagMask;
 		}
 
-		// タイマーリセット
-		mTimer = 0.0f;
+		// コマを進めた分タイマーを減らす
+		mTimer -= mSecondPerFrame * animProceed;
 	}
 }
 
@@ -83,7 +90,7 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 		for (int x = 0; x < xNum; ++x)
 		{
 			// サーフェイス生成
-			SDL_Surface * dstSurface = SDL_CreateRGBSurface(0, chipW, chipH, 32,
+			SDL_Surface * dstSurface = SDL_CreateRGBSurface(0, chipW, chipH, srcFormat->BitsPerPixel,
 				srcFormat->Rmask, srcFormat->Gmask, srcFormat->Bmask, srcFormat->Amask);
 
 			// 転写用矩形の設定

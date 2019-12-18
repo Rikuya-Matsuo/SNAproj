@@ -16,7 +16,7 @@ TestScene::TestScene()
 	p->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
 	p->SetScale(25.0f);
 
-	const bool stageGen = false;
+	const bool stageGen = true;
 	
 	if (stageGen)
 	{
