@@ -29,7 +29,7 @@ SpriteTest::~SpriteTest()
 {
 }
 
-void SpriteTest::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+void SpriteTest::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 	//SDL_Log("Hit!");
 }

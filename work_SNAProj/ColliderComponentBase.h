@@ -34,9 +34,9 @@ public:
 
 	virtual const Sphere * GetSphere() const { return nullptr; }
 
-	void OnHit(ColliderAttribute colAtt) { mOwner->OnHit(this, colAtt); };
-	void OnTouching(ColliderAttribute colAtt) { mOwner->OnTouching(this, colAtt); }
-	void OnApart(ColliderAttribute colAtt) { mOwner->OnApart(this, colAtt); }
+	void OnHit(const ColliderComponentBase * col) { mOwner->OnHit(this, col); };
+	void OnTouching(const ColliderComponentBase * col) { mOwner->OnTouching(this, col); }
+	void OnApart(const ColliderComponentBase * col) { mOwner->OnApart(this, col); }
 
 protected:
 	const Uint8 mAttribute;

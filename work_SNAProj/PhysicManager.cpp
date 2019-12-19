@@ -8,125 +8,15 @@
 #include <cstdlib>
 #include <algorithm>
 
-void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
-{
-	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
-	Uint8 attribute = collider->GetColliderAttribute();
-
-	// ループを減らすため、ランダムを使ってIDを設定する方法を使う。
-	bool loop = true;
-	while (loop)
-	{
-		// IDをランダム生成
-		// rand()は15ビットの範囲で乱数を出すらしいので、
-		// 頭の1ビットをランダムで決定することで、unsigned short型の最大値までのIDを発行できるようにする。
-		unsigned short usRand = rand() | ((rand() & 1) ? 0x8000 : 0);
-		unsigned short id = usRand % (UINT16_MAX + 1);		// 念のため余剰演算法を使っておく
-
-		// IDの中でアトリビュートを示すか
-		const bool indicateAtt_InID = false;
-		if (indicateAtt_InID)
-		{
-			// アトリビュートを示すマスク部分を初期化
-			const unsigned short attributeMask = 0xf000;
-			id &= ~attributeMask;
-
-			unsigned short usAttribute = static_cast<unsigned short>(attribute);
-
-			// アトリビュートをidに組み込む
-			id |= usAttribute << 12;
-		}
-
-		// そのIDが割り当てられているかを走査
-		bool alreadyAssigned = false;
-		for (auto col : mColliders[attribute])
-		{
-			// 割り当てられていた場合、ID生成からやり直し
-			if (mColliderID[col] == id)
-			{
-				alreadyAssigned = true;
-				break;
-			}
-		}
-
-		if (alreadyAssigned)
-		{
-			continue;
-		}
-		else
-		{
-			mColliderID[collider] = id;
-			loop = false;
-		}
-	}
-
-	// ↓もう一つのID設定方法。ループ使うのがちょっと気に入らないのでもう少し検討する。
-	/*
-	unsigned short i = 0;
-	bool loop = true;
-	while (loop)
-	{
-		// その数字が割り当てられていないとき
-		auto itr = std::find(mAssignedIDList.begin(), mAssignedIDList.end(), i);
-		if (itr == mAssignedIDList.end())
-		{
-			mColliderID[collider] = i;
-			mAssignedIDList.emplace_back(i++);
-			loop = false;
-		}
-	}
-	*/
-
-	// コライダー登録
-	mColliders[attribute].emplace_back(collider);
-}
-
-void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
-{
-	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
-	Uint8 attribute = collider->GetColliderAttribute();
-
-	// 対象を含むコライダーペアの削除
-	for (auto pair_att_colVec : mColliders)
-	{
-		for (auto colVec : pair_att_colVec.second)
-		{
-			ColliderPair pair =
-				(mColliderID[collider] < mColliderID[colVec]) ?
-				std::make_pair(collider, colVec) :
-				std::make_pair(colVec, collider);
-
-			if (mHitColliderPairState.count(pair))
-			{
-				mHitColliderPairState.erase(pair);
-			}
-		}
-	}
-
-	// IDを削除
-	mColliderID.erase(collider);
-
-	// コライダー配列から削除
-	auto target = std::find(mColliders[attribute].begin(), mColliders[attribute].end(), collider);
-	if (target != mColliders[attribute].end())
-	{
-		mColliders[attribute].erase(target);
-	}
-
-}
-
-void PhysicManager::GravityAffect(Actor * actor) const
-{
-	Vector3D vec = actor->GetMoveVector();
-
-	vec.z -= mGravityAcceleration * actor->GetFallSpeedRate() * System::GetInstance().GetDeltaTime();
-
-	actor->SetMoveVector(vec);
-}
-
 #define HIT_CHECK_TYPE 1
 void PhysicManager::CheckHit()
 {
+	// 判定が有効なアトリビュートの組み合わせだけで判定
+	for (auto attCombi : mCheckableAttributeCombination)
+	{
+		CheckLoop(attCombi);
+	}
+
 	// バージョンによってつぶさに切り替えられるようにする（完成したら整理しないと……）
 #if HIT_CHECK_TYPE == 0
 	for (int i = 0; i < (int)mColliders.size() - 1; ++i)
@@ -211,7 +101,7 @@ void PhysicManager::CheckHit()
 			}
 
 			// ペアを作成(IDの値が小さいほうをfirstとする)
-			ColliderPair pair = 
+			ColliderPair pair =
 				mColliderID[mColliders[i]] < mColliderID[mColliders[j]] ?
 				std::make_pair(mColliders[i], mColliders[j]) :
 				std::make_pair(mColliders[j], mColliders[i]);
@@ -279,14 +169,240 @@ void PhysicManager::CheckHit()
 		}
 	}
 #endif
+}
 
-	// 関数分けの必要あり
-
-	// 判定が有効なアトリビュートの組み合わせだけで判定
-	for (auto attCombi : mCheckableAttributeCombination)
+void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
+{
+	for (auto collider1 : mColliders[attCombi.first])
 	{
-		CheckLoop(attCombi);
+		// コライダーがアクティブでないなら判定を行わない
+		if (!collider1->GetActiveFlag())
+		{
+			continue;
+		}
+
+		// 形のデータを受け取る
+		const AABB * IBox = collider1->GetBox();
+		const Sphere * ISphere = collider1->GetSphere();
+
+		// どの形が受け取れたかを判定し、ビットフラグに格納
+		// 最下位ビットがi, 下から2番目のビットがjの、球取得フラグ
+		Uint8 sphereFlag = 0;
+
+		// 形を判別
+		if (ISphere != nullptr)
+		{
+			// 球だけ取得できたなら、それは間違いなく球である。
+			// どちらも取得出来たらエラー。このコライダーの判定を飛ばす。
+			if (IBox == nullptr)
+			{
+				sphereFlag |= 1;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		else
+		{
+			// どちらも取得できなかった場合もエラーとし、コライダーの判定を飛ばす。
+			if (IBox == nullptr)
+			{
+				continue;
+			}
+		}
+
+		for (auto collider2 : mColliders[attCombi.second])
+		{
+			// コライダー1がアクティブでなくなっているなら判定をブレーク
+			if (!collider1->GetActiveFlag())
+			{
+				break;
+			}
+
+			// アクティブでないなら判定をスキップ
+			if (!collider2->GetActiveFlag())
+			{
+				continue;
+			}
+
+			// 球フラグ初期化
+			sphereFlag &= ~2;
+
+			// 形のデータを受け取る
+			const AABB * JBox = collider2->GetBox();
+			const Sphere * JSphere = collider2->GetSphere();
+
+			// 形を判別
+			if (JSphere != nullptr)
+			{
+				// 球だけ取得できたなら、それは間違いなく球である。
+				// どちらも取得出来たらエラー。このコライダーの判定を飛ばす。
+				if (JBox == nullptr)
+				{
+					sphereFlag |= 2;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			else
+			{
+				// どちらも取得できなかった場合もエラーとし、コライダーの判定を飛ばす。
+				if (JBox == nullptr)
+				{
+					continue;
+				}
+			}
+
+			// ペアを作成(IDの値が小さいほうをfirstとする)
+			ColliderPair pair =
+				mColliderID[collider1] < mColliderID[collider2] ?
+				std::make_pair(collider1, collider2) :
+				std::make_pair(collider2, collider1);
+
+			// 前のフレームでの接触状態を判定
+			bool prevHit = CheckPrevHit(pair);
+
+			// 当たっているかを判定
+			bool hit = false;
+			switch (sphereFlag)
+			{
+			case 0:
+				hit = Collision::CheckHit(*IBox, *JBox);
+				break;
+			case 1:
+				hit = Collision::CheckHit(*ISphere, *JBox);
+				break;
+			case 2:
+				hit = Collision::CheckHit(*JSphere, *IBox);
+				break;
+			case 3:
+				hit = Collision::CheckHit(*ISphere, *JSphere);
+				break;
+			default:
+				break;
+			}
+
+			// ヒット時のリアクション
+			if (hit)
+			{
+				// 押し戻し
+				auto checkMoval = [](ColliderComponentBase* col)
+				{
+					return col->GetOwner()->GetMovalFlag() && (col->GetColliderAttribute() != ColliderAttribute::ColAtt_Detector);
+				};
+				bool iMovalFlag = checkMoval(collider1);
+				bool jMovalFlag = checkMoval(collider2);
+				if (iMovalFlag)
+				{
+					HitPush(collider1, collider2);
+				}
+				if (jMovalFlag)
+				{
+					HitPush(collider2, collider1);
+				}
+
+				HitProcess(pair);
+			}
+
+			// 接触していなかった時の処理
+			else
+			{
+				// 前フレームで接触していた場合
+				if (prevHit)
+				{
+					ApartProcess(pair);
+				}
+			}
+		}
 	}
+}
+
+void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
+{
+	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
+	Uint8 attribute = collider->GetColliderAttribute();
+
+	// ループを減らすため、ランダムを使ってIDを設定する方法を使う。
+	bool loop = true;
+	while (loop)
+	{
+		// IDをランダム生成
+		// rand()は15ビットの範囲で乱数を出すらしいので、
+		// 頭の1ビットをランダムで決定することで、unsigned short型の最大値までのIDを発行できるようにする。
+		unsigned short usRand = rand() | ((rand() & 1) ? 0x8000 : 0);
+		unsigned short id = usRand % (UINT16_MAX + 1);		// 念のため余剰演算法を使っておく
+
+		// そのIDが割り当てられているかを走査
+		bool alreadyAssigned = false;
+		for (auto col : mColliders[attribute])
+		{
+			// 割り当てられていた場合、ID生成からやり直し
+			if (mColliderID[col] == id)
+			{
+				alreadyAssigned = true;
+				break;
+			}
+		}
+
+		if (alreadyAssigned)
+		{
+			continue;
+		}
+		else
+		{
+			mColliderID[collider] = id;
+			loop = false;
+		}
+	}
+
+	// コライダー登録
+	mColliders[attribute].emplace_back(collider);
+}
+
+void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
+{
+	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
+	Uint8 attribute = collider->GetColliderAttribute();
+
+	// 対象を含むコライダーペアの削除
+	for (auto pair_att_colVec : mColliders)
+	{
+		for (auto colOfVec : pair_att_colVec.second)
+		{
+			ColliderPair pair =
+				(mColliderID[collider] < mColliderID[colOfVec]) ?
+				std::make_pair(collider, colOfVec) :
+				std::make_pair(colOfVec, collider);
+
+			if (mHitColliderPairState.count(pair))
+			{
+				mHitColliderPairState.erase(pair);
+			}
+		}
+	}
+
+	// IDを削除
+	mColliderID.erase(collider);
+
+	// コライダー配列から削除
+	auto target = std::find(mColliders[attribute].begin(), mColliders[attribute].end(), collider);
+	if (target != mColliders[attribute].end())
+	{
+		mColliders[attribute].erase(target);
+	}
+
+}
+
+void PhysicManager::GravityAffect(Actor * actor) const
+{
+	Vector3D vec = actor->GetMoveVector();
+
+	vec.z -= mGravityAcceleration * actor->GetFallSpeedRate() * System::GetInstance().GetDeltaTime();
+
+	actor->SetMoveVector(vec);
 }
 
 void PhysicManager::ResisterCheckableAttributeCombination(Uint8 att1, Uint8 att2)
@@ -486,150 +602,8 @@ bool PhysicManager::CheckPrevHit(const ColliderPair& pair)
 	return ret;
 }
 
-void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
-{
-	for (auto collider1 : mColliders[attCombi.first])
-	{
-		// コライダーがアクティブでないなら判定を行わない
-		if (!collider1->GetActiveFlag())
-		{
-			continue;
-		}
-
-		// 形のデータを受け取る
-		const AABB * IBox		= collider1->GetBox();
-		const Sphere * ISphere	= collider1->GetSphere();
-
-		// どの形が受け取れたかを判定し、ビットフラグに格納
-		// 最下位ビットがi, 下から2番目のビットがjの、球取得フラグ
-		Uint8 sphereFlag = 0;
-
-		// 形を判別
-		if (ISphere != nullptr)
-		{
-			// 球だけ取得できたなら、それは間違いなく球である。
-			// どちらも取得出来たらエラー。このコライダーの判定を飛ばす。
-			if (IBox == nullptr)
-			{
-				sphereFlag |= 1;
-			}
-			else
-			{
-				continue;
-			}
-		}
-		else
-		{
-			// どちらも取得できなかった場合もエラーとし、コライダーの判定を飛ばす。
-			if (IBox == nullptr)
-			{
-				continue;
-			}
-		}
-
-		for (auto collider2 : mColliders[attCombi.second])
-		{
-			// アクティブでないなら判定をスキップ
-			if (!collider2->GetActiveFlag())
-			{
-				continue;
-			}
-
-			// 球フラグ初期化
-			sphereFlag &= ~2;
-
-			// 形のデータを受け取る
-			const AABB * JBox = collider2->GetBox();
-			const Sphere * JSphere = collider2->GetSphere();
-
-			// 形を判別
-			if (JSphere != nullptr)
-			{
-				// 球だけ取得できたなら、それは間違いなく球である。
-				// どちらも取得出来たらエラー。このコライダーの判定を飛ばす。
-				if (JBox == nullptr)
-				{
-					sphereFlag |= 2;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			else
-			{
-				// どちらも取得できなかった場合もエラーとし、コライダーの判定を飛ばす。
-				if (JBox == nullptr)
-				{
-					continue;
-				}
-			}
-
-			// ペアを作成(IDの値が小さいほうをfirstとする)
-			ColliderPair pair =
-				mColliderID[collider1] < mColliderID[collider2] ?
-				std::make_pair(collider1, collider2) :
-				std::make_pair(collider2, collider1);
-
-			// 前のフレームでの接触状態を判定
-			bool prevHit = CheckPrevHit(pair);
-
-			// 当たっているかを判定
-			bool hit = false;
-			switch (sphereFlag)
-			{
-			case 0:
-				hit = Collision::CheckHit(*IBox, *JBox);
-				break;
-			case 1:
-				hit = Collision::CheckHit(*ISphere, *JBox);
-				break;
-			case 2:
-				hit = Collision::CheckHit(*JSphere, *IBox);
-				break;
-			case 3:
-				hit = Collision::CheckHit(*ISphere, *JSphere);
-				break;
-			default:
-				break;
-			}
-
-			// ヒット時のリアクション
-			if (hit)
-			{
-				HitProcess(pair);
-
-				// 押し戻し
-				bool iMovalFlag = collider1->GetOwner()->GetMovalFlag();
-				bool jMovalFlag = collider2->GetOwner()->GetMovalFlag();
-				if (iMovalFlag)
-				{
-					HitPush(collider1, collider2);
-				}
-				if (jMovalFlag)
-				{
-					HitPush(collider2, collider1);
-				}
-			}
-
-			// 接触していなかった時の処理
-			else
-			{
-				// 前フレームで接触していた場合
-				if (prevHit)
-				{
-					ApartProcess(pair);
-				}
-			}
-		}
-	}
-}
-
 void PhysicManager::HitProcess(ColliderPair& pair)
 {
-	const ColliderAttribute att1st = pair.first->GetColliderAttribute();
-	const ColliderAttribute att2nd = pair.second->GetColliderAttribute();
-
 	// コリジョンの組み合わせを検索
 	auto itr = mHitColliderPairState.find(pair);
 
@@ -641,8 +615,8 @@ void PhysicManager::HitProcess(ColliderPair& pair)
 		mHitColliderPairState[pair] = HitState::HitState_Hit;
 
 		// 衝突関数の呼び出し
-		pair.first->OnHit(att2nd);
-		pair.second->OnHit(att1st);
+		pair.first->OnHit(pair.second);
+		pair.second->OnHit(pair.first);
 	}
 
 	// 前フレームで衝突した or 前フレームから接触していた場合
@@ -653,8 +627,8 @@ void PhysicManager::HitProcess(ColliderPair& pair)
 		mHitColliderPairState[pair] = HitState::HitState_Touching;
 
 		// 接触関数の呼び出し
-		pair.first->OnTouching(att2nd);
-		pair.second->OnTouching(att1st);
+		pair.first->OnTouching(pair.second);
+		pair.second->OnTouching(pair.first);
 	}
 }
 
@@ -667,8 +641,8 @@ void PhysicManager::ApartProcess(ColliderPair & pair)
 	mHitColliderPairState[pair] = HitState::HitState_NoTouch;
 
 	// 接触解除処理
-	pair.first->OnApart(att2nd);
-	pair.second->OnApart(att1st);
+	pair.first->OnApart(pair.second);
+	pair.second->OnApart(pair.first);
 }
 
 void PhysicManager::SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair)
@@ -682,10 +656,15 @@ void PhysicManager::SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair)
 }
 
 PhysicManager::PhysicManager():
-	mGravityAcceleration(9.8f / 100)
+	mGravityAcceleration(9.8f)
 {
-	mColliders.reserve(128);
-	mColliderID.reserve(128);
+	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
+	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
+	{
+		mColliders[i].reserve(128);
+	}
+
+	mColliderID.reserve(256);
 	mHitColliderPairState.reserve(32);
 
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Block);
@@ -694,11 +673,17 @@ PhysicManager::PhysicManager():
 
 PhysicManager::~PhysicManager()
 {
-	//std::vector<ColliderComponentBase *>().swap(mColliders);
+	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
+	{
+		std::vector<ColliderComponentBase *>().swap(mColliders[i]);
+	}
+	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>>().swap(mColliders);
 
 	std::unordered_map<ColliderComponentBase *, unsigned short>().swap(mColliderID);
 
 	std::unordered_map<ColliderPair, char, HashColliderPair>().swap(mHitColliderPairState);
+
+	std::list<std::pair<Uint8, Uint8>>().swap(mCheckableAttributeCombination);
 }
 
 

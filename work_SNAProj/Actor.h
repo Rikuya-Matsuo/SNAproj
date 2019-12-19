@@ -48,14 +48,16 @@ public:
 
 	bool GetMovalFlag() const { return mFlags & mMovalFlagMask; }
 
+	bool GetPlayerFlag() const { return mFlags & mPlayerFlagMask; }
+
 	float GetFallSpeedRate() const { return mFallSpeedRate; }
 
-	void SetFixVector(const Vector3D& vec) { mFixVector = vec; }
+	void SetFixVector(const Vector3D & vec);
 	void FixPosition();
 
-	virtual void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt);
-	virtual void OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt);
-	virtual void OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt);
+	virtual void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent);
+	virtual void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent);
+	virtual void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent);
 
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
@@ -66,7 +68,7 @@ protected:
 	static const FlagType mAffectGravityFlagMask;
 	static const FlagType mMovalFlagMask;
 	static const FlagType mCalculateTransformFlagMask;
-	static const FlagType mPlayerFlagMask;
+	static const FlagType mPlayerFlagMask;				// 本番ではいらないかも
 
 	FlagType mFlags;
 
@@ -78,6 +80,8 @@ protected:
 
 	// 秒間どのくらい動くかの各成分の制限値
 	Vector3D mLimitSpeed;
+
+	Vector3D mPushedVector;
 
 	Vector3D mFixVector;
 

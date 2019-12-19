@@ -52,6 +52,6 @@ void AnimSpriteTest::UpdateActor1()
 	mPosition.y = 0.0f;
 }
 
-void AnimSpriteTest::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+void AnimSpriteTest::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 }

@@ -11,7 +11,7 @@ public:
 
 	void UpdateActor1() override;
 
-	void OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt) override;
+	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
 private:
 	Mesh * mMesh;

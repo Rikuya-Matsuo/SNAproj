@@ -134,7 +134,7 @@ void System::Finish()
 	SDL_Log("System finish to shut down");
 }
 
-#define SHOW_RUN_TIME
+//#define SHOW_DELTA_TIME
 
 void System::UpdateDeltaTime()
 {
@@ -142,7 +142,7 @@ void System::UpdateDeltaTime()
 	mDeltaTime = (ticksCount - mPrevTicksCount) / 1000.0f;
 	mPrevTicksCount = ticksCount;
 
-#ifdef SHOW_RUN_TIME
+#ifdef SHOW_DELTA_TIME
 	// 調整前のデルタタイム表示
 	SDL_Log("%lf", mDeltaTime);
 #endif

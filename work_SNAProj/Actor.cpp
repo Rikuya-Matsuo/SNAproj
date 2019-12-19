@@ -18,13 +18,12 @@ Actor::Actor():
 	mMoveVector(Vector3D::zero),
 	mLimitSpeed(Vector3D(50.0f, 0.0f, 50.0f)),
 	mFixVector(Vector3D::zero),
+	mPushedVector(Vector3D::zero),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
 	mFlags(mAffectGravityFlagMask | mMovalFlagMask | mCalculateTransformFlagMask)
 {
 	System::GetInstance().ResisterActor(this);
-
-	mFlags &= ~mAffectGravityFlagMask;
 }
 
 Actor::~Actor()
@@ -138,27 +137,34 @@ void Actor::CalculateWorldTransform()
 
 void Actor::ClampSpeed()
 {
-	auto clamp = [](float & speed, const float limit)
+	auto clamp = [](float & speed, float limit)
 	{
 		// 万が一limitに負の値が入っていた時のために絶対値を取っておく
-		float limAbs = fabsf(limit);
+		limit = fabsf(limit);
 
 		// デルタタイム基準に変える
-		limAbs *= System::GetInstance().GetDeltaTime();
+		limit *= System::GetInstance().GetDeltaTime();
 
-		if (speed > limAbs)
+		if (speed > limit)
 		{
-			speed = limAbs;
+			speed = limit;
 		}
-		else if (speed < -limAbs)
+		else if (speed < -limit)
 		{
-			speed = -limAbs;
+			speed = -limit;
 		}
 	};
 
 	clamp(mMoveVector.x, mLimitSpeed.x);
 	clamp(mMoveVector.y, mLimitSpeed.y);
 	clamp(mMoveVector.z, mLimitSpeed.z);
+}
+
+void Actor::SetFixVector(const Vector3D & vec)
+{
+	mPushedVector = vec;
+
+	mFixVector += mPushedVector;
 }
 
 void Actor::FixPosition()
@@ -186,15 +192,15 @@ void Actor::FixPosition()
 	}
 }
 
-void Actor::OnHit(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+void Actor::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 
 }
 
-void Actor::OnTouching(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+void Actor::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 }
 
-void Actor::OnApart(const ColliderComponentBase * caller, ColliderAttribute colAtt)
+void Actor::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 }
