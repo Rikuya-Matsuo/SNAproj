@@ -9,7 +9,8 @@
 
 Player::Player():
 	Actor(),
-	mLandingFlag(false)
+	mLandingFlag(false),
+	mDetectGroundFlag(false)
 {
 	// メッシュのロード
 	MeshComponent * mc = new MeshComponent(this);
@@ -21,6 +22,13 @@ Player::Player():
 	// コライダーの設定
 	mBoxCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	mBoxCollider->SetObjectBox(mMesh->GetCollisionBox());
+
+	AABB box = mMesh->GetCollisionBox();
+	const Vector3D boxSize = box.mMax - box.mMin;
+	box.mMax.z -= boxSize.z * 0.8f;
+	box.mMin.z -= boxSize.z * 0.2f;
+	BoxColliderComponent * groundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
+	groundChecker->SetObjectBox(box);
 
 	mInputComponent = new InputMoveComponent(this);
 	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
@@ -46,8 +54,28 @@ Player::~Player()
 	SDL_Log("Player is deleted\n");
 }
 
+void Player::UpdateActor0()
+{
+	if (!mDetectGroundFlag)
+	{
+		mLandingFlag = false;
+
+		SetAffectGravityFlag(true);
+	}
+
+	mDetectGroundFlag = false;
+}
+
 void Player::UpdateActor1()
 {
+	// ジャンプ時に重力かける
+	if (false && mInputComponent->GetUpKey())
+	{
+		mLandingFlag = false;
+
+		SetAffectGravityFlag(true);
+	}
+
 	// ブレーキ
 	if (!mInputComponent->GetHorizonInputFlag())
 	{
@@ -78,6 +106,21 @@ void Player::UpdateActor1()
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
+	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector)
+	{
+		if (mPushedVector.z > 0)
+		{
+			mLandingFlag = true;
+
+			mDetectGroundFlag = true;
+
+			SetAffectGravityFlag(false);
+
+			SDL_Log("Player : Detect Ground.\n");
+		}
+		return;
+	}
+
 	// すでにその方向への押し返しが働いている場合は、押し返しを無効化する
 	// 着地中ならば常に押し返しを無効化する
 	bool invalidationFlag = mLandingFlag;
@@ -98,19 +141,17 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 	}
 	else if (mPushedVector.z)
 	{
-		// 上方向への押し返しである場合、着地である
-		if (mPushedVector.z > 0)
-		{
-			mLandingFlag = true;
-		}
-
 		if (mFixVector.z)
 		{
 			invalidationFlag = true;
 		}
 	}
 
-	mFixVector -= mPushedVector;
+	// 無効化
+	if (invalidationFlag)
+	{
+		mFixVector -= mPushedVector;
+	}
 
 	static char HitTest = 0;
 	SDL_Log("Hit!%d\n", HitTest);
@@ -119,9 +160,18 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	static char touchingTest = 0;
-	//SDL_Log("Touch!%d\n", touchingTest);
-	touchingTest ^= 1;
+	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector)
+	{
+		if (mPushedVector.z > 0)
+		{
+			mLandingFlag = true;
+
+			mDetectGroundFlag = true;
+
+			SetAffectGravityFlag(false);
+		}
+		return;
+	}
 }
 
 void Player::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)

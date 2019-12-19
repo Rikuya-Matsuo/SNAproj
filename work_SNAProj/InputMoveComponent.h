@@ -28,6 +28,11 @@ public:
 	bool GetHorizonInputFlag() const { return mInputFlags & (mLeftMask | mRightMask); }
 	bool GetVerticalInputFlag() const { return mInputFlags & (mUpMask | mDownMask); }
 
+	bool GetUpKey() const { return mInputFlags & mUpMask; }
+	bool GetDownKey() const { return mInputFlags & mDownMask; }
+	bool GetRightKey() const { return mInputFlags & mRightMask; }
+	bool GetLeftKey() const { return mInputFlags & mRightMask; }
+
 private:
 	typedef Uint8 FlagType;
 	static const FlagType mLeftMask;

@@ -21,7 +21,7 @@ TestScene::TestScene()
 	if (stageGen)
 	{
 		TestStage * ts = new TestStage;
-		ts->SetBlockScale(0.1f);
+		ts->SetBlockScale(0.15f);
 		ts->Load("");
 	}
 	else

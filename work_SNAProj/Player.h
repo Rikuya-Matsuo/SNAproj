@@ -22,6 +22,10 @@ private:
 
 	bool mLandingFlag;
 
+	bool mDetectGroundFlag;
+
+	void UpdateActor0() override;
+
 	void UpdateActor1() override;
 
 	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
