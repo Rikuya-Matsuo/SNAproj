@@ -11,6 +11,15 @@
 #define HIT_CHECK_TYPE 1
 void PhysicManager::CheckHit()
 {
+	// Detectorを先に判定
+	for (auto detectSub : mDetectSubject)
+	{
+		std::pair<Uint8, Uint8> attCombi =
+			std::make_pair(ColliderAttribute::ColAtt_Detector, detectSub);
+
+		CheckLoop(attCombi);
+	}
+
 	// 判定が有効なアトリビュートの組み合わせだけで判定
 	for (auto attCombi : mCheckableAttributeCombination)
 	{
@@ -414,6 +423,18 @@ void PhysicManager::ResisterCheckableAttributeCombination(Uint8 att1, Uint8 att2
 
 void PhysicManager::ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8>& pair)
 {
+	// どちらかがDetectorなら特別処理
+	const Uint8 detectorAtt = ColliderAttribute::ColAtt_Detector;
+	if (pair.first == detectorAtt || pair.second == detectorAtt)
+	{
+		// 両方か片方だけか
+		(pair.first == pair.second) ?
+			mCheckableAttributeCombination.emplace_back(pair) : 
+			mDetectSubject.emplace_back((pair.first == detectorAtt) ? pair.second : pair.first);
+
+		return;
+	}
+
 	// firstが値として小さいとルール付ける
 	SetAttCombiSmallerFirst(pair);
 

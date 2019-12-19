@@ -51,6 +51,8 @@ Player::~Player()
 {
 	Common::DeleteContainerOfPointer(mComponentList);
 
+	std::list<const ColliderComponentBase*>().swap(mLandingGrounds);
+
 	SDL_Log("Player is deleted\n");
 }
 
@@ -110,11 +112,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 	{
 		if (mPushedVector.z > 0)
 		{
-			mLandingFlag = true;
-
-			mDetectGroundFlag = true;
-
-			SetAffectGravityFlag(false);
+			OnDetectGround(opponent);
 
 			SDL_Log("Player : Detect Ground.\n");
 		}
@@ -123,7 +121,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 	// すでにその方向への押し返しが働いている場合は、押し返しを無効化する
 	// 着地中ならば常に押し返しを無効化する
-	bool invalidationFlag = mLandingFlag;
+	bool invalidationFlag = false;
 
 	if (mPushedVector.x)
 	{
@@ -164,11 +162,7 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 	{
 		if (mPushedVector.z > 0)
 		{
-			mLandingFlag = true;
-
-			mDetectGroundFlag = true;
-
-			SetAffectGravityFlag(false);
+			OnDetectGround(opponent);
 		}
 		return;
 	}
@@ -176,7 +170,39 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 
 void Player::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
+	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector &&
+		opponent->GetColliderAttribute() == ColliderAttribute::ColAtt_Block)
+	{
+		auto itr = std::find(mLandingGrounds.begin(), mLandingGrounds.end(), opponent);
+
+		if (itr != mLandingGrounds.end())
+		{
+			mLandingGrounds.erase(itr);
+
+			SDL_Log("Player : Apart Ground.\n");
+		}
+	}
+
 	static char apartTest = 0;
 	SDL_Log("Apart!%d\n", apartTest);
 	apartTest ^= 1;
+}
+
+void Player::OnDetectGround(const ColliderComponentBase * opponent)
+{
+	if (opponent->GetColliderAttribute() == ColliderAttribute::ColAtt_Block)
+	{
+		auto itr = std::find(mLandingGrounds.begin(), mLandingGrounds.end(), opponent);
+
+		if (itr == mLandingGrounds.end())
+		{
+			mLandingGrounds.emplace_back(opponent);
+		}
+	}
+
+	mLandingFlag = true;
+
+	mDetectGroundFlag = true;
+
+	SetAffectGravityFlag(false);
 }

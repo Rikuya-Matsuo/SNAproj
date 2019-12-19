@@ -67,6 +67,9 @@ private:
 
 	std::list<std::pair<Uint8, Uint8>> mCheckableAttributeCombination;
 
+	// Detectorアトリビュートの検出対象になるアトリビュート
+	std::list<Uint8> mDetectSubject;
+
 	//std::list<unsigned short> mAssignedIDList;
 
 	void HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol);
