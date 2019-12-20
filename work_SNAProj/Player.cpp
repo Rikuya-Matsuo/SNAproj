@@ -27,8 +27,12 @@ Player::Player():
 	const Vector3D boxSize = box.mMax - box.mMin;
 	box.mMax.z -= boxSize.z * 0.8f;
 	box.mMin.z -= boxSize.z * 0.2f;
-	mGroundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
-	mGroundChecker->SetObjectBox(box);
+
+	if (false)
+	{
+		mGroundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
+		mGroundChecker->SetObjectBox(box);
+	}
 
 	mInputComponent = new InputMoveComponent(this);
 	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
@@ -63,7 +67,7 @@ void Player::UpdateActor0()
 		mLandingFlag = false;
 
 		static char testLand = 0;
-		SDL_Log("Player : No Landing%d", testLand);
+		//SDL_Log("Player : No Landing%d", testLand);
 		testLand ^= 1;
 
 		SetAffectGravityFlag(true);

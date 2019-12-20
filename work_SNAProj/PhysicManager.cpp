@@ -443,7 +443,6 @@ void PhysicManager::ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8
 }
 
 // 奥行きを考えない押し戻し処理を使う
-#define HITPUSH_AS_2D
 void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol)
 {
 	// 両方ボックス
@@ -454,146 +453,85 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 		const AABB * movalBox = movalCol->GetWorldBox();
 		const AABB * fixedBox = fixedCol->GetWorldBox();
 
-		// 各成分のめり込み量計算
-		// 1成分につき2方向からのめり込みを計算する必要があるので、各2個の配列を生成している
-		float x[2];
-
-		x[0] = movalBox->mMax.x - fixedBox->mMin.x;
-		x[1] = movalBox->mMin.x - fixedBox->mMax.x;
-
-#ifndef HITPUSH_AS_2D
-		float y[2];
-		y[0] = movalBox->mMax.y - fixedBox->mMin.y;
-		y[1] = movalBox->mMin.y - fixedBox->mMax.y;
-#endif
-
-		float z[2];
-		z[0] = movalBox->mMax.z - fixedBox->mMin.z;
-		z[1] = movalBox->mMin.z - fixedBox->mMax.z;
-
-		// floatの値 + ベクトルに格納していいかを示すフラグ
-		struct NeoFloat
+		// 各方向の接触面の大きさを計算
+		auto checkContact = [](float aMin, float aMax, float bMin, float bMax)
 		{
-			float value;
-			bool flag;
-		};
+			bool aMinIsLargeThanBMin = aMin > bMin;
+			bool aMaxIsLargeThanBMax = aMax > bMax;
 
-		// 2つのうち、めり込みの絶対値が小さいものを採用
-		auto absCompete = [](float * f)
-		{
-			if (fabsf(f[0]) < fabsf(f[1]))
+			// 状況に応じて返却値を計算
+			float contact;
+			if (aMinIsLargeThanBMin && aMaxIsLargeThanBMax)
 			{
-				return f[0];
+				contact = bMax - aMin;
+			}
+			else if (aMinIsLargeThanBMin && !aMaxIsLargeThanBMax)
+			{
+				contact = aMax - aMin;
+			}
+			else if (!aMinIsLargeThanBMin && aMaxIsLargeThanBMax)
+			{
+				contact = bMax - bMin;
 			}
 			else
 			{
-				return f[1];
+				// 両方false
+				contact = aMax - bMin;
 			}
+
+			return contact;
 		};
-		NeoFloat smallerX; 
-		smallerX.value = absCompete(x);
+		float contactX = checkContact(movalBox->mMin.x, movalBox->mMax.x, fixedBox->mMin.x, fixedBox->mMax.x);
+		float contactZ = checkContact(movalBox->mMin.z, movalBox->mMax.z, fixedBox->mMin.z, fixedBox->mMax.z);
 
-#ifndef HITPUSH_AS_2D
-		NeoFloat smallerY;
-		smallerY.value = absCompete(y);
-#endif
-
-		NeoFloat smallerZ;
-		smallerZ.value = absCompete(z);
-
-		// アクターのエイリアス取得
-		Actor & movalActor = *movalCol->GetOwner();
-
-		// 薄っぺらなメッシュもあるので、めり込みが0のものは不都合
-		// かつ、まったく動いていない方向に修正されても困るので、移動ベクトルが0の成分も不都合
-		// よって、そういったものは評価の対象外とする
-		auto checkEvaluatable = [](NeoFloat& nf, float axisSpeed)
+		// 絶対値を比較し、小さい方の（符号付きの）そのままの値を返す
+		// サイズ２の配列で使うこと！
+		auto absCmp = [](float * val)
 		{
-			// 考え方：「評価対象となるのは、重なりも移動方向成分も非0であるもの」
-			nf.flag = (nf.value != 0.0f) && (axisSpeed != 0.0f);
+			return (fabsf(val[0]) < fabsf(val[1])) ? val[0] : val[1];
 		};
 
-		// ベクトルのエイリアス生成
-		const Vector3D & vec = movalActor.GetMoveVector();
+		// アクターエイリアス取得
+		Actor * movalActor = movalCol->GetOwner();
 
-		checkEvaluatable(smallerX, vec.x);
-#ifndef HITPUSH_AS_2D
-		checkEvaluatable(smallerY, vec.y);
-#endif
-		checkEvaluatable(smallerZ, vec.z);
-
-		// 一番移動量が小さくて済むベクトルを計算
+		// 押し返しベクトル
 		Vector3D pushVec = Vector3D::zero;
-#ifndef HITPUSH_AS_2D
-		auto isSmallestOf3 = [](const NeoFloat& value, const NeoFloat& comparison1, const NeoFloat& comparison2)
+
+		// zの接触面が大きければそれは壁であり、xの接触面が大きければそれは地面である
+		if (contactZ > contactX)
 		{
-			if (!value.flag)
-			{
-				return false;
-			}
+			// 壁
 
-			// ビットフラグ
-			Uint8 flag = 0;
+			float xOverlapCandidate[2];
+			
+			xOverlapCandidate[0] = movalBox->mMax.x - fixedBox->mMin.x;
+			xOverlapCandidate[1] = movalBox->mMin.x - fixedBox->mMax.x;
 
-			// 比較対象となりえて、値がvalueより大きい or 比較対象とならないなら真
-			if ((comparison1.flag && value.value <= comparison1.value) || !comparison1.flag)
-			{
-				// 最下位ビットを立てる
-				flag |= 1;
-			}
+			float xOverlap = absCmp(xOverlapCandidate);
 
-			if ((comparison2.flag && value.value <= comparison2.value) || !comparison2.flag)
-			{
-				// 下から2ビット目を立てる
-				flag |= 2;
-			}
+			// 押し返し
+			pushVec.x = -xOverlap;
+			movalActor->SetFixVector(pushVec);
 
-			// 下2ビットが両方立っていれば真を返す
-			return flag == 3;
-		};
-
-		if (isSmallestOf3(smallerX, smallerY, smallerZ))
-		{
-			pushVec.x = -smallerX.value;
+			return;
 		}
-		else if (isSmallestOf3(smallerY, smallerX, smallerZ))
+		else
 		{
-			pushVec.y = -smallerY.value;
+			// 地面
+
+			float zOverlapCandidate[2];
+
+			zOverlapCandidate[0] = movalBox->mMax.z - fixedBox->mMin.z;
+			zOverlapCandidate[1] = movalBox->mMin.z - fixedBox->mMax.z;
+
+			float zOverlap = absCmp(zOverlapCandidate);
+
+			// 押し返し
+			pushVec.z = -zOverlap;
+			movalActor->SetFixVector(pushVec);
+
+			return;
 		}
-		else if (isSmallestOf3(smallerZ, smallerX, smallerY))
-		{
-			pushVec.z = -smallerZ.value;
-		}
-#else
-		auto isSmallestOf2 = [](const NeoFloat& value, const NeoFloat& comparison)
-		{
-			if (!value.flag)
-			{
-				return false;
-			}
-
-			bool ret = false;
-
-			if ((comparison.flag && value.value <= comparison.value) || !comparison.flag)
-			{
-				ret = true;
-			}
-
-			return ret;
-		};
-
-		if (isSmallestOf2(smallerX, smallerZ))
-		{
-			pushVec.x = -smallerX.value;
-		}
-		else if (isSmallestOf2(smallerZ, smallerX))
-		{
-			pushVec.z = -smallerZ.value;
-		}
-#endif // !HITPUSH_AS_2D
-
-		// 次フレームで処理される位置修正のベクトルをアクターにセット
-		movalActor.SetFixVector(pushVec);
 	}
 
 	// それ以外のケースは必要に応じて実装する
