@@ -81,8 +81,10 @@ protected:
 	// 秒間どのくらい動くかの各成分の制限値
 	Vector3D mLimitSpeed;
 
+	// 押し返し発生時の押し返しベクトル
 	Vector3D mPushedVector;
 
+	// 押し返しベクトルの総量
 	Vector3D mFixVector;
 
 	Matrix4 mWorldTransform;

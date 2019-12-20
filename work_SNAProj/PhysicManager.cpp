@@ -191,7 +191,7 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 		}
 
 		// 形のデータを受け取る
-		const AABB * IBox = collider1->GetBox();
+		const AABB * IBox = collider1->GetWorldBox();
 		const Sphere * ISphere = collider1->GetSphere();
 
 		// どの形が受け取れたかを判定し、ビットフラグに格納
@@ -239,7 +239,7 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 			sphereFlag &= ~2;
 
 			// 形のデータを受け取る
-			const AABB * JBox = collider2->GetBox();
+			const AABB * JBox = collider2->GetWorldBox();
 			const Sphere * JSphere = collider2->GetSphere();
 
 			// 形を判別
@@ -451,8 +451,8 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 		fixedCol->GetColliderShape() == ColliderShape::ColShape_Box)
 	{
 		// ボックス取得
-		const AABB * movalBox = movalCol->GetBox();
-		const AABB * fixedBox = fixedCol->GetBox();
+		const AABB * movalBox = movalCol->GetWorldBox();
+		const AABB * fixedBox = fixedCol->GetWorldBox();
 
 		// 各成分のめり込み量計算
 		// 1成分につき2方向からのめり込みを計算する必要があるので、各2個の配列を生成している

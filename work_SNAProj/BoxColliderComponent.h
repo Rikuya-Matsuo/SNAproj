@@ -14,7 +14,7 @@ public:
 
 	void CalculateWorldBox();
 
-	const AABB * GetBox() const override { return &mWorldBox; }
+	const AABB * GetWorldBox() const override { return &mWorldBox; }
 
 private:
 	AABB mObjectBox;

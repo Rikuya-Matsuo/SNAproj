@@ -27,8 +27,8 @@ Player::Player():
 	const Vector3D boxSize = box.mMax - box.mMin;
 	box.mMax.z -= boxSize.z * 0.8f;
 	box.mMin.z -= boxSize.z * 0.2f;
-	BoxColliderComponent * groundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
-	groundChecker->SetObjectBox(box);
+	mGroundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
+	mGroundChecker->SetObjectBox(box);
 
 	mInputComponent = new InputMoveComponent(this);
 	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
@@ -62,6 +62,10 @@ void Player::UpdateActor0()
 	{
 		mLandingFlag = false;
 
+		static char testLand = 0;
+		SDL_Log("Player : No Landing%d", testLand);
+		testLand ^= 1;
+
 		SetAffectGravityFlag(true);
 	}
 
@@ -70,14 +74,6 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
-	// ジャンプ時に重力かける
-	if (false && mInputComponent->GetUpKey())
-	{
-		mLandingFlag = false;
-
-		SetAffectGravityFlag(true);
-	}
-
 	// ブレーキ
 	if (!mInputComponent->GetHorizonInputFlag())
 	{
@@ -114,7 +110,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 		{
 			OnDetectGround(opponent);
 
-			SDL_Log("Player : Detect Ground.\n");
+			//SDL_Log("Player : Detect Ground.\n");
 		}
 		return;
 	}
@@ -152,7 +148,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 	}
 
 	static char HitTest = 0;
-	SDL_Log("Hit!%d\n", HitTest);
+	//SDL_Log("Hit!%d\n", HitTest);
 	HitTest ^= 1;
 }
 
@@ -179,12 +175,12 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 		{
 			mLandingGrounds.erase(itr);
 
-			SDL_Log("Player : Apart Ground.\n");
+			//SDL_Log("Player : Apart Ground.\n");
 		}
 	}
 
 	static char apartTest = 0;
-	SDL_Log("Apart!%d\n", apartTest);
+	//SDL_Log("Apart!%d\n", apartTest);
 	apartTest ^= 1;
 }
 
@@ -192,11 +188,32 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
 	if (opponent->GetColliderAttribute() == ColliderAttribute::ColAtt_Block)
 	{
+		// 踏んでいるブロックのコリジョンを記録
 		auto itr = std::find(mLandingGrounds.begin(), mLandingGrounds.end(), opponent);
 
-		if (itr == mLandingGrounds.end())
+		const bool sucessFind = (itr == mLandingGrounds.end());
+
+		if (!sucessFind)
 		{
 			mLandingGrounds.emplace_back(opponent);
+		}
+
+		// 埋まっている分押し上げる
+		float overlap = opponent->GetWorldBox()->mMax.z - mBoxCollider->GetWorldBox()->mMin.z;
+
+		if (overlap > 0)
+		{
+			mPosition.z += overlap;
+
+			// 行列を更新
+			CalculateWorldTransform();
+
+			mGroundChecker->Update();
+
+			// プレイヤーの位置が変わったため、接触コライダーを更新
+			mBoxCollider->Update();
+
+			SDL_Log("Player : Detect Ground.\n");
 		}
 	}
 

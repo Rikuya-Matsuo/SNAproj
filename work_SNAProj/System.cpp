@@ -70,6 +70,14 @@ void System::Run()
 
 		Input::GetInstance().Update();
 
+#ifdef DEBUG_SNA
+		if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_TAB))
+		{
+			// ブレークポイント設置
+			SDL_Delay(0);
+		}
+#endif // DEBUG_SNA
+
 		FixActorPosition();
 
 		GravityFall();

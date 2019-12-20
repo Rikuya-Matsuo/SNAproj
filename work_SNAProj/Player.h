@@ -20,6 +20,8 @@ private:
 
 	BoxColliderComponent * mBoxCollider;
 
+	BoxColliderComponent * mGroundChecker;
+
 	bool mLandingFlag;
 
 	bool mDetectGroundFlag;

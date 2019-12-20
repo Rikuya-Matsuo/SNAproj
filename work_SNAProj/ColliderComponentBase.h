@@ -30,7 +30,7 @@ public:
 
 	ColliderShape GetColliderShape() const { return static_cast<ColliderShape>(mShape); }
 
-	virtual const AABB * GetBox() const { return nullptr; }
+	virtual const AABB * GetWorldBox() const { return nullptr; }
 
 	virtual const Sphere * GetSphere() const { return nullptr; }
 
