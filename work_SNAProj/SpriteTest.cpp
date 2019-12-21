@@ -12,7 +12,7 @@ SpriteTest::SpriteTest():
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh");
 	if (msh != nullptr)
 	{
-		int texIndex = msh->LoadTexture("Assets/ForestBlock.png", System::GetInstance().GetRenderer());
+		int texIndex = msh->LoadTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer());
 		mc->SetMesh(msh);
 		mc->SetTextureIndex(texIndex);
 	}
