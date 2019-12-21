@@ -43,7 +43,7 @@ void MeshComponent::Update()
 
 	if (mMeshCompFlags & mAnimationModeFlagMask)
 	{
-		mMesh->Update();
+		mMesh->Update(mOwner);
 	}
 }
 
@@ -78,7 +78,7 @@ void MeshComponent::Draw(Shader* shader)
 		// Set specular power　スペキュラ強度セット
 		shader->SetFloatUniform("uSpecPower", 100);
 		// Set the active texture　アクティブテクスチャセット
-		Texture* t = mMesh->GetTexture();
+		Texture* t = mMesh->GetTexture(mOwner);
 		if (t)
 		{
 			t->SetActive();

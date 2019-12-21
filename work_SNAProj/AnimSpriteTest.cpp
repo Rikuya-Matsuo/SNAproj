@@ -10,8 +10,8 @@ AnimSpriteTest::AnimSpriteTest()
 {
 	MeshComponent * mc = new MeshComponent(this);
 	mMesh = new Mesh();
-	mMesh->Load("Assets/Board.gpmesh", System::GetInstance().GetRenderer());
-	bool sucess = mMesh->LoadDivTexture("Assets/AnimChipTest.png", System::GetInstance().GetRenderer(),
+	mMesh->Load("Assets/Board.gpmesh", System::GetInstance().GetRenderer(), this);
+	bool sucess = mMesh->LoadDivTexture("Assets/AnimChipTest.png", System::GetInstance().GetRenderer(), this,
 		3, 3, 1, 32, 32, 0.1f, 0);
 	if (!sucess)
 	{

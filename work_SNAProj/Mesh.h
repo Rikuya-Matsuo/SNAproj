@@ -14,6 +14,7 @@
 #include <string>
 #include <unordered_map>
 
+class Actor;
 class Renderer;
 class Texture;
 class VertexArray;
@@ -24,17 +25,17 @@ class Mesh
 public:
 	Mesh();
 	~Mesh();
-	bool Load(const std::string& fileName, Renderer* renderer);   	// メッシュのロード・アンロード
+	bool Load(const std::string& fileName, Renderer* renderer, const Actor * actor);   	// メッシュのロード・アンロード
 	void Unload();
 
-	void Update();
+	void Update(const Actor * actor);
 
-	bool LoadTexture(const std::string& fileName, Renderer* renderer);
+	bool LoadTexture(const std::string& fileName, Renderer* renderer, const Actor * actor);
 
-	bool LoadDivTexture(const std::string& fileName, Renderer* renderer, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex);
+	bool LoadDivTexture(const std::string& fileName, Renderer* renderer, const Actor * actor, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex);
 
 	VertexArray* GetVertexArray() { return mVertexArray; }            // メッシュの頂点配列の取得
-	Texture* GetTexture() const { return mCurrentTexture; }
+	Texture* GetTexture(const Actor * actor) const { return mCurrentTexture.at(actor); }
 	Texture* GetAnimFrameTexture(int index);                              // アニメーションのコマを取得(いるかな、これ……)
 	const std::string& GetShaderName() const { return mShaderName; }        // シェーダー名の取得
 
@@ -63,9 +64,9 @@ private:
 	FlagType mFlags;
 
 	// メッシュのテクスチャ
-	Texture * mDefaultTexture;
+	std::unordered_map<const Actor *, Texture *> mDefaultTexture;
 
-	Texture * mCurrentTexture;
+	std::unordered_map<const Actor *, Texture *> mCurrentTexture;
 
 	std::unordered_map<int, AnimationChips *> mAnimations;
 

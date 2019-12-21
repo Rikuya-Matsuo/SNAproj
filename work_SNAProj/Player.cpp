@@ -4,6 +4,7 @@
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 #include "JumpComponent.h"
+#include "AnimationChips.h"
 #include "Mesh.h"
 #include "System.h"
 #include "Renderer.h"
@@ -16,8 +17,8 @@ Player::Player():
 {
 	// メッシュのロード
 	MeshComponent * mc = new MeshComponent(this);
-	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh");
-	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(),
+	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
+	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(), this,
 		10, 10, 1, 128, 128, 0.07f, 0);
 	mc->SetMesh(mMesh);
 
@@ -80,6 +81,19 @@ void Player::UpdateActor0()
 
 	mDetectGroundFlag = false;
 
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_F4))
+	{
+		AnimationChips * animC = mMesh->GetAnimChips(0);
+
+		animC->StopPlaying();
+	}
+
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_F3))
+	{
+		AnimationChips * animC = mMesh->GetAnimChips(0);
+
+		animC->StartPlaying();
+	}
 	//bool jump = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE);
 	//mJumpComponent->SetJumpFlag()
 }

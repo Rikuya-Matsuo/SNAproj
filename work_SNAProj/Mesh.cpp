@@ -40,8 +40,6 @@ Mesh::Mesh()
 	: mVertexArray(nullptr)
 	, mRadius(0.0f)
 	, mSpecPower(100.0f)
-	, mDefaultTexture(nullptr)
-	, mCurrentTexture(nullptr)
 {
 	
 }
@@ -51,7 +49,7 @@ Mesh::~Mesh()
 }
 
 //メッシュのロード
-bool Mesh::Load(const std::string & fileName, Renderer* renderer)
+bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * actor)
 {
 	std::ifstream file(fileName);
 	if (!file.is_open())
@@ -133,12 +131,12 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 		}
 
 		// メッシュ読み込み時にデフォルトで設定されるテクスチャの設定
-		if (mDefaultTexture != nullptr)
+		if (mDefaultTexture[actor] != nullptr)
 		{
-			delete mDefaultTexture;
+			delete mDefaultTexture[actor];
 		}
 
-		mDefaultTexture = t;
+		mDefaultTexture[actor] = t;
 
 		// 現時点のテクスチャをデフォルトのものとして設定する
 		mCurrentTexture = mDefaultTexture;
@@ -263,7 +261,7 @@ void Mesh::Unload()
 
 }
 
-void Mesh::Update()
+void Mesh::Update(const Actor * actor)
 {
 	if (mAnimations.count(mActiveAnimIndex))
 	{
@@ -274,7 +272,7 @@ void Mesh::Update()
 		animChips->Update();
 
 		// テクスチャ取得
-		mCurrentTexture = mAnimTex[mActiveAnimIndex][animChips->GetCurrentTextureIndex()];
+		mCurrentTexture[actor] = mAnimTex[mActiveAnimIndex][animChips->GetCurrentTextureIndex()];
 
 		// アニメーションループ終了フラグの取得
 		bool loopEnd = animChips->GetLoopEndFlag();
@@ -282,7 +280,7 @@ void Mesh::Update()
 	}
 }
 
-bool Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
+bool Mesh::LoadTexture(const std::string & fileName, Renderer * renderer, const Actor * actor)
 {
 	Texture * tex = renderer->GetTexture(fileName);
 	if (tex == nullptr)
@@ -290,12 +288,12 @@ bool Mesh::LoadTexture(const std::string & fileName, Renderer * renderer)
 		return false;
 	}
 
-	mCurrentTexture = tex;
+	mCurrentTexture[actor] = tex;
 
 	return true;
 }
 
-bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex)
+bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, const Actor * actor, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex)
 {
 	bool ret = false;
 

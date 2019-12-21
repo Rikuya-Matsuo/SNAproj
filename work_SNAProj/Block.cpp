@@ -11,7 +11,7 @@ Block::Block():
 	Actor()
 {
 	mMeshComponent = new MeshComponent(this);
-	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/ForestGround01.gpmesh");
+	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/ForestGround01.gpmesh", this);
 	if (!msh)
 	{
 		SDL_Log("ブロック：メッシュの読み込みに失敗\n");

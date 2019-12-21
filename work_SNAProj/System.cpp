@@ -11,6 +11,11 @@
 #include <cstdlib>
 #include <ctime>
 
+#ifdef DEBUG_SNA
+Uint64 frameCount = 0;
+#endif // DEBUG_SNA
+
+
 System::System():
 	mCurrentScene(nullptr),
 	mRenderer(nullptr),
@@ -113,6 +118,10 @@ void System::Run()
 		Draw();
 
 		Input::GetInstance().LastUpdate();
+
+#ifdef DEBUG_SNA
+		frameCount++;
+#endif // DEBUG_SNA
 	}
 
 	SDL_Log("System quit running\n");

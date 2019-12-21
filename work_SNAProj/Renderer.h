@@ -29,7 +29,7 @@ public:
 	// ゲッター系
 	SDL_Renderer*          GetSDLRenderer() { return mSDLRenderer; }                           // SDL系の描画に必要なSDLrendererを得る
 	class Texture*         GetTexture(const std::string& fileName);                            // テクスチャをファイル名から返す
-	class Mesh*            GetMesh(const std::string& fileName);                               // メッシュをファイル名から返す
+	class Mesh*            GetMesh(const std::string& fileName, const class Actor * actor);                               // メッシュをファイル名から返す
 	const class Skeleton*  GetSkeleton(const char* fileName);                                  // スケルタルモデルの取得
 	const class Animation* GetAnimation(const char* fileName, bool loop);                      // スケルタルアニメーションの取得
 
