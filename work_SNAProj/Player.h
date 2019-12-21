@@ -4,6 +4,7 @@
 class Mesh;
 class InputMoveComponent;
 class BoxColliderComponent;
+class JumpComponent;
 
 // 大量生成するものではないのでビットフラグは使わない
 
@@ -21,6 +22,8 @@ private:
 	BoxColliderComponent * mBoxCollider;
 
 	BoxColliderComponent * mGroundChecker;
+
+	JumpComponent * mJumpComponent;
 
 	bool mLandingFlag;
 

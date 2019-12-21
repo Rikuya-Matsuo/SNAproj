@@ -51,6 +51,27 @@ void MeshComponent::Draw(Shader* shader)
 {
 	if ((mMeshCompFlags & mVisibleFlagMask) && mMesh)
 	{
+		static bool forBoardSetting = false;
+		bool isBoard = mMesh->GetIsBoardFlag();
+		// ボード描画用の設定ではなく、ボードのメッシュであるとき
+		if (!forBoardSetting && isBoard)
+		{
+			glDisable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
+			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
+			forBoardSetting = true;
+		}
+		// ボード描画用の設定で、ボードではないとき
+		else if (forBoardSetting && !isBoard)
+		{
+			glEnable(GL_DEPTH_TEST);
+			glDisable(GL_BLEND);
+
+			forBoardSetting = false;
+		}
+
 		// Set the world transform　ワールド変換をセット
 		shader->SetMatrixUniform("uWorldTransform",
 			mOwner->GetWorldTransform());

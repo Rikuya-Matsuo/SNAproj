@@ -49,10 +49,15 @@ public:
 
 	bool GetAnimLoopEndFlag() const { return mFlags & mAnimLoopEndFlagMask; }
 
+	bool GetIsBoardFlag() const { return mFlags & mIsBoardFlagMask; }
+
 private:
+	static const char* mBoardMeshPath;
+
 	typedef Uint8 FlagType;
 	static const FlagType mAnimModeFlagMask;
 	static const FlagType mAnimLoopEndFlagMask;
+	static const FlagType mIsBoardFlagMask;
 
 
 	FlagType mFlags;

@@ -3,9 +3,11 @@
 #include "MeshComponent.h"
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
+#include "JumpComponent.h"
 #include "Mesh.h"
 #include "System.h"
 #include "Renderer.h"
+#include "Input.h"
 
 Player::Player():
 	Actor(),
@@ -41,6 +43,9 @@ Player::Player():
 	mInputComponent->SetHorizontalSpeed(speed);
 	mInputComponent->SetVerticalSpeed(-speed);
 
+	// ジャンプ機能
+	mJumpComponent = new JumpComponent(this);
+
 	// 最大速度を調整
 	mLimitSpeed = Vector3D(100.0f, 0.0f, 100.0f);
 
@@ -74,6 +79,9 @@ void Player::UpdateActor0()
 	}
 
 	mDetectGroundFlag = false;
+
+	//bool jump = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE);
+	//mJumpComponent->SetJumpFlag()
 }
 
 void Player::UpdateActor1()

@@ -19,9 +19,13 @@
 #include <SDL/SDL_log.h>
 #include "MathExpantion.h"
 #include <cmath>
+#include <cstring>
+
+const char* Mesh::mBoardMeshPath = "Assets/Board.gpmesh";
 
 const Mesh::FlagType Mesh::mAnimModeFlagMask = 1 << 0;
 const Mesh::FlagType Mesh::mAnimLoopEndFlagMask = 1 << 1;
+const Mesh::FlagType Mesh::mIsBoardFlagMask = 1 << 2;
 
 namespace
 {
@@ -77,6 +81,12 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer)
 	{
 		printf("Mesh %s not version 1", fileName.c_str());
 		return false;
+	}
+
+	// ボードメッシュであればフラグを立てる
+	if (!strcmp(fileName.c_str(), mBoardMeshPath))
+	{
+		mFlags |= mIsBoardFlagMask;
 	}
 
 	mShaderName = doc["shader"].GetString();
