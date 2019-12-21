@@ -37,12 +37,12 @@ Player::Player():
 		mGroundChecker->SetObjectBox(box);
 	}
 
-	mInputComponent = new InputMoveComponent(this);
-	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
-	
-	const float speed = 500.0f;
-	mInputComponent->SetHorizontalSpeed(speed);
-	mInputComponent->SetVerticalSpeed(-speed);
+	//mInputComponent = new InputMoveComponent(this);
+	//mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
+	//
+	//const float speed = 500.0f;
+	//mInputComponent->SetHorizontalSpeed(speed);
+	//mInputComponent->SetVerticalSpeed(-speed);
 
 	// ジャンプ機能
 	mJumpComponent = new JumpComponent(this);
@@ -68,7 +68,7 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
-	if (!mDetectGroundFlag)
+	if (false && !mDetectGroundFlag)
 	{
 		mLandingFlag = false;
 
@@ -81,18 +81,19 @@ void Player::UpdateActor0()
 
 	mDetectGroundFlag = false;
 
+	Vector3D axis = Vector3D(0.0f, 0.0f, 1.0f);
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_F4))
 	{
-		AnimationChips * animC = mMesh->GetAnimChips(0);
+		mRotation = Quaternion(axis, 0.0f);
 
-		animC->StopPlaying();
+		mFlags |= mCalculateTransformFlagMask;
 	}
 
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_F3))
 	{
-		AnimationChips * animC = mMesh->GetAnimChips(0);
+		mRotation = Quaternion(axis, M_PI);
 
-		animC->StartPlaying();
+		mFlags |= mCalculateTransformFlagMask;
 	}
 	//bool jump = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE);
 	//mJumpComponent->SetJumpFlag()
@@ -101,7 +102,7 @@ void Player::UpdateActor0()
 void Player::UpdateActor1()
 {
 	// ブレーキ
-	if (!mInputComponent->GetHorizonInputFlag())
+	if (false && !mInputComponent->GetHorizonInputFlag())
 	{
 		mMoveVector.x *= 0.05f;
 

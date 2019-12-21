@@ -2,12 +2,15 @@
 #include "Player.h"
 #include "Camera.h"
 #include "System.h"
+#include "Input.h"
 #include "Renderer.h"
 #include "Quaternion.h"
 #include "AnimSpriteTest.h"
 #include "SpriteTest.h"
 #include "Block.h"
 #include "TestStage.h"
+
+
 
 TestScene::TestScene()
 {

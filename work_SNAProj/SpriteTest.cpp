@@ -26,6 +26,8 @@ SpriteTest::SpriteTest():
 
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Enemy);
 	bcc->SetObjectBox(mMesh->GetCollisionBox());
+
+	mFlags &= ~mMovalFlagMask;
 }
 
 SpriteTest::~SpriteTest()

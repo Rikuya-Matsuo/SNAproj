@@ -97,7 +97,7 @@ void Actor::UpdateComponents()
 
 	for (auto component : mComponentList)
 	{
-		if (component->GetActiveFlag())
+		if (component != nullptr && component->GetActiveFlag())
 		{
 			component->Update();
 		}
