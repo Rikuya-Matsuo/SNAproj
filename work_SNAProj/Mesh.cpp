@@ -131,7 +131,8 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 		}
 
 		// メッシュ読み込み時にデフォルトで設定されるテクスチャの設定
-		if (mDefaultTexture[actor] != nullptr)
+		if (mDefaultTexture.find(actor) != mDefaultTexture.end() &&
+			mDefaultTexture[actor] != t)
 		{
 			delete mDefaultTexture[actor];
 		}
@@ -139,7 +140,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 		mDefaultTexture[actor] = t;
 
 		// 現時点のテクスチャをデフォルトのものとして設定する
-		mCurrentTexture = mDefaultTexture;
+		mCurrentTexture[actor] = mDefaultTexture[actor];
 	}
 
 	// 頂点読み込み

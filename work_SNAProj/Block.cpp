@@ -12,7 +12,6 @@ Block::Block():
 {
 	mMeshComponent = new MeshComponent(this);
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/ForestGround01.gpmesh", this);
-	msh->LoadTexture("Assets/Forestblock.png", System::GetInstance().GetRenderer(), this);
 	if (!msh)
 	{
 		SDL_Log("ブロック：メッシュの読み込みに失敗\n");

@@ -218,6 +218,8 @@ Mesh* Renderer::GetMesh(const std::string & fileName, const Actor * actor)
 	if (iter != mMeshs.end())
 	{
 		m = iter->second;
+
+		m->DuplicateDefaultTexture(actor);
 	}
 	else
 	{

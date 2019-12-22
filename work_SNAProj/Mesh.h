@@ -52,6 +52,8 @@ public:
 
 	bool GetIsBoardFlag() const { return mFlags & mIsBoardFlagMask; }
 
+	void DuplicateDefaultTexture(const Actor * actor) { mCurrentTexture[actor] = mDefaultTexture[actor] = mDefaultTexture.begin()->second; }
+
 private:
 	static const char* mBoardMeshPath;
 
