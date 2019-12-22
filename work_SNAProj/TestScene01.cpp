@@ -18,8 +18,8 @@ TestScene01::TestScene01()
 	pl->SetAffectGravityFlag(false);
 	pl->SetScale(30.0f);
 
-	Camera * cam = new Camera(st);
-	cam->Init(Vector3D(0.0f, 100.0f, 0.0f), st->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
+	Camera * cam = new Camera(pl);
+	cam->Init(Vector3D(0.0f, 100.0f, 0.0f), pl->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
 	cam->SetDistanceVector(Vector3D(0.0f, 100.0f, 0.0f));
 	cam->SetChaseTargetFlag(false);
 
