@@ -58,8 +58,12 @@ void MeshComponent::Draw(Shader* shader)
 		{
 			glDisable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);
-			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+			glDepthMask(GL_FALSE);
+
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			//glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+			//glBlendFuncSeparate(GL_SRC_COLOR, GL_DST_COLOR, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			forBoardSetting = true;
 		}
@@ -68,7 +72,7 @@ void MeshComponent::Draw(Shader* shader)
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDisable(GL_BLEND);
-
+			glDepthMask(GL_TRUE);
 			forBoardSetting = false;
 		}
 
