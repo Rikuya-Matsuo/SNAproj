@@ -264,16 +264,16 @@ void Mesh::Unload()
 
 void Mesh::Update(const Actor * actor)
 {
-	if (mAnimations.count(mActiveAnimIndex))
+	if (mAnimations[actor].count(mActiveAnimIndex))
 	{
 		// エイリアス生成
-		AnimationChips * animChips = mAnimations[mActiveAnimIndex];
+		AnimationChips * animChips = mAnimations[actor][mActiveAnimIndex];
 
 		// アニメーションの更新
 		animChips->Update();
 
 		// テクスチャ取得
-		mCurrentTexture[actor] = mAnimTex[mActiveAnimIndex][animChips->GetCurrentTextureIndex()];
+		mCurrentTexture[actor] = animChips->GetCurrentTexture();
 
 		// アニメーションループ終了フラグの取得
 		bool loopEnd = animChips->GetLoopEndFlag();
@@ -307,18 +307,13 @@ bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, con
 	{
 		ret = true;
 
-		if (mAnimations.find(animIndex) != mAnimations.end())
+		if (mAnimations[actor].find(animIndex) != mAnimations[actor].end())
 		{
 			SDL_Log("Specified index has already been used.\n");
 		}
 		else
 		{
-			mAnimations[animIndex] = animChips;
-
-			for (size_t i = 0; i < frameMass; ++i)
-			{
-				mAnimTex[animIndex].emplace_back(&textures[i]);
-			}
+			mAnimations[actor][animIndex] = animChips;
 		}
 	}
 
@@ -328,24 +323,23 @@ bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, con
 	return ret;
 }
 
-Texture* Mesh::GetAnimFrameTexture(int index)
+Texture* Mesh::GetAnimFrameTexture(const Actor* actor, int index)
 {
 	Texture * ret = nullptr;
 
-	if (mAnimations.count(index))
+	if (mAnimations[actor].count(index))
 	{
-		size_t frameNum = mAnimations[index]->GetCurrentTextureIndex();
-		ret = mAnimTex[index][frameNum];
+		ret = mAnimations[actor][index]->GetCurrentTexture();
 	}
 
 	return ret;
 }
 
-AnimationChips * Mesh::GetAnimChips(int index)
+AnimationChips * Mesh::GetAnimChips(const Actor* actor, int index)
 {
-	if (mAnimations.count(index))
+	if (mAnimations[actor].count(index))
 	{
-		return mAnimations[index];
+		return mAnimations[actor][index];
 	}
 
 	return nullptr;

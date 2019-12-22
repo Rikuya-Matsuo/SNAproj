@@ -24,6 +24,8 @@ public:
 
 	size_t GetCurrentTextureIndex() const { return mCurrentTextureIndex; }
 
+	Texture * GetCurrentTexture() const { return mChipTextures[mCurrentTextureIndex]; }
+
 	bool GetLoopEndFlag() const { return mFlags & mLoopEndFlagMask; }
 
 	void StopPlaying() { mFlags |= mStopFlagMask; }

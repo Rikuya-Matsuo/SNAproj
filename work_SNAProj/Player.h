@@ -29,6 +29,8 @@ private:
 
 	bool mDetectGroundFlag;
 
+	bool mLookRightFlag;
+
 	std::list<const ColliderComponentBase*> mLandingGrounds;
 
 	void UpdateActor0() override;

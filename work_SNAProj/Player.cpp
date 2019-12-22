@@ -13,7 +13,8 @@
 Player::Player():
 	Actor(),
 	mLandingFlag(false),
-	mDetectGroundFlag(false)
+	mDetectGroundFlag(false),
+	mLookRightFlag(true)
 {
 	// メッシュのロード
 	MeshComponent * mc = new MeshComponent(this);
@@ -37,12 +38,12 @@ Player::Player():
 		mGroundChecker->SetObjectBox(box);
 	}
 
-	//mInputComponent = new InputMoveComponent(this);
-	//mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
-	//
-	//const float speed = 500.0f;
-	//mInputComponent->SetHorizontalSpeed(speed);
-	//mInputComponent->SetVerticalSpeed(-speed);
+	mInputComponent = new InputMoveComponent(this);
+	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
+
+	const float speed = 500.0f;
+	mInputComponent->SetHorizontalSpeed(speed);
+	mInputComponent->SetVerticalSpeed(-speed);
 
 	// ジャンプ機能
 	mJumpComponent = new JumpComponent(this);
@@ -91,7 +92,7 @@ void Player::UpdateActor0()
 
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_F3))
 	{
-		mRotation = Quaternion(axis, M_PI);
+		mRotation = Quaternion(axis, static_cast<float>(M_PI));
 
 		mFlags |= mCalculateTransformFlagMask;
 	}
@@ -102,7 +103,7 @@ void Player::UpdateActor0()
 void Player::UpdateActor1()
 {
 	// ブレーキ
-	if (false && !mInputComponent->GetHorizonInputFlag())
+	if (!mInputComponent->GetHorizonInputFlag())
 	{
 		mMoveVector.x *= 0.05f;
 
@@ -112,15 +113,30 @@ void Player::UpdateActor1()
 		}
 	}
 
-	/*if (!mInputComponent->GetVerticalInputFlag())
+	// 向き変更
+	Vector3D rotateAxis(0.0f, 0.0f, 1.0f);
+	if (mInputComponent->GetRightKey())
 	{
-		mMoveVector.z *= 0.05f;
-
-		if (fabsf(mMoveVector.z) < 0.001f)
+		if (!mLookRightFlag)
 		{
-			mMoveVector.z = 0.0f;
+			mRotation = Quaternion(rotateAxis, 0.0f);
+
+			mLookRightFlag = true;
+
+			mFlags |= mCalculateTransformFlagMask;
 		}
-	}*/
+	}
+	else if (mInputComponent->GetLeftKey())
+	{
+		if (mLookRightFlag)
+		{
+			mRotation = Quaternion(rotateAxis, static_cast<float>(M_PI));
+
+			mLookRightFlag = false;
+
+			mFlags |= mCalculateTransformFlagMask;
+		}
+	}
 
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;

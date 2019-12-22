@@ -36,14 +36,14 @@ public:
 
 	VertexArray* GetVertexArray() { return mVertexArray; }            // メッシュの頂点配列の取得
 	Texture* GetTexture(const Actor * actor) const { return mCurrentTexture.at(actor); }
-	Texture* GetAnimFrameTexture(int index);                              // アニメーションのコマを取得(いるかな、これ……)
+	Texture* GetAnimFrameTexture(const Actor* actor, int index);                              // アニメーションのコマを取得(いるかな、これ……)
 	const std::string& GetShaderName() const { return mShaderName; }        // シェーダー名の取得
 
 	float GetRadius() const { return mRadius; }                             // バウンディングスフィアの半径を取得
 
 	const AABB & GetCollisionBox() const { return mBox; }
 
-	AnimationChips * GetAnimChips(int index);
+	AnimationChips * GetAnimChips(const Actor* actor, int index);
 
 	void SetAnimModeFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAnimModeFlagMask); }
 	bool GetAnimModeFlag() const { return mFlags & mAnimModeFlagMask; }
@@ -70,10 +70,12 @@ private:
 
 	std::unordered_map<const Actor *, Texture *> mCurrentTexture;
 
-	std::unordered_map<int, AnimationChips *> mAnimations;
+	typedef std::unordered_map<int, AnimationChips *> AnimChipCollection;
+
+	std::unordered_map<const Actor*, AnimChipCollection> mAnimations;
 
 	// アニメーションが持ってるテクスチャをインデックスで管理
-	std::unordered_map<int, std::vector<Texture *>> mAnimTex;
+	//std::unordered_map<int, std::vector<Texture *>> mAnimTex;
 
 	VertexArray* mVertexArray;                                        // メッシュの頂点配列
 

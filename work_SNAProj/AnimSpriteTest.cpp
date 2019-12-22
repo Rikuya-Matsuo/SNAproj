@@ -31,7 +31,7 @@ void AnimSpriteTest::UpdateActor1()
 {
 	if (mMesh->GetAnimLoopEndFlag())
 	{
-		AnimationChips * animChips = mMesh->GetAnimChips(0);
+		AnimationChips * animChips = mMesh->GetAnimChips(this, 0);
 		if (animChips != nullptr)
 		{
 			animChips->Reset();
@@ -42,7 +42,7 @@ void AnimSpriteTest::UpdateActor1()
 
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_A))
 	{
-		AnimationChips * animChips = mMesh->GetAnimChips(0);
+		AnimationChips * animChips = mMesh->GetAnimChips(this, 0);
 		if (animChips != nullptr)
 		{
 			animChips->StartPlaying();
