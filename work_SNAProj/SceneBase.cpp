@@ -21,6 +21,9 @@ SceneBase::~SceneBase()
 	}
 
 	// ベクターコンテナのメモリ開放
+	mActors.shrink_to_fit();
+	mCameras.shrink_to_fit();
+
 	std::vector<Actor *>().swap(mActors);
 	std::vector<Camera *>().swap(mCameras);
 }

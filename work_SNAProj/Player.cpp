@@ -67,37 +67,21 @@ Player::~Player()
 	SDL_Log("Player is deleted\n");
 }
 
+bool jumpFlag = false;
+
 void Player::UpdateActor0()
 {
-	if (false && !mDetectGroundFlag)
-	{
-		mLandingFlag = false;
-
-		static char testLand = 0;
-		//SDL_Log("Player : No Landing%d", testLand);
-		testLand ^= 1;
-
-		SetAffectGravityFlag(true);
-	}
-
 	mDetectGroundFlag = false;
 
-	Vector3D axis = Vector3D(0.0f, 0.0f, 1.0f);
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_F4))
+	jumpFlag = false;
+	if (mLandingFlag && Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
 	{
-		mRotation = Quaternion(axis, 0.0f);
+		mJumpComponent->Jump();
 
-		mFlags |= mCalculateTransformFlagMask;
+		jumpFlag = true;
 	}
 
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_F3))
-	{
-		mRotation = Quaternion(axis, static_cast<float>(M_PI));
-
-		mFlags |= mCalculateTransformFlagMask;
-	}
-	//bool jump = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE);
-	//mJumpComponent->SetJumpFlag()
+	mLandingFlag = false;
 }
 
 void Player::UpdateActor1()
@@ -142,6 +126,10 @@ void Player::UpdateActor1()
 	mPosition.y = 0.0f;
 
 	// 基底クラスのほうも呼ぶ
+	if (jumpFlag)
+	{
+		SDL_Delay(0);
+	}
 	Actor::UpdateActor1();
 }
 
@@ -156,6 +144,11 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 			//SDL_Log("Player : Detect Ground.\n");
 		}
 		return;
+	}
+
+	if (mPushedVector.z > 0.0f)
+	{
+		mLandingFlag = true;
 	}
 
 	// すでにその方向への押し返しが働いている場合は、押し返しを無効化する
@@ -204,6 +197,11 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 			OnDetectGround(opponent);
 		}
 		return;
+	}
+
+	if (mPushedVector.z > 0.0f)
+	{
+		mLandingFlag = true;
 	}
 }
 

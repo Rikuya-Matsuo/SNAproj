@@ -636,6 +636,8 @@ PhysicManager::~PhysicManager()
 {
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
 	{
+		mColliders[i].clear();
+		mColliders[i].shrink_to_fit();
 		std::vector<ColliderComponentBase *>().swap(mColliders[i]);
 	}
 	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>>().swap(mColliders);
@@ -645,6 +647,8 @@ PhysicManager::~PhysicManager()
 	std::unordered_map<ColliderPair, char, HashColliderPair>().swap(mHitColliderPairState);
 
 	std::list<std::pair<Uint8, Uint8>>().swap(mCheckableAttributeCombination);
+
+	std::list<Uint8>().swap(mDetectSubject);
 }
 
 

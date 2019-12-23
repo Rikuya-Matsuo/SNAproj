@@ -15,7 +15,8 @@ AnimationChips::AnimationChips():
 
 AnimationChips::~AnimationChips()
 {
-	
+	mChipTextures.clear();
+	mChipTextures.shrink_to_fit();
 }
 
 void AnimationChips::Update()

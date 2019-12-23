@@ -6,12 +6,12 @@
 class JumpComponent : public ComponentBase
 {
 public:
-	JumpComponent(Actor * owner, float power = 100.0f);
+	JumpComponent(Actor * owner, float power = 500.0f);
 	~JumpComponent();
 
 	void Update() override;
 
-	void SetJumpFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mJumpFlags, mTimingFlagMask); }
+	void Jump() { mJumpFlags |= mTimingFlagMask; }
 
 	void SetPower(float power) { mPower = power; }
 
@@ -20,8 +20,12 @@ private:
 	static const FlagType mTimingFlagMask;
 
 
+	static const float mPushUpTimeCount;
+
 	FlagType mJumpFlags;
 
 	float mPower;
+
+	float mTimer;
 };
 

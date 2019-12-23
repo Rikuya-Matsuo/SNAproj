@@ -46,6 +46,13 @@ Mesh::Mesh()
 
 Mesh::~Mesh()
 {
+	for (auto anim : mAnimations)
+	{
+		for (auto chips : anim.second)
+		{
+			delete chips.second;
+		}
+	}
 }
 
 //メッシュのロード

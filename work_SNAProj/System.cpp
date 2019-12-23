@@ -129,8 +129,8 @@ void System::Run()
 
 void System::Finish()
 {
-	Common::DeleteContainerOfPointer(mActorCollection);
-	std::vector<Actor *>().swap(mActorCollection);
+	Common::DeleteContainerOfPointer(mActorList);
+	std::list<Actor *>().swap(mActorList);
 
 	std::list<DrawComponentBase *>().swap(mSpriteComponentList);
 
@@ -173,7 +173,7 @@ void System::UpdateDeltaTime()
 
 void System::FixActorPosition()
 {
-	for (auto actor : mActorCollection)
+	for (auto actor : mActorList)
 	{
 		actor->FixPosition();
 	}
@@ -189,7 +189,7 @@ void System::UpdateScene()
 
 void System::UpdateActor()
 {
-	for (auto actor : mActorCollection)
+	for (auto actor : mActorList)
 	{
 		actor->Update();
 	}
@@ -218,16 +218,18 @@ void System::ChangeScene(bool & quitFlag)
 		delete mCurrentScene;
 		mCurrentScene = nextScene;
 
-		for (int i = 0; i < (int)mActorCollection.size(); ++i)
+		auto itr = mActorList.begin();
+		for (; itr != mActorList.end(); ++itr)
 		{
-			if (!mActorCollection[i]->GetBeyondSceneFlag())
+			if (! (*itr)->GetBeyondSceneFlag())
 			{
-				// アクターを削除しつつ添え字を一つ戻す
-				delete mActorCollection[i--];
+				delete *itr;
+
+				itr--;
 			}
 			else
 			{
-				mActorCollection[i]->SetBeyondSceneFlag(false);
+				(*itr)->SetBeyondSceneFlag(false);
 			}
 		}
 	}
@@ -239,7 +241,7 @@ void System::ChangeScene(bool & quitFlag)
 
 void System::GravityFall()
 {
-	for (auto actor : mActorCollection)
+	for (auto actor : mActorList)
 	{
 		if (actor->GetAffectGravityFlag())
 		{
@@ -250,16 +252,16 @@ void System::GravityFall()
 
 void System::ResisterActor(const Actor * in_act)
 {
-	mActorCollection.emplace_back(const_cast<Actor*>(in_act));
+	mActorList.emplace_back(const_cast<Actor*>(in_act));
 }
 
 void System::DeresisterActor(const Actor * in_act)
 {
-	auto target = std::find(mActorCollection.begin(), mActorCollection.end(), const_cast<Actor*>(in_act));
+	auto target = std::find(mActorList.begin(), mActorList.end(), const_cast<Actor*>(in_act));
 	
-	if (target != mActorCollection.end())
+	if (target != mActorList.end())
 	{
-		mActorCollection.erase(target);
+		mActorList.erase(target);
 	}
 }
 

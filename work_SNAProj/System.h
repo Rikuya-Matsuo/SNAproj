@@ -68,7 +68,7 @@ private:
 
 	int mWindowHeight;
 
-	std::vector<Actor *> mActorCollection;
+	std::list<Actor *> mActorList;
 
 	std::list<DrawComponentBase *> mSpriteComponentList;
 
