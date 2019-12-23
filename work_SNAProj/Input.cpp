@@ -3,7 +3,10 @@
 Input::Input() :
 	mQuitEventFlag(false),
 	mGamePadButtonFlags(0),
-	mPrevGamePadButtonFlags(0xFFFF)
+	mPrevGamePadButtonFlags(0),
+	mLStickX(0.0f),
+	mLStickY(0.0f),
+	mLStickDeadZone(0.9f)
 {
 	mStates = SDL_GetKeyboardState(NULL);
 
@@ -14,6 +17,17 @@ Input::Input() :
 
 	// ゲームコントローラー取得
 	ConnectGamePad(0);
+
+	// この時点でのボタン状態を取得し、一フレーム前の入力状態として記録
+	SDL_GameControllerUpdate();
+	for (int i = 0; i < SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_MAX; ++i)
+	{
+		Uint16 mask = 1 << i;
+		if (SDL_GameControllerGetButton(mGamePad, static_cast<SDL_GameControllerButton>(i)))
+		{
+			mPrevGamePadButtonFlags |= mask;
+		}
+	}
 
 	SDL_GameControllerEventState(SDL_IGNORE);
 }
@@ -114,6 +128,25 @@ void Input::UpdateGamePad()
 			mGamePadButtonFlags |= mask;
 		}
 	}
+
+	// 左スティックの情報取得
+	mLStick.x = SDL_GameControllerGetAxis(mGamePad, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX);
+	mLStick.y = SDL_GameControllerGetAxis(mGamePad, SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTY);
+
+	// 相対値(-1.0～1.0に直した値)を計算
+	mLStickX = mLStick.GetFloatX();
+	mLStickY = mLStick.GetFloatY();
+
+	// デッドゾーンの考慮
+	auto calculateDeadZone = [](float& axisVal, float deadZone)
+	{
+		if (fabsf(axisVal) < deadZone)
+		{
+			axisVal = 0.0f;
+		}
+	};
+	calculateDeadZone(mLStickX, mLStickDeadZone);
+	calculateDeadZone(mLStickY, mLStickDeadZone);
 }
 
 void Input::DisconnectGamePad(int padIndex)

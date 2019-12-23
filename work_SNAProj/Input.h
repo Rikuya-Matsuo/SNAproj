@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "SDL/SDL.h"
+#include "GamePadAxis.h"
 
 class Input final
 {
@@ -33,8 +34,13 @@ public:
 	bool GetGamePadButtonRelease(SDL_GameControllerButton button)
 	{ return GetGamePadButton(mPrevGamePadButtonFlags, button) && !GetGamePadButton(mGamePadButtonFlags, button); }
 
+	float GetLStickX() const { return mLStickX; }
+	float GetLStickY() const { return mLStickY; }
+
 private:
 	Input();
+
+	const float mLStickDeadZone;
 
 	bool mQuitEventFlag;
 
@@ -50,6 +56,11 @@ private:
 
 	// 起動時にボタンが押しっぱなしだった時に押下判定にならないよう、初期値は全ビットを立てる
 	Uint16 mPrevGamePadButtonFlags;
+
+	GamePadAxis mLStick;
+
+	float mLStickX;
+	float mLStickY;
 
 	void ConnectGamePad(int padIndex);
 

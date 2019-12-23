@@ -51,8 +51,9 @@ void InputMoveComponent::Update()
 		vecVertical = &vec.z;
 	}
 
-	// 操作受付。エイリアスを通じて座標をいじる。
+	// 操作受付。エイリアスを通じて移動ベクトルをいじる。
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_LEFT)
+		|| Input::GetInstance().GetLStickX() < 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_LEFT))
 	{
 		*vecHorizontal -= speedHorizontal;
@@ -65,6 +66,7 @@ void InputMoveComponent::Update()
 	}
 	
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
+		|| Input::GetInstance().GetLStickX() > 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_RIGHT))
 	{
 		*vecHorizontal += speedHorizontal;
@@ -77,6 +79,7 @@ void InputMoveComponent::Update()
 	}
 
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_UP)
+		|| Input::GetInstance().GetLStickY() < 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_UP))
 	{
 		*vecVertical -= speedVertical;
@@ -89,6 +92,7 @@ void InputMoveComponent::Update()
 	}
 
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+		|| Input::GetInstance().GetLStickY() > 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_DOWN))
 	{
 		*vecVertical += speedVertical;
