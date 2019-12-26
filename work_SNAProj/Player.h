@@ -44,4 +44,6 @@ private:
 	void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
 	void OnDetectGround(const ColliderComponentBase * opponent);
+
+	void OnLanding();
 };

@@ -182,6 +182,12 @@ void PhysicManager::CheckHit()
 
 void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 {
+	// いずれかのコライダーの数が0ならば判定を行わない
+	if (!mColliders[attCombi.first].size() || !mColliders[attCombi.second].size())
+	{
+		return;
+	}
+
 	for (auto collider1 : mColliders[attCombi.first])
 	{
 		// コライダーがアクティブでないなら判定を行わない
@@ -300,7 +306,8 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 				// 押し戻し
 				auto checkMoval = [](ColliderComponentBase* col)
 				{
-					return col->GetOwner()->GetMovalFlag() && (col->GetColliderAttribute() != ColliderAttribute::ColAtt_Detector);
+					bool ret = col->GetOwner()->GetMovalFlag() && (col->GetColliderAttribute() != ColliderAttribute::ColAtt_Detector);
+					return ret;
 				};
 				bool iMovalFlag = checkMoval(collider1);
 				bool jMovalFlag = checkMoval(collider2);
@@ -630,6 +637,8 @@ PhysicManager::PhysicManager():
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Block);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);
+	ResisterCheckableAttributeCombination(ColAtt_PlayerAttack, ColAtt_Enemy);
+	ResisterCheckableAttributeCombination(ColAtt_EnemyAttack, ColAtt_Player);
 }
 
 PhysicManager::~PhysicManager()

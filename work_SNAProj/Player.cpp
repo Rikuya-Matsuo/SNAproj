@@ -67,21 +67,19 @@ Player::~Player()
 	SDL_Log("Player is deleted\n");
 }
 
-bool jumpFlag = false;
-
 void Player::UpdateActor0()
 {
 	mDetectGroundFlag = false;
 
-	jumpFlag = false;
 	if (mLandingFlag && Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
 	{
 		mJumpComponent->Jump();
-
-		jumpFlag = true;
 	}
 
-	mLandingFlag = false;
+	if (mLandingFlag)
+	{
+		mLandingFlag = false;
+	}
 }
 
 void Player::UpdateActor1()
@@ -126,10 +124,6 @@ void Player::UpdateActor1()
 	mPosition.y = 0.0f;
 
 	// 基底クラスのほうも呼ぶ
-	if (jumpFlag)
-	{
-		SDL_Delay(0);
-	}
 	Actor::UpdateActor1();
 }
 
@@ -148,7 +142,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 	if (mPushedVector.z > 0.0f)
 	{
-		mLandingFlag = true;
+		OnLanding();
 	}
 
 	// すでにその方向への押し返しが働いている場合は、押し返しを無効化する
@@ -201,7 +195,7 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 
 	if (mPushedVector.z > 0.0f)
 	{
-		mLandingFlag = true;
+		OnLanding();
 	}
 }
 
@@ -263,4 +257,9 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 	mDetectGroundFlag = true;
 
 	SetAffectGravityFlag(false);
+}
+
+void Player::OnLanding()
+{
+	mLandingFlag = true;
 }
