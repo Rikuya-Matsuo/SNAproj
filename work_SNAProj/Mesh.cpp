@@ -21,7 +21,7 @@
 #include <cmath>
 #include <cstring>
 
-const char* Mesh::mBoardMeshPath = "Assets/Board.gpmesh";
+const char* Mesh::mBoardMeshPath = "assets/board.gpmesh";
 
 const Mesh::FlagType Mesh::mAnimModeFlagMask = 1 << 0;
 const Mesh::FlagType Mesh::mAnimLoopEndFlagMask = 1 << 1;
@@ -89,7 +89,15 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 	}
 
 	// ボードメッシュであればフラグを立てる
-	if (!strcmp(fileName.c_str(), mBoardMeshPath))
+	// 入力されたパスを全部小文字に合わせる
+	std::string fileNameAllLower(fileName);
+	const char * ccFileName = fileName.c_str();
+	for (int i = 0; ccFileName[i] != '\0'; ++i)
+	{
+		fileNameAllLower[i] = SDL_tolower(ccFileName[i]);
+	}
+	fileNameAllLower += '\0';
+	if (!strcmp(fileNameAllLower.c_str(), mBoardMeshPath))
 	{
 		mFlags |= mIsBoardFlagMask;
 	}
