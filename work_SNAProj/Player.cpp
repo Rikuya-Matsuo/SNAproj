@@ -27,13 +27,13 @@ Player::Player():
 	mBoxCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
 	mBoxCollider->SetObjectBox(mMesh->GetCollisionBox());
 
-	AABB box = mMesh->GetCollisionBox();
-	const Vector3D boxSize = box.mMax - box.mMin;
-	box.mMax.z -= boxSize.z * 0.8f;
-	box.mMin.z -= boxSize.z * 0.2f;
-
 	if (false)
 	{
+		AABB box = mMesh->GetCollisionBox();
+		const Vector3D boxSize = box.mMax - box.mMin;
+		box.mMax.z -= boxSize.z * 0.8f;
+		box.mMin.z -= boxSize.z * 0.2f;
+
 		mGroundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 		mGroundChecker->SetObjectBox(box);
 	}

@@ -85,14 +85,27 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 	// テクスチャの配列を生成
 	Texture * textures = new Texture[allNum];
 
+	// マスクの取得
+	Uint32 rMask, gMask, bMask, aMask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rMask = 0xFF000000;
+	gMask = 0x00FF0000;
+	bMask = 0x0000FF00;
+	aMask = 0x000000FF;
+#else
+	rMask = 0x000000FF;
+	gMask = 0x0000FF00;
+	bMask = 0x00FF0000;
+	aMask = 0xFF000000;
+#endif
+
 	// 縦横で二重ループ
 	for (int y = 0; y < yNum; ++y)
 	{
 		for (int x = 0; x < xNum; ++x)
 		{
 			// サーフェイス生成
-			SDL_Surface * dstSurface = SDL_CreateRGBSurface(0, chipW, chipH, srcFormat->BitsPerPixel,
-				srcFormat->Rmask, srcFormat->Gmask, srcFormat->Bmask, srcFormat->Amask);
+			SDL_Surface * dstSurface = SDL_CreateRGBSurface(0, chipW, chipH, 32, rMask, gMask, bMask, aMask);
 
 			// 転写用矩形の設定
 			SDL_Rect sRect, dRect;

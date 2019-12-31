@@ -87,7 +87,7 @@ void Texture::CreateFromSurface(SDL_Surface* surface)
 	// Generate a GL texture
 	glGenTextures(1, &mTextureID);
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_BGRA,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA,
 		GL_UNSIGNED_BYTE, surface->pixels);
 
 	// Use linear filtering
