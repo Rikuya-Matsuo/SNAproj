@@ -197,7 +197,8 @@ void System::UpdateActor()
 
 void System::Draw()
 {
-	SDL_SetRenderDrawColor(GetSDLRenderer(), 0, 0, 0, 255);
+	//SDL_SetRenderDrawColor(GetSDLRenderer(), 0, 0, 0, 255);
+	glClearColor(0, 0, 0, 0);
 	mRenderer->WindowClear();
 
 	mRenderer->Draw();
