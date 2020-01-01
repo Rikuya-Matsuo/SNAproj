@@ -99,6 +99,24 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 	aMask = 0xFF000000;
 #endif
 
+#ifdef DEBUG_SNA
+
+	auto maskCheck = [](Uint32 srcMask, Uint32 mask, const std::string& maskName)
+	{
+		if (srcMask != mask)
+		{
+			SDL_Log((maskName + " mask is strange.\n").c_str());
+		}
+		return;
+	};
+
+	maskCheck(srcFormat->Rmask, rMask, "Red");
+	maskCheck(srcFormat->Gmask, gMask, "Green");
+	maskCheck(srcFormat->Bmask, bMask, "Blue");
+	maskCheck(srcFormat->Amask, aMask, "Alpha");
+
+#endif
+
 	// 縦横で二重ループ
 	for (int y = 0; y < yNum; ++y)
 	{
