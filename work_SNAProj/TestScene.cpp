@@ -9,6 +9,7 @@
 #include "SpriteTest.h"
 #include "Block.h"
 #include "TestStage.h"
+#include "BGObject.h"
 
 
 
@@ -37,6 +38,10 @@ TestScene::TestScene()
 		//st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
 		//st->SetScale(30.0f);
 	}
+
+	BGObject * bgWall = new BGObject("Assets/SM_Snow_Rock_Wall_A.gpmesh");
+	bgWall->SetPosition(Vector3D(50, -100, -50));
+	bgWall->SetScale(0.5f);
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);
