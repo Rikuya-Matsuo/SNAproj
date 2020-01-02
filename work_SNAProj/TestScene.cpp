@@ -39,7 +39,7 @@ TestScene::TestScene()
 		//st->SetScale(30.0f);
 	}
 
-	BGObject * bgWall = new BGObject("Assets/SM_Snow_Rock_Wall_A.gpmesh");
+	BGObject * bgWall = new BGObject("Assets/SM_IceCliffWall_01a.gpmesh");
 	bgWall->SetPosition(Vector3D(50, -100, -50));
 	bgWall->SetScale(0.5f);
 
