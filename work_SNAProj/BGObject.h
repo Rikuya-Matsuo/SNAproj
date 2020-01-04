@@ -9,6 +9,12 @@ public:
 	BGObject(const std::string & meshFileName);
 	~BGObject();
 
+	const Vector3D & GetModelSize() const { return mModelSize; }
+
+	bool GetSucessToLoadFlag() const { return mSucessToLoadFlag; }
+
 private:
-	MeshComponent * mMeshComponent;
+	bool mSucessToLoadFlag;
+
+	Vector3D mModelSize;
 };

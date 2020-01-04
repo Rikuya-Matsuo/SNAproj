@@ -39,9 +39,30 @@ TestScene::TestScene()
 		//st->SetScale(30.0f);
 	}
 
-	BGObject * bgWall = new BGObject("Assets/SM_IceCliffWall_01a.gpmesh");
-	bgWall->SetPosition(Vector3D(50, -100, -50));
-	bgWall->SetScale(0.5f);
+	// 壁オブジェクトのスケール値
+	float wallScale = 0.5f;
+	// 前に生成したオブジェクトの大きさを格納。どのくらい横にずらして生成すればいいかの変数である。
+	float offset = 0.0f;
+	// 岩壁の種類の順番をハードコーディング
+	char wallType[] = { 1,2,1,3,3,2,1,3 };
+	// ファイル名テンプレート
+	const char * fileTemplate = "Assets/SM_IceCliffWall_%02da.gpmesh";
+	for (int i = 0; i < 8; ++i)
+	{
+		const size_t fileNameMaxLen = 64;
+		char fileName[fileNameMaxLen];
+		sprintf_s(fileName, fileNameMaxLen, fileTemplate, wallType[i]);
+
+		BGObject * bgWall = new BGObject(fileName);
+		bgWall->SetScale(wallScale);
+		bgWall->SetPosition(Vector3D(-100 + offset, -100, -50));
+		offset = bgWall->GetModelSize().x * bgWall->GetScale() * i;
+
+		if (i == 7)
+		{
+			printf("%lf\n", bgWall->GetModelSize().y);
+		}
+	}
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);

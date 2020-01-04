@@ -4,14 +4,18 @@
 #include "Mesh.h"
 
 BGObject::BGObject(const std::string & meshFileName):
-	mMeshComponent(nullptr)
+	mSucessToLoadFlag(false)
 {
-	mMeshComponent = new MeshComponent(this);
+	MeshComponent * mc = new MeshComponent(this);
 	Mesh * msh = new Mesh;
-	bool success = msh->Load(meshFileName, System::GetInstance().GetRenderer(), this);
-	if (success)
+	mSucessToLoadFlag = msh->Load(meshFileName, System::GetInstance().GetRenderer(), this);
+	if (mSucessToLoadFlag)
 	{
-		mMeshComponent->SetMesh(msh);
+		mc->SetMesh(msh);
+
+		// オブジェクトのサイズを計算
+		AABB box = msh->GetCollisionBox();
+		mModelSize = box.mMax - box.mMin;
 	}
 
 	mFlags &= ~(mAffectGravityFlagMask | mMovalFlagMask);
