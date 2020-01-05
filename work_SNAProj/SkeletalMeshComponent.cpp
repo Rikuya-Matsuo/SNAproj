@@ -9,8 +9,8 @@
 #include "Animation.h"
 #include "Skeleton.h"
 
-SkeletalMeshComponent::SkeletalMeshComponent(Actor* owner)
-	:MeshComponent(owner, true)
+SkeletalMeshComponent::SkeletalMeshComponent(Actor* owner, int drawOrder)
+	:MeshComponent(owner, drawOrder, true)
 	, mSkeleton(nullptr)
 {
 }

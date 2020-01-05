@@ -5,7 +5,7 @@
 class SkeletalMeshComponent : public MeshComponent
 {
 public:
-	SkeletalMeshComponent(class Actor* owner);
+	SkeletalMeshComponent(class Actor* owner, int drawOrder);
 	~SkeletalMeshComponent();
 
 	// Draw this mesh component                                              メッシュコンポーネントの描画

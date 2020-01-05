@@ -8,7 +8,7 @@
 SpriteTest::SpriteTest():
 	Actor()
 {
-	MeshComponent * mc = new MeshComponent(this);
+	MeshComponent * mc = new MeshComponent(this, 100);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/ninjastayOrigin.gpmesh", this);
 	if (mMesh != nullptr)
 	{

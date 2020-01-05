@@ -6,10 +6,9 @@
 BGObject::BGObject(const std::string & meshFileName):
 	mSucessToLoadFlag(false)
 {
-	MeshComponent * mc = new MeshComponent(this);
-	Mesh * msh = new Mesh;
-	mSucessToLoadFlag = msh->Load(meshFileName, System::GetInstance().GetRenderer(), this);
-	if (mSucessToLoadFlag)
+	MeshComponent * mc = new MeshComponent(this, 0);
+	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh(meshFileName, this);
+	if (msh)
 	{
 		mc->SetMesh(msh);
 

@@ -17,7 +17,7 @@ Player::Player():
 	mLookRightFlag(true)
 {
 	// メッシュのロード
-	MeshComponent * mc = new MeshComponent(this);
+	MeshComponent * mc = new MeshComponent(this, 300);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(), this,
 		10, 10, 1, 128, 128, 0.07f, 0);

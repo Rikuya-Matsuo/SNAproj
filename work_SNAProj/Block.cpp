@@ -10,7 +10,7 @@ const float Block::mModelSize = 200.0f;
 Block::Block():
 	Actor()
 {
-	mMeshComponent = new MeshComponent(this);
+	mMeshComponent = new MeshComponent(this, 100);
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/ForestGround01.gpmesh", this);
 	if (!msh)
 	{

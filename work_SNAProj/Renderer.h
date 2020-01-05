@@ -62,8 +62,9 @@ private:
 
 
 	//シェーダー関連
-	class Shader*                                     mMeshShader;       // メッシュシェーダー
-	class Shader*                                     mSkinnedShader;    // スキンメッシュシェーダー
+	class Shader*										mMeshShader;			// メッシュシェーダー
+	class Shader*										mMeshShaderForBoard;	// メッシュシェーダー（ボードメッシュ用）
+	class Shader*										mSkinnedShader;			// スキンメッシュシェーダー
 
 	// 基本行列関連
 	Matrix4                                           mView;             // ビュー行列

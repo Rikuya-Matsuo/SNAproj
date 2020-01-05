@@ -17,7 +17,7 @@ class Mesh;
 class MeshComponent : public ComponentBase
 {
 public:
-	MeshComponent(class Actor* owner, bool isSkeletal = false);       // メッシュコンポーネントコンストラクタ。（要：親アクター）
+	MeshComponent(class Actor* owner, int drawOrder, bool isSkeletal = false);       // メッシュコンポーネントコンストラクタ。（要：親アクター）
 	~MeshComponent();
 
 	void Update() override;
@@ -30,6 +30,9 @@ public:
 	bool GetVisible() const { return mMeshCompFlags & mVisibleFlagMask; }                      // 表示フラグのゲット
 
 	bool GetIsSkeletal() const { return mMeshCompFlags & mIsSkeletalFlagMask; }                // スケルタルモデルかどうかの取得
+
+	int GetDrawOrder() const { return mDrawOrder; }
+
 protected:
 	typedef Uint8 FlagType;
 	static const FlagType mVisibleFlagMask;
@@ -42,4 +45,6 @@ protected:
 	Mesh* mMesh;                                                // メッシュオブジェクトの取得
 
 	size_t mTextureIndex;                                             // テクスチャーのインデックス
+
+	const int mDrawOrder;
 };

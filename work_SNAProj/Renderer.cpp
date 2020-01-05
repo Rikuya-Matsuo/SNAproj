@@ -243,11 +243,40 @@ void Renderer::AddMeshComponent(MeshComponent* mesh)
 	if (mesh->GetIsSkeletal())
 	{
 		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
-		mSkeletalMeshes.emplace_back(sk);
+
+		const int drawOrder = sk->GetDrawOrder();
+		auto itr = mSkeletalMeshes.begin();
+		for (; itr != mSkeletalMeshes.end(); ++itr)
+		{
+			if (drawOrder < (*itr)->GetDrawOrder())
+			{
+				mSkeletalMeshes.insert(itr, sk);
+				return;
+			}
+		}
+
+		if (itr == mSkeletalMeshes.end())
+		{
+			mSkeletalMeshes.emplace_back(sk);
+		}
 	}
 	else
 	{
-		mMeshComponents.emplace_back(mesh);
+		const int drawOrder = mesh->GetDrawOrder();
+		auto itr = mMeshComponents.begin();
+		for (; itr != mMeshComponents.end(); ++itr)
+		{
+			if (drawOrder < (*itr)->GetDrawOrder())
+			{
+				mMeshComponents.insert(itr, mesh);
+				return;
+			}
+		}
+
+		if (itr == mMeshComponents.end())
+		{
+			mMeshComponents.emplace_back(mesh);
+		}
 	}
 }
 
@@ -288,9 +317,13 @@ void Renderer::SetWindowTitle(const std::string & title)
 
 bool Renderer::LoadShaders()
 {
+	// メッシュシェーダー（ボード用）
+	//mMeshShaderForBoard = new Shader();
+
 	// メッシュシェーダー
 	mMeshShader = new Shader();
-	if (!mMeshShader->Load("Shaders/Phong.vert", "Shaders/Phong.frag"))
+	//"Shaders/Phong.frag";
+	if (!mMeshShader->Load("Shaders/BasicMesh.vert", "Shaders/BasicMesh.frag"))
 	{
 		return false;
 	}

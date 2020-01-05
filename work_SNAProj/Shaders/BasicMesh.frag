@@ -22,4 +22,5 @@ void main()
 {
 	// Sample color from texture
     outColor = texture(uTexture, fragTexCoord);
+	//outColor.a = 0;
 }
