@@ -5,13 +5,14 @@
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 
-const float Block::mModelSize = 200.0f;
+const float Block::mModelSize = 1.0f;
 
 Block::Block():
 	Actor()
 {
 	mMeshComponent = new MeshComponent(this, 100);
-	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/ForestGround01.gpmesh", this);
+	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Cube.gpmesh", this);
+	msh->LoadTexture("Assets/SM_Snow_Rock_Wall_A.png", System::GetInstance().GetRenderer(), this);
 	if (!msh)
 	{
 		SDL_Log("ブロック：メッシュの読み込みに失敗\n");

@@ -20,24 +20,9 @@ TestScene::TestScene()
 	p->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
 	p->SetScale(25.0f);
 
-	const bool stageGen = true;
-	
-	if (stageGen)
-	{
-		TestStage * ts = new TestStage;
-		ts->SetBlockScale(0.15f);
-		ts->Load("");
-	}
-	else
-	{
-		AnimSpriteTest * ast = new AnimSpriteTest;
-		ast->SetPosition(Vector3D(0.0f, 0.0f, 0.0f));
-		ast->SetScale(30.0f);
-
-		//SpriteTest * st = new SpriteTest;
-		//st->SetPosition(Vector3D(-30.0f, 0.0f, 0.0f));
-		//st->SetScale(30.0f);
-	}
+	TestStage * ts = new TestStage;
+	ts->SetBlockScale(30.0f);
+	ts->Load("");
 
 	// 壁オブジェクトのスケール値
 	float wallScale = 0.5f;
