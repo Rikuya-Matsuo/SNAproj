@@ -46,7 +46,7 @@ Player::Player():
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
 	attackCol.mMin.x += bodyColSizeX;
 	attackCol.mMax.x += bodyColSizeX;
-	mAttackCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
+	mAttackCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_PlayerAttack);
 	mAttackCollider->SetObjectBox(attackCol);
 	mAttackCollider->SetActive(false);
 	mAttackCollider->SetMoveOnHitFlag(false);
