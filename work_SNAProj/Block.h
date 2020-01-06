@@ -6,7 +6,7 @@ class MeshComponent;
 class Block : public Actor
 {
 public:
-	Block();
+	Block(const std::string & texturePath);
 	~Block();
 
 	static const float mModelSize;

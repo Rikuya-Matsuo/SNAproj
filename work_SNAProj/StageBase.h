@@ -21,6 +21,12 @@ protected:
 
 	static float mBlockScale;
 
+	std::string mBlockTexturePath;
+
+	std::string mFloorTexturePath;
+
+	float mFloorScale;
+
 	// ブロック配置配列に基づいてブロックのインスタンスを生成する。
 	void Construct();
 };

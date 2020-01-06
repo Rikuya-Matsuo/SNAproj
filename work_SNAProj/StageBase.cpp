@@ -1,12 +1,14 @@
 #include "StageBase.h"
 #include "Block.h"
+#include "Floor.h"
 
-float StageBase::mBlockScale = 0.1f;
+float StageBase::mBlockScale = 1.0f;
 
 StageBase::StageBase():
 	mBlocks(nullptr),
 	mBlockMassX(0),
-	mBlockMassY(0)
+	mBlockMassY(0),
+	mFloorScale(1.0f)
 {
 }
 
@@ -42,7 +44,9 @@ void StageBase::Construct()
 		SDL_Log("Stage : Block mass is invalid value. Fail to construction.\n");
 	}
 
-	// 生成
+	///////////////////////////////////////
+	// ブロック生成
+	///////////////////////////////////////
 	for (int yBlock = 0; yBlock < mBlockMassY; ++yBlock)
 	{
 		for (int xBlock = 0; xBlock < mBlockMassX; ++xBlock)
@@ -56,7 +60,7 @@ void StageBase::Construct()
 			}
 
 			// 生成
-			Block * const bk = new Block;
+			Block * const bk = new Block(mBlockTexturePath);
 			bk->SetScale(mBlockScale);
 
 			// ブロックの高さの半分を計算
@@ -69,4 +73,18 @@ void StageBase::Construct()
 			bk->SetPosition(pos);
 		}
 	}
+
+	////////////////////////////////////////////////
+	// ブロックのさらに下に表示する床の生成
+	////////////////////////////////////////////////
+	// 生成位置を計算
+	Vector3D flrPos;
+	flrPos.x = mBlockMassX * Block::mModelSize * mBlockScale / 2.0f;
+	flrPos.y = 0.0f;
+	flrPos.z = -(Block::mModelSize * mBlockScale);
+
+	// 生成
+	Floor * const flr = new Floor(mFloorTexturePath);
+	flr->SetPosition(flrPos);
+	flr->SetScale(mFloorScale);
 }

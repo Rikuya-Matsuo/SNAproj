@@ -7,12 +7,12 @@
 
 const float Block::mModelSize = 1.0f;
 
-Block::Block():
+Block::Block(const std::string & texturePath):
 	Actor()
 {
 	mMeshComponent = new MeshComponent(this, 100);
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Cube.gpmesh", this);
-	msh->LoadTexture("Assets/SM_Snow_Rock_Wall_A.png", System::GetInstance().GetRenderer(), this);
+	msh->LoadTexture(texturePath, System::GetInstance().GetRenderer(), this);
 	if (!msh)
 	{
 		SDL_Log("ブロック：メッシュの読み込みに失敗\n");
@@ -23,11 +23,8 @@ Block::Block():
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
 	bcc->SetObjectBox(msh->GetCollisionBox());
 
-	// 重力の影響を受けない
-	SetAffectGravityFlag(false);
-
-	// ヒット時に押し返されない
-	mFlags &= ~mMovalFlagMask;
+	// 重力落下を行わない。ヒット時に押し返されない。
+	mFlags &= ~(mAffectGravityFlagMask | mMovalFlagMask);
 }
 
 Block::~Block()

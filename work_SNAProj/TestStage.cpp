@@ -12,8 +12,18 @@ TestStage::TestStage()
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1}
 	};
 
-	// 静的確保(？)された二次元配列は、メモリ上に連続して並んでいるはずなので、一気にコピーできる。
+	// 動的メモリ確保を使わずに生成された二次元配列は、メモリ上に連続して並んでいるはずなので、一気にコピーできる。
 	SDL_memcpy(mTestBlocks, testBlocks, mTestBlockMassX * mTestBlockMassY);
+
+	// ブロック、床のテクスチャファイル名を設定
+	mBlockTexturePath = "Assets/SM_Snow_Rock_Wall_A.png";
+	mBlockTexturePath.shrink_to_fit();
+
+	mFloorTexturePath = "Assets/SM_Snow_Rock_Wall_A.png";
+	mFloorTexturePath.shrink_to_fit();
+
+	// 床オブジェクトのスケール値を設定
+	mFloorScale = 1000.0f;
 }
 
 TestStage::~TestStage()

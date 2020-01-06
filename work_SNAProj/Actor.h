@@ -62,12 +62,12 @@ public:
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
 	typedef Uint8 FlagType;
-	static const FlagType mRequestComponentSortMask;
-	static const FlagType mStopDrawFlagMask;
-	static const FlagType mBeyondSceneFlagMask;
-	static const FlagType mAffectGravityFlagMask;
-	static const FlagType mMovalFlagMask;
-	static const FlagType mCalculateTransformFlagMask;
+	static const FlagType mRequestComponentSortMask;	// コンポーネントのソートを要請するフラグのマスク
+	static const FlagType mStopDrawFlagMask;			// 描画をしないフラグのマスク
+	static const FlagType mBeyondSceneFlagMask;			// シーンをまたいでもアクターの削除をスキップするフラグのマスク
+	static const FlagType mAffectGravityFlagMask;		// 重力落下を行うかのフラグマスク（デフォルトで真）
+	static const FlagType mMovalFlagMask;				// 何か物と当たったときに押し返しの影響を受けるかのフラグマスク（デフォルト真）
+	static const FlagType mCalculateTransformFlagMask;	// 変形行列計算が必要であることのフラグマスク（デフォルトで真）
 	static const FlagType mPlayerFlagMask;				// 本番ではいらないかも
 
 	FlagType mFlags;
