@@ -1,4 +1,5 @@
 ﻿#include "Vector.h"
+#include "Quaternion.h"
 
 const Vector2D Vector2D::zero = Vector2D(0.0f, 0.0f);
 
@@ -27,4 +28,12 @@ Vector3D::operator Vector2D() const
 {
 	Vector2D ret(this->x, this->y);
 	return ret;
+}
+
+Vector3D Vector3D::Transform(const Vector3D & v, const Quaternion & q)
+{
+	Vector3D qv(q.x, q.y, q.z);
+	Vector3D retVal = v;
+	retVal += 2.0f * Vector3D::Cross(qv, Vector3D::Cross(qv, v) + q.w * v);
+	return retVal;
 }

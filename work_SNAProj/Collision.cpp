@@ -1,5 +1,6 @@
 ﻿#include "Collision.h"
 #include "Common.h"
+#include <array>
 
 Sphere::Sphere(const Vector3D & center, float radius) :
 	mCenter(center),
@@ -66,4 +67,34 @@ float AABB::MinimumDistanceSq(const Vector3D & point) const
 	v.z = Common::Larger(v.z, point.z - mMax.z);
 
 	return v.LengthSq();
+}
+
+void AABB::Rotate(const Quaternion & q)
+{
+	// ボックスの8つの頂点の配列作る
+	std::array<Vector3D, 8> points;
+	// 最小値は常にコーナーである
+	points[0] = mMin;
+	// 2つの最小値と1個の最大値の並べ替え
+	points[1] = Vector3D(mMax.x, mMin.y, mMin.z);
+	points[2] = Vector3D(mMin.x, mMax.y, mMin.z);
+	points[3] = Vector3D(mMin.x, mMin.y, mMax.z);
+	// 2つの最大値と1個の最小値の並べ替え
+	points[4] = Vector3D(mMin.x, mMax.y, mMax.z);
+	points[5] = Vector3D(mMax.x, mMin.y, mMax.z);
+	points[6] = Vector3D(mMax.x, mMax.y, mMin.z);
+	// 最大値は常にコーナーである
+	points[7] = Vector3D(mMax);
+
+	// 最初の点を回転
+	Vector3D p = Vector3D::Transform(points[0], q);
+	// 最小値と最大値を求めるために最初の点を入れてリセット
+	mMin = p;
+	mMax = p;
+	// 回転によって最大値と最小値を求めなおす。
+	for (size_t i = 1; i < points.size(); i++)
+	{
+		p = Vector3D::Transform(points[i], q);
+		RenewalMinMax(p);
+	}
 }

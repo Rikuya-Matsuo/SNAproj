@@ -133,9 +133,11 @@ public:
 		return Vector3D(a + ((b - a) *rate));
 	}
 
-	// 勉強不足ゆえに、このキャストが大丈夫な気がしない。
 	const float* GetAsFloatPtr() const
 	{
 		return reinterpret_cast<const float*>(&x);
 	}
+
+	// Transform a Vector3 by a quaternion
+	static Vector3D Transform(const Vector3D& v, const class Quaternion& q);
 };

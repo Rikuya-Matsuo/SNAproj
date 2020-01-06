@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Vector.h"
+#include "Quaternion.h"
 #include "Common.h"
 
 struct Sphere
@@ -30,6 +31,8 @@ struct AABB
 	bool IsPointInside(const Vector3D& point) const;
 
 	float MinimumDistanceSq(const Vector3D& point) const;
+
+	void Rotate(const Quaternion & q);
 };
 
 namespace Collision

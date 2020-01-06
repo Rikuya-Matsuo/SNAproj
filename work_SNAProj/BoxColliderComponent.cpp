@@ -23,7 +23,8 @@ void BoxColliderComponent::CalculateWorldBox()
 	mWorldBox.mMin *= mOwner->GetScale();
 	mWorldBox.mMax *= mOwner->GetScale();
 
-	// 回転（あとで実装しゃす）
+	// 回転
+	mWorldBox.Rotate(mOwner->GetRotation());
 
 	// 平行移動
 	mWorldBox.mMin += mOwner->GetPosition();

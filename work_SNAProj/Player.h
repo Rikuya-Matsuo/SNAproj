@@ -23,6 +23,8 @@ private:
 
 	BoxColliderComponent * mGroundChecker;
 
+	BoxColliderComponent * mAttackCollider;
+
 	JumpComponent * mJumpComponent;
 
 	bool mLandingFlag;

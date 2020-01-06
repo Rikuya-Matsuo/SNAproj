@@ -14,7 +14,9 @@ Player::Player():
 	Actor(),
 	mLandingFlag(false),
 	mDetectGroundFlag(false),
-	mLookRightFlag(true)
+	mLookRightFlag(true),
+	mGroundChecker(nullptr),
+	mAttackCollider(nullptr)
 {
 	// メッシュのロード
 	MeshComponent * mc = new MeshComponent(this, 300);
@@ -25,9 +27,11 @@ Player::Player():
 
 	// コライダーの設定
 	mBoxCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
-	mBoxCollider->SetObjectBox(mMesh->GetCollisionBox());
+	AABB bodyCol = mMesh->GetCollisionBox();
+	mBoxCollider->SetObjectBox(bodyCol);
 
-	if (false)
+	const bool genDetectorFlag = false;
+	if (genDetectorFlag)
 	{
 		AABB box = mMesh->GetCollisionBox();
 		const Vector3D boxSize = box.mMax - box.mMin;
@@ -37,6 +41,14 @@ Player::Player():
 		mGroundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 		mGroundChecker->SetObjectBox(box);
 	}
+
+	AABB attackCol = mMesh->GetCollisionBox();
+	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
+	attackCol.mMin.x += bodyColSizeX;
+	attackCol.mMax.x += bodyColSizeX;
+	mAttackCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_PlayerAttack);
+	mAttackCollider->SetObjectBox(attackCol);
+	mAttackCollider->SetActive(false);
 
 	mInputComponent = new InputMoveComponent(this);
 	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
