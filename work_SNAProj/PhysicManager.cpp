@@ -306,7 +306,10 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 				// 押し戻し
 				auto checkMoval = [](ColliderComponentBase* col)
 				{
-					bool ret = col->GetOwner()->GetMovalFlag() && (col->GetColliderAttribute() != ColliderAttribute::ColAtt_Detector);
+					bool ret =
+						col->GetOwner()->GetMovalFlag() &&
+						col->GetMoveOnHitFlag() &&
+						(col->GetColliderAttribute() != ColliderAttribute::ColAtt_Detector);
 					return ret;
 				};
 				bool iMovalFlag = checkMoval(collider1);
