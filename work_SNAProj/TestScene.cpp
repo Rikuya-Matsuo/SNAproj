@@ -40,13 +40,8 @@ TestScene::TestScene()
 
 		BGObject * bgWall = new BGObject(fileName);
 		bgWall->SetScale(wallScale);
-		bgWall->SetPosition(Vector3D(-100 + offset, -100, -50));
+		bgWall->SetPosition(Vector3D(-100 + offset, -100, ts->GetFloorHeight()));
 		offset = bgWall->GetModelSize().x * bgWall->GetScale() * i;
-
-		if (i == 7)
-		{
-			printf("%lf\n", bgWall->GetModelSize().y);
-		}
 	}
 
 	Camera * cam = new Camera(p);

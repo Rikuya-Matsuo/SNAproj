@@ -81,7 +81,7 @@ void StageBase::Construct()
 	Vector3D flrPos;
 	flrPos.x = mBlockMassX * Block::mModelSize * mBlockScale / 2.0f;
 	flrPos.y = 0.0f;
-	flrPos.z = -(Block::mModelSize * mBlockScale);
+	flrPos.z = mFloorHeight = -(Block::mModelSize * mBlockScale);
 
 	// 生成
 	Floor * const flr = new Floor(mFloorTexturePath);

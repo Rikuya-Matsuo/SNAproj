@@ -13,6 +13,8 @@ public:
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
 
+	float GetFloorHeight() const { return mFloorHeight; }
+
 protected:
 	Uint8 ** mBlocks;
 
@@ -26,6 +28,8 @@ protected:
 	std::string mFloorTexturePath;
 
 	float mFloorScale;
+
+	float mFloorHeight;
 
 	// ブロック配置配列に基づいてブロックのインスタンスを生成する。
 	void Construct();
