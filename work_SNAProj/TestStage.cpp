@@ -16,7 +16,7 @@ TestStage::TestStage()
 	SDL_memcpy(mTestBlocks, testBlocks, mTestBlockMassX * mTestBlockMassY);
 
 	// ブロック、床のテクスチャファイル名を設定
-	mBlockTexturePath = "Assets/SM_Snow_Rock_Wall_A.png";
+	mBlockTexturePath = "Assets/SM_Ice_RuinedWalls.png";
 	mBlockTexturePath.shrink_to_fit();
 
 	mFloorTexturePath = "Assets/SM_Snow_Rock_Wall_A.png";

@@ -24,25 +24,9 @@ TestScene::TestScene()
 	ts->SetBlockScale(30.0f);
 	ts->Load("");
 
-	// 壁オブジェクトのスケール値
-	float wallScale = 0.5f;
-	// 前に生成したオブジェクトの大きさを格納。どのくらい横にずらして生成すればいいかの変数である。
-	float offset = 0.0f;
-	// 岩壁の種類の順番をハードコーディング
-	char wallType[] = { 1,2,1,3,3,2,1,3 };
-	// ファイル名テンプレート
-	const char * fileTemplate = "Assets/SM_IceCliffWall_%02da.gpmesh";
-	for (int i = 0; i < 8; ++i)
-	{
-		const size_t fileNameMaxLen = 64;
-		char fileName[fileNameMaxLen];
-		sprintf_s(fileName, fileNameMaxLen, fileTemplate, wallType[i]);
+	GenerateBGWall(ts->GetFloorHeight());
 
-		BGObject * bgWall = new BGObject(fileName);
-		bgWall->SetScale(wallScale);
-		bgWall->SetPosition(Vector3D(-100 + offset, -100, ts->GetFloorHeight()));
-		offset = bgWall->GetModelSize().x * bgWall->GetScale() * i;
-	}
+	GenerateBGDecoration(ts->GetFloorHeight());
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);
@@ -62,4 +46,59 @@ TestScene::~TestScene()
 
 void TestScene::Update()
 {
+}
+
+void TestScene::GenerateBGWall(float height)
+{
+	// 壁オブジェクトのスケール値
+	float wallScale = 0.5f;
+	// 前に生成したオブジェクトの大きさを格納。どのくらい横にずらして生成すればいいかの変数である。
+	float offset = 0.0f;
+	// 岩壁の種類の順番をハードコーディング
+	char wallType[] = { 1,2,1,3,3,2,1,3 };
+	// ファイル名テンプレート
+	const char * fileTemplate = "Assets/SM_IceCliffWall_%02da.gpmesh";
+	for (int i = 0; i < 8; ++i)
+	{
+		const size_t fileNameMaxLen = 64;
+		char fileName[fileNameMaxLen];
+		sprintf_s(fileName, fileNameMaxLen, fileTemplate, wallType[i]);
+
+		BGObject * bgWall = new BGObject(fileName);
+		bgWall->SetScale(wallScale);
+		bgWall->SetPosition(Vector3D(-100 + offset, -100, height));
+		offset = bgWall->GetModelSize().x * bgWall->GetScale() * i;
+	}
+}
+
+void TestScene::GenerateBGDecoration(float height)
+{
+	// キャプチャの意味をここで知ったのだ……
+	// []の中に変数を入れると、ラムダ式の中でそれが使えるらしい。
+	auto gen = [height](const std::string & modelPath, float x, float y)
+	{
+		BGObject * bgWall = new BGObject(modelPath);
+		bgWall->SetPosition(Vector3D(x, y, height));
+
+		return bgWall;
+	};
+
+	const float defaultDepth = -75;
+	const std::string assets = "Assets/";
+
+	const float wallScale = 0.2f;
+	const Quaternion wallRota = Quaternion(Vector3D(0, 0, 1), static_cast<float>(M_PI / 2.0f));
+	auto wallSetting = [wallScale, &wallRota](BGObject * obj)
+	{
+		obj->SetScale(wallScale);
+		obj->SetRotation(wallRota);
+	};
+
+	BGObject * generated = nullptr;
+
+	generated = gen(assets + "SM_RuinedWalls1.gpmesh", 30, defaultDepth);
+	wallSetting(generated);
+
+	generated = gen(assets + "SM_RuinedWalls2.gpmesh", 200, defaultDepth);
+	wallSetting(generated);
 }
