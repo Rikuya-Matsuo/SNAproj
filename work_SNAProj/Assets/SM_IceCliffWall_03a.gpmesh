@@ -3,7 +3,7 @@
 	"vertexformat":"PosNormTex",
 	"shader":"BasicMesh",
 	"textures":[
-		"Assets/SM_Env_Ice_Cliffs_CliffWall_03a.png"
+		"Assets/SM_Env_Ice_Cliffs_CliffWall_01a.png"
 	],
 	"specularPower":0.0,
 	"vertices":[
