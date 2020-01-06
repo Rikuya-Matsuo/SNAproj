@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "StageBase.h"
 
 class TestStage : public StageBase
@@ -7,11 +7,11 @@ public:
 	TestStage();
 	~TestStage();
 
-	// ƒtƒ@ƒCƒ‹–¼‚É‰½‚ğ“ü‚ê‚Ä‚àƒeƒXƒg—p‚ÌƒXƒe[ƒW‚ğ¶¬‚·‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã«ä½•ã‚’å…¥ã‚Œã¦ã‚‚ãƒ†ã‚¹ãƒˆç”¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ç”Ÿæˆã™ã‚‹
 	void Load(const std::string & fileName) override;
 
 private:
-	// ƒNƒ‰ƒX‚Ì’è‹`“à‚Åg‚¤’è”‚Å‚ ‚éŒÌAƒNƒ‰ƒX“à‚Å‰Šú‰»‚·‚é
+	// ã‚¯ãƒ©ã‚¹ã®å®šç¾©å†…ã§ä½¿ã†å®šæ•°ã§ã‚ã‚‹æ•…ã€ã‚¯ãƒ©ã‚¹å†…ã§åˆæœŸåŒ–ã™ã‚‹
 	static const Uint8 mTestBlockMassX = 32;
 	static const Uint8 mTestBlockMassY = 4;
 

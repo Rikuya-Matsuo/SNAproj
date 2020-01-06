@@ -1,9 +1,9 @@
-#include "TestStage.h"
+ï»¿#include "TestStage.h"
 
 TestStage::TestStage()
 {
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^‰Šú‰»q‚ğg‚Á‚ÄŒø—¦‚ğ‚Æ‚é‚©Aƒ[ƒJƒ‹•Ï”‚É‚¢‚Á‚½‚ñŠi”[‚µ‚ÄƒRƒs[‚·‚é‚±‚Æ‚Å‰Â“Ç«‚ğ‚Æ‚é‚©
-	// „‚ª‘I‚ñ‚¾‚Ì‚ÍŒãÒ‚¾‚Á‚½B
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿åˆæœŸåŒ–å­ã‚’ä½¿ã£ã¦åŠ¹ç‡ã‚’ã¨ã‚‹ã‹ã€ãƒ­ãƒ¼ã‚«ãƒ«å¤‰æ•°ã«ã„ã£ãŸã‚“æ ¼ç´ã—ã¦ã‚³ãƒ”ãƒ¼ã™ã‚‹ã“ã¨ã§å¯èª­æ€§ã‚’ã¨ã‚‹ã‹
+	// ç§ãŒé¸ã‚“ã ã®ã¯å¾Œè€…ã ã£ãŸã€‚
 	Uint8 testBlocks[mTestBlockMassY][mTestBlockMassX] =
 	{
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -12,17 +12,17 @@ TestStage::TestStage()
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1}
 	};
 
-	// “®“Iƒƒ‚ƒŠŠm•Û‚ğg‚í‚¸‚É¶¬‚³‚ê‚½“ñŸŒ³”z—ñ‚ÍAƒƒ‚ƒŠã‚É˜A‘±‚µ‚Ä•À‚ñ‚Å‚¢‚é‚Í‚¸‚È‚Ì‚ÅAˆê‹C‚ÉƒRƒs[‚Å‚«‚éB
+	// å‹•çš„ãƒ¡ãƒ¢ãƒªç¢ºä¿ã‚’ä½¿ã‚ãšã«ç”Ÿæˆã•ã‚ŒãŸäºŒæ¬¡å…ƒé…åˆ—ã¯ã€ãƒ¡ãƒ¢ãƒªä¸Šã«é€£ç¶šã—ã¦ä¸¦ã‚“ã§ã„ã‚‹ã¯ãšãªã®ã§ã€ä¸€æ°—ã«ã‚³ãƒ”ãƒ¼ã§ãã‚‹ã€‚
 	SDL_memcpy(mTestBlocks, testBlocks, mTestBlockMassX * mTestBlockMassY);
 
-	// ƒuƒƒbƒNA°‚ÌƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼‚ğİ’è
+	// ãƒ–ãƒ­ãƒƒã‚¯ã€åºŠã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¨­å®š
 	mBlockTexturePath = "Assets/SM_Snow_Rock_Wall_A.png";
 	mBlockTexturePath.shrink_to_fit();
 
 	mFloorTexturePath = "Assets/SM_Snow_Rock_Wall_A.png";
 	mFloorTexturePath.shrink_to_fit();
 
-	// °ƒIƒuƒWƒFƒNƒg‚ÌƒXƒP[ƒ‹’l‚ğİ’è
+	// åºŠã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¹ã‚±ãƒ¼ãƒ«å€¤ã‚’è¨­å®š
 	mFloorScale = 1000.0f;
 }
 
@@ -33,27 +33,27 @@ TestStage::~TestStage()
 void TestStage::Load(const std::string & fileName)
 {
 	/////////////////////////
-	// ƒuƒƒbƒN•À‚Ñ‚ğƒRƒs[
+	// ãƒ–ãƒ­ãƒƒã‚¯ä¸¦ã³ã‚’ã‚³ãƒ”ãƒ¼
 	/////////////////////////
-	// ƒƒ‚ƒŠŠm•Û
+	// ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	mBlocks = new Uint8* [mTestBlockMassY];
 	for (Uint8 i = 0; i < mTestBlockMassY; ++i)
 	{
 		mBlocks[i] = new Uint8[mTestBlockMassX];
 	}
 
-	// ƒXƒe[ƒW‚Ìc‰¡‚ÌƒuƒƒbƒN”‚ğİ’è
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã®ç¸¦æ¨ªã®ãƒ–ãƒ­ãƒƒã‚¯æ•°ã‚’è¨­å®š
 	mBlockMassX = mTestBlockMassX;
 	mBlockMassY = mTestBlockMassY;
 
-	// “à—eƒRƒs[
+	// å†…å®¹ã‚³ãƒ”ãƒ¼
 	for (Uint8 yLoop = 0; yLoop < mTestBlockMassY; ++yLoop)
 	{
 		SDL_memcpy(mBlocks[yLoop], mTestBlocks[yLoop], mTestBlockMassX);
 	}
 
 	/////////////////////////
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	/////////////////////////
 	Construct();
 }

@@ -1,4 +1,4 @@
-#include "GamePadAxis.h"
+ï»¿#include "GamePadAxis.h"
 #include "Common.h"
 #include <climits>
 #include <cmath>
@@ -9,13 +9,13 @@ GamePadAxis::GamePadAxis():
 {
 }
 
-// •„†•t16ƒrƒbƒg‚Ì’l‚ğ-1.0`1.0‚ÌA‘Š‘Î“I‚È’l‚Å•\‚·ƒ‰ƒ€ƒ_®
-// cpp‚Å‚Ì’è‹`‚È‚Ì‚Å‘¼ƒNƒ‰ƒX‚Å‚Íg‚¦‚È‚¢
+// ç¬¦å·ä»˜16ãƒ“ãƒƒãƒˆã®å€¤ã‚’-1.0ï½1.0ã®ã€ç›¸å¯¾çš„ãªå€¤ã§è¡¨ã™ãƒ©ãƒ ãƒ€å¼
+// cppã§ã®å®šç¾©ãªã®ã§ä»–ã‚¯ãƒ©ã‚¹ã§ã¯ä½¿ãˆãªã„
 auto GetRelativeValue = [](Sint16 val)
 {
 	float floatAbsVal = static_cast<float>(fabsf(val));
 
-	// val‚ª³‚È‚çshortŒ^Å‘å’l‚ğA•‰‚È‚çÅ¬’l‚ğ‘ã“ü
+	// valãŒæ­£ãªã‚‰shortå‹æœ€å¤§å€¤ã‚’ã€è² ãªã‚‰æœ€å°å€¤ã‚’ä»£å…¥
 	Sint16 maxOrMin = ((val >= 0) ? SHRT_MAX : SHRT_MIN);
 
 	return floatAbsVal / maxOrMin;

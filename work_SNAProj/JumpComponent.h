@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "ComponentBase.h"
 #include "BitFlagFunc.h"
 
-// À‘•’†EEE
+// å®Ÿè£…ä¸­ãƒ»ãƒ»ãƒ»
 class JumpComponent : public ComponentBase
 {
 public:

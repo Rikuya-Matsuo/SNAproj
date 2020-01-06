@@ -1,4 +1,4 @@
-#include "StageBase.h"
+ï»¿#include "StageBase.h"
 #include "Block.h"
 #include "Floor.h"
 
@@ -14,7 +14,7 @@ StageBase::StageBase():
 
 StageBase::~StageBase()
 {
-	// ƒƒ‚ƒŠíœ
+	// ãƒ¡ãƒ¢ãƒªå‰Šé™¤
 	if (mBlocks != nullptr)
 	{
 		for (Uint8 i = 0; i < mBlockMassY; ++i)
@@ -32,20 +32,20 @@ void StageBase::Load(const std::string & fileName)
 
 void StageBase::Construct()
 {
-	// ƒuƒƒbƒN‚ªnull‚È‚çs‚í‚È‚¢
+	// ãƒ–ãƒ­ãƒƒã‚¯ãŒnullãªã‚‰è¡Œã‚ãªã„
 	if (mBlocks == nullptr)
 	{
 		SDL_Log("Stage : Block is not set! Fail to construction.\n");
 		return;
 	}
-	// ƒXƒe[ƒW‚Ìc‰¡ƒuƒƒbƒN”‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚às‚í‚È‚¢
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã®ç¸¦æ¨ªãƒ–ãƒ­ãƒƒã‚¯æ•°ãŒè¨­å®šã•ã‚Œã¦ã„ãªã„å ´åˆã‚‚è¡Œã‚ãªã„
 	else if (mBlockMassX <= 0 || mBlockMassY <= 0)
 	{
 		SDL_Log("Stage : Block mass is invalid value. Fail to construction.\n");
 	}
 
 	///////////////////////////////////////
-	// ƒuƒƒbƒN¶¬
+	// ãƒ–ãƒ­ãƒƒã‚¯ç”Ÿæˆ
 	///////////////////////////////////////
 	for (int yBlock = 0; yBlock < mBlockMassY; ++yBlock)
 	{
@@ -53,37 +53,37 @@ void StageBase::Construct()
 		{
 			const Uint8 blockType = mBlocks[yBlock][xBlock];
 
-			// ƒuƒƒbƒN”z’uƒf[ƒ^“à‚Ì’l‚ª0‚Å‚ ‚ê‚Î¶¬‚µ‚È‚¢
+			// ãƒ–ãƒ­ãƒƒã‚¯é…ç½®ãƒ‡ãƒ¼ã‚¿å†…ã®å€¤ãŒ0ã§ã‚ã‚Œã°ç”Ÿæˆã—ãªã„
 			if (!blockType)
 			{
 				continue;
 			}
 
-			// ¶¬
+			// ç”Ÿæˆ
 			Block * const bk = new Block(mBlockTexturePath);
 			bk->SetScale(mBlockScale);
 
-			// ƒuƒƒbƒN‚Ì‚‚³‚Ì”¼•ª‚ğŒvZ
+			// ãƒ–ãƒ­ãƒƒã‚¯ã®é«˜ã•ã®åŠåˆ†ã‚’è¨ˆç®—
 			const float blockHalfHeight = (Block::mModelSize / 2) * mBlockScale;
 
-			// ˆê”Ô‰º‚Ì’i‚ÌƒuƒƒbƒN‚Ìã–Ê‚ª‚‚³0‚Æ‚È‚é‚æ‚¤A¶¬‚·‚éˆÊ’u‚ğŒvZ
+			// ä¸€ç•ªä¸‹ã®æ®µã®ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šé¢ãŒé«˜ã•0ã¨ãªã‚‹ã‚ˆã†ã€ç”Ÿæˆã™ã‚‹ä½ç½®ã‚’è¨ˆç®—
 			Vector3D pos(Block::mModelSize * mBlockScale * xBlock, 0.0f, Block::mModelSize * mBlockScale * (mBlockMassY - (yBlock + 1)) - blockHalfHeight);
 
-			// ˆÊ’uî•ñ‘ã“ü
+			// ä½ç½®æƒ…å ±ä»£å…¥
 			bk->SetPosition(pos);
 		}
 	}
 
 	////////////////////////////////////////////////
-	// ƒuƒƒbƒN‚Ì‚³‚ç‚É‰º‚É•\¦‚·‚é°‚Ì¶¬
+	// ãƒ–ãƒ­ãƒƒã‚¯ã®ã•ã‚‰ã«ä¸‹ã«è¡¨ç¤ºã™ã‚‹åºŠã®ç”Ÿæˆ
 	////////////////////////////////////////////////
-	// ¶¬ˆÊ’u‚ğŒvZ
+	// ç”Ÿæˆä½ç½®ã‚’è¨ˆç®—
 	Vector3D flrPos;
 	flrPos.x = mBlockMassX * Block::mModelSize * mBlockScale / 2.0f;
 	flrPos.y = 0.0f;
 	flrPos.z = -(Block::mModelSize * mBlockScale);
 
-	// ¶¬
+	// ç”Ÿæˆ
 	Floor * const flr = new Floor(mFloorTexturePath);
 	flr->SetPosition(flrPos);
 	flr->SetScale(mFloorScale);

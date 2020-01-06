@@ -1,4 +1,4 @@
-#include "BGObject.h"
+ï»¿#include "BGObject.h"
 #include "System.h"
 #include "MeshComponent.h"
 #include "Mesh.h"
@@ -12,7 +12,7 @@ BGObject::BGObject(const std::string & meshFileName):
 	{
 		mc->SetMesh(msh);
 
-		// ƒIƒuƒWƒFƒNƒg‚ÌƒTƒCƒY‚ðŒvŽZ
+		// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚µã‚¤ã‚ºã‚’è¨ˆç®—
 		AABB box = msh->GetCollisionBox();
 		mModelSize = box.mMax - box.mMin;
 	}

@@ -1,4 +1,4 @@
-#include "Floor.h"
+ï»¿#include "Floor.h"
 #include "System.h"
 #include "MeshComponent.h"
 #include "Mesh.h"
@@ -10,22 +10,22 @@ Floor::Floor(const std::string & texturePath)
 	bool texLoadSucess = msh->LoadTexture(texturePath, System::GetInstance().GetRenderer(), this);
 	if (!texLoadSucess)
 	{
-		SDL_Log("ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh‚É¸”s\n");
+		SDL_Log("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—\n");
 	}
 
 	if (!mc)
 	{
-		SDL_Log("ƒƒbƒVƒ…‚Ìƒ[ƒh‚É¸”s\n");
+		SDL_Log("ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—\n");
 	}
 	else
 	{
 		mc->SetMesh(msh);
 	}
 
-	// ‰ñ“]
+	// å›è»¢
 	mRotation = Quaternion(Vector3D(1, 0, 0), static_cast<float>(M_PI / 2.0f));
 
-	// ƒtƒ‰ƒO’²®
+	// ãƒ•ãƒ©ã‚°èª¿æ•´
 	mFlags &= ~(mAffectGravityFlagMask | mMovalFlagMask);
 }
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "SDL/SDL.h"
 #include <string>
 
@@ -8,7 +8,7 @@ public:
 	StageBase();
 	~StageBase();
 
-	// –¢À‘•
+	// æœªå®Ÿè£…
 	virtual void Load(const std::string & fileName);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
@@ -27,6 +27,6 @@ protected:
 
 	float mFloorScale;
 
-	// ƒuƒƒbƒN”z’u”z—ñ‚ÉŠî‚Ã‚¢‚ÄƒuƒƒbƒN‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚éB
+	// ãƒ–ãƒ­ãƒƒã‚¯é…ç½®é…åˆ—ã«åŸºã¥ã„ã¦ãƒ–ãƒ­ãƒƒã‚¯ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ã€‚
 	void Construct();
 };
