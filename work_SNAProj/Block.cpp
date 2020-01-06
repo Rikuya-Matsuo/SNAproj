@@ -5,7 +5,7 @@
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 
-const float Block::mModelSize = 1.0f;
+const float Block::mModelSize = 100.0f;
 
 Block::Block(const std::string & texturePath):
 	Actor()

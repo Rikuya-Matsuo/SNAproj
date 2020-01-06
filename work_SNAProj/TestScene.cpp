@@ -21,7 +21,7 @@ TestScene::TestScene()
 	p->SetScale(25.0f);
 
 	TestStage * ts = new TestStage;
-	ts->SetBlockScale(30.0f);
+	ts->SetBlockScale(0.3f);
 	ts->Load("");
 
 	GenerateBGWall(ts->GetFloorHeight());
