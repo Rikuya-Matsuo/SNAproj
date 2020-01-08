@@ -1,5 +1,6 @@
 ﻿#include "Player.h"
 #include "Common.h"
+#include "CompletionMeshActor.h"
 #include "MeshComponent.h"
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
@@ -16,14 +17,24 @@ Player::Player():
 	mDetectGroundFlag(false),
 	mLookRightFlag(true),
 	mGroundChecker(nullptr),
-	mAttackCollider(nullptr)
+	mAttackCollider(nullptr),
+	mCurrentAnimation(AnimationPattern::Anim_Stay)
 {
 	// メッシュのロード
-	MeshComponent * mc = new MeshComponent(this, 300);
+	const int drawOrder = 300;
+	MeshComponent * mc = new MeshComponent(this, drawOrder);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(), this,
 		10, 10, 1, 128, 128, 0.07f, 0);
 	mc->SetMesh(mMesh);
+
+	// チップからはみ出た部分を描画するためのアクター
+	mCompletionMeshActor = new CompletionMeshActor(this, drawOrder);
+	Mesh * completionMesh = mCompletionMeshActor->GetMesh();
+	AABB complMeshBox = completionMesh->GetCollisionBox();
+	const float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
+	Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
+	mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
 
 	// コライダーの設定
 	mBoxCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
@@ -109,14 +120,19 @@ void Player::UpdateActor1()
 	}
 
 	// 向き変更
-	Vector3D rotateAxis(0.0f, 0.0f, 1.0f);
 	if (mInputComponent->GetRightKey())
 	{
 		if (!mLookRightFlag)
 		{
-			mRotation = Quaternion(rotateAxis, 0.0f);
+			mRotationAngle = 0.0f;
+
+			mRotation = Quaternion(mRotationAxis, mRotationAngle);
 
 			mLookRightFlag = true;
+
+			Vector3D offset = mCompletionMeshActor->GetPositionOffset();
+
+			mCompletionMeshActor->SetPositionOffset(offset * -1);
 
 			mFlags |= mCalculateTransformFlagMask;
 		}
@@ -125,9 +141,15 @@ void Player::UpdateActor1()
 	{
 		if (mLookRightFlag)
 		{
-			mRotation = Quaternion(rotateAxis, static_cast<float>(M_PI));
+			mRotationAngle = static_cast<float>(M_PI);
+
+			mRotation = Quaternion(mRotationAxis, mRotationAngle);
 
 			mLookRightFlag = false;
+
+			Vector3D offset = mCompletionMeshActor->GetPositionOffset();
+
+			mCompletionMeshActor->SetPositionOffset(offset * -1);
 
 			mFlags |= mCalculateTransformFlagMask;
 		}
@@ -135,6 +157,21 @@ void Player::UpdateActor1()
 
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;
+
+	if (mScale != mCompletionMeshActor->GetScale())
+	{
+		Mesh * completionMesh = mCompletionMeshActor->GetMesh();
+		AABB complMeshBox = completionMesh->GetCollisionBox();
+		float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
+		if (!mLookRightFlag)
+		{
+			offsetX *= -1;
+		}
+		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
+		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
+	}
+	// チップ補完アクターにも現在のアニメーションを伝える
+	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
 
 	// 基底クラスのほうも呼ぶ
 	Actor::UpdateActor1();

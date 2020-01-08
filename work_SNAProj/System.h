@@ -40,6 +40,8 @@ public:
 
 	void DeresisterActor(const Actor * in_act);
 
+	void RequestSortActor() { mSortActorFlag = true; }
+
 	void ResisterDrawComponent(const DrawComponentBase * in_cmp);
 
 	void DeresisterDrawComponent(const DrawComponentBase * in_cmp);
@@ -69,12 +71,16 @@ private:
 
 	int mWindowHeight;
 
+	bool mSortActorFlag;
+
 	std::list<Actor *> mActorList;
 
 	std::list<DrawComponentBase *> mSpriteComponentList;
 
 	void UpdateDeltaTime();
 	
+	void SortActor();
+
 	void FixActorPosition();
 
 	void UpdateScene();

@@ -40,6 +40,7 @@ Mesh::Mesh()
 	: mVertexArray(nullptr)
 	, mRadius(0.0f)
 	, mSpecPower(100.0f)
+	, mFlags(0)
 {
 	
 }
@@ -279,10 +280,10 @@ void Mesh::Unload()
 
 void Mesh::Update(const Actor * actor)
 {
-	if (mAnimations[actor].count(mActiveAnimIndex))
+	if (mAnimations[actor].count(mActiveAnimIndex[actor]))
 	{
 		// エイリアス生成
-		AnimationChips * animChips = mAnimations[actor][mActiveAnimIndex];
+		AnimationChips * animChips = mAnimations[actor][mActiveAnimIndex[actor]];
 
 		// アニメーションの更新
 		animChips->Update();

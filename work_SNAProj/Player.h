@@ -5,6 +5,7 @@ class Mesh;
 class InputMoveComponent;
 class BoxColliderComponent;
 class JumpComponent;
+class CompletionMeshActor;
 
 // 大量生成するものではないのでビットフラグは使わない
 
@@ -15,6 +16,14 @@ public:
 	~Player();
 
 private:
+	enum AnimationPattern
+	{
+		Anim_Stay = 0,
+		Anim_DashAttack,
+		Anim_DashAttackCompletion,
+		Anim_Invalid
+	};
+
 	Mesh * mMesh;
 
 	InputMoveComponent * mInputComponent;
@@ -27,11 +36,15 @@ private:
 
 	JumpComponent * mJumpComponent;
 
+	CompletionMeshActor * mCompletionMeshActor;
+
 	bool mLandingFlag;
 
 	bool mDetectGroundFlag;
 
 	bool mLookRightFlag;
+
+	char mCurrentAnimation;
 
 	std::list<const ColliderComponentBase*> mLandingGrounds;
 

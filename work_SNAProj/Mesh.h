@@ -45,8 +45,12 @@ public:
 
 	AnimationChips * GetAnimChips(const Actor* actor, int index);
 
+	void SetAnimChips(AnimationChips * anim, const Actor * actor, int index) { mAnimations[actor][index] = anim; }
+
 	void SetAnimModeFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAnimModeFlagMask); }
 	bool GetAnimModeFlag() const { return mFlags & mAnimModeFlagMask; }
+
+	void SetAnimIndex(const Actor * actor, int index) { mActiveAnimIndex[actor] = index; }
 
 	bool GetAnimLoopEndFlag() const { return mFlags & mAnimLoopEndFlagMask; }
 
@@ -76,6 +80,8 @@ private:
 
 	std::unordered_map<const Actor*, AnimChipCollection> mAnimations;
 
+	std::unordered_map<const Actor *, int> mActiveAnimIndex;
+
 	// アニメーションが持ってるテクスチャをインデックスで管理
 	//std::unordered_map<int, std::vector<Texture *>> mAnimTex;
 
@@ -87,5 +93,4 @@ private:
 
 	AABB mBox;																// バウンディングボックス
 
-	int mActiveAnimIndex;
 };

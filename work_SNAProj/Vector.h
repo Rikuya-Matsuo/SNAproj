@@ -57,6 +57,19 @@ public:
 		return Vector3D(vec.x * scalar, vec.y * scalar, vec.z * scalar);
 	}
 
+	friend bool operator==(const Vector3D& left, const Vector3D& right)
+	{
+		return
+			left.x == right.x &&
+			left.y == right.y &&
+			left.z == right.z;
+	}
+
+	friend bool operator!=(const Vector3D& left, const Vector3D& right)
+	{
+		return !(left == right);
+	}
+
 	// Scalar *=
 	Vector3D& operator*=(float scalar)
 	{

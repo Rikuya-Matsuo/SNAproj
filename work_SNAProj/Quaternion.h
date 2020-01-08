@@ -159,5 +159,19 @@ public:
 		return retVal;
 	}
 
+	friend bool operator==(const Quaternion& left, const Quaternion& right)
+	{
+		return
+			left.x == right.x &&
+			left.y == right.y &&
+			left.z == right.z &&
+			left.w == right.w;
+	}
+
+	friend bool operator!=(const Quaternion& left, const Quaternion& right)
+	{
+		return !(left == right);
+	}
+
 	static const Quaternion Identity;
 };

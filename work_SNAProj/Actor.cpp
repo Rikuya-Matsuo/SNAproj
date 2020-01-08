@@ -16,9 +16,12 @@ const Actor::FlagType Actor::mPlayerFlagMask					= 1 << 6;
 Actor::Actor():
 	mPosition(Vector3D::zero),
 	mMoveVector(Vector3D::zero),
+	mRotationAxis(Vector3D(0.0f, 0.0f, 1.0f)),
 	mLimitSpeed(Vector3D(50.0f, 0.0f, 50.0f)),
 	mFixVector(Vector3D::zero),
 	mPushedVector(Vector3D::zero),
+	mPriority(0),
+	mRotationAngle(0.0f),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
 	mFlags(mAffectGravityFlagMask | mMovalFlagMask | mCalculateTransformFlagMask)
@@ -107,7 +110,7 @@ void Actor::UpdateComponents()
 void Actor::SortComponents()
 {
 	// 見よ！これがラムダ式を使ったソートである！
-	mComponentList.sort([](ComponentBase * lhs, ComponentBase * rhs) { return lhs->GetPriority() < rhs->GetPriority(); });
+	mComponentList.sort([](ComponentBase * lhs, ComponentBase * rhs) { return lhs->GetPriority() <= rhs->GetPriority(); });
 }
 
 void Actor::UpdateActor0()
@@ -158,6 +161,12 @@ void Actor::ClampSpeed()
 	clamp(mMoveVector.x, mLimitSpeed.x);
 	clamp(mMoveVector.y, mLimitSpeed.y);
 	clamp(mMoveVector.z, mLimitSpeed.z);
+}
+
+void Actor::SetPriority(int value)
+{
+	mPriority = value;
+	System::GetInstance().RequestSortActor();
 }
 
 void Actor::SetFixVector(const Vector3D & vec)

@@ -23,13 +23,16 @@ public:
 	void SetMoveVector(const Vector3D & vec) { mMoveVector = vec; }
 	const Vector3D& GetMoveVector() const { return mMoveVector; }
 
+	const Vector3D& GetRotationAxis() const { return mRotationAxis; }
+	float GetRotationAngle() const { return mRotationAngle; }
+
 	const Matrix4& GetWorldTransform() const { return mWorldTransform; }
 
 	void SetScale(float scale) { mScale = scale; }
 	float GetScale() const { return mScale; }
 
 	void SetRotation(const Quaternion & q) { mRotation = q; }
-	const Quaternion& GetRotation() { return mRotation; }
+	const Quaternion& GetRotation() const { return mRotation; }
 
 	// コンポーネントの登録・登録解除
 	void ResisterComponent(const ComponentBase * in_cmp);
@@ -51,6 +54,8 @@ public:
 	bool GetPlayerFlag() const { return mFlags & mPlayerFlagMask; }
 
 	float GetFallSpeedRate() const { return mFallSpeedRate; }
+
+	int GetPriority() const { return mPriority; }
 
 	void SetFixVector(const Vector3D & vec);
 	void FixPosition();
@@ -78,6 +83,9 @@ protected:
 
 	Vector3D mMoveVector;
 
+	Vector3D mRotationAxis;
+	float mRotationAngle;
+
 	// 秒間どのくらい動くかの各成分の制限値
 	Vector3D mLimitSpeed;
 
@@ -90,6 +98,10 @@ protected:
 	Matrix4 mWorldTransform;
 
 	Quaternion mRotation;
+
+	// アップデートの順番
+	// 値が小さい方が先に行う
+	int mPriority;
 
 	float mScale;
 
@@ -107,4 +119,10 @@ protected:
 	void CalculateWorldTransform();
 
 	void ClampSpeed();
+
+	void SetPriority(int value);
+
+
+
+	public : FlagType GetBitFlag() const { return mFlags; }
 };

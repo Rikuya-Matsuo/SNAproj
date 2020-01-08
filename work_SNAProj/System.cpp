@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 #ifdef DEBUG_SNA
 Uint64 frameCount = 0;
@@ -20,7 +21,8 @@ System::System():
 	mCurrentScene(nullptr),
 	mRenderer(nullptr),
 	mWindowWidth(1024),
-	mWindowHeight(768)
+	mWindowHeight(768),
+	mSortActorFlag(false)
 {
 }
 
@@ -99,6 +101,12 @@ void System::Run()
 	while (!quitFlag)
 	{
 		UpdateDeltaTime();
+
+		if (mSortActorFlag)
+		{
+			SortActor();
+			mSortActorFlag = false;
+		}
 
 		Input::GetInstance().Update();
 
@@ -198,6 +206,11 @@ void System::UpdateDeltaTime()
 	}
 }
 
+void System::SortActor()
+{
+	mActorList.sort([](const Actor * lhs, const Actor * rhs) { return lhs->GetPriority() <= rhs->GetPriority(); });
+}
+
 void System::FixActorPosition()
 {
 	for (auto actor : mActorList)
@@ -280,7 +293,19 @@ void System::GravityFall()
 
 void System::ResisterActor(const Actor * in_act)
 {
-	mActorList.emplace_back(const_cast<Actor*>(in_act));
+	Actor * actor = const_cast<Actor*>(in_act);
+/*
+	int priority = actor->GetPriority();
+	for (auto itr = mActorList.begin(); itr != mActorList.end(); ++itr)
+	{
+		if (priority < (*itr)->GetPriority())
+		{
+			mActorList.insert(itr, actor);
+			return;
+		}
+	}
+*/
+	mActorList.emplace_back(const_cast<Actor*>(actor));
 }
 
 void System::DeresisterActor(const Actor * in_act)
