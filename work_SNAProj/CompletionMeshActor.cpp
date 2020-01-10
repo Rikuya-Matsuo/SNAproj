@@ -1,4 +1,4 @@
-#include "CompletionMeshActor.h"
+ï»¿#include "CompletionMeshActor.h"
 #include "Mesh.h"
 #include "MeshComponent.h"
 #include "AnimationChips.h"
@@ -22,8 +22,8 @@ CompletionMeshActor::CompletionMeshActor(const Actor * owner, int drawOrder):
 	mMeshComponent->SetMesh(mMesh);
 	//mMeshComponent->SetActive(false);
 
-	// ˆ—‡‚Ìİ’è
-	// Š—LÒ‚æ‚è‚àŒã‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+	// å‡¦ç†é †ã®è¨­å®š
+	// æ‰€æœ‰è€…ã‚ˆã‚Šã‚‚å¾Œã§ãªã‘ã‚Œã°ãªã‚‰ãªã„
 	SetPriority(mOwner->GetPriority() + 50);
 
 	AdaptPosition();
@@ -54,7 +54,7 @@ void CompletionMeshActor::SetPositionOffset(const Vector3D & offset)
 {
 	mPositionOffset = offset;
 
-	// ƒtƒ‰ƒO‚ğu”½“]‚µ‚Ä‚¢‚È‚¢vó‘Ô‚É‰Šú‰»
+	// ãƒ•ãƒ©ã‚°ã‚’ã€Œåè»¢ã—ã¦ã„ãªã„ã€çŠ¶æ…‹ã«åˆæœŸåŒ–
 	mFlipFlag &= ~mNowFlippingFlagMask;
 
 	AdaptPosition();
@@ -72,8 +72,8 @@ void CompletionMeshActor::FlipPositionOffset()
 		mPositionOffset.z *= -1;
 	}
 
-	Uint8 flipping = ((mFlipFlag & mNowFlippingFlagMask) ^ mNowFlippingFlagMask);		// ”½“]Œã‚Ìƒrƒbƒg‚Ì’l
-	Uint8 flipDir = (mFlipFlag & (mFlipXFlagMask | mFlipYFlagMask));					// ”½“]•ûŒüƒtƒ‰ƒO‚ğ’Šo
+	Uint8 flipping = ((mFlipFlag & mNowFlippingFlagMask) ^ mNowFlippingFlagMask);		// åè»¢å¾Œã®ãƒ“ãƒƒãƒˆã®å€¤
+	Uint8 flipDir = (mFlipFlag & (mFlipXFlagMask | mFlipYFlagMask));					// åè»¢æ–¹å‘ãƒ•ãƒ©ã‚°ã‚’æŠ½å‡º
 	mFlipFlag = flipping | flipDir;
 }
 
@@ -94,7 +94,7 @@ void CompletionMeshActor::UpdateActor0()
 {
 	UpdateTransformData();
 
-	// ƒCƒ“ƒfƒbƒNƒX‚ğŒŸõBƒqƒbƒg‚·‚ê‚Î•`‰æ‚·‚é‚ªA‚µ‚È‚¯‚ê‚Î•`‰æ‚µ‚È‚¢B
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æ¤œç´¢ã€‚ãƒ’ãƒƒãƒˆã™ã‚Œã°æç”»ã™ã‚‹ãŒã€ã—ãªã‘ã‚Œã°æç”»ã—ãªã„ã€‚
 	auto itr = std::find(mAnimIndexList.begin(), mAnimIndexList.end(), mCurrentIndex);
 	bool drawFlag = (itr != mAnimIndexList.end());
 	BitFlagFunc::SetFlagByBool(!drawFlag, mFlags, mStopDrawFlagMask_Base);
