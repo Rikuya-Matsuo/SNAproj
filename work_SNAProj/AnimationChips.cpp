@@ -5,6 +5,7 @@
 
 const AnimationChips::FlagType AnimationChips::mLoopEndFlagMask = 1 << 0;
 const AnimationChips::FlagType AnimationChips::mStopFlagMask = 1 << 1;
+std::unordered_map<std::string, std::vector<Texture*>> AnimationChips::mFrameTextureList;
 
 AnimationChips::AnimationChips():
 	mFlags(0),
@@ -64,6 +65,21 @@ void AnimationChips::Reset()
 
 size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, Texture * & texArray)
 {
+	// 検索し、同じ名前のファイルが読まれていた場合、その時のチップを渡す
+	if (mFrameTextureList.find(fileName) != mFrameTextureList.end())
+	{
+		mChipTextures.reserve(mFrameTextureList[fileName].size());
+		for (auto chip : mFrameTextureList[fileName])
+		{
+			mChipTextures.emplace_back(chip);
+		}
+		mChipTextures.shrink_to_fit();
+
+		texArray = *mChipTextures.data();
+
+		return mChipTextures.size();
+	}
+
 	SDL_Surface * srcSurface = IMG_Load(fileName.c_str());
 
 	// 読み込みに失敗したなら関数から抜ける
@@ -166,6 +182,20 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 				break;
 			}
 		}
+	}
+
+	// チップテクスチャ群の不要なメモリを解放
+	mChipTextures.shrink_to_fit();
+
+	// 移行同じ名前のチップが呼ばれたときに、チップのインスタンスを共有するように静的変数へ格納
+	if (textures)
+	{
+		mFrameTextureList[fileName].reserve(mChipTextures.size());
+		for (auto chip : mChipTextures)
+		{
+			mFrameTextureList[fileName].emplace_back(chip);
+		}
+		mFrameTextureList[fileName].shrink_to_fit();
 	}
 
 	// 転写元サーフェイスのメモリ解放

@@ -3,6 +3,7 @@
 #include "SDL/SDL_image.h"
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 class Renderer;
 class Texture;
@@ -37,6 +38,8 @@ private:
 	static const FlagType mLoopEndFlagMask;
 	static const FlagType mStopFlagMask;
 
+
+	static std::unordered_map<std::string, std::vector<Texture*>> mFrameTextureList;
 
 	FlagType mFlags;
 
