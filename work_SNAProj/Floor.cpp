@@ -26,7 +26,7 @@ Floor::Floor(const std::string & texturePath)
 	mRotation = Quaternion(Vector3D(1, 0, 0), static_cast<float>(M_PI / 2.0f));
 
 	// フラグ調整
-	mFlags &= ~(mAffectGravityFlagMask | mMovalFlagMask);
+	mFlags &= ~(mAffectGravityFlagMask_Base | mMovalFlagMask_Base);
 }
 
 

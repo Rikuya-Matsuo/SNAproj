@@ -17,7 +17,7 @@ BGObject::BGObject(const std::string & meshFileName):
 		mModelSize = box.mMax - box.mMin;
 	}
 
-	mFlags &= ~(mAffectGravityFlagMask | mMovalFlagMask);
+	mFlags &= ~(mAffectGravityFlagMask_Base | mMovalFlagMask_Base);
 }
 
 BGObject::~BGObject()

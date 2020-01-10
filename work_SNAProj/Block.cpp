@@ -24,7 +24,7 @@ Block::Block(const std::string & texturePath):
 	bcc->SetObjectBox(msh->GetCollisionBox());
 
 	// 重力落下を行わない。ヒット時に押し返されない。
-	mFlags &= ~(mAffectGravityFlagMask | mMovalFlagMask);
+	mFlags &= ~(mAffectGravityFlagMask_Base | mMovalFlagMask_Base);
 }
 
 Block::~Block()

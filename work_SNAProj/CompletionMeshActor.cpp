@@ -3,10 +3,15 @@
 #include "MeshComponent.h"
 #include "System.h"
 
+const Uint8 CompletionMeshActor::mFlipXFlagMask = 1 << 0;
+const Uint8 CompletionMeshActor::mFlipYFlagMask = 1 << 1;
+const Uint8 CompletionMeshActor::mNowFlippingFlagMask = 1 << 2;
+
 CompletionMeshActor::CompletionMeshActor(const Actor * owner, int drawOrder):
 	mOwner(owner),
 	mCurrentIndex(-1),
-	mPositionOffset(Vector3D::zero)
+	mPositionOffset(Vector3D::zero),
+	mFlipFlag(0)
 {
 	mRotationAxis = mOwner->GetRotationAxis();
 
@@ -56,7 +61,27 @@ void CompletionMeshActor::SetPositionOffset(const Vector3D & offset)
 {
 	mPositionOffset = offset;
 
+	// フラグを「反転していない」状態に初期化
+	mFlipFlag &= ~mNowFlippingFlagMask;
+
 	AdaptPosition();
+}
+
+void CompletionMeshActor::FlipPositionOffset()
+{
+	if (mFlipFlag & mFlipXFlagMask)
+	{
+		mPositionOffset.x *= -1;
+	}
+	
+	if (mFlipFlag & mFlipYFlagMask)
+	{
+		mPositionOffset.z *= -1;
+	}
+
+	Uint8 flipping = ((mFlipFlag & mNowFlippingFlagMask) ^ mNowFlippingFlagMask);		// 反転後のビットの値
+	Uint8 flipDir = (mFlipFlag & (mFlipXFlagMask | mFlipYFlagMask));					// 反転方向フラグを抽出
+	mFlipFlag = flipping | flipDir;
 }
 
 void CompletionMeshActor::UpdateActor0()
@@ -84,7 +109,7 @@ void CompletionMeshActor::UpdateTransformData()
 	{
 		mScale = mOwner->GetScale();
 
-		mFlags |= mCalculateTransformFlagMask;
+		mFlags |= mCalculateTransformFlagMask_Base;
 	}
 
 	if (rotaFlag)
@@ -93,13 +118,13 @@ void CompletionMeshActor::UpdateTransformData()
 
 		mRotation = Quaternion(mOwner->GetRotationAxis(), mRotationAngle);
 
-		mFlags |= mCalculateTransformFlagMask;
+		mFlags |= mCalculateTransformFlagMask_Base;
 	}
 
 	if (posFlag)
 	{
 		AdaptPosition();
 
-		mFlags |= mCalculateTransformFlagMask;
+		mFlags |= mCalculateTransformFlagMask_Base;
 	}
 }

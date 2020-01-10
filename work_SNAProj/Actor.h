@@ -17,7 +17,7 @@ public:
 
 	virtual void Update() final;
 
-	void SetPosition(const Vector3D & pos) { mPosition = pos; mFlags |= mCalculateTransformFlagMask; }
+	void SetPosition(const Vector3D & pos) { mPosition = pos; mFlags |= mCalculateTransformFlagMask_Base; }
 	const Vector3D& GetPosition() const { return mPosition; }
 
 	void SetMoveVector(const Vector3D & vec) { mMoveVector = vec; }
@@ -38,20 +38,20 @@ public:
 	void ResisterComponent(const ComponentBase * in_cmp);
 	void DeresisterComponent(const ComponentBase * in_cmp);
 
-	void RequestSortComponents() { mFlags |= mRequestComponentSortMask; }
+	void RequestSortComponents() { mFlags |= mRequestComponentSortMask_Base; }
 
-	void SetVisible(bool value) { BitFlagFunc::SetFlagByBool(!value, mFlags, mStopDrawFlagMask); }
-	bool GetVisibleFlag() const { return !(mFlags & mStopDrawFlagMask); }
+	void SetVisible(bool value) { BitFlagFunc::SetFlagByBool(!value, mFlags, mStopDrawFlagMask_Base); }
+	bool GetVisibleFlag() const { return !(mFlags & mStopDrawFlagMask_Base); }
 
-	void SetBeyondSceneFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mBeyondSceneFlagMask); }
-	bool GetBeyondSceneFlag() const { return mFlags & mBeyondSceneFlagMask; }
+	void SetBeyondSceneFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mBeyondSceneFlagMask_Base); }
+	bool GetBeyondSceneFlag() const { return mFlags & mBeyondSceneFlagMask_Base; }
 
-	void SetAffectGravityFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAffectGravityFlagMask); }
-	bool GetAffectGravityFlag() const { return mFlags & mAffectGravityFlagMask; }
+	void SetAffectGravityFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAffectGravityFlagMask_Base); }
+	bool GetAffectGravityFlag() const { return mFlags & mAffectGravityFlagMask_Base; }
 
-	bool GetMovalFlag() const { return mFlags & mMovalFlagMask; }
+	bool GetMovalFlag() const { return mFlags & mMovalFlagMask_Base; }
 
-	bool GetPlayerFlag() const { return mFlags & mPlayerFlagMask; }
+	bool GetPlayerFlag() const { return mFlags & mPlayerFlagMask_Base; }
 
 	float GetFallSpeedRate() const { return mFallSpeedRate; }
 
@@ -67,13 +67,13 @@ public:
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
 	typedef Uint8 FlagType;
-	static const FlagType mRequestComponentSortMask;	// コンポーネントのソートを要請するフラグのマスク
-	static const FlagType mStopDrawFlagMask;			// 描画をしないフラグのマスク
-	static const FlagType mBeyondSceneFlagMask;			// シーンをまたいでもアクターの削除をスキップするフラグのマスク
-	static const FlagType mAffectGravityFlagMask;		// 重力落下を行うかのフラグマスク（デフォルトで真）
-	static const FlagType mMovalFlagMask;				// 何か物と当たったときに押し返しの影響を受けるかのフラグマスク（デフォルト真）
-	static const FlagType mCalculateTransformFlagMask;	// 変形行列計算が必要であることのフラグマスク（デフォルトで真）
-	static const FlagType mPlayerFlagMask;				// 本番ではいらないかも
+	static const FlagType mRequestComponentSortMask_Base;		// コンポーネントのソートを要請するフラグのマスク
+	static const FlagType mStopDrawFlagMask_Base;				// 描画をしないフラグのマスク
+	static const FlagType mBeyondSceneFlagMask_Base;			// シーンをまたいでもアクターの削除をスキップするフラグのマスク
+	static const FlagType mAffectGravityFlagMask_Base;			// 重力落下を行うかのフラグマスク（デフォルトで真）
+	static const FlagType mMovalFlagMask_Base;					// 何か物と当たったときに押し返しの影響を受けるかのフラグマスク（デフォルト真）
+	static const FlagType mCalculateTransformFlagMask_Base;		// 変形行列計算が必要であることのフラグマスク（デフォルトで真）
+	static const FlagType mPlayerFlagMask_Base;					// 本番ではいらないかも
 
 	FlagType mFlags;
 

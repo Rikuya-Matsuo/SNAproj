@@ -35,6 +35,7 @@ Player::Player():
 	const float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
 	Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
 	mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
+	mCompletionMeshActor->SetFlipDirection(true, false);
 
 	// コライダーの設定
 	mBoxCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Player);
@@ -79,7 +80,7 @@ Player::Player():
 	mFallSpeedRate = 2.0f;
 
 	// プレイヤーであることを示すフラグ
-	mFlags |= mPlayerFlagMask;
+	mFlags |= mPlayerFlagMask_Base;
 }
 
 Player::~Player()
@@ -108,6 +109,21 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
+	// チップ補完アクターの設置方向を再設定
+	if (mScale != mCompletionMeshActor->GetScale())
+	{
+		Mesh * completionMesh = mCompletionMeshActor->GetMesh();
+		AABB complMeshBox = completionMesh->GetCollisionBox();
+		float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
+		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
+		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
+
+		if (!mLookRightFlag)
+		{
+			mCompletionMeshActor->FlipPositionOffset();
+		}
+	}
+
 	// ブレーキ
 	if (!mInputComponent->GetHorizonInputFlag())
 	{
@@ -130,11 +146,12 @@ void Player::UpdateActor1()
 
 			mLookRightFlag = true;
 
-			Vector3D offset = mCompletionMeshActor->GetPositionOffset();
+			if (mCompletionMeshActor->GetNowFlippingFlag())
+			{
+				mCompletionMeshActor->FlipPositionOffset();
+			}
 
-			mCompletionMeshActor->SetPositionOffset(offset * -1);
-
-			mFlags |= mCalculateTransformFlagMask;
+			mFlags |= mCalculateTransformFlagMask_Base;
 		}
 	}
 	else if (mInputComponent->GetLeftKey())
@@ -147,29 +164,18 @@ void Player::UpdateActor1()
 
 			mLookRightFlag = false;
 
-			Vector3D offset = mCompletionMeshActor->GetPositionOffset();
+			if (!mCompletionMeshActor->GetNowFlippingFlag())
+			{
+				mCompletionMeshActor->FlipPositionOffset();
+			}
 
-			mCompletionMeshActor->SetPositionOffset(offset * -1);
-
-			mFlags |= mCalculateTransformFlagMask;
+			mFlags |= mCalculateTransformFlagMask_Base;
 		}
 	}
 
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;
 
-	if (mScale != mCompletionMeshActor->GetScale())
-	{
-		Mesh * completionMesh = mCompletionMeshActor->GetMesh();
-		AABB complMeshBox = completionMesh->GetCollisionBox();
-		float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
-		if (!mLookRightFlag)
-		{
-			offsetX *= -1;
-		}
-		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
-		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
-	}
 	// チップ補完アクターにも現在のアニメーションを伝える
 	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
 

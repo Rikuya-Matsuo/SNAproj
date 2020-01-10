@@ -5,13 +5,13 @@
 #include <algorithm>
 #include <cmath>
 
-const Actor::FlagType Actor::mRequestComponentSortMask			= 1 << 0;
-const Actor::FlagType Actor::mStopDrawFlagMask					= 1 << 1;
-const Actor::FlagType Actor::mBeyondSceneFlagMask				= 1 << 2;
-const Actor::FlagType Actor::mAffectGravityFlagMask				= 1 << 3;
-const Actor::FlagType Actor::mMovalFlagMask						= 1 << 4;
-const Actor::FlagType Actor::mCalculateTransformFlagMask		= 1 << 5;
-const Actor::FlagType Actor::mPlayerFlagMask					= 1 << 6;
+const Actor::FlagType Actor::mRequestComponentSortMask_Base			= 1 << 0;
+const Actor::FlagType Actor::mStopDrawFlagMask_Base					= 1 << 1;
+const Actor::FlagType Actor::mBeyondSceneFlagMask_Base				= 1 << 2;
+const Actor::FlagType Actor::mAffectGravityFlagMask_Base				= 1 << 3;
+const Actor::FlagType Actor::mMovalFlagMask_Base						= 1 << 4;
+const Actor::FlagType Actor::mCalculateTransformFlagMask_Base		= 1 << 5;
+const Actor::FlagType Actor::mPlayerFlagMask_Base					= 1 << 6;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
@@ -24,7 +24,7 @@ Actor::Actor():
 	mRotationAngle(0.0f),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
-	mFlags(mAffectGravityFlagMask | mMovalFlagMask | mCalculateTransformFlagMask)
+	mFlags(mAffectGravityFlagMask_Base | mMovalFlagMask_Base | mCalculateTransformFlagMask_Base)
 {
 	System::GetInstance().ResisterActor(this);
 }
@@ -39,11 +39,11 @@ Actor::~Actor()
 
 void Actor::Update()
 {
-	if (mFlags & mCalculateTransformFlagMask)
+	if (mFlags & mCalculateTransformFlagMask_Base)
 	{
 		CalculateWorldTransform();
 
-		mFlags &= ~mCalculateTransformFlagMask;
+		mFlags &= ~mCalculateTransformFlagMask_Base;
 	}
 
 	UpdateActor0();
@@ -52,11 +52,11 @@ void Actor::Update()
 
 	UpdateActor1();
 
-	if (mFlags & mCalculateTransformFlagMask)
+	if (mFlags & mCalculateTransformFlagMask_Base)
 	{
 		CalculateWorldTransform();
 
-		mFlags &= ~mCalculateTransformFlagMask;
+		mFlags &= ~mCalculateTransformFlagMask_Base;
 	}
 }
 
@@ -90,12 +90,12 @@ void Actor::DeresisterComponent(const ComponentBase * in_cmp)
 void Actor::UpdateComponents()
 {
 	// コンポーネントのソートがリクエストされていた場合はソートを行う
-	if (mFlags & mRequestComponentSortMask)
+	if (mFlags & mRequestComponentSortMask_Base)
 	{
 		SortComponents();
 
 		// フラグを下す
-		mFlags &= ~mRequestComponentSortMask;
+		mFlags &= ~mRequestComponentSortMask_Base;
 	}
 
 	for (auto component : mComponentList)
@@ -125,7 +125,7 @@ void Actor::UpdateActor1()
 	{
 		mPosition += mMoveVector;
 
-		mFlags |= mCalculateTransformFlagMask;
+		mFlags |= mCalculateTransformFlagMask_Base;
 	}
 }
 
@@ -182,7 +182,7 @@ void Actor::FixPosition()
 	{
 		mPosition += mFixVector;
 
-		mFlags |= mCalculateTransformFlagMask;
+		mFlags |= mCalculateTransformFlagMask_Base;
 
 		if (mFixVector.x)
 		{

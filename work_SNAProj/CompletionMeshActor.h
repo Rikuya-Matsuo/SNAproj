@@ -22,7 +22,20 @@ public:
 
 	void AdaptPosition() { mPosition = mOwner->GetPosition() + mPositionOffset; }
 
+	void SetFlipDirection(bool xFlip, bool yFlip) { mFlipFlag = (xFlip ? mFlipXFlagMask : 0) | (yFlip ? mFlipYFlagMask : 0) | (mFlipFlag & mNowFlippingFlagMask); }
+
+	void FlipPositionOffset();
+
+	bool GetNowFlippingFlag() const { return mFlipFlag & mNowFlippingFlagMask; }
+
 private:
+	static const Uint8 mFlipXFlagMask;
+	static const Uint8 mFlipYFlagMask;
+	static const Uint8 mNowFlippingFlagMask;
+
+
+	Uint8 mFlipFlag;
+
 	const Actor * mOwner;
 
 	MeshComponent * mMeshComponent;
