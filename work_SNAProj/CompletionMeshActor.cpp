@@ -1,6 +1,7 @@
 #include "CompletionMeshActor.h"
 #include "Mesh.h"
 #include "MeshComponent.h"
+#include "AnimationChips.h"
 #include "System.h"
 
 const Uint8 CompletionMeshActor::mFlipXFlagMask = 1 << 0;
@@ -17,15 +18,7 @@ CompletionMeshActor::CompletionMeshActor(const Actor * owner, int drawOrder):
 
 	mMeshComponent = new MeshComponent(this, drawOrder);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
-	// テスト用に適当なアニメーションをロード
-	bool success = mMesh->LoadDivTexture("Assets/AnimChipTest.png", System::GetInstance().GetRenderer(), this, 3, 3, 1, 32, 32, 0.3f, 0);
-	if (!success)
-	{
-		SDL_Log("Graph for test load failed\n");
-	}
-	mAnimIndexList.emplace_back(0);
 	mMesh->SetAnimModeFlag(true);
-	mMesh->SetAnimIndex(this, 0);
 	mMeshComponent->SetMesh(mMesh);
 	//mMeshComponent->SetActive(false);
 
@@ -44,7 +37,7 @@ CompletionMeshActor::~CompletionMeshActor()
 void CompletionMeshActor::LoadAnimation(const std::string & filePath, Renderer * renderer, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, int animIndex)
 {
 	auto itr = std::find(mAnimIndexList.begin(), mAnimIndexList.end(), animIndex);
-	if (itr != mAnimIndexList.end())
+	if (itr != mAnimIndexList.end() || mAnimIndexList.empty())
 	{
 		mAnimIndexList.emplace_back(animIndex);
 	}
@@ -84,14 +77,32 @@ void CompletionMeshActor::FlipPositionOffset()
 	mFlipFlag = flipping | flipDir;
 }
 
+void CompletionMeshActor::ResetAnimation(int index)
+{
+	AnimationChips * anim = mMesh->GetAnimChips(this, index);
+
+	if (!anim)
+	{
+		SDL_Log("anim is null\n");
+		return;
+	}
+
+	anim->Reset();
+}
+
 void CompletionMeshActor::UpdateActor0()
 {
 	UpdateTransformData();
 
-	// インデックスを検索。ヒットすればメッシュコンポーネントをアクティブに、しなければ非アクティブに。
+	// インデックスを検索。ヒットすれば描画するが、しなければ描画しない。
 	auto itr = std::find(mAnimIndexList.begin(), mAnimIndexList.end(), mCurrentIndex);
-	bool activeFlag = (itr != mAnimIndexList.end());
-	mMeshComponent->SetActive(activeFlag);
+	bool drawFlag = (itr != mAnimIndexList.end());
+	BitFlagFunc::SetFlagByBool(!drawFlag, mFlags, mStopDrawFlagMask_Base);
+
+	if (drawFlag)
+	{
+		mMesh->SetAnimIndex(this, mCurrentIndex);
+	}
 }
 
 void CompletionMeshActor::UpdateActor1()

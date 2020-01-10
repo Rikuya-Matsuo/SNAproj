@@ -20,7 +20,6 @@ private:
 	{
 		Anim_Stay = 0,
 		Anim_DashAttack,
-		Anim_DashAttackCompletion,
 		Anim_Invalid
 	};
 

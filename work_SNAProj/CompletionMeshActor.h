@@ -28,6 +28,9 @@ public:
 
 	bool GetNowFlippingFlag() const { return mFlipFlag & mNowFlippingFlagMask; }
 
+	void ResetAnimation(int index);
+	void ResetActiveAnimation() { ResetAnimation(mCurrentIndex); }
+
 private:
 	static const Uint8 mFlipXFlagMask;
 	static const Uint8 mFlipYFlagMask;

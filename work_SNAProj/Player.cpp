@@ -25,11 +25,15 @@ Player::Player():
 	MeshComponent * mc = new MeshComponent(this, drawOrder);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(), this,
-		10, 10, 1, 128, 128, 0.07f, 0);
+		10, 10, 1, 128, 128, 0.07f, AnimationPattern::Anim_Stay);
+	mMesh->LoadDivTexture("Assets/NinjaDashAttack02.png", System::GetInstance().GetRenderer(), this,
+		8, 8, 1, 128, 128, 0.07f, AnimationPattern::Anim_DashAttack);
 	mc->SetMesh(mMesh);
 
 	// チップからはみ出た部分を描画するためのアクター
 	mCompletionMeshActor = new CompletionMeshActor(this, drawOrder);
+	mCompletionMeshActor->LoadAnimation("Assets/NinjaDashAttack02_completion.png", System::GetInstance().GetRenderer(),
+		8, 8, 1, 128, 128, 0.07f, AnimationPattern::Anim_DashAttack);
 	Mesh * completionMesh = mCompletionMeshActor->GetMesh();
 	AABB complMeshBox = completionMesh->GetCollisionBox();
 	const float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
@@ -99,6 +103,24 @@ void Player::UpdateActor0()
 	if (mLandingFlag && Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
 	{
 		mJumpComponent->Jump();
+	}
+
+	// ダッシュアタック
+	if (mCurrentAnimation == AnimationPattern::Anim_DashAttack && mMesh->GetAnimLoopEndFlag())
+	{
+		mMesh->GetActiveAnimChips(this)->Reset();
+		mCompletionMeshActor->ResetActiveAnimation();
+
+		mCurrentAnimation = AnimationPattern::Anim_Stay;
+
+		mMesh->SetAnimIndex(this, mCurrentAnimation);
+	}
+
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_A))
+	{
+		mCurrentAnimation = AnimationPattern::Anim_DashAttack;
+
+		mMesh->SetAnimIndex(this, mCurrentAnimation);
 	}
 
 	if (mLandingFlag)

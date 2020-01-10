@@ -45,6 +45,8 @@ public:
 
 	AnimationChips * GetAnimChips(const Actor* actor, int index);
 
+	AnimationChips * GetActiveAnimChips(const Actor* actor) { return GetAnimChips(actor, mActiveAnimIndex[actor]); }
+
 	void SetAnimChips(AnimationChips * anim, const Actor * actor, int index) { mAnimations[actor][index] = anim; }
 
 	void SetAnimModeFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAnimModeFlagMask); }
