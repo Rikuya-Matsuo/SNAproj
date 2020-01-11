@@ -46,7 +46,7 @@ void AnimationChips::Update()
 		// コマ数をオーバーしていれば0に戻す
 		if (mCurrentTextureIndex >= mChipTextures.size())
 		{
-			mCurrentTextureIndex = 0;
+			mCurrentTextureIndex -= mChipTextures.size();
 
 			// アニメーションのループが一周したことを示すフラグを立てる
 			mFlags |= mLoopEndFlagMask;
@@ -61,6 +61,9 @@ void AnimationChips::Reset()
 {
 	mCurrentTextureIndex = 0;
 	mTimer = 0.0f;
+
+	// ループ終了フラグを初期化
+	mFlags &= ~mLoopEndFlagMask;
 }
 
 size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, Texture * & texArray)

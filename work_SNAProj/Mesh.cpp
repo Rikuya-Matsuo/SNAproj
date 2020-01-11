@@ -285,15 +285,18 @@ void Mesh::Update(const Actor * actor)
 		// エイリアス生成
 		AnimationChips * animChips = mAnimations[actor][mActiveAnimIndex[actor]];
 
-		// アニメーションの更新
-		animChips->Update();
+		if (animChips)
+		{
+			// アニメーションの更新
+			animChips->Update();
 
-		// テクスチャ取得
-		mCurrentTexture[actor] = animChips->GetCurrentTexture();
+			// テクスチャ取得
+			mCurrentTexture[actor] = animChips->GetCurrentTexture();
 
-		// アニメーションループ終了フラグの取得
-		bool loopEnd = animChips->GetLoopEndFlag();
-		BitFlagFunc::SetFlagByBool(loopEnd, mFlags, mAnimLoopEndFlagMask);
+			// アニメーションループ終了フラグの取得
+			bool loopEnd = animChips->GetLoopEndFlag();
+			BitFlagFunc::SetFlagByBool(loopEnd, mFlags, mAnimLoopEndFlagMask);
+		}
 	}
 }
 
