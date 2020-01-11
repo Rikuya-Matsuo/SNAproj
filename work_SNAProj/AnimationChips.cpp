@@ -77,9 +77,12 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 
 		texArray = *mChipTextures.data();
 
+		mSecondPerFrame = secondPerFrame;
+
 		return mChipTextures.size();
 	}
 
+	// まだ読んだことのないファイルだった場合は読み込む
 	SDL_Surface * srcSurface = IMG_Load(fileName.c_str());
 
 	// 読み込みに失敗したなら関数から抜ける
