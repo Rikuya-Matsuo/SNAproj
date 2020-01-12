@@ -20,6 +20,8 @@ class System final
 public:
 	~System();
 
+	static const float mMaxDeltaTime;
+
 	static System& GetInstance()
 	{
 		static System instance;

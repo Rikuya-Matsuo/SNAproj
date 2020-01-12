@@ -26,6 +26,8 @@ class PhysicManager final
 public:
 	~PhysicManager();
 
+	static const float mGravityAcceleration;
+
 	static PhysicManager & GetInstance()
 	{
 		static PhysicManager instance;
@@ -56,8 +58,6 @@ private:
 	};
 
 	PhysicManager();
-
-	const float mGravityAcceleration;
 
 	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>> mColliders;
 

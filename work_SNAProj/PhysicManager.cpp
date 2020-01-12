@@ -8,6 +8,8 @@
 #include <cstdlib>
 #include <algorithm>
 
+const float PhysicManager::mGravityAcceleration = 1.0f;
+
 #define HIT_CHECK_TYPE 1
 void PhysicManager::CheckHit()
 {
@@ -624,8 +626,7 @@ void PhysicManager::SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair)
 	}
 }
 
-PhysicManager::PhysicManager():
-	mGravityAcceleration(9.8f)
+PhysicManager::PhysicManager()
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)

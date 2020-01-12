@@ -26,6 +26,8 @@ CompletionMeshActor::CompletionMeshActor(const Actor * owner, int drawOrder):
 	// 所有者よりも後でなければならない
 	SetPriority(mOwner->GetPriority() + 50);
 
+	mFlags &= ~mAffectGravityFlagMask_Base;
+
 	AdaptPosition();
 }
 
@@ -132,10 +134,10 @@ void CompletionMeshActor::UpdateTransformData()
 		mFlags |= mCalculateTransformFlagMask_Base;
 	}
 
+	AdaptPosition();
+
+	mFlags |= mCalculateTransformFlagMask_Base;
 	if (posFlag)
 	{
-		AdaptPosition();
-
-		mFlags |= mCalculateTransformFlagMask_Base;
 	}
 }

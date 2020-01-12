@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include "ComponentBase.h"
-#include "BitFlagFunc.h"
 
-// 実装中・・・
 class JumpComponent : public ComponentBase
 {
 public:
@@ -12,6 +10,9 @@ public:
 	void Update() override;
 
 	void Jump() { mJumpFlags |= mTimingFlagMask; }
+
+	// その高さのジャンプができるだけのPowerにセットする
+	void SetJumpHeight(float height, float timeToGetHighest);
 
 	void SetPower(float power) { mPower = power; }
 

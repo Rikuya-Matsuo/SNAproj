@@ -77,7 +77,8 @@ Player::Player():
 	mInputComponent->SetVerticalSpeed(-speed);
 
 	// ジャンプ機能
-	mJumpComponent = new JumpComponent(this, 10000.0f);
+	mJumpComponent = new JumpComponent(this);
+	mJumpComponent->SetJumpHeight(100.0f, 1.5f);
 
 	// 最大速度を調整
 	Vector3D limitSpeed(100.0f, 0.0f, 100.0f);
@@ -85,7 +86,7 @@ Player::Player():
 	csc->SetClampDirectionFlags(true, false, false);
 
 	// 落下スピード割合の調整
-	mFallSpeedRate = 2.0f;
+	mFallSpeedRate = 1.0f;
 
 	// プレイヤーであることを示すフラグ
 	mFlags |= mPlayerFlagMask_Base;
@@ -117,10 +118,19 @@ void Player::UpdateActor0()
 		mMesh->SetAnimIndex(this, mCurrentAnimation);
 	}
 
+	std::string landingState;
+	landingState.reserve(6);
 	if (mLandingFlag)
 	{
 		mLandingFlag = false;
+		landingState = "true";
 	}
+	else
+	{
+		landingState = "false";
+	}
+
+	SDL_Log("Landing state : %s", landingState.c_str());
 }
 
 void Player::UpdateActor1()
@@ -206,9 +216,6 @@ void Player::UpdateActor1()
 
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;
-
-	// 現在の高さをデバッグ表示
-	SDL_Log("Height : %lf", mPosition.z + mMoveVector.z);
 
 	// チップ補完アクターにも現在のアニメーションを伝える
 	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);

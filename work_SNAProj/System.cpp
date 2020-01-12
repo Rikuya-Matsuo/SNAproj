@@ -16,6 +16,7 @@
 Uint64 frameCount = 0;
 #endif // DEBUG_SNA
 
+const float System::mMaxDeltaTime = 1.0f / 30.0f;
 
 System::System():
 	mCurrentScene(nullptr),
@@ -199,10 +200,10 @@ void System::UpdateDeltaTime()
 	SDL_Log("%lf", mDeltaTime);
 #endif
 
-	// 30フレームのゲームにそぐわない値ならば調整する
-	if (mDeltaTime > 1 / 30.0f)
+	// 値が大きすぎれば調節する
+	if (mDeltaTime > mMaxDeltaTime)
 	{
-		mDeltaTime = 1 / 30.0f;
+		mDeltaTime = mMaxDeltaTime;
 	}
 }
 
