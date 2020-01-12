@@ -5,6 +5,7 @@
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 #include "JumpComponent.h"
+#include "ClampSpeedComponent.h"
 #include "AnimationChips.h"
 #include "Mesh.h"
 #include "System.h"
@@ -76,10 +77,12 @@ Player::Player():
 	mInputComponent->SetVerticalSpeed(-speed);
 
 	// ジャンプ機能
-	mJumpComponent = new JumpComponent(this);
+	mJumpComponent = new JumpComponent(this, 10000.0f);
 
 	// 最大速度を調整
-	mLimitSpeed = Vector3D(100.0f, 0.0f, 100.0f);
+	Vector3D limitSpeed(100.0f, 0.0f, 100.0f);
+	ClampSpeedComponent * csc = new ClampSpeedComponent(this, limitSpeed);
+	csc->SetClampDirectionFlags(true, false, false);
 
 	// 落下スピード割合の調整
 	mFallSpeedRate = 2.0f;
@@ -204,11 +207,11 @@ void Player::UpdateActor1()
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;
 
+	// 現在の高さをデバッグ表示
+	SDL_Log("Height : %lf", mPosition.z + mMoveVector.z);
+
 	// チップ補完アクターにも現在のアニメーションを伝える
 	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
-
-	// 基底クラスのほうも呼ぶ
-	Actor::UpdateActor1();
 }
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)

@@ -27,13 +27,14 @@ void JumpComponent::Update()
 
 		moveVec.z += mPower * System::GetInstance().GetDeltaTime();
 
-		mTimer += System::GetInstance().GetDeltaTime();
+		mJumpFlags &= ~mTimingFlagMask;
+
+		/*mTimer += System::GetInstance().GetDeltaTime();
 		if (mTimer > mPushUpTimeCount)
 		{
-			mJumpFlags &= ~mTimingFlagMask;
 
 			mTimer = 0.0f;
-		}
+		}*/
 
 		mOwner->SetMoveVector(moveVec);
 	}

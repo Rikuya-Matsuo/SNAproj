@@ -17,7 +17,6 @@ Actor::Actor():
 	mPosition(Vector3D::zero),
 	mMoveVector(Vector3D::zero),
 	mRotationAxis(Vector3D(0.0f, 0.0f, 1.0f)),
-	mLimitSpeed(Vector3D(50.0f, 0.0f, 50.0f)),
 	mFixVector(Vector3D::zero),
 	mPushedVector(Vector3D::zero),
 	mPriority(0),
@@ -51,6 +50,14 @@ void Actor::Update()
 	UpdateComponents();
 
 	UpdateActor1();
+
+	// 移動が発生しているなら移動させる
+	if (mMoveVector.LengthSq())
+	{
+		mPosition += mMoveVector;
+
+		mFlags |= mCalculateTransformFlagMask_Base;
+	}
 
 	if (mFlags & mCalculateTransformFlagMask_Base)
 	{
@@ -119,14 +126,6 @@ void Actor::UpdateActor0()
 
 void Actor::UpdateActor1()
 {
-	ClampSpeed();
-
-	if (mMoveVector.LengthSq())
-	{
-		mPosition += mMoveVector;
-
-		mFlags |= mCalculateTransformFlagMask_Base;
-	}
 }
 
 void Actor::CalculateWorldTransform()
@@ -136,31 +135,6 @@ void Actor::CalculateWorldTransform()
 	mWorldTransform *= Matrix4::CreateFromQuaternion(mRotation);
 
 	mWorldTransform *= Matrix4::CreateTranslation(mPosition);
-}
-
-void Actor::ClampSpeed()
-{
-	auto clamp = [](float & speed, float limit)
-	{
-		// 万が一limitに負の値が入っていた時のために絶対値を取っておく
-		limit = fabsf(limit);
-
-		// デルタタイム基準に変える
-		limit *= System::GetInstance().GetDeltaTime();
-
-		if (speed > limit)
-		{
-			speed = limit;
-		}
-		else if (speed < -limit)
-		{
-			speed = -limit;
-		}
-	};
-
-	clamp(mMoveVector.x, mLimitSpeed.x);
-	clamp(mMoveVector.y, mLimitSpeed.y);
-	clamp(mMoveVector.z, mLimitSpeed.z);
 }
 
 void Actor::SetPriority(int value)

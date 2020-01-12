@@ -1,5 +1,6 @@
 #include "ClampSpeedComponent.h"
 #include "System.h"
+#include "Common.h"
 
 #include <cmath>
 
@@ -33,16 +34,11 @@ void ClampSpeedComponent::Update()
 	const float deltaTime = System::GetInstance().GetDeltaTime();
 	auto clamp = [deltaTime](float & speed, float limit)
 	{
+		// 制限値が万が一負の値になっていた時のため、絶対値を取る &
+		// デルタタイムを考慮した値に制限値を調整する
 		float absLim = fabsf(limit) * deltaTime;
 
-		if (speed > absLim)
-		{
-			speed = absLim;
-		}
-		else if (speed < -absLim)
-		{
-			speed = -absLim;
-		}
+		speed = Common::Clamp(speed, -absLim, absLim);
 	};
 
 	if (mClampDirectionFlag & mClampXFlagMask)

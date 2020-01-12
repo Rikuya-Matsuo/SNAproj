@@ -86,9 +86,6 @@ protected:
 	Vector3D mRotationAxis;
 	float mRotationAngle;
 
-	// 秒間どのくらい動くかの各成分の制限値
-	Vector3D mLimitSpeed;
-
 	// 押し返し発生時の押し返しベクトル
 	Vector3D mPushedVector;
 
@@ -117,8 +114,6 @@ protected:
 	virtual void UpdateActor1();
 
 	void CalculateWorldTransform();
-
-	void ClampSpeed();
 
 	void SetPriority(int value);
 
