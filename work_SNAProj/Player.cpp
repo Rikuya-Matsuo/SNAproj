@@ -48,13 +48,17 @@ Player::Player():
 	AABB bodyCol = mMesh->GetCollisionBox();
 	mBoxCollider->SetObjectBox(bodyCol);
 
-	const bool genDetectorFlag = false;
+	const bool genDetectorFlag = true;
 	if (genDetectorFlag)
 	{
-		AABB box = mMesh->GetCollisionBox();
-		const Vector3D boxSize = box.mMax - box.mMin;
-		box.mMax.z -= boxSize.z * 0.8f;
-		box.mMin.z -= boxSize.z * 0.2f;
+		AABB box = bodyCol;
+		const Vector3D boxSize = bodyCol.mMax - bodyCol.mMin;
+		box.mMax.z -= boxSize.z * 0.9f;
+		box.mMin.z = bodyCol.mMin.z - 0.1f;
+
+		float detectorXOffset = boxSize.x * 0.95f / 2;
+		box.mMax.x -= detectorXOffset;
+		box.mMin.x += detectorXOffset;
 
 		mGroundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 		mGroundChecker->SetObjectBox(box);
@@ -78,7 +82,7 @@ Player::Player():
 
 	// ジャンプ機能
 	mJumpComponent = new JumpComponent(this);
-	mJumpComponent->SetJumpHeight(100.0f, 1.5f);
+	mJumpComponent->SetJumpHeight(0.1f, 1.2f);
 
 	// 最大速度を調整
 	Vector3D limitSpeed(100.0f, 0.0f, 100.0f);
@@ -86,7 +90,7 @@ Player::Player():
 	csc->SetClampDirectionFlags(true, false, false);
 
 	// 落下スピード割合の調整
-	mFallSpeedRate = 1.0f;
+	mFallSpeedRate = 1.5f;
 
 	// プレイヤーであることを示すフラグ
 	mFlags |= mPlayerFlagMask_Base;
@@ -94,15 +98,16 @@ Player::Player():
 
 Player::~Player()
 {
-	Common::DeleteContainerOfPointer(mComponentList);
-
-	std::list<const ColliderComponentBase*>().swap(mLandingGrounds);
-
 	SDL_Log("Player is deleted\n");
 }
 
 void Player::UpdateActor0()
 {
+	if (!mDetectGroundFlag)
+	{
+		SetAffectGravityFlag(true);
+		mLandingFlag = false;
+	}
 	mDetectGroundFlag = false;
 
 	if (mLandingFlag && Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
@@ -118,19 +123,10 @@ void Player::UpdateActor0()
 		mMesh->SetAnimIndex(this, mCurrentAnimation);
 	}
 
-	std::string landingState;
-	landingState.reserve(6);
-	if (mLandingFlag)
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
 	{
-		mLandingFlag = false;
-		landingState = "true";
+		SDL_Log("height : %lf", mPosition.z);
 	}
-	else
-	{
-		landingState = "false";
-	}
-
-	SDL_Log("Landing state : %s", landingState.c_str());
 }
 
 void Player::UpdateActor1()
@@ -225,12 +221,8 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 {
 	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector)
 	{
-		if (mPushedVector.z > 0)
-		{
-			OnDetectGround(opponent);
+		OnDetectGround(opponent);
 
-			//SDL_Log("Player : Detect Ground.\n");
-		}
 		return;
 	}
 
@@ -280,10 +272,8 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 {
 	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector)
 	{
-		if (mPushedVector.z > 0)
-		{
-			OnDetectGround(opponent);
-		}
+		OnDetectGround(opponent);
+
 		return;
 	}
 
@@ -298,14 +288,6 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector &&
 		opponent->GetColliderAttribute() == ColliderAttribute::ColAtt_Block)
 	{
-		auto itr = std::find(mLandingGrounds.begin(), mLandingGrounds.end(), opponent);
-
-		if (itr != mLandingGrounds.end())
-		{
-			mLandingGrounds.erase(itr);
-
-			//SDL_Log("Player : Apart Ground.\n");
-		}
 	}
 
 	static char apartTest = 0;
@@ -315,37 +297,6 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
-	if (opponent->GetColliderAttribute() == ColliderAttribute::ColAtt_Block)
-	{
-		// 踏んでいるブロックのコリジョンを記録
-		auto itr = std::find(mLandingGrounds.begin(), mLandingGrounds.end(), opponent);
-
-		const bool sucessFind = (itr == mLandingGrounds.end());
-
-		if (!sucessFind)
-		{
-			mLandingGrounds.emplace_back(opponent);
-		}
-
-		// 埋まっている分押し上げる
-		float overlap = opponent->GetWorldBox()->mMax.z - mBoxCollider->GetWorldBox()->mMin.z;
-
-		if (overlap > 0)
-		{
-			mPosition.z += overlap;
-
-			// 行列を更新
-			CalculateWorldTransform();
-
-			mGroundChecker->Update();
-
-			// プレイヤーの位置が変わったため、接触コライダーを更新
-			mBoxCollider->Update();
-
-			SDL_Log("Player : Detect Ground.\n");
-		}
-	}
-
 	mLandingFlag = true;
 
 	mDetectGroundFlag = true;

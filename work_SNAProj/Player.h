@@ -45,8 +45,6 @@ private:
 
 	char mCurrentAnimation;
 
-	std::list<const ColliderComponentBase*> mLandingGrounds;
-
 	void UpdateActor0() override;
 
 	void UpdateActor1() override;
