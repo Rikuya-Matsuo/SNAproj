@@ -213,3 +213,11 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 	texArray = textures;
 	return sucessCount;
 }
+
+void AnimationChips::SetTextureIndex(size_t num)
+{
+	if (num < mChipTextures.size())
+	{
+		mCurrentTextureIndex = num;
+	}
+}

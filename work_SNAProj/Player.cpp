@@ -215,6 +215,13 @@ void Player::UpdateActor1()
 
 	// チップ補完アクターにも現在のアニメーションを伝える
 	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
+
+	// テクスチャ番号を設定
+	if (mCurrentAnimation == AnimationPattern::Anim_DashAttack)
+	{
+		size_t index = mMesh->GetActiveAnimChips(this)->GetCurrentTextureIndex();
+		mCompletionMeshActor->GetMesh()->GetAnimChips(mCompletionMeshActor, mCurrentAnimation)->SetTextureIndex(index);
+	}
 }
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)

@@ -23,6 +23,8 @@ public:
 
 	void SetSecondPerFrame(float second) { mSecondPerFrame = second; }
 
+	void SetTextureIndex(size_t num);
+
 	size_t GetCurrentTextureIndex() const { return mCurrentTextureIndex; }
 
 	Texture * GetCurrentTexture() const { return mChipTextures[mCurrentTextureIndex]; }
