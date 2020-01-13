@@ -22,6 +22,8 @@ public:
 	static const char mLifeMax;
 
 private:
+	static const char mDashAttackPower;
+
 	enum AnimationPattern
 	{
 		Anim_Stay = 0,

@@ -13,6 +13,7 @@
 #include "Input.h"
 
 const char Player::mLifeMax = 10;
+const char Player::mDashAttackPower = 1;
 
 Player::Player():
 	Actor(),
