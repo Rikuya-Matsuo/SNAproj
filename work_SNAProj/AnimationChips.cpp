@@ -220,4 +220,8 @@ void AnimationChips::SetTextureIndex(size_t num)
 	{
 		mCurrentTextureIndex = num;
 	}
+	else
+	{
+		SDL_Delay(0);
+	}
 }

@@ -13,6 +13,9 @@ const float PhysicManager::mGravityAcceleration = 1.0f;
 #define HIT_CHECK_TYPE 1
 void PhysicManager::CheckHit()
 {
+	// ループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除
+	RefreshHitState();
+
 	// Detectorを先に判定
 	for (auto detectSub : mDetectSubject)
 	{
@@ -195,6 +198,9 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 		// コライダーがアクティブでないなら判定を行わない
 		if (!collider1->GetActiveFlag())
 		{
+			// このコライダーを含む判定の組み合わせを当たっていない判定にする
+			ResetHitState(collider1);
+
 			continue;
 		}
 
@@ -234,12 +240,16 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 			// コライダー1がアクティブでなくなっているなら判定をブレーク
 			if (!collider1->GetActiveFlag())
 			{
+				ResetHitState(collider1);
+
 				break;
 			}
 
 			// アクティブでないなら判定をスキップ
 			if (!collider2->GetActiveFlag())
 			{
+				ResetHitState(collider2);
+
 				continue;
 			}
 
@@ -314,13 +324,13 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 						(col->GetColliderAttribute() != ColliderAttribute::ColAtt_Detector);
 					return ret;
 				};
-				bool iMovalFlag = checkMoval(collider1);
-				bool jMovalFlag = checkMoval(collider2);
-				if (iMovalFlag)
+				bool movalFlag1 = checkMoval(collider1) && collider2->GetPushOnHitFlag();
+				bool movalFlag2 = checkMoval(collider2) && collider1->GetPushOnHitFlag();
+				if (movalFlag1)
 				{
 					HitPush(collider1, collider2);
 				}
-				if (jMovalFlag)
+				if (movalFlag2)
 				{
 					HitPush(collider2, collider1);
 				}
@@ -626,6 +636,43 @@ void PhysicManager::SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair)
 	}
 }
 
+void PhysicManager::ResetHitState(const ColliderComponentBase * col)
+{
+	// そのコライダーが関わった接触情報を探す
+	auto itr = mHitColliderPairState.begin();
+	for (; itr != mHitColliderPairState.end(); ++itr)
+	{
+		// そのコライダーが関係なければcontinue
+		ColliderPair pair = itr->first;
+		if (col != pair.first && col != pair.second)
+		{
+			continue;
+		}
+
+		// 接触状態である場合、両方の接触解除関数を呼び、接触情報を削除
+		if (itr->second != HitState::HitState_NoTouch)
+		{
+			ApartProcess(pair);
+
+			itr = mHitColliderPairState.erase(itr);
+			itr--;
+		}
+	}
+}
+
+void PhysicManager::RefreshHitState()
+{
+	auto itr = mHitColliderPairState.begin();
+	for (; itr != mHitColliderPairState.end(); ++itr)
+	{
+		if (itr->second == HitState::HitState_NoTouch)
+		{
+			itr = mHitColliderPairState.erase(itr);
+			itr--;
+		}
+	}
+}
+
 PhysicManager::PhysicManager()
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
@@ -643,6 +690,7 @@ PhysicManager::PhysicManager()
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_PlayerAttack, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_EnemyAttack, ColAtt_Player);
+	ResisterCheckableAttributeCombination(ColAtt_Enemy, ColAtt_Block);
 }
 
 PhysicManager::~PhysicManager()

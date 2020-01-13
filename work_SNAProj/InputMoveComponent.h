@@ -13,7 +13,8 @@ public:
 	{
 		AxisEnum_x = 0,
 		AxisEnum_y,
-		AxisEnum_z
+		AxisEnum_z,
+		AxisEnum_Invalid
 	};
 
 	void SetHorizontalAxis(AxisEnum axis) { mHorizontalAxis = axis; }

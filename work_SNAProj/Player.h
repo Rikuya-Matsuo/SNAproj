@@ -15,6 +15,12 @@ public:
 	Player();
 	~Player();
 
+	char GetLife() const { return mLife; }
+	void Damage(unsigned char damageValue) { mLife -= damageValue; }
+	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
+
+	static const char mLifeMax;
+
 private:
 	enum AnimationPattern
 	{
@@ -44,6 +50,8 @@ private:
 	bool mLookRightFlag;
 
 	char mCurrentAnimation;
+
+	char mLife;
 
 	void UpdateActor0() override;
 

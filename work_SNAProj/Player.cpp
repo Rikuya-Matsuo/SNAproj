@@ -12,6 +12,8 @@
 #include "Renderer.h"
 #include "Input.h"
 
+const char Player::mLifeMax = 10;
+
 Player::Player():
 	Actor(),
 	mLandingFlag(false),
@@ -19,11 +21,12 @@ Player::Player():
 	mLookRightFlag(true),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
-	mCurrentAnimation(AnimationPattern::Anim_Stay)
+	mCurrentAnimation(AnimationPattern::Anim_Stay),
+	mLife(mLifeMax)
 {
 	// メッシュのロード
 	const int drawOrder = 300;
-	const float dashAttackAnimSpeed = 1.0f;
+	const float dashAttackAnimSpeed = 0.05f;
 	MeshComponent * mc = new MeshComponent(this, drawOrder);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(), this,
@@ -72,9 +75,11 @@ Player::Player():
 	mAttackCollider->SetObjectBox(attackCol);
 	mAttackCollider->SetActive(false);
 	mAttackCollider->SetMoveOnHitFlag(false);
+	mAttackCollider->SetPushOnHitFlag(false);
 
+	// 矢印キー移動コンポーネント
 	mInputComponent = new InputMoveComponent(this);
-	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_z);
+	mInputComponent->SetVerticalAxis(mInputComponent->AxisEnum_Invalid);
 
 	const float speed = 500.0f;
 	mInputComponent->SetHorizontalSpeed(speed);
@@ -121,6 +126,8 @@ void Player::UpdateActor0()
 		mCurrentAnimation = AnimationPattern::Anim_DashAttack;
 
 		mMesh->SetAnimIndex(this, mCurrentAnimation);
+
+		mAttackCollider->SetActive(true);
 	}
 
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
@@ -131,6 +138,7 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
+	// ダッシュアタック終了判定
 	if (mCurrentAnimation == AnimationPattern::Anim_DashAttack && mMesh->GetAnimLoopEndFlag())
 	{
 		if (!(mCompletionMeshActor->GetMesh()->GetAnimLoopEndFlag()))
@@ -144,6 +152,8 @@ void Player::UpdateActor1()
 		mCurrentAnimation = AnimationPattern::Anim_Stay;
 
 		mMesh->SetAnimIndex(this, mCurrentAnimation);
+
+		mAttackCollider->SetActive(false);
 	}
 
 	// チップ補完アクターの設置方向を再設定
@@ -217,7 +227,7 @@ void Player::UpdateActor1()
 	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
 
 	// テクスチャ番号を設定
-	if (mCurrentAnimation == AnimationPattern::Anim_DashAttack)
+	if (mCompletionMeshActor->IsResisteredIndex(mCurrentAnimation))
 	{
 		size_t index = mMesh->GetActiveAnimChips(this)->GetCurrentTextureIndex();
 		mCompletionMeshActor->GetMesh()->GetAnimChips(mCompletionMeshActor, mCurrentAnimation)->SetTextureIndex(index);

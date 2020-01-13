@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -202,6 +202,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="CompletionMeshActor.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
     <ClCompile Include="DrawComponentBase.cpp" />
+    <ClCompile Include="EnemyTest.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="GamePadAxis.cpp" />
@@ -251,6 +252,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="CompletionMeshActor.h" />
     <ClInclude Include="ComponentBase.h" />
     <ClInclude Include="DrawComponentBase.h" />
+    <ClInclude Include="EnemyTest.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="GamePadAxis.h" />

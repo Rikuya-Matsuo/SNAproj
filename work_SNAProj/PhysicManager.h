@@ -83,4 +83,8 @@ private:
 	void ApartProcess(ColliderPair& pair);
 
 	void SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair);
+
+	void ResetHitState(const ColliderComponentBase * col);
+
+	void RefreshHitState();
 };

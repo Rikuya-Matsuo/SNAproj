@@ -31,6 +31,8 @@ public:
 	void ResetAnimation(int index);
 	void ResetActiveAnimation() { ResetAnimation(mCurrentIndex); }
 
+	bool IsResisteredIndex(int index) const { return std::find(mAnimIndexList.begin(), mAnimIndexList.end(), index) != mAnimIndexList.end(); }
+
 private:
 	static const Uint8 mFlipXFlagMask;
 	static const Uint8 mFlipYFlagMask;

@@ -39,10 +39,15 @@ public:
 	void OnTouching(const ColliderComponentBase * col) { mOwner->OnTouching(this, col); }
 	void OnApart(const ColliderComponentBase * col) { mOwner->OnApart(this, col); }
 
-	// ヒット時に押し返しを行うかどうかのフラグのセット（デフォルトで真）
+	// ヒット時に押し返しを受けるかどうかのフラグのセット（デフォルトで真）
 	void SetMoveOnHitFlag(bool value) { mMoveOnHitFlag = value; }
 
 	bool GetMoveOnHitFlag() const { return mMoveOnHitFlag; }
+
+	// ヒット時に相手を押すかどうかのフラグ（デフォルトで真）
+	void SetPushOnHitFlag(bool value) { mPushOnHitFlag = value; }
+
+	bool GetPushOnHitFlag() const { return mPushOnHitFlag; }
 
 protected:
 	const Uint8 mAttribute;
@@ -50,4 +55,6 @@ protected:
 	const Uint8 mShape;
 
 	bool mMoveOnHitFlag;
+
+	bool mPushOnHitFlag;
 };

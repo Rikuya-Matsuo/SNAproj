@@ -5,7 +5,8 @@ ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute co
 	ComponentBase(owner, 300),
 	mAttribute(colAtt),
 	mShape(colShape),
-	mMoveOnHitFlag(true)
+	mMoveOnHitFlag(true),
+	mPushOnHitFlag(true)
 {
 	if (mAttribute == ColliderAttribute::ColAtt_Detector)
 	{

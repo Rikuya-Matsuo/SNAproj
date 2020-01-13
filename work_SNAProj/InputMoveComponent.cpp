@@ -30,10 +30,14 @@ void InputMoveComponent::Update()
 	float speedVertical = mSpeedVertical * System::GetInstance().GetDeltaTime();
 
 	// エイリアス設定
-	float * vecHorizontal = &vec.x;
-	float * vecVertical = &vec.y;
+	float * vecHorizontal = nullptr;
+	float * vecVertical = nullptr;
 
-	if (mHorizontalAxis == AxisEnum_y)
+	if (mHorizontalAxis == AxisEnum_x)
+	{
+		vecHorizontal = &vec.x;
+	}
+	else if (mHorizontalAxis == AxisEnum_y)
 	{
 		vecHorizontal = &vec.y;
 	}
@@ -46,6 +50,10 @@ void InputMoveComponent::Update()
 	{
 		vecVertical = &vec.x;
 	}
+	else if (mVerticalAxis == AxisEnum_y)
+	{
+		vecVertical = &vec.y;
+	}
 	else if (mVerticalAxis == AxisEnum_z)
 	{
 		vecVertical = &vec.z;
@@ -56,7 +64,10 @@ void InputMoveComponent::Update()
 		|| Input::GetInstance().GetLStickX() < 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_LEFT))
 	{
-		*vecHorizontal -= speedHorizontal;
+		if (vecHorizontal)
+		{
+			*vecHorizontal -= speedHorizontal;
+		}
 		
 		mInputFlags |= mLeftMask;
 	}
@@ -69,7 +80,10 @@ void InputMoveComponent::Update()
 		|| Input::GetInstance().GetLStickX() > 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_RIGHT))
 	{
-		*vecHorizontal += speedHorizontal;
+		if (vecHorizontal)
+		{
+			*vecHorizontal += speedHorizontal;
+		}
 
 		mInputFlags |= mRightMask;
 	}
@@ -82,7 +96,10 @@ void InputMoveComponent::Update()
 		|| Input::GetInstance().GetLStickY() < 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_UP))
 	{
-		*vecVertical -= speedVertical;
+		if (vecVertical)
+		{
+			*vecVertical -= speedVertical;
+		}
 
 		mInputFlags |= mUpMask;
 	}
@@ -95,7 +112,10 @@ void InputMoveComponent::Update()
 		|| Input::GetInstance().GetLStickY() > 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_DOWN))
 	{
-		*vecVertical += speedVertical;
+		if (vecVertical)
+		{
+			*vecVertical += speedVertical;
+		}
 
 		mInputFlags |= mDownMask;
 	}

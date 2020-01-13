@@ -10,7 +10,7 @@
 #include "Block.h"
 #include "TestStage.h"
 #include "BGObject.h"
-
+#include "EnemyTest.h"
 
 
 TestScene::TestScene()
@@ -27,6 +27,10 @@ TestScene::TestScene()
 	GenerateBGWall(ts->GetFloorHeight());
 
 	GenerateBGDecoration(ts->GetFloorHeight());
+
+	EnemyTest * et = new EnemyTest;
+	et->SetScale(25.0f);
+	et->SetPosition(Vector3D(50.0f, 0.0f, 100.0f));
 
 	Camera * cam = new Camera(p);
 	mCameras.emplace_back(cam);

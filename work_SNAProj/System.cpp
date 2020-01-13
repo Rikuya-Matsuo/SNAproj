@@ -188,6 +188,7 @@ void System::Finish()
 }
 
 //#define SHOW_DELTA_TIME
+//#define SHOW_GAME_TIME
 
 void System::UpdateDeltaTime()
 {
@@ -205,6 +206,12 @@ void System::UpdateDeltaTime()
 	{
 		mDeltaTime = mMaxDeltaTime;
 	}
+
+#ifdef SHOW_GAME_TIME
+	static float timer = 0.0f;
+	timer += mDeltaTime;
+	SDL_Log("%lf", timer);
+#endif
 }
 
 void System::SortActor()
