@@ -16,3 +16,31 @@ EnemyBase::EnemyBase(char lifeMax) :
 EnemyBase::~EnemyBase()
 {
 }
+
+void EnemyBase::OnDeath()
+{
+	// 生存フラグを下す
+	mFlags_Enemy &= ~mAliveFlagMask;
+}
+
+void EnemyBase::UpdateActor0()
+{
+	if (mLife <= 0)
+	{
+		OnDeath();
+	}
+
+	if (!(mFlags_Enemy & mAliveFlagMask))
+	{
+		mFlags |= mStopUpdateFlagMask_Base;
+	}
+
+	UpdateEnemy0();
+}
+
+void EnemyBase::UpdateActor1()
+{
+	UpdateEnemy1();
+
+	mPosition.y = 0.0f;
+}

@@ -27,7 +27,7 @@ EnemyTest::~EnemyTest()
 {
 }
 
-void EnemyTest::UpdateActor0()
+void EnemyTest::UpdateEnemy0()
 {
 	if (mFlags_EnemyTest & mDamageAnimFlagMask)
 	{
@@ -55,9 +55,8 @@ void EnemyTest::UpdateActor0()
 	}
 }
 
-void EnemyTest::UpdateActor1()
+void EnemyTest::UpdateEnemy1()
 {
-	mPosition.y = 0.0f;
 }
 
 void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)

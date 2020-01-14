@@ -11,6 +11,7 @@
 #include "System.h"
 #include "Renderer.h"
 #include "Input.h"
+#include "EnemyBase.h"
 
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
@@ -237,7 +238,10 @@ void Player::UpdateActor1()
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector)
+	ColliderAttribute callerAtt = caller->GetColliderAttribute();
+	ColliderAttribute opponentAtt = opponent->GetColliderAttribute();
+
+	if (callerAtt == ColliderAttribute::ColAtt_Detector)
 	{
 		OnDetectGround(opponent);
 
@@ -249,41 +253,46 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 		OnLanding();
 	}
 
-	// すでにその方向への押し返しが働いている場合は、押し返しを無効化する
-	// 着地中ならば常に押し返しを無効化する
-	bool invalidationFlag = false;
-
-	if (mPushedVector.x)
+	if (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy)
 	{
-		if (mFixVector.x)
+		// すでにその方向への押し返しが働いている場合は、押し返しを無効化する
+		// 着地中ならば常に押し返しを無効化する
+		bool invalidationFlag = false;
+
+		if (mPushedVector.x)
 		{
-			invalidationFlag = true;
+			if (mFixVector.x)
+			{
+				invalidationFlag = true;
+			}
+		}
+		else if (mPushedVector.y)
+		{
+			if (mFixVector.y)
+			{
+				invalidationFlag = true;
+			}
+		}
+		else if (mPushedVector.z)
+		{
+			if (mFixVector.z)
+			{
+				invalidationFlag = true;
+			}
+		}
+
+		// 無効化
+		if (invalidationFlag)
+		{
+			mFixVector -= mPushedVector;
 		}
 	}
-	else if (mPushedVector.y)
-	{
-		if (mFixVector.y)
-		{
-			invalidationFlag = true;
-		}
-	}
-	else if (mPushedVector.z)
-	{
-		if (mFixVector.z)
-		{
-			invalidationFlag = true;
-		}
-	}
 
-	// 無効化
-	if (invalidationFlag)
+	if (opponentAtt == ColliderAttribute::ColAtt_Enemy)
 	{
-		mFixVector -= mPushedVector;
+		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
+		enemy->Damage(mDashAttackPower);
 	}
-
-	static char HitTest = 0;
-	//SDL_Log("Hit!%d\n", HitTest);
-	HitTest ^= 1;
 }
 
 void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)

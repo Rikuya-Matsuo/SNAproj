@@ -50,7 +50,7 @@ void MeshComponent::Update()
 
 void MeshComponent::Draw(Shader* shader)
 {
-	if ((mMeshCompFlags & mVisibleFlagMask) && mMesh)
+	if ((mOwner->GetActiveFlag()) && (mMeshCompFlags & mVisibleFlagMask) && mMesh)
 	{
 		static bool forBoardSetting = false;
 		bool isBoard = mMesh->GetIsBoardFlag();

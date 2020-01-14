@@ -9,11 +9,11 @@ public:
 	EnemyBase(char lifeMax = 5);
 	~EnemyBase();
 
+	const char mLifeMax;
+
 	char GetLife() const { return mLife; }
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
-
-	const char mLifeMax;
 
 protected:
 	typedef Uint8 FlagType;
@@ -26,4 +26,19 @@ protected:
 	char mLife;
 
 	Mesh * mMesh;
+
+	virtual void UpdateEnemy0() = 0;
+
+	virtual void UpdateEnemy1() = 0;
+
+	virtual void OnDeath();
+
+
+
+private:
+	void UpdateActor0() final override;
+
+	void UpdateActor1() final override;
+
+
 };

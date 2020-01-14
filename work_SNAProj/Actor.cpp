@@ -11,7 +11,8 @@ const Actor::FlagType Actor::mBeyondSceneFlagMask_Base				= 1 << 2;
 const Actor::FlagType Actor::mAffectGravityFlagMask_Base			= 1 << 3;
 const Actor::FlagType Actor::mMovalFlagMask_Base					= 1 << 4;
 const Actor::FlagType Actor::mCalculateTransformFlagMask_Base		= 1 << 5;
-const Actor::FlagType Actor::mPlayerFlagMask_Base					= 1 << 6;
+const Actor::FlagType Actor::mStopUpdateFlagMask_Base				= 1 << 6;
+const Actor::FlagType Actor::mPlayerFlagMask_Base					= 1 << 7;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
@@ -26,6 +27,8 @@ Actor::Actor():
 	mFlags(mAffectGravityFlagMask_Base | mMovalFlagMask_Base | mCalculateTransformFlagMask_Base)
 {
 	System::GetInstance().ResisterActor(this);
+
+	mPrevFlags = mFlags;
 }
 
 Actor::~Actor()
@@ -45,11 +48,30 @@ void Actor::Update()
 		mFlags &= ~mCalculateTransformFlagMask_Base;
 	}
 
-	UpdateActor0();
+	// アクティブ化した or アクティブでなくなった判定・処理
+	bool getNonActive = !(mPrevFlags & mStopUpdateFlagMask_Base) && mFlags & mStopUpdateFlagMask_Base;
+	bool getActive = mPrevFlags & mStopUpdateFlagMask_Base && !(mFlags & mStopUpdateFlagMask_Base);
+	if (getNonActive)
+	{
+		OnBecomeNotActive();
+	}
+	else if (getActive)
+	{
+		OnBecomeActive();
+	}
+
+	bool isActive = !(mFlags & mStopUpdateFlagMask_Base);
+	if (isActive)
+	{
+		UpdateActor0();
+	}
 
 	UpdateComponents();
 
-	UpdateActor1();
+	if (isActive)
+	{
+		UpdateActor1();
+	}
 
 	// 移動が発生しているなら移動させる
 	if (mMoveVector.LengthSq())
@@ -57,6 +79,13 @@ void Actor::Update()
 		mPosition += mMoveVector;
 
 		mFlags |= mCalculateTransformFlagMask_Base;
+	}
+
+	// アップデート中にアクティブでなくなる可能性があるのでもう一度判定・処理を行う
+	bool getNonActive_after = !(mPrevFlags & mStopUpdateFlagMask_Base) && mFlags & mStopUpdateFlagMask_Base;
+	if (!getNonActive && getNonActive_after)
+	{
+		OnBecomeNotActive();
 	}
 
 	if (mFlags & mCalculateTransformFlagMask_Base)
@@ -141,6 +170,24 @@ void Actor::SetPriority(int value)
 {
 	mPriority = value;
 	System::GetInstance().RequestSortActor();
+}
+
+void Actor::OnBecomeNotActive()
+{
+	SetAllComponentActive(false);
+}
+
+void Actor::OnBecomeActive()
+{
+	SetAllComponentActive(true);
+}
+
+void Actor::SetAllComponentActive(bool active)
+{
+	for (auto cmp : mComponentList)
+	{
+		cmp->SetActive(active);
+	}
 }
 
 void Actor::SetFixVector(const Vector3D & vec)

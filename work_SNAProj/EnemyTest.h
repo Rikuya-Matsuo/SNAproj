@@ -24,7 +24,7 @@ private:
 
 	AnimationChips * mAnimChips;
 
-	void UpdateActor0() override;
+	void UpdateEnemy0() override;
 
-	void UpdateActor1() override;
+	void UpdateEnemy1() override;
 };
