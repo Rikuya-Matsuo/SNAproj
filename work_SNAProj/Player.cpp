@@ -89,7 +89,7 @@ Player::Player():
 
 	// ジャンプ機能
 	mJumpComponent = new JumpComponent(this);
-	mJumpComponent->SetJumpHeight(0.1f, 1.2f);
+	mJumpComponent->SetJumpHeight(1.2f, 1.2f);
 
 	// 最大速度を調整
 	Vector3D limitSpeed(100.0f, 0.0f, 100.0f);
@@ -288,7 +288,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 		}
 	}
 
-	if (opponentAtt == ColliderAttribute::ColAtt_Enemy)
+	if (callerAtt == ColliderAttribute::ColAtt_PlayerAttack && opponentAtt == ColliderAttribute::ColAtt_Enemy)
 	{
 		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
 		enemy->Damage(mDashAttackPower);
