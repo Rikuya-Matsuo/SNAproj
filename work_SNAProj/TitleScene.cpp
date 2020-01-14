@@ -10,6 +10,7 @@ TitleScene::TitleScene()
 
 	Camera * cam = new Camera(tb);
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), tb->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
+	cam->SetDistanceVector(Vector3D(0.0f, 55.0f, 0.0f));
 }
 
 

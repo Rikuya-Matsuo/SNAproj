@@ -16,16 +16,23 @@
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
-Player::Player():
+const Player::FlagType Player::mLandingFlagMask			= 1 << 0;
+const Player::FlagType Player::mDetectGroundFlagMask	= 1 << 1;
+const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
+const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
+const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
+
+Player::Player() :
 	Actor(),
-	mLandingFlag(false),
-	mDetectGroundFlag(false),
-	mLookRightFlag(true),
+	mFlags_Player(mLookRightFlagMask | mAliveFlagMask),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
 	mLife(mLifeMax)
 {
+	// フラグコピー
+	mPrevFlags_Player = mFlags_Player;
+
 	// メッシュのロード
 	const int drawOrder = 300;
 	const float dashAttackAnimSpeed = 0.05f;
@@ -110,14 +117,24 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
-	if (!mDetectGroundFlag)
+	if (mLife <= 0 && !(mFlags_Player & mImmortalFlagMask))
+	{
+		OnLifeRunOut();
+	}
+
+	if (!(mFlags_Player & mAliveFlagMask) && mPrevFlags_Player & mAliveFlagMask)
+	{
+		SetAllComponentActive(false);
+	}
+
+	if (!(mFlags_Player & mDetectGroundFlagMask))
 	{
 		SetAffectGravityFlag(true);
-		mLandingFlag = false;
+		mFlags_Player &= ~mLandingFlagMask;
 	}
-	mDetectGroundFlag = false;
+	mFlags_Player &= ~mDetectGroundFlagMask;
 
-	if (mLandingFlag && Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
+	if (mFlags_Player & mLandingFlagMask && Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
 	{
 		mJumpComponent->Jump();
 	}
@@ -156,6 +173,8 @@ void Player::UpdateActor1()
 		mMesh->SetAnimIndex(this, mCurrentAnimation);
 
 		mAttackCollider->SetActive(false);
+
+		mHitList.clear();
 	}
 
 	// チップ補完アクターの設置方向を再設定
@@ -167,7 +186,7 @@ void Player::UpdateActor1()
 		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
 		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
 
-		if (!mLookRightFlag)
+		if (!(mFlags_Player & mLookRightFlagMask))
 		{
 			mCompletionMeshActor->FlipPositionOffset();
 		}
@@ -187,13 +206,13 @@ void Player::UpdateActor1()
 	// 向き変更
 	if (mInputComponent->GetRightKey())
 	{
-		if (!mLookRightFlag)
+		if (!(mFlags_Player & mLookRightFlagMask))
 		{
 			mRotationAngle = 0.0f;
 
 			mRotation = Quaternion(mRotationAxis, mRotationAngle);
 
-			mLookRightFlag = true;
+			mFlags_Player |= mLookRightFlagMask;
 
 			if (mCompletionMeshActor->GetNowFlippingFlag())
 			{
@@ -205,13 +224,13 @@ void Player::UpdateActor1()
 	}
 	else if (mInputComponent->GetLeftKey())
 	{
-		if (mLookRightFlag)
+		if ((mFlags_Player & mLookRightFlagMask))
 		{
 			mRotationAngle = static_cast<float>(M_PI);
 
 			mRotation = Quaternion(mRotationAxis, mRotationAngle);
 
-			mLookRightFlag = false;
+			mFlags_Player &= ~mLookRightFlagMask;
 
 			if (!mCompletionMeshActor->GetNowFlippingFlag())
 			{
@@ -234,6 +253,9 @@ void Player::UpdateActor1()
 		size_t index = mMesh->GetActiveAnimChips(this)->GetCurrentTextureIndex();
 		mCompletionMeshActor->GetMesh()->GetAnimChips(mCompletionMeshActor, mCurrentAnimation)->SetTextureIndex(index);
 	}
+
+	// フラグ記録
+	mPrevFlags_Player = mFlags_Player;
 }
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
@@ -291,7 +313,13 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 	if (callerAtt == ColliderAttribute::ColAtt_PlayerAttack && opponentAtt == ColliderAttribute::ColAtt_Enemy)
 	{
 		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
-		enemy->Damage(mDashAttackPower);
+
+		auto itr = std::find(mHitList.begin(), mHitList.end(), enemy);
+		if (itr == mHitList.end())
+		{
+			enemy->Damage(mDashAttackPower);
+			mHitList.emplace_back(enemy);
+		}
 	}
 }
 
@@ -324,14 +352,18 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
-	mLandingFlag = true;
+	mFlags_Player |= mLandingFlagMask;
 
-	mDetectGroundFlag = true;
+	mFlags_Player |= mDetectGroundFlagMask;
 
 	SetAffectGravityFlag(false);
 }
 
 void Player::OnLanding()
 {
-	mLandingFlag = true;
+	mFlags_Player |= mLandingFlagMask;
+}
+
+void Player::OnLifeRunOut()
+{
 }

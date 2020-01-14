@@ -4,8 +4,9 @@
 
 const EnemyBase::FlagType EnemyBase::mAliveFlagMask = 1 << 0;
 const EnemyBase::FlagType EnemyBase::mFindPlayerFlagMask = 1 << 1;
+const EnemyBase::FlagType EnemyBase::mImmortalFlagMask = 1 << 2;
 
-EnemyBase::EnemyBase(char lifeMax) :
+EnemyBase::EnemyBase(unsigned char lifeMax) :
 	mLifeMax(lifeMax),
 	mLife(lifeMax),
 	mFlags_Enemy(mAliveFlagMask)
@@ -17,7 +18,7 @@ EnemyBase::~EnemyBase()
 {
 }
 
-void EnemyBase::OnDeath()
+void EnemyBase::OnLifeRunOut()
 {
 	// 生存フラグを下す
 	mFlags_Enemy &= ~mAliveFlagMask;
@@ -25,9 +26,9 @@ void EnemyBase::OnDeath()
 
 void EnemyBase::UpdateActor0()
 {
-	if (mLife <= 0)
+	if (mLife <= 0 && !(mFlags_Enemy & mImmortalFlagMask))
 	{
-		OnDeath();
+		OnLifeRunOut();
 	}
 
 	if (!(mFlags_Enemy & mAliveFlagMask))

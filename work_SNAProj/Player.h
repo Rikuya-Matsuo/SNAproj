@@ -6,6 +6,7 @@ class InputMoveComponent;
 class BoxColliderComponent;
 class JumpComponent;
 class CompletionMeshActor;
+class EnemyBase;
 
 // 大量生成するものではないのでビットフラグは使わない
 
@@ -23,6 +24,14 @@ public:
 
 private:
 	static const char mDashAttackPower;
+
+
+	typedef Uint8 FlagType;
+	static const FlagType mLandingFlagMask;
+	static const FlagType mDetectGroundFlagMask;
+	static const FlagType mLookRightFlagMask;
+	static const FlagType mImmortalFlagMask;
+	static const FlagType mAliveFlagMask;
 
 	enum AnimationPattern
 	{
@@ -45,15 +54,15 @@ private:
 
 	CompletionMeshActor * mCompletionMeshActor;
 
-	bool mLandingFlag;
-
-	bool mDetectGroundFlag;
-
-	bool mLookRightFlag;
-
 	char mCurrentAnimation;
 
 	char mLife;
+
+	FlagType mFlags_Player;
+
+	FlagType mPrevFlags_Player;
+
+	std::list<EnemyBase *> mHitList;
 
 	void UpdateActor0() override;
 
@@ -68,4 +77,6 @@ private:
 	void OnDetectGround(const ColliderComponentBase * opponent);
 
 	void OnLanding();
+
+	void OnLifeRunOut();
 };

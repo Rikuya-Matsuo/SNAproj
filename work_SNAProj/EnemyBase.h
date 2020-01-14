@@ -6,7 +6,7 @@ class Mesh;
 class EnemyBase : public Actor
 {
 public:
-	EnemyBase(char lifeMax = 5);
+	EnemyBase(unsigned char lifeMax = 5);
 	~EnemyBase();
 
 	const char mLifeMax;
@@ -19,6 +19,7 @@ protected:
 	typedef Uint8 FlagType;
 	static const FlagType mAliveFlagMask;
 	static const FlagType mFindPlayerFlagMask;
+	static const FlagType mImmortalFlagMask;
 
 
 	FlagType mFlags_Enemy;
@@ -31,7 +32,7 @@ protected:
 
 	virtual void UpdateEnemy1() = 0;
 
-	virtual void OnDeath();
+	virtual void OnLifeRunOut();
 
 
 

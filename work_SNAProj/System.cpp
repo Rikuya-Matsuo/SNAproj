@@ -205,6 +205,7 @@ void System::UpdateDeltaTime()
 	if (mDeltaTime > mMaxDeltaTime)
 	{
 		mDeltaTime = mMaxDeltaTime;
+		SDL_Log("Delta time over\n");
 	}
 
 #ifdef SHOW_GAME_TIME
