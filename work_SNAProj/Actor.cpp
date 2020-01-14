@@ -234,3 +234,35 @@ void Actor::OnTouching(const ColliderComponentBase * caller, const ColliderCompo
 void Actor::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 }
+
+template<class T>
+inline T * Actor::GetComponent()
+{
+	T * component = nullptr;
+
+	for (auto cmp : mComponentList)
+	{
+		component = dynamic_cast<T*>(cmp);
+		if (component)
+		{
+			return component;
+		}
+	}
+
+	return nullptr;
+}
+
+template<class T>
+void Actor::GetComponentAll(std::vector<T*>& ret)
+{
+	T * component = nullptr;
+
+	for (auto cmp : mComponentList)
+	{
+		component = dynamic_cast<T*>(cmp);
+		if (component)
+		{
+			ret.emplace_back(component);
+		}
+	}
+}

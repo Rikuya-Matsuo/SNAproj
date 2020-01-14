@@ -4,6 +4,7 @@
 #include "Quaternion.h"
 #include "BitFlagFunc.h"
 #include <list>
+#include <vector>
 
 class ComponentBase;
 class ColliderComponentBase;
@@ -119,6 +120,12 @@ public:
 	float GetFallSpeedRate() const { return mFallSpeedRate; }
 
 	int GetPriority() const { return mPriority; }
+
+	template <class T>
+	T * GetComponent();
+
+	template <class T>
+	void GetComponentAll(std::vector<T*>& ret);
 
 	void SetFixVector(const Vector3D & vec);
 	void FixPosition();
