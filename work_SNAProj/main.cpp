@@ -2,12 +2,13 @@
 #include "System.h"
 #include "TestScene.h"
 #include "TestScene01.h"
+#include "TitleScene.h"
 
 int main(int argc, char ** argv)
 {
 	bool successInit = System::GetInstance().Init();
 
-	System::GetInstance().SetScene(new TestScene);
+	System::GetInstance().SetScene(new TitleScene);
 
 	if (successInit)
 	{

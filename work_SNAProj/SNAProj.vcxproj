@@ -230,6 +230,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="TestScene01.cpp" />
     <ClCompile Include="TestStage.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="TitleBoard.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="VertexArray.cpp" />
   </ItemGroup>
@@ -281,6 +283,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="TestScene01.h" />
     <ClInclude Include="TestStage.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="TitleBoard.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VertexArray.h" />
   </ItemGroup>

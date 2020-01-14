@@ -1,4 +1,4 @@
-#include "ClampSpeedComponent.h"
+ï»¿#include "ClampSpeedComponent.h"
 #include "System.h"
 #include "Common.h"
 
@@ -34,8 +34,8 @@ void ClampSpeedComponent::Update()
 	const float deltaTime = System::GetInstance().GetDeltaTime();
 	auto clamp = [deltaTime](float & speed, float limit)
 	{
-		// §ŒÀ’l‚ª–œ‚ªˆê•‰‚Ì’l‚É‚È‚Á‚Ä‚¢‚½‚Ì‚½‚ßAâ‘Î’l‚ğæ‚é &
-		// ƒfƒ‹ƒ^ƒ^ƒCƒ€‚ğl—¶‚µ‚½’l‚É§ŒÀ’l‚ğ’²®‚·‚é
+		// åˆ¶é™å€¤ãŒä¸‡ãŒä¸€è² ã®å€¤ã«ãªã£ã¦ã„ãŸæ™‚ã®ãŸã‚ã€çµ¶å¯¾å€¤ã‚’å–ã‚‹ &
+		// ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ ã‚’è€ƒæ…®ã—ãŸå€¤ã«åˆ¶é™å€¤ã‚’èª¿æ•´ã™ã‚‹
 		float absLim = fabsf(limit) * deltaTime;
 
 		speed = Common::Clamp(speed, -absLim, absLim);
