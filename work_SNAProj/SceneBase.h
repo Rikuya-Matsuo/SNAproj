@@ -22,10 +22,14 @@ public:
 
 	bool GetSceneChangeFlag() const { return mFlags & mSceneChangeFlagMask; }
 
+	static const SceneBase * GetLatestScene() { return mLatestScene; }
+
 protected:
 	typedef Uint8 FlagType;
 
 	static const FlagType mSceneChangeFlagMask;
+
+	static SceneBase * mLatestScene;
 
 	FlagType mFlags;
 

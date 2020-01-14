@@ -37,6 +37,7 @@ TestScene::TestScene()
 	cam->Init(Vector3D(0, 100, 100), p->GetPosition(), Vector3D(0, 0, 1));
 	cam->SetDistanceVector(Vector3D(0, 150, 50));
 	cam->SetChaseTargetFlag(true);
+	cam->SetActive();
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);

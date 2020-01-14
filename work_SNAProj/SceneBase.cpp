@@ -4,11 +4,15 @@
 
 const SceneBase::FlagType SceneBase::mSceneChangeFlagMask = 1 << 0;
 
+SceneBase * SceneBase::mLatestScene = nullptr;
+
 SceneBase::SceneBase():
 	mNextScene(nullptr),
 	mFlags(0)
 {
 	mCameras.reserve(1);
+
+	mLatestScene = this;
 }
 
 SceneBase::~SceneBase()

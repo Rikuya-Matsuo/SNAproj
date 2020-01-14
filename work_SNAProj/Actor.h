@@ -8,6 +8,7 @@
 
 class ComponentBase;
 class ColliderComponentBase;
+class SceneBase;
 enum ColliderAttribute;
 
 class Actor
@@ -78,6 +79,10 @@ public:
 
 	virtual void Update() final;
 
+	void OnBeyondScene();
+
+	const SceneBase * GetBelongScene() const { return mBelongScene; }
+
 	void SetPosition(const Vector3D & pos) { mPosition = pos; mFlags |= mCalculateTransformFlagMask_Base; }
 	const Vector3D& GetPosition() const { return mPosition; }
 
@@ -138,4 +143,6 @@ public:
 
 private:
 	FlagType mPrevFlags;
+
+	SceneBase * mBelongScene;
 };

@@ -271,7 +271,12 @@ void System::ChangeScene(bool & quitFlag)
 		auto itr = mActorList.begin();
 		for (; itr != mActorList.end(); ++itr)
 		{
-			if (! (*itr)->GetBeyondSceneFlag())
+			if ((*itr)->GetBelongScene() != mCurrentScene)
+			{
+				continue;
+			}
+
+			if (!(*itr)->GetBeyondSceneFlag())
 			{
 				delete *itr;
 
@@ -281,6 +286,11 @@ void System::ChangeScene(bool & quitFlag)
 			{
 				(*itr)->SetBeyondSceneFlag(false);
 			}
+		}
+
+		for (itr = mActorList.begin(); itr != mActorList.end(); ++itr)
+		{
+			(*itr)->OnBeyondScene();
 		}
 	}
 	else

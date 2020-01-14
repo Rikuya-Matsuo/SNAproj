@@ -2,6 +2,7 @@
 #include "System.h"
 #include "Common.h"
 #include "ComponentBase.h"
+#include "SceneBase.h"
 #include <algorithm>
 #include <cmath>
 
@@ -29,6 +30,8 @@ Actor::Actor():
 	System::GetInstance().ResisterActor(this);
 
 	mPrevFlags = mFlags;
+
+	mBelongScene = const_cast<SceneBase*>(SceneBase::GetLatestScene());
 }
 
 Actor::~Actor()
@@ -94,6 +97,11 @@ void Actor::Update()
 
 		mFlags &= ~mCalculateTransformFlagMask_Base;
 	}
+}
+
+void Actor::OnBeyondScene()
+{
+	mBelongScene = const_cast<SceneBase*>(SceneBase::GetLatestScene());
 }
 
 void Actor::ResisterComponent(const ComponentBase * in_cmp)
