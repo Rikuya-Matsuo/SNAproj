@@ -11,8 +11,9 @@
 #include "TestStage.h"
 #include "BGObject.h"
 #include "EnemyTest.h"
-
-
+#include "Input.h"
+#include "GameOverScene.h"
+#include "GameClearScene.h"
 TestScene::TestScene()
 {
 	Player * p = new Player;
@@ -51,6 +52,33 @@ TestScene::~TestScene()
 
 void TestScene::Update()
 {
+#ifdef DEBUG_SNA
+
+	static bool clear = false;
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_MINUS))
+	{
+		clear = !clear;
+		SDL_Log("Jump to clear : %s\n", clear ? "true" : "false");
+	}
+
+	bool lshift = Input::GetInstance().GetKey(SDL_SCANCODE_LSHIFT);
+	bool enter = Input::GetInstance().GetKey(SDL_SCANCODE_RETURN);
+	if (lshift && enter)
+	{
+		if (clear)
+		{
+			mNextScene = new GameClearScene;
+		}
+		else
+		{
+			mNextScene = new GameOverScene;
+		}
+
+		mFlags |= mSceneChangeFlagMask;
+	}
+
+#endif // DEBUG_SNA
+
 }
 
 void TestScene::GenerateBGWall(float height)

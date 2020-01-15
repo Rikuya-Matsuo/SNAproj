@@ -126,12 +126,6 @@ public:
 
 	int GetPriority() const { return mPriority; }
 
-	template <class T>
-	T * GetComponent();
-
-	template <class T>
-	void GetComponentAll(std::vector<T*>& ret);
-
 	void SetFixVector(const Vector3D & vec);
 	void FixPosition();
 

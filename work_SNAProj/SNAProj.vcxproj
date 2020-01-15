@@ -205,6 +205,10 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="EnemyTest.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="GameClearBoard.cpp" />
+    <ClCompile Include="GameClearScene.cpp" />
+    <ClCompile Include="GameOverBoard.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GamePadAxis.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputMoveComponent.cpp" />
@@ -257,6 +261,10 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="EnemyTest.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="Floor.h" />
+    <ClInclude Include="GameClearBoard.h" />
+    <ClInclude Include="GameClearScene.h" />
+    <ClInclude Include="GameOverBoard.h" />
+    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GamePadAxis.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputMoveComponent.h" />

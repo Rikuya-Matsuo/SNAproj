@@ -24,6 +24,7 @@ public:
 
 	virtual void Draw(Shader* shader);                          // メッシュコンポーネントの描画
 	virtual void SetMesh(Mesh* mesh);          // メッシュコンポーネントで使用するメッシュのセット
+	const Mesh * GetMesh() { return mMesh; }
 	void SetTextureIndex(size_t index) { mTextureIndex = index; }     // テクスチャのセット
 
 	void SetVisible(bool visible) { BitFlagFunc::SetFlagByBool(visible, mMeshCompFlags, mVisibleFlagMask); }             // 表示フラグのセット
