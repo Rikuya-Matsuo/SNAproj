@@ -53,7 +53,7 @@ bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
 
 	// Windowの作成
 	mWindow = SDL_CreateWindow("SDL & GL Window",
-		                       600, 80,
+		                       0, 0,
 		                       mScreenWidth, mScreenHeight, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 	if (!mWindow)
 	{

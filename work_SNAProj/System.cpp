@@ -21,8 +21,8 @@ const float System::mMaxDeltaTime = 1.0f / 30.0f;
 System::System():
 	mCurrentScene(nullptr),
 	mRenderer(nullptr),
-	mWindowWidth(1024),
-	mWindowHeight(768),
+	mWindowWidth(1920),
+	mWindowHeight(1080),
 	mSortActorFlag(false)
 {
 }
