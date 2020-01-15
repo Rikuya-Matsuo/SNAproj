@@ -271,7 +271,7 @@ void System::ChangeScene(bool & quitFlag)
 		auto itr = mActorList.begin();
 		for (; itr != mActorList.end(); ++itr)
 		{
-			if ((*itr)->GetBelongScene() != mCurrentScene)
+			if ((*itr)->GetBelongScene() == mCurrentScene)
 			{
 				continue;
 			}
