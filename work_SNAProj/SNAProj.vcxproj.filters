@@ -55,6 +55,12 @@
     <Filter Include="ヘッダー ファイル\Stage">
       <UniqueIdentifier>{494763e2-e553-4d45-87d6-9f3f27ff923e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\NinjaArts">
+      <UniqueIdentifier>{57921482-27ff-49b3-94c9-0fa9ec27175c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\NinjaArts">
+      <UniqueIdentifier>{82c88034-18ec-46be-98dd-2c42e334fbfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -144,9 +150,6 @@
     <ClCompile Include="ColliderComponentBase.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteTest.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="NinjaArtsBase.cpp">
+      <Filter>ソース ファイル\NinjaArts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -314,9 +320,6 @@
     <ClInclude Include="BitFlagFunc.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteTest.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="Effect.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="NinjaArtsBase.h">
+      <Filter>ヘッダー ファイル\NinjaArts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@ class JumpComponent;
 class CompletionMeshActor;
 class EnemyBase;
 class Effect;
+class NinjaArtsBase;
 
 class Player final : public Actor
 {
@@ -20,6 +21,8 @@ public:
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
 
 	static const char mLifeMax;
+
+	friend NinjaArtsBase;
 
 private:
 	static const char mDashAttackPower;
@@ -52,6 +55,8 @@ private:
 	JumpComponent * mJumpComponent;
 
 	CompletionMeshActor * mCompletionMeshActor;
+
+	NinjaArtsBase * mCurrentCursorNinjaArts;
 
 	char mCurrentAnimation;
 

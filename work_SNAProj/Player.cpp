@@ -13,6 +13,7 @@
 #include "Input.h"
 #include "EnemyBase.h"
 #include "Effect.h"
+#include "NinjaArtsBase.h"
 
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
@@ -28,6 +29,7 @@ Player::Player() :
 	mFlags_Player(mLookRightFlagMask | mAliveFlagMask),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
+	mCurrentCursorNinjaArts(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
 	mLife(mLifeMax),
 	mHitEffectMass(2)
@@ -157,6 +159,14 @@ void Player::UpdateActor0()
 		mMesh->SetAnimIndex(this, mCurrentAnimation);
 
 		mAttackCollider->SetActive(true);
+	}
+
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N))
+	{
+		if (mCurrentCursorNinjaArts)
+		{
+			mCurrentCursorNinjaArts->Use();
+		}
 	}
 
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
