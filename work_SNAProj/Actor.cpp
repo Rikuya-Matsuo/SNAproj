@@ -187,6 +187,9 @@ void Actor::OnBecomeNotActive()
 
 void Actor::OnBecomeActive()
 {
+	// よくよく考えたらこの設計はよくないかもしれない
+	// 以前アクターがアクティブだったときに、非アクティブだったコンポーネントもアクティブになる為。
+	// あとで考える。
 	SetAllComponentActive(true);
 }
 

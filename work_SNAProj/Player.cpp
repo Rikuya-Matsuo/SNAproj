@@ -12,6 +12,7 @@
 #include "Renderer.h"
 #include "Input.h"
 #include "EnemyBase.h"
+#include "Effect.h"
 
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
@@ -28,7 +29,8 @@ Player::Player() :
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
-	mLife(mLifeMax)
+	mLife(mLifeMax),
+	mHitEffectMass(2)
 {
 	// フラグコピー
 	mPrevFlags_Player = mFlags_Player;
@@ -103,6 +105,14 @@ Player::Player() :
 	ClampSpeedComponent * csc = new ClampSpeedComponent(this, limitSpeed);
 	csc->SetClampDirectionFlags(true, false, false);
 
+	// 攻撃ヒットエフェクトの配列
+	mHitEffects = new Effect*[mHitEffectMass];
+	for (size_t i = 0; i < mHitEffectMass; ++i)
+	{
+		mHitEffects[i] = new Effect("Assets/effectKari.png");
+		mHitEffects[i]->SetScale(20.0f);
+	}
+
 	// 落下スピード割合の調整
 	mFallSpeedRate = 1.5f;
 
@@ -112,6 +122,12 @@ Player::Player() :
 
 Player::~Player()
 {
+	for (size_t i = 0; i < mHitEffectMass; ++i)
+	{
+		delete mHitEffects[i];
+	}
+	delete[] mHitEffects;
+
 	SDL_Log("Player is deleted\n");
 }
 
@@ -320,6 +336,13 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 			enemy->Damage(mDashAttackPower);
 			mHitList.emplace_back(enemy);
 		}
+
+		Effect * eff = FindNonActiveEffect(const_cast<const Effect**>(mHitEffects), mHitEffectMass);
+		if (eff)
+		{
+			eff->SetPosition(enemy->GetPosition());
+			eff->SetActive(true);
+		}
 	}
 }
 
@@ -366,4 +389,20 @@ void Player::OnLanding()
 
 void Player::OnLifeRunOut()
 {
+}
+
+Effect * Player::FindNonActiveEffect(const Effect ** effArray, size_t mass) const
+{
+	Effect * ret = nullptr;
+
+	for (size_t i = 0; i < mass; ++i)
+	{
+		if (!effArray[i]->GetActiveFlag())
+		{
+			ret = const_cast<Effect*>(effArray[i]);
+			break;
+		}
+	}
+
+	return ret;
 }

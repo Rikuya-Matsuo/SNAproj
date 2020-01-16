@@ -7,8 +7,7 @@ class BoxColliderComponent;
 class JumpComponent;
 class CompletionMeshActor;
 class EnemyBase;
-
-// 大量生成するものではないのでビットフラグは使わない
+class Effect;
 
 class Player final : public Actor
 {
@@ -64,6 +63,9 @@ private:
 
 	std::list<EnemyBase *> mHitList;
 
+	const size_t mHitEffectMass;
+	Effect ** mHitEffects;
+
 	void UpdateActor0() override;
 
 	void UpdateActor1() override;
@@ -79,4 +81,6 @@ private:
 	void OnLanding();
 
 	void OnLifeRunOut();
+
+	Effect * FindNonActiveEffect(const Effect ** effArray, size_t mass) const;
 };
