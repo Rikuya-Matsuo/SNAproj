@@ -122,12 +122,6 @@ Player::Player() :
 
 Player::~Player()
 {
-	for (size_t i = 0; i < mHitEffectMass; ++i)
-	{
-		delete mHitEffects[i];
-	}
-	delete[] mHitEffects;
-
 	SDL_Log("Player is deleted\n");
 }
 
