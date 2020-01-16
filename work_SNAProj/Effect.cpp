@@ -3,15 +3,19 @@
 #include "MeshComponent.h"
 #include "System.h"
 
-const float Effect::mDepth = -1.0f;
+const float Effect::mDepth = 0.1f;
 
 Effect::Effect(const std::string & texPath):
 	mAppearSecond(1.0f),
 	mTimer(0.0f)
 {
 	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/board.gpmesh", this);
+	mesh->LoadTexture(texPath, System::GetInstance().GetRenderer(), this);
 	MeshComponent * mc = new MeshComponent(this, 500);
 	mc->SetMesh(mesh);
+
+	mFlags |= mStopUpdateFlagMask_Base;
+	mFlags &= ~(mAffectGravityFlagMask_Base);
 }
 
 Effect::~Effect()
@@ -21,8 +25,6 @@ Effect::~Effect()
 void Effect::UpdateActor0()
 {
 	mTimer += System::GetInstance().GetDeltaTime();
-
-
 
 	if (mTimer > mAppearSecond)
 	{

@@ -19,8 +19,10 @@ EnemyTest::EnemyTest():
 	mAnimChips = mMesh->GetAnimChips(this, 0);
 	mAnimChips->StopPlaying();
 
+	AABB box = mMesh->GetCollisionBox();
+	box.mMin.y -= EnemyBase::mDepth;
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Enemy);
-	bcc->SetObjectBox(mMesh->GetCollisionBox());
+	bcc->SetObjectBox(box);
 }
 
 EnemyTest::~EnemyTest()

@@ -97,6 +97,9 @@ void Actor::Update()
 
 		mFlags &= ~mCalculateTransformFlagMask_Base;
 	}
+
+	// フラグの記録
+	mPrevFlags = mFlags;
 }
 
 void Actor::OnBeyondScene()

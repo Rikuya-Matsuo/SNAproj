@@ -6,12 +6,16 @@ const EnemyBase::FlagType EnemyBase::mAliveFlagMask = 1 << 0;
 const EnemyBase::FlagType EnemyBase::mFindPlayerFlagMask = 1 << 1;
 const EnemyBase::FlagType EnemyBase::mImmortalFlagMask = 1 << 2;
 
+const float EnemyBase::mDepth = 0.05f;
+
 EnemyBase::EnemyBase(unsigned char lifeMax) :
 	mLifeMax(lifeMax),
 	mLife(lifeMax),
 	mFlags_Enemy(mAliveFlagMask)
 {
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
+
+	mFlags_Enemy |= mImmortalFlagMask;
 }
 
 EnemyBase::~EnemyBase()
@@ -43,5 +47,9 @@ void EnemyBase::UpdateActor1()
 {
 	UpdateEnemy1();
 
-	mPosition.y = 0.0f;
+	if (mPosition.y != mDepth)
+	{
+		mPosition.y = mDepth;
+		mFlags |= mCalculateTransformFlagMask_Base;
+	}
 }

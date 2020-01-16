@@ -21,6 +21,7 @@ protected:
 	static const FlagType mFindPlayerFlagMask;
 	static const FlagType mImmortalFlagMask;
 
+	static const float mDepth;
 
 	FlagType mFlags_Enemy;
 

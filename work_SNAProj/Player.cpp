@@ -335,13 +335,17 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 		{
 			enemy->Damage(mDashAttackPower);
 			mHitList.emplace_back(enemy);
-		}
 
-		Effect * eff = FindNonActiveEffect(const_cast<const Effect**>(mHitEffects), mHitEffectMass);
-		if (eff)
-		{
-			eff->SetPosition(enemy->GetPosition());
-			eff->SetActive(true);
+			Effect * eff = FindNonActiveEffect(const_cast<const Effect**>(mHitEffects), mHitEffectMass);
+			if (eff)
+			{
+				eff->SetPosition(enemy->GetPosition());
+				eff->SetActive(true);
+			}
+			else
+			{
+				SDL_Delay(0);
+			}
 		}
 	}
 }
