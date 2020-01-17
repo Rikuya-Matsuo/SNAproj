@@ -219,6 +219,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshComponent.cpp" />
+    <ClCompile Include="Music.cpp" />
     <ClCompile Include="NinjaArtsBase.cpp" />
     <ClCompile Include="PhysicManager.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -228,6 +229,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkeletalMeshComponent.cpp" />
     <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="StageBase.cpp" />
@@ -278,6 +280,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="MatrixPalette.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="Music.h" />
     <ClInclude Include="NinjaArtsBase.h" />
     <ClInclude Include="PhysicManager.h" />
     <ClInclude Include="Player.h" />
@@ -287,6 +290,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="StageBase.h" />
