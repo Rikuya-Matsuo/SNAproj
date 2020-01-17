@@ -20,6 +20,7 @@ protected:
 	static const FlagType mAliveFlagMask;
 	static const FlagType mFindPlayerFlagMask;
 	static const FlagType mImmortalFlagMask;
+	static const FlagType mLookRightFlagMask;
 
 	static const float mDepth;
 

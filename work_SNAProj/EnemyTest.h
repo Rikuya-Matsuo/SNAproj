@@ -2,6 +2,8 @@
 #include "EnemyBase.h"
 
 class AnimationChips;
+class AutoMoveComponent;
+class BoxColliderComponent;
 
 class EnemyTest : public EnemyBase
 {
@@ -14,6 +16,8 @@ public:
 private:
 	typedef Uint8 FlagType;
 	static const FlagType mDamageAnimFlagMask;
+	static const FlagType mLDetectGroundFlagMask;
+	static const FlagType mRDetectGroundFlagMask;
 
 
 	FlagType mFlags_EnemyTest;
@@ -22,7 +26,15 @@ private:
 
 	float mDamageAnimTimer;
 
+	Vector3D mVelocity;
+
 	AnimationChips * mAnimChips;
+
+	AutoMoveComponent * mAutoMoveComp;
+
+	BoxColliderComponent * mLDetector;
+
+	BoxColliderComponent * mRDetector;
 
 	void UpdateEnemy0() override;
 

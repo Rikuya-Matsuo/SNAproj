@@ -157,7 +157,7 @@ void Actor::UpdateComponents()
 void Actor::SortComponents()
 {
 	// 見よ！これがラムダ式を使ったソートである！
-	mComponentList.sort([](ComponentBase * lhs, ComponentBase * rhs) { return lhs->GetPriority() <= rhs->GetPriority(); });
+	mComponentList.sort([](const ComponentBase * lhs, const ComponentBase * rhs) { return lhs->GetPriority() <= rhs->GetPriority(); });
 }
 
 void Actor::UpdateActor0()
