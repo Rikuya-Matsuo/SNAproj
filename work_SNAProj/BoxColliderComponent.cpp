@@ -24,7 +24,10 @@ void BoxColliderComponent::CalculateWorldBox()
 	mWorldBox.mMax *= mOwner->GetScale();
 
 	// 回転
-	mWorldBox.Rotate(mOwner->GetRotation());
+	if (mFlags_CCBase & mRotatableFlagMask)
+	{
+		mWorldBox.Rotate(mOwner->GetRotation());
+	}
 
 	// 平行移動
 	mWorldBox.mMin += mOwner->GetPosition();

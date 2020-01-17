@@ -230,7 +230,7 @@ void Player::UpdateActor1()
 		{
 			mRotationAngle = 0.0f;
 
-			mRotation = Quaternion(mRotationAxis, mRotationAngle);
+			//mRotation = Quaternion(mRotationAxis, mRotationAngle);
 
 			mFlags_Player |= mLookRightFlagMask;
 
@@ -248,7 +248,7 @@ void Player::UpdateActor1()
 		{
 			mRotationAngle = static_cast<float>(M_PI);
 
-			mRotation = Quaternion(mRotationAxis, mRotationAngle);
+			//mRotation = Quaternion(mRotationAxis, mRotationAngle);
 
 			mFlags_Player &= ~mLookRightFlagMask;
 

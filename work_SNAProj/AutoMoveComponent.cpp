@@ -1,4 +1,5 @@
 #include "AutoMoveComponent.h"
+#include "System.h"
 
 const Uint8 AutoMoveComponent::mReverseFlagMask = 1 << 0;
 const Uint8 AutoMoveComponent::mReverseXFlagMask = 1 << 1;
@@ -19,7 +20,7 @@ AutoMoveComponent::~AutoMoveComponent()
 void AutoMoveComponent::Update()
 {
 	Vector3D v = mOwner->GetMoveVector();
-	v += mVelocity;
+	v += mVelocity * System::GetInstance().GetDeltaTime();
 	mOwner->SetMoveVector(v);
 }
 
@@ -52,7 +53,5 @@ void AutoMoveComponent::ReverseVelocity()
 		mVelocity.z *= -1;
 	}
 
-	mFlags_AMC & mReverseFlagMask ?
-		mFlags_AMC &= ~mReverseFlagMask :
-		mFlags_AMC |= mReverseFlagMask;
+	mFlags_AMC ^= mReverseFlagMask;
 }

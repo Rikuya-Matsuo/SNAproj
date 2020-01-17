@@ -17,10 +17,10 @@ public:
 
 protected:
 	typedef Uint8 FlagType;
-	static const FlagType mAliveFlagMask;
-	static const FlagType mFindPlayerFlagMask;
-	static const FlagType mImmortalFlagMask;
-	static const FlagType mLookRightFlagMask;
+	static const FlagType mAliveFlagMask_EBase;
+	static const FlagType mFindPlayerFlagMask_EBase;
+	static const FlagType mImmortalFlagMask_EBase;
+	static const FlagType mLookRightFlagMask_EBase;
 
 	static const float mDepth;
 
@@ -36,7 +36,7 @@ protected:
 
 	virtual void OnLifeRunOut();
 
-
+	void Flip() { mRotationAngle = (mRotationAngle == 0.0f) ? static_cast<float>(M_PI) : 0.0f; }
 
 private:
 	void UpdateActor0() final override;

@@ -30,6 +30,7 @@ Actor::Actor():
 	System::GetInstance().ResisterActor(this);
 
 	mPrevFlags = mFlags;
+	mPrevRotationAngle = mRotationAngle;
 
 	mBelongScene = const_cast<SceneBase*>(SceneBase::GetLatestScene());
 }
@@ -44,6 +45,15 @@ Actor::~Actor()
 
 void Actor::Update()
 {
+	if (mPrevRotationAngle != mRotationAngle)
+	{
+		mRotation = Quaternion(mRotationAxis, mRotationAngle);
+
+		mFlags |= mCalculateTransformFlagMask_Base;
+
+		mPrevRotationAngle = mRotationAngle;
+	}
+
 	if (mFlags & mCalculateTransformFlagMask_Base)
 	{
 		CalculateWorldTransform();
@@ -89,6 +99,15 @@ void Actor::Update()
 	if (!getNonActive && getNonActive_after)
 	{
 		OnBecomeNotActive();
+	}
+
+	if (mPrevRotationAngle != mRotationAngle)
+	{
+		mRotation = Quaternion(mRotationAxis, mRotationAngle);
+
+		mFlags |= mCalculateTransformFlagMask_Base;
+		
+		mPrevRotationAngle = mRotationAngle;
 	}
 
 	if (mFlags & mCalculateTransformFlagMask_Base)

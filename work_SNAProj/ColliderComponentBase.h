@@ -40,21 +40,28 @@ public:
 	void OnApart(const ColliderComponentBase * col) { mOwner->OnApart(this, col); }
 
 	// ヒット時に押し返しを受けるかどうかのフラグのセット（デフォルトで真）
-	void SetMoveOnHitFlag(bool value) { mMoveOnHitFlag = value; }
+	void SetMoveOnHitFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags_CCBase, mMoveOnHitFlagMask); }
 
-	bool GetMoveOnHitFlag() const { return mMoveOnHitFlag; }
+	bool GetMoveOnHitFlag() const { return mFlags_CCBase & mMoveOnHitFlagMask; }
 
 	// ヒット時に相手を押すかどうかのフラグ（デフォルトで真）
-	void SetPushOnHitFlag(bool value) { mPushOnHitFlag = value; }
+	void SetPushOnHitFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags_CCBase, mPushOnHitFlagMask); }
 
-	bool GetPushOnHitFlag() const { return mPushOnHitFlag; }
+	bool GetPushOnHitFlag() const { return mFlags_CCBase & mPushOnHitFlagMask; }
+
+	// アクターの回転についていくか（デフォルトで真）
+	void SetRotatableFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags_CCBase, mRotatableFlagMask); }
 
 protected:
+	typedef Uint8 FlagType;
+	static const FlagType mMoveOnHitFlagMask;
+	static const FlagType mPushOnHitFlagMask;
+	static const FlagType mRotatableFlagMask;
+
+
 	const Uint8 mAttribute;
 
 	const Uint8 mShape;
 
-	bool mMoveOnHitFlag;
-
-	bool mPushOnHitFlag;
+	FlagType mFlags_CCBase;
 };

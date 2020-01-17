@@ -138,5 +138,7 @@ public:
 private:
 	FlagType mPrevFlags;
 
+	float mPrevRotationAngle;
+
 	SceneBase * mBelongScene;
 };

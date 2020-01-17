@@ -13,6 +13,8 @@ public:
 
 	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
+	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
+
 private:
 	typedef Uint8 FlagType;
 	static const FlagType mDamageAnimFlagMask;

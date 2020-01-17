@@ -23,7 +23,7 @@ EnemyTest::EnemyTest():
 	mAnimChips = mMesh->GetAnimChips(this, 0);
 	mAnimChips->StopPlaying();
 
-	mVelocity = Vector3D(10.0f, 0.0f, 0.0f);
+	mVelocity = Vector3D(-10.0f, 0.0f, 0.0f);
 
 	mAutoMoveComp = new AutoMoveComponent(this, mVelocity);
 	mAutoMoveComp->SetReverseFlag(true, false, false);
@@ -47,6 +47,7 @@ EnemyTest::EnemyTest():
 	detectorL.mMin.x -= boxSize.x / 3;
 	mLDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 	mLDetector->SetObjectBox(detectorL);
+	mLDetector->SetRotatableFlag(false);
 
 	// 右側の地面検出装置
 	AABB detectorR = originalBox;
@@ -56,6 +57,7 @@ EnemyTest::EnemyTest():
 	detectorR.mMax.x += boxSize.x / 3;
 	mRDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 	mRDetector->SetObjectBox(detectorR);
+	mRDetector->SetRotatableFlag(false);
 }
 
 EnemyTest::~EnemyTest()
@@ -88,6 +90,49 @@ void EnemyTest::UpdateEnemy0()
 
 		mAnimChips->SetTextureIndex(mTextureIndex);
 	}
+
+	const FlagType detectFlags = mFlags_EnemyTest & (mLDetectGroundFlagMask | mRDetectGroundFlagMask);
+	switch (detectFlags)
+	{
+	// 左だけ検知
+	case mLDetectGroundFlagMask:
+		if (mFlags_Enemy & mLookRightFlagMask_EBase)
+		{
+			mFlags_Enemy &= ~mLookRightFlagMask_EBase;
+			Flip();
+			mAutoMoveComp->ReverseVelocity();
+		}
+		break;
+
+	// 右だけ検知
+	case mRDetectGroundFlagMask:
+		if (!(mFlags_Enemy & mLookRightFlagMask_EBase))
+		{
+			mFlags_Enemy |= mLookRightFlagMask_EBase;
+			Flip();
+			mAutoMoveComp->ReverseVelocity();
+		}
+		break;
+
+	// どちらも検出できなかった
+	case 0:
+		// 空中では移動を行わない
+		if (mAutoMoveComp->GetActiveFlag())
+		{
+			mAutoMoveComp->SetActive(false);
+		}
+		break;
+
+	// 両方検出
+	default:
+		if (!mAutoMoveComp->GetActiveFlag())
+		{
+			mAutoMoveComp->SetActive(true);
+		}
+		break;
+	}
+
+	mFlags_EnemyTest &= ~(mLDetectGroundFlagMask | mRDetectGroundFlagMask);
 }
 
 void EnemyTest::UpdateEnemy1()
@@ -96,10 +141,59 @@ void EnemyTest::UpdateEnemy1()
 
 void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	if (opponent->GetColliderAttribute() == ColliderAttribute::ColAtt_PlayerAttack)
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+	Uint8 callerAtt = caller->GetColliderAttribute();
+
+	if (opponentAtt == ColliderAttribute::ColAtt_PlayerAttack)
 	{
 		mFlags_EnemyTest |= mDamageAnimFlagMask;
 
 		SDL_Log("Damage!\n");
+	}
+
+	// 地面検出装置の処理
+	auto checkPointer = [this, caller, opponentAtt](const BoxColliderComponent * detector, const FlagType mask)
+	{
+		bool ret = false;
+
+		if (detector == caller && opponentAtt == ColliderAttribute::ColAtt_Block)
+		{
+			mFlags_EnemyTest |= mask;
+
+			ret = true;
+		}
+
+		return ret;
+	};
+
+	if (!checkPointer(mLDetector, mLDetectGroundFlagMask))
+	{
+		checkPointer(mRDetector, mRDetectGroundFlagMask);
+	}
+}
+
+void EnemyTest::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
+{
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+	Uint8 callerAtt = caller->GetColliderAttribute();
+
+	// 地面検出装置の処理
+	auto checkPointer = [this, caller, opponentAtt](const BoxColliderComponent * detector, const FlagType mask)
+	{
+		bool ret = false;
+
+		if (detector == caller && opponentAtt == ColliderAttribute::ColAtt_Block)
+		{
+			mFlags_EnemyTest |= mask;
+
+			ret = true;
+		}
+
+		return ret;
+	};
+
+	if (!checkPointer(mLDetector, mLDetectGroundFlagMask))
+	{
+		checkPointer(mRDetector, mRDetectGroundFlagMask);
 	}
 }
