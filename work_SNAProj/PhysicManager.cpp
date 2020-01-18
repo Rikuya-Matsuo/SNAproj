@@ -432,6 +432,11 @@ void PhysicManager::GravityAffect(Actor * actor) const
 	Vector3D vec = actor->GetMoveVector();
 
 	vec.z -= mGravityAcceleration * actor->GetFallSpeedRate() * System::GetInstance().GetDeltaTime();
+	const float limiter = actor->GetFallSpeedMax();
+	if (vec.z < -fabsf(limiter))
+	{
+		vec.z = limiter;
+	}
 
 	actor->SetMoveVector(vec);
 }

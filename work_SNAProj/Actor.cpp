@@ -25,6 +25,7 @@ Actor::Actor():
 	mRotationAngle(0.0f),
 	mScale(1.0f),
 	mFallSpeedRate(1.0f),
+	mFallSpeedMax(30.0f),
 	mFlags(mAffectGravityFlagMask_Base | mMovalFlagMask_Base | mCalculateTransformFlagMask_Base)
 {
 	System::GetInstance().ResisterActor(this);

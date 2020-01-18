@@ -54,6 +54,8 @@ protected:
 
 	float mFallSpeedRate;
 
+	float mFallSpeedMax;
+
 	virtual void UpdateComponents() final;
 
 	void SortComponents();
@@ -123,6 +125,7 @@ public:
 	bool GetPlayerFlag() const { return mFlags & mPlayerFlagMask_Base; }
 
 	float GetFallSpeedRate() const { return mFallSpeedRate; }
+	float GetFallSpeedMax() const { return mFallSpeedMax; }
 
 	int GetPriority() const { return mPriority; }
 

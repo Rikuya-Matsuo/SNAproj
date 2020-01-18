@@ -100,7 +100,7 @@ Player::Player() :
 
 	// ジャンプ機能
 	mJumpComponent = new JumpComponent(this);
-	mJumpComponent->SetJumpHeight(1.2f, 1.2f);
+	mJumpComponent->SetPower(6.0f);
 
 	// 最大速度を調整
 	Vector3D limitSpeed(100.0f, 0.0f, 100.0f);
@@ -116,7 +116,10 @@ Player::Player() :
 	}
 
 	// 落下スピード割合の調整
-	mFallSpeedRate = 1.5f;
+	mFallSpeedRate = 25.0f;
+
+	// 落下スピードの制限値設定
+	mFallSpeedMax = 50.0f;
 
 	// プレイヤーであることを示すフラグ
 	mFlags |= mPlayerFlagMask_Base;
