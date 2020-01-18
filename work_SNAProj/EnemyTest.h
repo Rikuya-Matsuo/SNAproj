@@ -20,9 +20,12 @@ private:
 	static const FlagType mDamageAnimFlagMask;
 	static const FlagType mLDetectGroundFlagMask;
 	static const FlagType mRDetectGroundFlagMask;
+	static const FlagType mDetectWallFlagMask;
 
 
 	FlagType mFlags_EnemyTest;
+
+	FlagType mPrevFlags_EnemyTest;
 
 	unsigned char mTextureIndex;
 
@@ -34,9 +37,11 @@ private:
 
 	AutoMoveComponent * mAutoMoveComp;
 
-	BoxColliderComponent * mLDetector;
+	BoxColliderComponent * mLGroundDetector;
 
-	BoxColliderComponent * mRDetector;
+	BoxColliderComponent * mRGroundDetector;
+
+	BoxColliderComponent * mWallDetector;
 
 	void UpdateEnemy0() override;
 

@@ -6,10 +6,12 @@
 #include "AutoMoveComponent.h"
 #include "BoxColliderComponent.h"
 #include "ClampSpeedComponent.h"
+#include "Input.h"
 
 const EnemyTest::FlagType EnemyTest::mDamageAnimFlagMask = 1 << 0;
 const EnemyTest::FlagType EnemyTest::mLDetectGroundFlagMask = 1 << 1;
 const EnemyTest::FlagType EnemyTest::mRDetectGroundFlagMask = 1 << 2;
+const EnemyTest::FlagType EnemyTest::mDetectWallFlagMask = 1 << 3;
 
 EnemyTest::EnemyTest():
 	EnemyBase(3),
@@ -46,9 +48,9 @@ EnemyTest::EnemyTest():
 	detectorL.mMin.z -= 0.1f;
 	detectorL.mMax.x = detectorL.mMin.x;
 	detectorL.mMin.x -= boxSize.x / 3;
-	mLDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
-	mLDetector->SetObjectBox(detectorL);
-	mLDetector->SetRotatableFlag(false);
+	mLGroundDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
+	mLGroundDetector->SetObjectBox(detectorL);
+	mLGroundDetector->SetRotatableFlag(false);
 
 	// 右側の地面検出装置
 	AABB detectorR = originalBox;
@@ -56,9 +58,20 @@ EnemyTest::EnemyTest():
 	detectorR.mMin.z -= 0.1f;
 	detectorR.mMin.x = detectorR.mMax.x;
 	detectorR.mMax.x += boxSize.x / 3;
-	mRDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
-	mRDetector->SetObjectBox(detectorR);
-	mRDetector->SetRotatableFlag(false);
+	mRGroundDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
+	mRGroundDetector->SetObjectBox(detectorR);
+	mRGroundDetector->SetRotatableFlag(false);
+
+	// 進行方向の壁検出装置
+	AABB wallDetector = originalBox;
+	wallDetector.mMin.z += boxSize.z / 5;
+	wallDetector.mMax.z -= boxSize.z / 5;
+	wallDetector.mMax.x = wallDetector.mMin.x;
+	wallDetector.mMin.x -= 0.1f;
+	mWallDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
+	mWallDetector->SetObjectBox(wallDetector);
+
+	mPrevFlags_EnemyTest = mFlags_EnemyTest;
 }
 
 EnemyTest::~EnemyTest()
@@ -122,6 +135,10 @@ void EnemyTest::UpdateEnemy0()
 		{
 			mAutoMoveComp->SetActive(false);
 		}
+		if (!GetAffectGravityFlag())
+		{
+			SetAffectGravityFlag(true);
+		}
 		break;
 
 	// 両方検出
@@ -133,11 +150,30 @@ void EnemyTest::UpdateEnemy0()
 		break;
 	}
 
-	mFlags_EnemyTest &= ~(mLDetectGroundFlagMask | mRDetectGroundFlagMask);
+	// 地面にいる間は重力の影響を受けない
+	if (detectFlags != 0)
+	{
+		SetAffectGravityFlag(false);
+	}
+
+	// 壁を検出したら反転
+	if (mFlags_EnemyTest & mDetectWallFlagMask)
+	{
+		if (!(mPrevFlags_EnemyTest & mDetectWallFlagMask))
+		{
+			bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
+			BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
+			Flip();
+			mAutoMoveComp->ReverseVelocity();
+		}
+	}
 }
 
 void EnemyTest::UpdateEnemy1()
 {
+	mPrevFlags_EnemyTest = mFlags_EnemyTest;
+
+	mFlags_EnemyTest &= ~(mLDetectGroundFlagMask | mRDetectGroundFlagMask | mDetectWallFlagMask);
 }
 
 void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
@@ -148,6 +184,7 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 	if (opponentAtt == ColliderAttribute::ColAtt_PlayerAttack)
 	{
 		mFlags_EnemyTest |= mDamageAnimFlagMask;
+
 
 		SDL_Log("Damage!\n");
 	}
@@ -167,9 +204,12 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 		return ret;
 	};
 
-	if (!checkPointer(mLDetector, mLDetectGroundFlagMask))
+	checkPointer(mLGroundDetector, mLDetectGroundFlagMask);
+	checkPointer(mRGroundDetector, mRDetectGroundFlagMask);
+	bool hoge = checkPointer(mWallDetector, mDetectWallFlagMask);
+	if (hoge)
 	{
-		checkPointer(mRDetector, mRDetectGroundFlagMask);
+		SDL_Log("FFF\n");
 	}
 }
 
@@ -193,8 +233,11 @@ void EnemyTest::OnTouching(const ColliderComponentBase * caller, const ColliderC
 		return ret;
 	};
 
-	if (!checkPointer(mLDetector, mLDetectGroundFlagMask))
+	checkPointer(mLGroundDetector, mLDetectGroundFlagMask);
+	checkPointer(mRGroundDetector, mRDetectGroundFlagMask);
+	bool hoge = checkPointer(mWallDetector, mDetectWallFlagMask);
+	if (hoge)
 	{
-		checkPointer(mRDetector, mRDetectGroundFlagMask);
+		SDL_Log("FFF\n");
 	}
 }
