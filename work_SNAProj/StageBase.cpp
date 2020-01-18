@@ -1,6 +1,9 @@
 ﻿#include "StageBase.h"
 #include "Block.h"
 #include "Floor.h"
+#include <vector>
+#include <fstream>
+#include <sstream>
 
 float StageBase::mBlockScale = 1.0f;
 
@@ -27,7 +30,85 @@ StageBase::~StageBase()
 
 void StageBase::Load(const std::string & fileName)
 {
-	return;
+	mBlockMassX = mBlockMassY = 0;
+
+	// ファイルオープン
+	std::ifstream mapFile;
+	mapFile.open(fileName.c_str());
+
+	// 読み込み失敗時
+	if (mapFile.fail())
+	{
+		return;
+	}
+
+	std::vector<int> numArray;		// 配列が決まるまで一時的にここに格納する
+	std::string buf;				// 数字文字を格納
+	buf.reserve(4);
+	int mapWidth = 0;				// マップの幅を記録
+	char c;							// ファイルの中の文字
+	while (true)
+	{
+		// 文字を入れる
+		c = mapFile.get();
+
+		// ファイルが終わりならループを抜ける
+		if (mapFile.eof())
+		{
+			break;
+		}
+
+		// カンマじゃなく、改行でもない = 数字文字
+		if (c != ',' && c != '\n')
+		{
+			buf += c;
+		}
+		else
+		{
+			// マップ幅記録（マップ幅　=　カンマ、改行の読まれた数　より）
+			mapWidth++;
+
+			// 改行は段が変わったとき。
+			if (c == '\n')
+			{
+				mBlockMassY++;
+
+				// 一番広い幅を幅として記録する
+				if (mapWidth > mBlockMassX)
+				{
+					mBlockMassX = mapWidth;
+				}
+				mapWidth = 0;
+			}
+
+			// 数字文字をint型の値として記録
+			int num = std::stoi(buf);
+			numArray.emplace_back(num);
+			buf.clear();
+		}
+	}
+
+	// メモリ確保
+	mBlocks = new Uint8*[mBlockMassY];
+	for (int i = 0; i < mBlockMassY; ++i)
+	{
+		mBlocks[i] = new Uint8[mBlockMassX];
+	}
+
+	// 代入
+	for (int yloop = 0; yloop < mBlockMassY; ++yloop)
+	{
+		for (int xloop = 0; xloop < mBlockMassX; ++xloop)
+		{
+			int loopNum = yloop * mBlockMassX + xloop;
+			mBlocks[yloop][xloop] = numArray[loopNum];
+		}
+	}
+
+	std::vector<int>().swap(numArray);
+
+	// 生成
+	Construct();
 }
 
 void StageBase::Construct()

@@ -34,6 +34,7 @@ EnemyTest::EnemyTest():
 	const AABB originalBox = mMesh->GetCollisionBox();;
 	AABB colBox = mMesh->GetCollisionBox();
 	colBox.mMin.y -= EnemyBase::mDepth;
+	colBox.mMax.y += EnemyBase::mDepth;
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Enemy);
 	bcc->SetObjectBox(colBox);
 

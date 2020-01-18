@@ -103,7 +103,7 @@ Player::Player() :
 	mJumpComponent->SetPower(6.0f);
 
 	// 最大速度を調整
-	Vector3D limitSpeed(100.0f, 0.0f, 100.0f);
+	Vector3D limitSpeed(170.0f, 0.0f, 100.0f);
 	ClampSpeedComponent * csc = new ClampSpeedComponent(this, limitSpeed);
 	csc->SetClampDirectionFlags(true, false, false);
 

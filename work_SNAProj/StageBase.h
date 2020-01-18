@@ -8,7 +8,6 @@ public:
 	StageBase();
 	~StageBase();
 
-	// 未実装
 	virtual void Load(const std::string & fileName);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }

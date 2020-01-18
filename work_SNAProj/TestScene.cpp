@@ -14,6 +14,7 @@
 #include "Input.h"
 #include "GameOverScene.h"
 #include "GameClearScene.h"
+
 TestScene::TestScene()
 {
 	Player * p = new Player;
@@ -23,7 +24,9 @@ TestScene::TestScene()
 
 	TestStage * ts = new TestStage;
 	ts->SetBlockScale(0.3f);
-	ts->Load("");
+	ts->Load("Map/map.csv");
+
+	delete ts;
 
 	GenerateBGWall(ts->GetFloorHeight());
 
