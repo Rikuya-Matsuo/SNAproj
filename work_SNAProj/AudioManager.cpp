@@ -38,6 +38,8 @@ int AudioManager::GetSoundIndex(const std::string & soundPath)
 	Sound * snd = new Sound;
 	if (snd->Load(soundPath))
 	{
+		// インデックスをランダムにすることでループ回数削減が見込める
+		// 後でやりたいと思う
 		int i = 0;
 		bool findFlag = false;
 		while (!findFlag)
@@ -46,6 +48,8 @@ int AudioManager::GetSoundIndex(const std::string & soundPath)
 			(itr == mSounds.end()) ? ret = i : i++;
 			findFlag = (ret == i);
 		}
+
+		mSounds[ret] = snd;
 	}
 
 	return ret;
@@ -67,6 +71,8 @@ int AudioManager::GetMusicIndex(const std::string & musicPath)
 	Music * msc = new Music;
 	if (msc->Load(musicPath))
 	{
+		// インデックスをランダムにすることでループ回数削減が見込める
+		// 後でやりたいと思う
 		int i = 0;
 		bool findFlag = false;
 		while (!findFlag)
@@ -75,7 +81,76 @@ int AudioManager::GetMusicIndex(const std::string & musicPath)
 			(itr == mMusics.end()) ? ret = i : i++;
 			findFlag = (ret == i);
 		}
+
+		mMusics[ret] = msc;
 	}
 
 	return ret;
+}
+
+void AudioManager::PlaySound(int soundIndex)
+{
+	auto itr = mSounds.find(soundIndex);
+	if (itr != mSounds.end())
+	{
+		itr->second->Play();
+	}
+}
+
+void AudioManager::StopSound(int soundIndex)
+{
+	auto itr = mSounds.find(soundIndex);
+	if (itr != mSounds.end())
+	{
+		itr->second->Stop();
+	}
+}
+
+bool AudioManager::IsPlayingSound(int soundIndex)
+{
+	auto itr = mSounds.find(soundIndex);
+	if (itr != mSounds.end())
+	{
+		return itr->second->IsPlaying();
+	}
+
+	return false;
+}
+
+void AudioManager::DeresisterSound(int soundIndex)
+{
+	auto itr = mSounds.find(soundIndex);
+	if (itr != mSounds.end())
+	{
+		delete itr->second;
+		mSounds.erase(itr->first);
+	}
+}
+
+void AudioManager::PlayMusic(int musicIndex)
+{
+	auto itr = mMusics.find(musicIndex);
+	if (itr != mMusics.end())
+	{
+		itr->second->Play();
+	}
+}
+
+void AudioManager::PlayFadeInMusic(int musicIndex, int time) const
+{
+	auto itr = mMusics.find(musicIndex);
+	if (itr != mMusics.end())
+	{
+		itr->second->FadeIn(time);
+	}
+}
+
+void AudioManager::DeresisterMusic(int musicIndex)
+{
+	auto itr = mMusics.find(musicIndex);
+	if (itr != mMusics.end())
+	{
+		delete itr->second;
+		mMusics.erase(itr);
+	}
 }
