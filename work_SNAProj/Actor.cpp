@@ -80,6 +80,15 @@ void Actor::Update()
 		UpdateActor0();
 	}
 
+	if (mPrevRotationAngle != mRotationAngle)
+	{
+		mRotation = Quaternion(mRotationAxis, mRotationAngle);
+
+		mFlags |= mCalculateTransformFlagMask_Base;
+
+		mPrevRotationAngle = mRotationAngle;
+	}
+
 	UpdateComponents();
 
 	if (isActive)
@@ -90,6 +99,11 @@ void Actor::Update()
 	// 移動が発生しているなら移動させる
 	if (mMoveVector.LengthSq())
 	{
+		if (mFlags & mPlayerFlagMask_Base)
+		{
+			SDL_Delay(0);
+		}
+
 		mPosition += mMoveVector;
 
 		mFlags |= mCalculateTransformFlagMask_Base;

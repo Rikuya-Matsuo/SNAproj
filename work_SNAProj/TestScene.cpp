@@ -82,7 +82,7 @@ void TestScene::Update()
 
 #endif // DEBUG_SNA
 
-	if (mPlayer->GetLife() <= 0)
+	if (!mPlayer->GetAliveFlag())
 	{
 		mNextScene = new GameOverScene;
 		mFlags |= mSceneChangeFlagMask;

@@ -16,6 +16,8 @@ public:
 	Player();
 	~Player();
 
+	bool GetAliveFlag() const { return mFlags_Player & mAliveFlagMask; }
+
 	char GetLife() const { return mLife; }
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }

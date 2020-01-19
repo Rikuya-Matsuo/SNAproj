@@ -16,6 +16,7 @@ const EnemyTest::FlagType EnemyTest::mHitWallFlagMask = 1 << 3;
 const EnemyTest::FlagType EnemyTest::mDetectPlayerFlagMask = 1 << 4;
 const EnemyTest::FlagType EnemyTest::mDetectWallFlagMask = 1 << 5;
 const EnemyTest::FlagType EnemyTest::mTackleFlagMask = 1 << 6;
+const EnemyTest::FlagType EnemyTest::mKnockBackFlagMask = 1 << 7;
 
 const float EnemyTest::mTackleWait = 0.8f;
 
@@ -31,7 +32,9 @@ EnemyTest::EnemyTest():
 	mVelocity(Vector3D(-10.0f, 0.0f, 0.0f)),
 	mTackleVelocity(Vector3D(-20.0f, 0.0f, 0.0f)),
 	mNormalVelocityLimit(Vector3D(30.0f, 0.0f, 30.0f)),
-	mTackleVelocityLimit(Vector3D(70.0f, 0.0f, 50.0f))
+	mTackleVelocityLimit(Vector3D(70.0f, 0.0f, 50.0f)),
+	mKnockBackRightVector(Vector3D(10.0f, 0.0, 10.0f)),
+	mKnockBackVecLimit(Vector3D(50.0f, 0.0f, 50.0f))
 {
 	mMesh->LoadDivTexture("Assets/AnimChipTest.png", System::GetInstance().GetRenderer(), this, 3, 3, 1, 32, 32, 0.0f, 0);
 	MeshComponent * mc = new MeshComponent(this, 350);
@@ -94,6 +97,8 @@ EnemyTest::EnemyTest():
 	mPlayerDetector->SetObjectBox(playerDetector);
 
 	mPrevFlags_EnemyTest = mFlags_EnemyTest;
+
+	mFallSpeedRate = 2.0f;
 }
 
 EnemyTest::~EnemyTest()
@@ -102,6 +107,16 @@ EnemyTest::~EnemyTest()
 
 void EnemyTest::UpdateEnemy0()
 {
+	if (mFlags_EnemyTest & mKnockBackFlagMask)
+	{
+		if (!(mPrevFlags_EnemyTest & mKnockBackFlagMask))
+		{
+			mMoveVector = mKnockBackVector;
+		}
+		mMoveVector.x = mKnockBackVector.x;
+		mAutoMoveComp->SetActive(false);
+	}
+
 	if (mFlags_EnemyTest & mDamageAnimFlagMask)
 	{
 		mTextureIndex++;
@@ -165,29 +180,37 @@ void EnemyTest::UpdateEnemy0()
 
 	// 両方検出
 	default:
-		if (!mAutoMoveComp->GetActiveFlag())
+		// ノックバック時は例外
+		if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyTest & mKnockBackFlagMask))
 		{
 			mAutoMoveComp->SetActive(true);
 		}
 		break;
 	}
 
-	// 地面にいる間は重力の影響を受けない
-	if (detectFlags != 0)
+	// 着地中は重力の影響を受けない(ノックバック例外）
+	if (detectFlags != 0 && !(mFlags_EnemyTest & mKnockBackFlagMask))
 	{
 		SetAffectGravityFlag(false);
+	}
+
+	// 着地時
+	if (detectFlags != 0)
+	{
+		// ノックバックしたばかりでなければフラグを下す
+		if (mPrevFlags_EnemyTest & mFlags_EnemyTest & mKnockBackFlagMask)
+		{
+			mFlags_EnemyTest &= ~mKnockBackFlagMask;
+		}
 	}
 
 	// 壁を検出したら反転
 	if (mFlags_EnemyTest & mHitWallFlagMask)
 	{
-		if (!(mPrevFlags_EnemyTest & mHitWallFlagMask))
-		{
-			bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
-			BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
-			Flip();
-			mAutoMoveComp->ReverseVelocity();
-		}
+		bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
+		BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
+		Flip();
+		mAutoMoveComp->ReverseVelocity();
 	}
 
 	// プレイヤー検知時にタックル準備処理
@@ -222,10 +245,13 @@ void EnemyTest::UpdateEnemy0()
 	}
 
 	// 自動移動が非アクティブなら水平方向移動ベクトルを0に
-	if (!mAutoMoveComp->GetActiveFlag())
+	// ただし、ノックバックは除く
+	if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyTest & mKnockBackFlagMask))
 	{
 		mMoveVector.x = 0.0f;
 	}
+
+	mFlags |= mPlayerFlagMask_Base;
 }
 
 void EnemyTest::TackleProcess()
@@ -253,6 +279,13 @@ void EnemyTest::TackleProcess()
 
 void EnemyTest::UpdateEnemy1()
 {
+	if (mPrevFlags_EnemyTest & mKnockBackFlagMask && !(mFlags_EnemyTest & mKnockBackFlagMask))
+	{
+		Vector3D lim = (mFlags_EnemyTest & mTackleFlagMask) ? mTackleVelocityLimit : mNormalVelocityLimit;
+		mClamper->SetLimit(lim);
+		mClamper->SetClampDirectionFlags(true, false, false);
+	}
+
 	mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
 	EnemyTest::FlagType mask =
@@ -274,6 +307,13 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 	if (caller == mBodyCollision && opponentAtt == ColliderAttribute::ColAtt_PlayerAttack)
 	{
 		mFlags_EnemyTest |= mDamageAnimFlagMask;
+		
+		mFlags_EnemyTest |= mKnockBackFlagMask;
+		float x = opponent->GetOwner()->GetPosition().x - mPosition.x;
+		mKnockBackVector = mKnockBackRightVector;
+		mKnockBackVector.x *= (x < 0.0f) ? 1.0f : -1.0f;
+		mClamper->SetLimit(mKnockBackVecLimit);
+		mClamper->SetClampDirectionFlags(true, false, true);
 	}
 
 	// 地面検出装置の処理

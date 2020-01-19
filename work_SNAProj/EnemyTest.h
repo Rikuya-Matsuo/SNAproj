@@ -25,6 +25,7 @@ private:
 	static const FlagType mDetectPlayerFlagMask;
 	static const FlagType mDetectWallFlagMask;
 	static const FlagType mTackleFlagMask;
+	static const FlagType mKnockBackFlagMask;
 
 	static const float mTackleWait;
 
@@ -32,6 +33,10 @@ private:
 	const Vector3D mNormalVelocityLimit;
 
 	const Vector3D mTackleVelocityLimit;
+
+	const Vector3D mKnockBackRightVector;
+
+	const Vector3D mKnockBackVecLimit;
 
 	FlagType mFlags_EnemyTest;
 
@@ -46,6 +51,8 @@ private:
 	Vector3D mVelocity;
 
 	Vector3D mTackleVelocity;
+
+	Vector3D mKnockBackVector;
 
 	Vector3D mPlayerDirection;
 

@@ -122,7 +122,10 @@ Player::Player() :
 	mFallSpeedMax = 50.0f;
 
 	// プレイヤーであることを示すフラグ
-	mFlags |= mPlayerFlagMask_Base;
+	//mFlags |= mPlayerFlagMask_Base;
+
+	// プレイヤーを不死身に
+	mFlags_Player |= mImmortalFlagMask;
 }
 
 Player::~Player()
