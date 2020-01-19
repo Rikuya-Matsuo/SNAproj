@@ -17,10 +17,10 @@
 
 TestScene::TestScene()
 {
-	Player * p = new Player;
-	mActors.emplace_back(p);
-	p->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
-	p->SetScale(25.0f);
+	mPlayer = new Player;
+	mActors.emplace_back(mPlayer);
+	mPlayer->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
+	mPlayer->SetScale(25.0f);
 
 	TestStage * ts = new TestStage;
 	ts->SetBlockScale(0.3f);
@@ -36,9 +36,9 @@ TestScene::TestScene()
 	et->SetScale(25.0f);
 	et->SetPosition(Vector3D(50.0f, 0.0f, 100.0f));
 
-	Camera * cam = new Camera(p);
+	Camera * cam = new Camera(mPlayer);
 	mCameras.emplace_back(cam);
-	cam->Init(Vector3D(0, 100, 100), p->GetPosition(), Vector3D(0, 0, 1));
+	cam->Init(Vector3D(0, 100, 100), mPlayer->GetPosition(), Vector3D(0, 0, 1));
 	cam->SetDistanceVector(Vector3D(0, 150, 50));
 	cam->SetChaseTargetFlag(true);
 	cam->SetActive();
@@ -82,6 +82,11 @@ void TestScene::Update()
 
 #endif // DEBUG_SNA
 
+	if (mPlayer->GetLife() <= 0)
+	{
+		mNextScene = new GameOverScene;
+		mFlags |= mSceneChangeFlagMask;
+	}
 }
 
 void TestScene::GenerateBGWall(float height)

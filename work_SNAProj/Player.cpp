@@ -15,7 +15,7 @@
 #include "Effect.h"
 #include "NinjaArtsBase.h"
 
-const char Player::mLifeMax = 10;
+const char Player::mLifeMax = 3;
 const char Player::mDashAttackPower = 1;
 
 const Player::FlagType Player::mLandingFlagMask			= 1 << 0;
@@ -393,6 +393,7 @@ void Player::OnLanding()
 
 void Player::OnLifeRunOut()
 {
+	mFlags_Player &= ~mAliveFlagMask;
 }
 
 Effect * Player::FindNonActiveEffect(const Effect ** effArray, size_t mass) const

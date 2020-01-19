@@ -7,6 +7,7 @@
 #include "BoxColliderComponent.h"
 #include "ClampSpeedComponent.h"
 #include "Input.h"
+#include "Player.h"
 
 const EnemyTest::FlagType EnemyTest::mDamageAnimFlagMask = 1 << 0;
 const EnemyTest::FlagType EnemyTest::mLDetectGroundFlagMask = 1 << 1;
@@ -264,6 +265,12 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
 
+	if (mFlags_EnemyTest & mTackleFlagMask && opponentAtt == ColAtt_Player)
+	{
+		Player * p = static_cast<Player*>(opponent->GetOwner());
+		p->Damage(1);
+	}
+
 	if (caller == mBodyCollision && opponentAtt == ColliderAttribute::ColAtt_PlayerAttack)
 	{
 		mFlags_EnemyTest |= mDamageAnimFlagMask;
@@ -277,11 +284,6 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 
 		if (detector == caller && opponentAtt == cmpAtt)
 		{
-			if (cmpAtt == ColAtt_Player)
-			{
-				SDL_Delay(0);
-			}
-
 			mFlags_EnemyTest |= mask;
 
 			ret = true;
@@ -298,12 +300,6 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 	if (detPlayer)
 	{
 		mPlayerDirection = opponent->GetOwner()->GetPosition() - mPosition;
-
-#ifdef DEBUG_SNA
-
-		SDL_Log("detect Player.%d\n", System::frameCount);
-
-#endif // DEBUG_SNA
 	}
 
 	bool detBlock = checkPointer(mPlayerDetector, mDetectWallFlagMask);
@@ -342,12 +338,6 @@ void EnemyTest::OnTouching(const ColliderComponentBase * caller, const ColliderC
 	if (detPlayer)
 	{
 		mPlayerDirection = opponent->GetOwner()->GetPosition() - mPosition;
-
-#ifdef DEBUG_SNA
-
-		SDL_Log("detect Player.%d\n", System::frameCount);
-
-#endif // DEBUG_SNA
 	}
 
 	bool detBlock = checkPointer(mPlayerDetector, mDetectWallFlagMask);
