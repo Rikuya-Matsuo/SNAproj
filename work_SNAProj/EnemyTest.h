@@ -4,6 +4,7 @@
 class AnimationChips;
 class AutoMoveComponent;
 class BoxColliderComponent;
+class ClampSpeedComponent;
 
 class EnemyTest : public EnemyBase
 {
@@ -20,8 +21,17 @@ private:
 	static const FlagType mDamageAnimFlagMask;
 	static const FlagType mLDetectGroundFlagMask;
 	static const FlagType mRDetectGroundFlagMask;
+	static const FlagType mHitWallFlagMask;
+	static const FlagType mDetectPlayerFlagMask;
 	static const FlagType mDetectWallFlagMask;
+	static const FlagType mTackleFlagMask;
 
+	static const float mTackleWait;
+
+
+	const Vector3D mNormalVelocityLimit;
+
+	const Vector3D mTackleVelocityLimit;
 
 	FlagType mFlags_EnemyTest;
 
@@ -31,11 +41,21 @@ private:
 
 	float mDamageAnimTimer;
 
+	float mTackleWaitTimer;
+
 	Vector3D mVelocity;
+
+	Vector3D mTackleVelocity;
+
+	Vector3D mPlayerDirection;
+
+	Vector3D mWallDerection;
 
 	AnimationChips * mAnimChips;
 
 	AutoMoveComponent * mAutoMoveComp;
+
+	BoxColliderComponent * mBodyCollision;
 
 	BoxColliderComponent * mLGroundDetector;
 
@@ -43,7 +63,13 @@ private:
 
 	BoxColliderComponent * mWallDetector;
 
+	BoxColliderComponent * mPlayerDetector;
+
+	ClampSpeedComponent * mClamper;
+
 	void UpdateEnemy0() override;
 
 	void UpdateEnemy1() override;
+
+	void TackleProcess();
 };

@@ -286,7 +286,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 	ColliderAttribute callerAtt = caller->GetColliderAttribute();
 	ColliderAttribute opponentAtt = opponent->GetColliderAttribute();
 
-	if (callerAtt == ColliderAttribute::ColAtt_Detector)
+	if (callerAtt == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
 	{
 		OnDetectGround(opponent);
 
@@ -359,7 +359,8 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector)
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
 	{
 		OnDetectGround(opponent);
 
@@ -374,14 +375,6 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 
 void Player::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector &&
-		opponent->GetColliderAttribute() == ColliderAttribute::ColAtt_Block)
-	{
-	}
-
-	static char apartTest = 0;
-	//SDL_Log("Apart!%d\n", apartTest);
-	apartTest ^= 1;
 }
 
 void Player::OnDetectGround(const ColliderComponentBase * opponent)

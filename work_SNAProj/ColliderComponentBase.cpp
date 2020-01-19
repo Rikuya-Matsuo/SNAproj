@@ -14,7 +14,7 @@ ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute co
 	if (mAttribute == ColliderAttribute::ColAtt_Detector)
 	{
 		mPriority -= 50;
-		mFlags_CCBase &= ~mMoveOnHitFlagMask;
+		mFlags_CCBase &= ~(mMoveOnHitFlagMask | mPushOnHitFlagMask);
 		mOwner->RequestSortComponents();
 	}
 

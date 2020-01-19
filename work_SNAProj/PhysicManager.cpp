@@ -326,11 +326,12 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 				};
 				bool movalFlag1 = checkMoval(collider1) && collider2->GetPushOnHitFlag();
 				bool movalFlag2 = checkMoval(collider2) && collider1->GetPushOnHitFlag();
-				if (movalFlag1)
+				bool sameOwner = collider1->GetOwner() == collider2->GetOwner();
+				if (!sameOwner && movalFlag1)
 				{
 					HitPush(collider1, collider2);
 				}
-				if (movalFlag2)
+				if (!sameOwner && movalFlag2)
 				{
 					HitPush(collider2, collider1);
 				}
@@ -693,6 +694,7 @@ PhysicManager::PhysicManager()
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Block);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);
+	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Player);
 	ResisterCheckableAttributeCombination(ColAtt_PlayerAttack, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_EnemyAttack, ColAtt_Player);
 	ResisterCheckableAttributeCombination(ColAtt_Enemy, ColAtt_Block);

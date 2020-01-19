@@ -20,6 +20,10 @@ class System final
 public:
 	~System();
 
+#ifdef DEBUG_SNA
+	static Uint64 frameCount;
+#endif // DEBUG_SNA
+
 	static const float mMaxDeltaTime;
 
 	static System& GetInstance()
