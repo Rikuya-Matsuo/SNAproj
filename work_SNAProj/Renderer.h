@@ -12,6 +12,7 @@ typedef struct _DirectionalLight
 	Vector3D mSpecColor;	    // スペキュラーカラー
 }DirectionalLight;
 
+class Camera;
 
 class Renderer
 {
@@ -39,6 +40,8 @@ public:
 	const Matrix4&         GetViewMatrix() { return mView; }
 	const Matrix4&         GetProjectionMatrix() { return mProjection; }
 
+	void SetCamera(Camera * cam) { mCameraPointer = cam; }
+
 	void                   AddMeshComponent(class MeshComponent* mesh);                        // メッシュコンポーネントの追加
 	void                   RemoveMeshComponent(class MeshComponent* mesh);                     // メッシュコンポーネントの削除
 	void                   ShowResource();                                                     // 登録されている テクスチャ・メッシュリソースの表示（デバッグ用）
@@ -60,6 +63,7 @@ private:
 	std::unordered_map<std::string, class Skeleton*>  mSkeletons; // スケルタルデータ
 	std::unordered_map<std::string, class Animation*> mAnims;    // アニメーションデータ
 
+	const float mFieldOfView;
 
 	//シェーダー関連
 	class Shader*										mMeshShader;			// メッシュシェーダー
@@ -78,6 +82,8 @@ private:
 	SDL_Window*                                       mWindow;           // SDLウィンドウハンドル 
 	SDL_GLContext                                     mContext;          // OpenGLコンテキスト
 	SDL_Renderer*                                     mSDLRenderer;      // SDLレンダリングハンドル
+
+	Camera*												mCameraPointer;
 };
 
 bool GLErrorHandle(const char* location);                              // OpenGLのエラーハンドル取得

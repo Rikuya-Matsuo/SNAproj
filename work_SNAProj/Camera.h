@@ -16,6 +16,8 @@ public:
 	void SetTargetActor(const Actor * target) { mTargetActor = const_cast<Actor *>(target); }
 	void SetActive();
 
+	const Vector3D & GetPosition() const { return mPosition; }
+
 	const Matrix4 & GetViewMatrix() const { return mViewMatrix; }
 	const Vector3D & GetViewVector() const { return mViewVector; }
 

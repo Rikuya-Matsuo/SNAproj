@@ -64,4 +64,27 @@ namespace Common
 
 		return val;
 	}
+
+	static float DegreesFix(float degrees)
+	{
+		if (degrees > 360.000f)
+		{
+			int num = static_cast<int>(degrees) / 360;
+			degrees -= 360.000f * num;
+		}
+		else if (degrees < 0.00f)
+		{
+			degrees = 360.000f + degrees;
+		}
+
+		return degrees;
+	}
+
+	static float DegToRad(float degrees)
+	{
+		degrees = DegreesFix(degrees);
+
+		const float pi = static_cast<float>(M_PI);
+		return (pi / 180.000f) * degrees;
+	}
 }

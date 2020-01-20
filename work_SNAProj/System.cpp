@@ -135,6 +135,7 @@ void System::Run()
 		{
 			mActiveCamera->Update();
 
+			mRenderer->SetCamera(mActiveCamera);
 			Matrix4 viewMatrix = mActiveCamera->GetViewMatrix();
 			mRenderer->SetViewMatrix(viewMatrix);
 		}

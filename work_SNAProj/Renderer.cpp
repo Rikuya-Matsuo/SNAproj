@@ -8,7 +8,8 @@
 #include "Skeleton.h"
 #include "SkeletalMeshComponent.h"
 #include "Animation.h"
-
+#include "Camera.h"
+#include "Common.h"
 
 Renderer::Renderer()
 	:mWindow(nullptr)
@@ -16,6 +17,7 @@ Renderer::Renderer()
 	,mContext(0)
 	,mMeshShader(nullptr)
 	,mSkinnedShader(nullptr)
+	,mFieldOfView(Common::DegToRad(150.0f))
 {
 }
 
@@ -155,6 +157,21 @@ void Renderer::Draw()
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
+	// 有効視野角のなかにあるかを調べるラムダ式
+	auto isInFieldOfView = [this](MeshComponent * mc)
+	{
+		// 視野角計算
+		Vector3D acCamDir = mc->GetOwner()->GetPosition() - mCameraPointer->GetPosition();
+		Vector3D camVec = mCameraPointer->GetViewVector();
+		acCamDir.z = camVec.z = 0.0f;
+		float cos = Vector3D::Dot(acCamDir, camVec) / (acCamDir.Length() * camVec.Length());
+		float sita = static_cast<float>(acos(cos));
+
+		bool inFieldOfView = (sita <= mFieldOfView / 2);
+
+		return inFieldOfView;
+	};
+
 	//メッシュシェーダーで描画する対象の変数をセット
 	mMeshShader->SetActive();
 	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
@@ -163,9 +180,14 @@ void Renderer::Draw()
 	// 全てのメッシュコンポーネントを描画
 	for (auto mc : mMeshComponents)
 	{
-		if (mc->GetVisible())
+		bool inFOV = isInFieldOfView(mc);
+		if (inFOV && mc->GetVisible())
 		{
 			mc->Draw(mMeshShader);
+		}
+		else if (!inFOV)
+		{
+			SDL_Log("out of FOV\n");
 		}
 	}
 
@@ -177,7 +199,7 @@ void Renderer::Draw()
 	SetLightUniforms(mSkinnedShader);
 	for (auto sk : mSkeletalMeshes)
 	{
-		if (sk->GetVisible())
+		if (isInFieldOfView(sk) && sk->GetVisible())
 		{
 			sk->Draw(mSkinnedShader);
 		}

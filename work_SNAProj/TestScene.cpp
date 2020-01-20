@@ -27,7 +27,7 @@ TestScene::TestScene()
 	ts->SetBlockScale(0.3f);
 	ts->Load("Map/map.csv");
 
-	const bool genEnemy = false;
+	const bool genEnemy = true;
 	if (genEnemy)
 	{
 		EnemyManager * em = new EnemyManager(ts);
