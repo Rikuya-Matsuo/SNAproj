@@ -120,10 +120,16 @@ EnemyTest::~EnemyTest()
 void EnemyTest::UpdateEnemy0()
 {
 	// エフェクトの出現位置調整
-	Vector3D effOffset = mEffectOffset * mScale;
-	effOffset.x *= (mFlags_Enemy & mLookRightFlagMask_EBase) ? -1.0f : 1.0f;
-	Vector3D effPos = mPosition + effOffset;
-	mFindPlayerEffect->SetPosition(effPos);
+	if (mFlags_EnemyTest & mDetectPlayerFlagMask)
+	{
+		Vector3D effOffset = mEffectOffset * mScale;
+		effOffset.x *= (mFlags_Enemy & mLookRightFlagMask_EBase) ? -1.0f : 1.0f;
+		Vector3D effPos = mPosition + effOffset;
+		mFindPlayerEffect->SetPosition(effPos);
+	}
+
+	// 画面外にいる間はプレイヤー検知装置を非アクティブに
+	mPlayerDetector->SetActive(GetInCameraFlag());
 
 	if (mFlags_EnemyTest & mKnockBackFlagMask)
 	{

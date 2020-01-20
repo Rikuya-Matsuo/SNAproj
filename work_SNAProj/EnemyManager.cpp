@@ -3,6 +3,7 @@
 #include "StageBase.h"
 #include "AutoMoveComponent.h"
 #include "Block.h"
+#include "System.h"
 #include <fstream>
 
 EnemyManager::EnemyManager(StageBase * stage):
@@ -24,10 +25,6 @@ void EnemyManager::LoadMapping(const std::string & path)
 		return;
 	}
 
-	// w, h‚¢‚ç‚È‚¢‚©‚à
-	int w;
-	int h;
-	w = h = 0;
 	int x;
 	int y;
 	x = y = 0;
@@ -59,17 +56,11 @@ void EnemyManager::LoadMapping(const std::string & path)
 			if (c == '\n')
 			{
 				y++;
-
-				if (x > w)
-				{
-					w = x;
-					x = 0;
-				}
+				x = 0;
 			}
 
 		}
 	}
-	h = y;
 
 	file.close();
 }

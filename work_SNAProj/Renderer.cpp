@@ -185,10 +185,8 @@ void Renderer::Draw()
 		{
 			mc->Draw(mMeshShader);
 		}
-		else if (!inFOV)
-		{
-			SDL_Log("out of FOV\n");
-		}
+
+		mc->GetOwner()->SetInCameraFlag(inFOV);
 	}
 
 	// Draw any skinned meshes now
@@ -199,10 +197,13 @@ void Renderer::Draw()
 	SetLightUniforms(mSkinnedShader);
 	for (auto sk : mSkeletalMeshes)
 	{
-		if (isInFieldOfView(sk) && sk->GetVisible())
+		bool inFOV = isInFieldOfView(sk);
+		if (inFOV && sk->GetVisible())
 		{
 			sk->Draw(mSkinnedShader);
 		}
+
+		sk->GetOwner()->SetInCameraFlag(inFOV);
 	}
 
 }

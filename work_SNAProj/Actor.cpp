@@ -13,7 +13,8 @@ const Actor::FlagType Actor::mAffectGravityFlagMask_Base			= 1 << 3;
 const Actor::FlagType Actor::mMovalFlagMask_Base					= 1 << 4;
 const Actor::FlagType Actor::mCalculateTransformFlagMask_Base		= 1 << 5;
 const Actor::FlagType Actor::mStopUpdateFlagMask_Base				= 1 << 6;
-const Actor::FlagType Actor::mPlayerFlagMask_Base					= 1 << 7;
+const Actor::FlagType Actor::mInCameraFlagMask_Base					= 1 << 7;
+const Actor::FlagType Actor::mPlayerFlagMask_Base					= 1 << 8;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),

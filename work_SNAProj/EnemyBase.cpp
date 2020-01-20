@@ -16,7 +16,7 @@ EnemyBase::EnemyBase(unsigned char lifeMax) :
 {
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 
-	mFlags_Enemy |= mImmortalFlagMask_EBase;
+	//mFlags_Enemy |= mImmortalFlagMask_EBase;
 }
 
 EnemyBase::~EnemyBase()
