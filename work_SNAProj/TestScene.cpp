@@ -11,6 +11,7 @@
 #include "TestStage.h"
 #include "BGObject.h"
 #include "EnemyTest.h"
+#include "EnemyManager.h"
 #include "Input.h"
 #include "GameOverScene.h"
 #include "GameClearScene.h"
@@ -26,15 +27,20 @@ TestScene::TestScene()
 	ts->SetBlockScale(0.3f);
 	ts->Load("Map/map.csv");
 
+	const bool genEnemy = false;
+	if (genEnemy)
+	{
+		EnemyManager * em = new EnemyManager(ts);
+		em->LoadMapping("Map/enemyMapping.csv");
+
+		delete em;
+	}
+
 	delete ts;
 
 	GenerateBGWall(ts->GetFloorHeight());
 
 	GenerateBGDecoration(ts->GetFloorHeight());
-
-	EnemyTest * et = new EnemyTest;
-	et->SetScale(25.0f);
-	et->SetPosition(Vector3D(50.0f, 0.0f, 100.0f));
 
 	Camera * cam = new Camera(mPlayer);
 	mCameras.emplace_back(cam);

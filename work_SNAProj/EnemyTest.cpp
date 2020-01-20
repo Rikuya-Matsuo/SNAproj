@@ -104,6 +104,9 @@ EnemyTest::EnemyTest():
 	mFindPlayerEffect->SetScale(16.0f);
 	mFindPlayerEffect->SetAppearSecond(mTackleWait);
 
+	// スケール
+	SetScale(25.0f);
+
 	// デバッグしやすくなるフラグぅ
 	//mPrevFlags_EnemyTest = mFlags_EnemyTest;
 

@@ -12,7 +12,12 @@ public:
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
 
+	static float GetBlockScale() { return mBlockScale; }
+
 	float GetFloorHeight() const { return mFloorHeight; }
+
+	int GetBlockMassX() const { return mBlockMassX; }
+	int GetBlockMassY() const { return mBlockMassY; }
 
 protected:
 	Uint8 ** mBlocks;

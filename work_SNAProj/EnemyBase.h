@@ -2,6 +2,7 @@
 #include "Actor.h"
 
 class Mesh;
+class EnemyManager;
 
 class EnemyBase : public Actor
 {
@@ -14,6 +15,8 @@ public:
 	char GetLife() const { return mLife; }
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
+
+	friend EnemyManager;
 
 protected:
 	typedef Uint8 FlagType;

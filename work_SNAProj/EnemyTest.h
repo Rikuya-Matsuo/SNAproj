@@ -17,6 +17,8 @@ public:
 
 	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
+	friend EnemyManager;
+
 private:
 	typedef Uint8 FlagType;
 	static const FlagType mDamageAnimFlagMask;

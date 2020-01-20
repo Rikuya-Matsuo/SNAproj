@@ -106,6 +106,8 @@ void StageBase::Load(const std::string & fileName)
 
 	std::vector<int>().swap(numArray);
 
+	mapFile.close();
+
 	// 生成
 	Construct();
 }
