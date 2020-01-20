@@ -34,11 +34,15 @@ public:
 
 	int GetDrawOrder() const { return mDrawOrder; }
 
+	void SetSpecialDrawFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mMeshCompFlags, mSpecialDrawFlagMask); }
+	bool GetSpecialDrawFlag() const { return mMeshCompFlags & mSpecialDrawFlagMask; }
+
 protected:
 	typedef Uint8 FlagType;
 	static const FlagType mVisibleFlagMask;
 	static const FlagType mIsSkeletalFlagMask;
 	static const FlagType mAnimationModeFlagMask;
+	static const FlagType mSpecialDrawFlagMask;			//視野角の外にあっても描画を行う。やたらと真にすると重くなる可能性あり。
 
 
 	FlagType mMeshCompFlags;

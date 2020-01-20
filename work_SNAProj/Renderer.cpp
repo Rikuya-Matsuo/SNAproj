@@ -181,7 +181,7 @@ void Renderer::Draw()
 	for (auto mc : mMeshComponents)
 	{
 		bool inFOV = isInFieldOfView(mc);
-		if (inFOV && mc->GetVisible())
+		if ((inFOV && mc->GetVisible()) || mc->GetSpecialDrawFlag())
 		{
 			mc->Draw(mMeshShader);
 		}

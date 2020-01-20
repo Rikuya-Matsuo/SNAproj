@@ -19,6 +19,7 @@
 const MeshComponent::FlagType MeshComponent::mVisibleFlagMask = 1 << 0;
 const MeshComponent::FlagType MeshComponent::mIsSkeletalFlagMask = 1 << 1;
 const MeshComponent::FlagType MeshComponent::mAnimationModeFlagMask = 1 << 2;
+const MeshComponent::FlagType MeshComponent::mSpecialDrawFlagMask = 1 << 3;
 
 // メッシュコンポーネント　ownerとスキンメッシュかの情報入れる
 MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal)

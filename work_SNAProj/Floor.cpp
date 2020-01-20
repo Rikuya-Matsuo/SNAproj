@@ -20,6 +20,7 @@ Floor::Floor(const std::string & texturePath)
 	else
 	{
 		mc->SetMesh(msh);
+		mc->SetSpecialDrawFlag(true);
 	}
 
 	// 回転
