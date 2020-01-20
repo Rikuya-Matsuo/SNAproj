@@ -5,6 +5,7 @@ class AnimationChips;
 class AutoMoveComponent;
 class BoxColliderComponent;
 class ClampSpeedComponent;
+class Effect;
 
 class EnemyTest : public EnemyBase
 {
@@ -58,7 +59,11 @@ private:
 
 	Vector3D mWallDerection;
 
+	Vector3D mEffectOffset;
+
 	AnimationChips * mAnimChips;
+
+	Effect * mFindPlayerEffect;
 
 	AutoMoveComponent * mAutoMoveComp;
 

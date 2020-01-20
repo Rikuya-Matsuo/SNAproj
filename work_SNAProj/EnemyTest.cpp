@@ -8,6 +8,7 @@
 #include "ClampSpeedComponent.h"
 #include "Input.h"
 #include "Player.h"
+#include "Effect.h"
 
 const EnemyTest::FlagType EnemyTest::mDamageAnimFlagMask = 1 << 0;
 const EnemyTest::FlagType EnemyTest::mLDetectGroundFlagMask = 1 << 1;
@@ -34,7 +35,8 @@ EnemyTest::EnemyTest():
 	mNormalVelocityLimit(Vector3D(30.0f, 0.0f, 30.0f)),
 	mTackleVelocityLimit(Vector3D(70.0f, 0.0f, 50.0f)),
 	mKnockBackRightVector(Vector3D(10.0f, 0.0, 10.0f)),
-	mKnockBackVecLimit(Vector3D(50.0f, 0.0f, 50.0f))
+	mKnockBackVecLimit(Vector3D(50.0f, 0.0f, 50.0f)),
+	mEffectOffset(Vector3D(0.5f, 0.0f, 0.5f))
 {
 	mMesh->LoadDivTexture("Assets/AnimChipTest.png", System::GetInstance().GetRenderer(), this, 3, 3, 1, 32, 32, 0.0f, 0);
 	MeshComponent * mc = new MeshComponent(this, 350);
@@ -90,13 +92,20 @@ EnemyTest::EnemyTest():
 	AABB playerDetector = originalBox;
 	playerDetector.mMax.x = playerDetector.mMin.x;
 	playerDetector.mMin.x -= boxSize.x * 2.5f;
+	playerDetector.mMax.z -= boxSize.z / 5;
 	playerDetector.mMin.z += boxSize.z / 5;
 	playerDetector.mMin.y -= EnemyBase::mDepth;
 	playerDetector.mMax.y += EnemyBase::mDepth;
 	mPlayerDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 	mPlayerDetector->SetObjectBox(playerDetector);
 
-	mPrevFlags_EnemyTest = mFlags_EnemyTest;
+	// プレイヤー発見エフェクト
+	mFindPlayerEffect = new Effect("Assets/findPlayerEff.png", mPriority + 50);
+	mFindPlayerEffect->SetScale(16.0f);
+	mFindPlayerEffect->SetAppearSecond(mTackleWait);
+
+	// デバッグしやすくなるフラグぅ
+	//mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
 	mFallSpeedRate = 2.0f;
 }
@@ -107,6 +116,12 @@ EnemyTest::~EnemyTest()
 
 void EnemyTest::UpdateEnemy0()
 {
+	// エフェクトの出現位置調整
+	Vector3D effOffset = mEffectOffset * mScale;
+	effOffset.x *= (mFlags_Enemy & mLookRightFlagMask_EBase) ? -1.0f : 1.0f;
+	Vector3D effPos = mPosition + effOffset;
+	mFindPlayerEffect->SetPosition(effPos);
+
 	if (mFlags_EnemyTest & mKnockBackFlagMask)
 	{
 		if (!(mPrevFlags_EnemyTest & mKnockBackFlagMask))
@@ -260,6 +275,8 @@ void EnemyTest::TackleProcess()
 	{
 		mTackleWaitTimer += System::GetInstance().GetDeltaTime();
 		mAutoMoveComp->SetActive(false);
+
+		mFindPlayerEffect->SetActive(true);
 	}
 	else
 	{
@@ -273,6 +290,8 @@ void EnemyTest::TackleProcess()
 			mAutoMoveComp->SetVelocity(mTackleVelocity * f);
 
 			mClamper->SetLimit(mTackleVelocityLimit);
+
+			mFindPlayerEffect->SetActive(false);
 		}
 	}
 }

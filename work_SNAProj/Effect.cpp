@@ -5,7 +5,7 @@
 
 const float Effect::mDepth = 0.1f;
 
-Effect::Effect(const std::string & texPath):
+Effect::Effect(const std::string & texPath, int priority):
 	mAppearSecond(1.0f),
 	mTimer(0.0f)
 {
@@ -16,6 +16,11 @@ Effect::Effect(const std::string & texPath):
 
 	mFlags |= mStopUpdateFlagMask_Base;
 	mFlags &= ~(mAffectGravityFlagMask_Base);
+
+	if (mPriority != priority)
+	{
+		SetPriority(priority);
+	}
 }
 
 Effect::~Effect()

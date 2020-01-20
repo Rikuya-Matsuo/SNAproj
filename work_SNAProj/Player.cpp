@@ -111,7 +111,7 @@ Player::Player() :
 	mHitEffects = new Effect*[mHitEffectMass];
 	for (size_t i = 0; i < mHitEffectMass; ++i)
 	{
-		mHitEffects[i] = new Effect("Assets/effectKari.png");
+		mHitEffects[i] = new Effect("Assets/effectKari.png", mPriority + 50);
 		mHitEffects[i]->SetScale(20.0f);
 	}
 
@@ -351,10 +351,6 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 			{
 				eff->SetPosition(enemy->GetPosition());
 				eff->SetActive(true);
-			}
-			else
-			{
-				SDL_Delay(0);
 			}
 		}
 	}
