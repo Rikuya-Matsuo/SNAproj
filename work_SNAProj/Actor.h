@@ -57,6 +57,8 @@ protected:
 
 	float mFallSpeedMax;
 
+	SceneBase * mBelongScene;
+
 	virtual void UpdateComponents() final;
 
 	void SortComponents();
@@ -146,6 +148,4 @@ private:
 	FlagType mPrevFlags;
 
 	float mPrevRotationAngle;
-
-	SceneBase * mBelongScene;
 };

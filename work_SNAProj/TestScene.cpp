@@ -23,24 +23,22 @@ TestScene::TestScene()
 	mPlayer->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
 	mPlayer->SetScale(25.0f);
 
-	TestStage * ts = new TestStage;
-	ts->SetBlockScale(0.3f);
-	ts->Load("Map/map.csv");
+	mStage = new TestStage;
+	mStage->SetBlockScale(0.3f);
+	mStage->Load("Map/map.csv");
 
 	const bool genEnemy = true;
 	if (genEnemy)
 	{
-		EnemyManager * em = new EnemyManager(ts);
+		EnemyManager * em = new EnemyManager(mStage);
 		em->LoadMapping("Map/enemyMapping.csv");
 
 		delete em;
 	}
 
-	delete ts;
+	GenerateBGWall(mStage->GetFloorHeight());
 
-	GenerateBGWall(ts->GetFloorHeight());
-
-	GenerateBGDecoration(ts->GetFloorHeight());
+	GenerateBGDecoration(mStage->GetFloorHeight());
 
 	Camera * cam = new Camera(mPlayer);
 	mCameras.emplace_back(cam);

@@ -17,7 +17,7 @@ Renderer::Renderer()
 	,mContext(0)
 	,mMeshShader(nullptr)
 	,mSkinnedShader(nullptr)
-	,mFieldOfView(Common::DegToRad(150.0f))
+	,mFieldOfView(Common::DegToRad(160.0f))
 {
 }
 
@@ -164,7 +164,10 @@ void Renderer::Draw()
 		Vector3D acCamDir = mc->GetOwner()->GetPosition() - mCameraPointer->GetPosition();
 		Vector3D camVec = mCameraPointer->GetViewVector();
 		acCamDir.z = camVec.z = 0.0f;
-		float cos = Vector3D::Dot(acCamDir, camVec) / (acCamDir.Length() * camVec.Length());
+		float dot = Vector3D::Dot(acCamDir, camVec);
+		// 二乗値を最初にとって、平方根の計算を一回に節約する
+		float cos = (dot * dot) / (acCamDir.LengthSq() * camVec.LengthSq());
+		cos = sqrtf(cos);
 		float sita = static_cast<float>(acos(cos));
 
 		bool inFieldOfView = (sita <= mFieldOfView / 2);

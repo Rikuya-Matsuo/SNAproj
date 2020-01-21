@@ -8,6 +8,7 @@ SceneBase * SceneBase::mLatestScene = nullptr;
 
 SceneBase::SceneBase():
 	mNextScene(nullptr),
+	mStage(nullptr),
 	mFlags(0)
 {
 	mCameras.reserve(1);

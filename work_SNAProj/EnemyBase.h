@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Actor.h"
 
+class Block;
+class StageBase;
 class Mesh;
 class EnemyManager;
 
@@ -45,6 +47,4 @@ private:
 	void UpdateActor0() final override;
 
 	void UpdateActor1() final override;
-
-
 };

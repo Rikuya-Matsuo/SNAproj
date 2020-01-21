@@ -6,6 +6,10 @@
 #include "System.h"
 #include <fstream>
 
+#ifdef DEBUG_SNA
+const int debugEnemyMassLimit = 2;
+#endif
+
 EnemyManager::EnemyManager(StageBase * stage):
 	mStage(stage)
 {
@@ -25,6 +29,7 @@ void EnemyManager::LoadMapping(const std::string & path)
 		return;
 	}
 
+	int enemyMass = 0;
 	int x;
 	int y;
 	x = y = 0;
@@ -40,6 +45,15 @@ void EnemyManager::LoadMapping(const std::string & path)
 			break;
 		}
 
+#ifdef DEBUG_SNA
+
+		if (debugEnemyMassLimit <= 0 || enemyMass >= debugEnemyMassLimit)
+		{
+			break;
+		}
+
+#endif // DEBUG_SNA
+
 		if (c != ',' && c != '\n')
 		{
 			buf += c;
@@ -50,6 +64,10 @@ void EnemyManager::LoadMapping(const std::string & path)
 			buf.clear();
 
 			GenerateEnemy(type, x, y);
+			if (type >= 0)
+			{
+				enemyMass++;
+			}
 
 			x++;
 

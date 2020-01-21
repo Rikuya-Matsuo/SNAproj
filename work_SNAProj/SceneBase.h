@@ -5,6 +5,7 @@
 // 前方宣言
 class Actor;
 class Camera;
+class StageBase;
 
 class SceneBase
 {
@@ -21,6 +22,8 @@ public:
 	void RequestSceneChange() { mFlags |= mSceneChangeFlagMask; }
 
 	bool GetSceneChangeFlag() const { return mFlags & mSceneChangeFlagMask; }
+
+	const StageBase * GetStage() const { return mStage; }
 
 	static const SceneBase * GetLatestScene() { return mLatestScene; }
 
@@ -39,4 +42,6 @@ protected:
 	std::vector<Camera *> mCameras;
 
 	SceneBase * mNextScene;
+
+	StageBase * mStage;
 };

@@ -19,6 +19,8 @@ public:
 	int GetBlockMassX() const { return mBlockMassX; }
 	int GetBlockMassY() const { return mBlockMassY; }
 
+	Uint8 **const GetBlocks() const { return mBlocks; }
+
 protected:
 	Uint8 ** mBlocks;
 
