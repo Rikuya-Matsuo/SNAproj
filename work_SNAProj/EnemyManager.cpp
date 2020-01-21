@@ -7,7 +7,7 @@
 #include <fstream>
 
 #ifdef DEBUG_SNA
-const int debugEnemyMassLimit = 2;
+const int debugEnemyMassLimit = -1;
 #endif
 
 EnemyManager::EnemyManager(StageBase * stage):
@@ -47,7 +47,7 @@ void EnemyManager::LoadMapping(const std::string & path)
 
 #ifdef DEBUG_SNA
 
-		if (debugEnemyMassLimit <= 0 || enemyMass >= debugEnemyMassLimit)
+		if (debugEnemyMassLimit >= 0 && enemyMass >= debugEnemyMassLimit)
 		{
 			break;
 		}
