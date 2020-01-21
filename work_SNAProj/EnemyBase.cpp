@@ -4,9 +4,8 @@
 #include "BlockHitChecker.h"
 
 const EnemyBase::FlagType EnemyBase::mAliveFlagMask_EBase = 1 << 0;
-const EnemyBase::FlagType EnemyBase::mFindPlayerFlagMask_EBase = 1 << 1;
-const EnemyBase::FlagType EnemyBase::mImmortalFlagMask_EBase = 1 << 2;
-const EnemyBase::FlagType EnemyBase::mLookRightFlagMask_EBase = 1 << 3;
+const EnemyBase::FlagType EnemyBase::mImmortalFlagMask_EBase = 1 << 1;
+const EnemyBase::FlagType EnemyBase::mLookRightFlagMask_EBase = 1 << 2;
 
 const float EnemyBase::mDepth = 0.05f;
 
@@ -30,6 +29,16 @@ void EnemyBase::OnLifeRunOut()
 {
 	// 生存フラグを下す
 	mFlags_Enemy &= ~mAliveFlagMask_EBase;
+}
+
+void EnemyBase::Flip()
+{
+	mRotationAngle = (mRotationAngle == 0.0f) ? static_cast<float>(M_PI) : 0.0f;
+	OnFlip();
+}
+
+void EnemyBase::OnFlip()
+{
 }
 
 void EnemyBase::UpdateActor0()

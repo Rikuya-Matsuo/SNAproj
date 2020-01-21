@@ -41,8 +41,16 @@ void BlockHitChecker::Update()
 
 	int rightXBlock = static_cast<int>(box.mMax.x / blockSize);
 
-	auto checkBlock = [blockArray](int x, int y)
+	auto checkBlock = [this, blockArray](int x, int y)
 	{
+		bool xRangeOut = (x >= mStage->GetBlockMassX() || x < 0);
+		bool yRangeOut = (y >= mStage->GetBlockMassY() || y < 0);
+
+		if (xRangeOut || yRangeOut)
+		{
+			return false;
+		}
+
 		bool ret = blockArray[y][x];
 		return ret;
 	};
@@ -60,8 +68,122 @@ void BlockHitChecker::Update()
 		checkBlock(leftXBlock, footHeightBlock);
 
 	mHitDirectionFlags = 0;
+	mHitDirectionFlags |=	checkBlock(rightXBlock, headHeightBlock) ? Mask::mRUVerMask : 0;
+	mHitDirectionFlags |=	checkBlock(rightXBlock, footHeightBlock) ? Mask::mRDVerMask : 0;
+	mHitDirectionFlags |=	checkBlock(leftXBlock, headHeightBlock)  ? Mask::mLUVerMask : 0;
+	mHitDirectionFlags |=	checkBlock(leftXBlock, footHeightBlock)  ? Mask::mLDVerMask : 0;
+
+	if (upHit && (rightHit || leftHit))
+	{
+		float blockFootHeight = highest - (blockSize * (headHeightBlock + 1));
+		float overlapY = box.mMax.z - blockFootHeight;
+		float leftBlockEdgeR = blockSize * (leftXBlock + 1);
+		float rightBlockEdgeL = blockSize * rightXBlock;
+		float overlapX = box.mMax.x - rightBlockEdgeL;
+		if (overlapX > leftBlockEdgeR - box.mMin.x)
+		{
+			overlapX = leftBlockEdgeR - box.mMin.x;
+		}
+
+		if (overlapX >= overlapY)
+		{
+			rightHit ? rightHit = false : leftHit = false;
+		}
+		else
+		{
+			upHit = false;
+		}
+	}
+
+	if (downHit && (rightHit || leftHit))
+	{
+		float blockHead = highest - (blockSize * footHeightBlock);
+		float overlapY = blockHead - box.mMin.z;
+		float leftBlockEdgeR = blockSize * (leftXBlock + 1);
+		float rightBlockEdgeL = blockSize * rightXBlock;
+		float overlapX = box.mMax.x - rightBlockEdgeL;
+		if (overlapX > leftBlockEdgeR - box.mMin.x)
+		{
+			overlapX = leftBlockEdgeR - box.mMin.x;
+		}
+
+		if (overlapX >= overlapY)
+		{
+			rightHit ? rightHit = false : leftHit = false;
+		}
+		else
+		{
+			downHit = false;
+		}
+	}
+
 	mHitDirectionFlags |= upHit ? Mask::mUpMask : 0;
 	mHitDirectionFlags |= downHit ? Mask::mDownMask : 0;
 	mHitDirectionFlags |= rightHit ? Mask::mRightMask : 0;
 	mHitDirectionFlags |= leftHit ? Mask::mLeftMask : 0;
+
+	// ‰Ÿ‚µ•Ô‚µƒvƒƒZƒX
+	if (upHit)
+	{
+		float blockFootHeight = highest - (blockSize * (headHeightBlock + 1));
+		float overlapY = box.mMax.z - blockFootHeight;
+
+		Vector3D v = mOwner->GetPosition();
+		v.z -= overlapY;
+		mOwner->SetPosition(v);
+
+		Vector3D vel = mOwner->GetMoveVector();
+		vel.z = 0.0f;
+		mOwner->SetMoveVector(vel);
+	}
+	
+	if (downHit)
+	{
+		float blockHead = highest - (blockSize * footHeightBlock);
+		float overlapY = blockHead - box.mMin.z;
+
+		Vector3D v = mOwner->GetPosition();
+		v.z += overlapY;
+		mOwner->SetPosition(v);
+
+		Vector3D vel = mOwner->GetMoveVector();
+		vel.z = 0.0f;
+		mOwner->SetMoveVector(vel);
+	}
+
+	if (rightHit)
+	{
+		float rightBlockEdgeL = blockSize * rightXBlock;
+		float overlapX = box.mMax.x - rightBlockEdgeL;
+
+		Vector3D v = mOwner->GetPosition();
+		v.x -= overlapX;
+		mOwner->SetPosition(v);
+
+		Vector3D vel = mOwner->GetMoveVector();
+		vel.x = 0.0f;
+		mOwner->SetMoveVector(vel);
+	}
+
+	if (leftHit)
+	{
+		float leftBlockEdgeR = blockSize * (leftXBlock + 1);
+		float overlapX = leftBlockEdgeR - box.mMin.x;
+
+		Vector3D v = mOwner->GetPosition();
+		v.x += overlapX;
+		mOwner->SetPosition(v);
+
+		Vector3D vel = mOwner->GetMoveVector();
+		vel.x = 0.0f;
+		mOwner->SetMoveVector(vel);
+	}
+}
+
+void BlockHitChecker::CheckProcess()
+{
+}
+
+void BlockHitChecker::PushProcess()
+{
 }

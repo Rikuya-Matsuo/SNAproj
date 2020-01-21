@@ -208,6 +208,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EnemyTest.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyType0.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="GameClearBoard.cpp" />
     <ClCompile Include="GameClearScene.cpp" />
@@ -268,6 +269,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EnemyTest.h" />
     <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyType0.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="GameClearBoard.h" />
     <ClInclude Include="GameClearScene.h" />

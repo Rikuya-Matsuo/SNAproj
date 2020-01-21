@@ -693,11 +693,11 @@ PhysicManager::PhysicManager()
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Block);
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Block);
-	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);
+	//ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Player);
 	ResisterCheckableAttributeCombination(ColAtt_PlayerAttack, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_EnemyAttack, ColAtt_Player);
-	ResisterCheckableAttributeCombination(ColAtt_Enemy, ColAtt_Block);
+	//ResisterCheckableAttributeCombination(ColAtt_Enemy, ColAtt_Block);
 }
 
 PhysicManager::~PhysicManager()

@@ -6,6 +6,7 @@ class AutoMoveComponent;
 class BoxColliderComponent;
 class ClampSpeedComponent;
 class Effect;
+class BlockHitChecker;
 
 class EnemyTest : public EnemyBase
 {
@@ -71,19 +72,23 @@ private:
 
 	BoxColliderComponent * mBodyCollision;
 
-	BoxColliderComponent * mLGroundDetector;
+	//BoxColliderComponent * mLGroundDetector;
 
-	BoxColliderComponent * mRGroundDetector;
+	//BoxColliderComponent * mRGroundDetector;
 
-	BoxColliderComponent * mWallDetector;
+	//BoxColliderComponent * mWallDetector;
 
 	BoxColliderComponent * mPlayerDetector;
 
 	ClampSpeedComponent * mClamper;
 
+	BlockHitChecker * mBlockChecker;
+
 	void UpdateEnemy0() override;
 
 	void UpdateEnemy1() override;
+
+	void OnFlip() override;
 
 	void TackleProcess();
 };

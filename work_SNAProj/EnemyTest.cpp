@@ -6,6 +6,7 @@
 #include "AutoMoveComponent.h"
 #include "BoxColliderComponent.h"
 #include "ClampSpeedComponent.h"
+#include "BlockHitChecker.h"
 #include "Input.h"
 #include "Player.h"
 #include "Effect.h"
@@ -21,6 +22,7 @@ const EnemyTest::FlagType EnemyTest::mKnockBackFlagMask = 1 << 7;
 
 const float EnemyTest::mTackleWait = 0.8f;
 
+using namespace BlockHitDirectionFlagMask;
 
 EnemyTest::EnemyTest():
 	EnemyBase(3),
@@ -58,7 +60,7 @@ EnemyTest::EnemyTest():
 	mBodyCollision->SetObjectBox(colBox);
 
 	const Vector3D boxSize = originalBox.mMax - originalBox.mMin;
-
+	/*
 	// 左側の地面検出装置
 	AABB detectorL = originalBox;
 	detectorL.mMax.z = detectorL.mMin.z;
@@ -87,7 +89,7 @@ EnemyTest::EnemyTest():
 	wallDetector.mMin.x -= 0.1f;
 	mWallDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 	mWallDetector->SetObjectBox(wallDetector);
-
+	*/
 	// プレイヤー検出装置
 	AABB playerDetector = originalBox;
 	playerDetector.mMax.x = playerDetector.mMin.x;
@@ -106,6 +108,8 @@ EnemyTest::EnemyTest():
 
 	// スケール
 	SetScale(25.0f);
+
+	mBlockChecker = new BlockHitChecker(this, mBodyCollision);
 
 	// デバッグしやすくなるフラグぅ
 	//mPrevFlags_EnemyTest = mFlags_EnemyTest;
@@ -130,6 +134,14 @@ void EnemyTest::UpdateEnemy0()
 
 	// 画面外にいる間はプレイヤー検知装置を非アクティブに
 	mPlayerDetector->SetActive(GetInCameraFlag());
+
+	const Uint8 blhit = mBlockChecker->GetFlags();
+	bool fowardIsEdge =
+		(mFlags_Enemy & mLookRightFlagMask_EBase && !(blhit & mRDVerMask)) ||
+		(!(mFlags_Enemy & mLookRightFlagMask_EBase) && blhit & mLDVerMask);
+
+	mFlags_EnemyTest |= blhit & mRDetectGroundFlagMask ? mRDetectGroundFlagMask : 0;
+	mFlags_EnemyTest |= blhit & mLDetectGroundFlagMask ? mLDetectGroundFlagMask : 0;
 
 	if (mFlags_EnemyTest & mKnockBackFlagMask)
 	{
@@ -231,10 +243,7 @@ void EnemyTest::UpdateEnemy0()
 	// 壁を検出したら反転
 	if (mFlags_EnemyTest & mHitWallFlagMask)
 	{
-		bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
-		BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
 		Flip();
-		mAutoMoveComp->ReverseVelocity();
 	}
 
 	// プレイヤー検知時にタックル準備処理
@@ -317,8 +326,15 @@ void EnemyTest::UpdateEnemy1()
 	mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
 	EnemyTest::FlagType mask =
-		(mLDetectGroundFlagMask | mRDetectGroundFlagMask | mHitWallFlagMask | mDetectPlayerFlagMask | mDetectWallFlagMask);
+		(mHitWallFlagMask | mDetectPlayerFlagMask | mDetectWallFlagMask);
 	mFlags_EnemyTest &= ~mask;
+}
+
+void EnemyTest::OnFlip()
+{
+	bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
+	BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
+	mAutoMoveComp->ReverseVelocity();
 }
 
 void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
@@ -360,10 +376,6 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 		return ret;
 	};
 
-	checkPointer(mLGroundDetector, mLDetectGroundFlagMask);
-	checkPointer(mRGroundDetector, mRDetectGroundFlagMask);
-	checkPointer(mWallDetector, mHitWallFlagMask);
-
 	bool detPlayer = checkPointer(mPlayerDetector, mDetectPlayerFlagMask, ColliderAttribute::ColAtt_Player);
 	if (detPlayer)
 	{
@@ -397,10 +409,6 @@ void EnemyTest::OnTouching(const ColliderComponentBase * caller, const ColliderC
 
 		return ret;
 	};
-
-	checkPointer(mLGroundDetector, mLDetectGroundFlagMask);
-	checkPointer(mRGroundDetector, mRDetectGroundFlagMask);
-	checkPointer(mWallDetector, mHitWallFlagMask);
 
 	bool detPlayer = checkPointer(mPlayerDetector, mDetectPlayerFlagMask, ColliderAttribute::ColAtt_Player);
 	if (detPlayer)
