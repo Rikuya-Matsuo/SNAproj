@@ -136,17 +136,12 @@ void EnemyTest::UpdateEnemy0()
 
 	// 画面外にいる間はプレイヤー検知装置を非アクティブに
 	mPlayerDetector->SetActive(GetInCameraFlag());
-
+	
 	const Uint8 blhit = mBlockChecker->GetFlags();
 
-	mFlags_EnemyTest |= blhit & mRDetectGroundFlagMask ? mRDetectGroundFlagMask : 0;
-	mFlags_EnemyTest |= blhit & mLDetectGroundFlagMask ? mLDetectGroundFlagMask : 0;
-
-	if (blhit & mDownMask)
-	{
-		SetAffectGravityFlag(false);
-	}
-
+	mFlags_EnemyTest |= blhit & mRDVerMask ? mRDetectGroundFlagMask : 0;
+	mFlags_EnemyTest |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
+	
 	if (mFlags_EnemyTest & mKnockBackFlagMask)
 	{
 		if (!(mPrevFlags_EnemyTest & mKnockBackFlagMask))
@@ -227,7 +222,7 @@ void EnemyTest::UpdateEnemy0()
 	// 着地中は重力の影響を受けない(ノックバック例外）
 	if (detectFlags != 0 && !(mFlags_EnemyTest & mKnockBackFlagMask))
 	{
-		SetAffectGravityFlag(false);
+		//SetAffectGravityFlag(false);
 	}
 
 	// 着地時
@@ -238,12 +233,6 @@ void EnemyTest::UpdateEnemy0()
 		{
 			mFlags_EnemyTest &= ~mKnockBackFlagMask;
 		}
-	}
-
-	// 壁を検出したら反転
-	if (mFlags_EnemyTest & mHitWallFlagMask)
-	{
-		Flip();
 	}
 
 	// プレイヤー検知時にタックル準備処理
@@ -345,8 +334,16 @@ void EnemyTest::UpdateEnemy1()
 		{
 			Flip();
 		}
+		else if (!(blhit & mRDVerMask))
+		{
+			Flip();
+		}
 	}
 	else if (blhit & mLeftMask)
+	{
+		Flip();
+	}
+	else if (!(blhit & mLDVerMask))
 	{
 		Flip();
 	}
@@ -354,7 +351,7 @@ void EnemyTest::UpdateEnemy1()
 	mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
 	EnemyTest::FlagType mask =
-		(mHitWallFlagMask | mDetectPlayerFlagMask | mDetectWallFlagMask);
+		(mRDetectGroundFlagMask | mLDetectGroundFlagMask | mHitWallFlagMask | mDetectPlayerFlagMask | mDetectWallFlagMask);
 	mFlags_EnemyTest &= ~mask;
 }
 

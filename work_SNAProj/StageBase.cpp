@@ -149,7 +149,11 @@ void StageBase::Construct()
 			const float blockHalfHeight = (Block::mModelSize / 2) * mBlockScale;
 
 			// 一番下の段のブロックの上面が高さ0となるよう、生成する位置を計算
-			Vector3D pos(Block::mModelSize * mBlockScale * xBlock, 0.0f, Block::mModelSize * mBlockScale * (mBlockMassY - (yBlock + 1)) - blockHalfHeight);
+			// xも左が0となるように。
+			Vector3D pos(
+				Block::mModelSize * mBlockScale * xBlock + Block::mModelSize * mBlockScale / 2,
+				0.0f,
+				Block::mModelSize * mBlockScale * (mBlockMassY - (yBlock + 1)) - blockHalfHeight);
 
 			// 位置情報代入
 			bk->SetPosition(pos);
