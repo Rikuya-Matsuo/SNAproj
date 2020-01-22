@@ -114,7 +114,7 @@ EnemyTest::EnemyTest():
 	// デバッグしやすくなるフラグぅ
 	//mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
-	mFallSpeedRate = 2.0f;
+	mFallSpeedRate = 1.0f;
 }
 
 EnemyTest::~EnemyTest()
@@ -136,12 +136,14 @@ void EnemyTest::UpdateEnemy0()
 	mPlayerDetector->SetActive(GetInCameraFlag());
 
 	const Uint8 blhit = mBlockChecker->GetFlags();
-	bool fowardIsEdge =
-		(mFlags_Enemy & mLookRightFlagMask_EBase && !(blhit & mRDVerMask)) ||
-		(!(mFlags_Enemy & mLookRightFlagMask_EBase) && blhit & mLDVerMask);
 
 	mFlags_EnemyTest |= blhit & mRDetectGroundFlagMask ? mRDetectGroundFlagMask : 0;
 	mFlags_EnemyTest |= blhit & mLDetectGroundFlagMask ? mLDetectGroundFlagMask : 0;
+
+	if (blhit & mDownMask)
+	{
+		SetAffectGravityFlag(false);
+	}
 
 	if (mFlags_EnemyTest & mKnockBackFlagMask)
 	{
@@ -185,9 +187,7 @@ void EnemyTest::UpdateEnemy0()
 	case mLDetectGroundFlagMask:
 		if (mFlags_Enemy & mLookRightFlagMask_EBase)
 		{
-			mFlags_Enemy &= ~mLookRightFlagMask_EBase;
 			Flip();
-			mAutoMoveComp->ReverseVelocity();
 		}
 		break;
 
@@ -195,9 +195,7 @@ void EnemyTest::UpdateEnemy0()
 	case mRDetectGroundFlagMask:
 		if (!(mFlags_Enemy & mLookRightFlagMask_EBase))
 		{
-			mFlags_Enemy |= mLookRightFlagMask_EBase;
 			Flip();
-			mAutoMoveComp->ReverseVelocity();
 		}
 		break;
 
@@ -314,6 +312,15 @@ void EnemyTest::TackleProcess()
 	}
 }
 
+void EnemyTest::OnPressedByPlayerAndCheckIfWhen(const ColliderComponentBase * caller, Uint8 oppAtt)
+{
+	if (caller == mBodyCollision && oppAtt == ColliderAttribute::ColAtt_Player && mPushedVector.z < 0)
+	{
+		mFixVector.z -= mPushedVector.z;
+		mPushedVector.z = 0;
+	}
+}
+
 void EnemyTest::UpdateEnemy1()
 {
 	if (mPrevFlags_EnemyTest & mKnockBackFlagMask && !(mFlags_EnemyTest & mKnockBackFlagMask))
@@ -321,6 +328,25 @@ void EnemyTest::UpdateEnemy1()
 		Vector3D lim = (mFlags_EnemyTest & mTackleFlagMask) ? mTackleVelocityLimit : mNormalVelocityLimit;
 		mClamper->SetLimit(lim);
 		mClamper->SetClampDirectionFlags(true, false, false);
+	}
+
+	const Uint8 blhit = mBlockChecker->GetFlags();
+	if (blhit & mDownMask)
+	{
+		mMoveVector.z = 0;
+		SetAffectGravityFlag(false);
+	}
+
+	if (mFlags_Enemy & mLookRightFlagMask_EBase)
+	{
+		if (blhit & mRightMask)
+		{
+			Flip();
+		}
+	}
+	else if (blhit & mLeftMask)
+	{
+		Flip();
 	}
 
 	mPrevFlags_EnemyTest = mFlags_EnemyTest;
@@ -341,6 +367,8 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 {
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
+
+	OnPressedByPlayerAndCheckIfWhen(caller, opponentAtt);
 
 	if (mFlags_EnemyTest & mTackleFlagMask && opponentAtt == ColAtt_Player)
 	{
@@ -393,6 +421,8 @@ void EnemyTest::OnTouching(const ColliderComponentBase * caller, const ColliderC
 {
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
+
+	OnPressedByPlayerAndCheckIfWhen(caller, opponentAtt);
 
 	// 地面検出装置の処理
 	auto checkPointer = 

@@ -91,4 +91,6 @@ private:
 	void OnFlip() override;
 
 	void TackleProcess();
+
+	void OnPressedByPlayerAndCheckIfWhen(const ColliderComponentBase * caller, Uint8 oppAtt);
 };

@@ -29,17 +29,21 @@ void BlockHitChecker::Update()
 
 	// ボックスの取得
 	AABB box = *mBox->GetWorldBox();
-	box.mMin += mOwner->GetMoveVector();
-	box.mMax += mOwner->GetMoveVector();
+	//box.mMin += mOwner->GetMoveVector();
+	//box.mMax += mOwner->GetMoveVector();
 
 	// 0.0の下に1ブロックあるので-1
 	int headHeightBlock = static_cast<int>(box.mMax.z / blockSize) - 1;
 
 	int footHeightBlock = static_cast<int>(box.mMin.z / blockSize) - 1;
 
+	int midYBlock = static_cast<int>((box.mMin.z + (box.mMax.z - box.mMin.z) / 2) / blockSize) - 1;
+
 	int leftXBlock = static_cast<int>(box.mMin.x / blockSize);
 
 	int rightXBlock = static_cast<int>(box.mMax.x / blockSize);
+
+	int midXBlock = static_cast<int>((box.mMin.x + (box.mMax.x - box.mMin.x) / 2) / blockSize);
 
 	auto checkBlock = [this, blockArray](int x, int y)
 	{
@@ -72,7 +76,46 @@ void BlockHitChecker::Update()
 	mHitDirectionFlags |=	checkBlock(rightXBlock, footHeightBlock) ? Mask::mRDVerMask : 0;
 	mHitDirectionFlags |=	checkBlock(leftXBlock, headHeightBlock)  ? Mask::mLUVerMask : 0;
 	mHitDirectionFlags |=	checkBlock(leftXBlock, footHeightBlock)  ? Mask::mLDVerMask : 0;
+	
+	bool downHit1 = false;
+	if (Uint8 m = (mHitDirectionFlags & (Mask::mRDVerMask | Mask::mLDVerMask)))
+	{
+		if (m == (Mask::mRDVerMask | Mask::mLDVerMask))
+		{
+			downHit1 = true;
+		}
+		else if (m)
+		{
+			if (checkBlock(midXBlock, footHeightBlock))
+			{
+				downHit1 = true;
+			}
+			else
+			{
+				float blockHead = highest - (blockSize * footHeightBlock);
+				float overlapY = blockHead - box.mMin.z;
 
+				float overlapX;
+				if (m == Mask::mRDVerMask)
+				{
+					float blockEdgeL = blockSize * rightXBlock;
+					overlapX = box.mMax.x - blockEdgeL;
+				}
+				else
+				{
+					float blockEdgeR = blockSize * (leftXBlock + 1);
+					overlapX = blockEdgeR - box.mMin.x;
+				}
+
+				if (overlapX >= overlapY)
+				{
+					downHit1 = true;
+				}
+			}
+		}
+	}
+
+	/*
 	if (upHit && (rightHit || leftHit))
 	{
 		float blockFootHeight = highest - (blockSize * (headHeightBlock + 1));
@@ -107,7 +150,7 @@ void BlockHitChecker::Update()
 			overlapX = leftBlockEdgeR - box.mMin.x;
 		}
 
-		if (overlapX >= overlapY)
+		if (overlapX > overlapY)
 		{
 			rightHit ? rightHit = false : leftHit = false;
 		}
@@ -116,9 +159,9 @@ void BlockHitChecker::Update()
 			downHit = false;
 		}
 	}
-
+	*/
 	mHitDirectionFlags |= upHit ? Mask::mUpMask : 0;
-	mHitDirectionFlags |= downHit ? Mask::mDownMask : 0;
+	mHitDirectionFlags |= downHit1 ? Mask::mDownMask : 0;
 	mHitDirectionFlags |= rightHit ? Mask::mRightMask : 0;
 	mHitDirectionFlags |= leftHit ? Mask::mLeftMask : 0;
 
@@ -137,14 +180,12 @@ void BlockHitChecker::Update()
 		mOwner->SetMoveVector(vel);
 	}
 	
-	if (downHit)
+	if (downHit1)
 	{
 		float blockHead = highest - (blockSize * footHeightBlock);
 		float overlapY = blockHead - box.mMin.z;
 
-		Vector3D v = mOwner->GetPosition();
-		v.z += overlapY;
-		mOwner->SetPosition(v);
+		mOwner->SetFixVector(Vector3D(0, 0, overlapY));
 
 		Vector3D vel = mOwner->GetMoveVector();
 		vel.z = 0.0f;
