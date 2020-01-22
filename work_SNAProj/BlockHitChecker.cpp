@@ -238,8 +238,8 @@ void BlockHitChecker::Update()
 	*/
 	mHitDirectionFlags |= upHit ? Mask::mUpMask : 0;
 	mHitDirectionFlags |= downHit1 ? Mask::mDownMask : 0;
-	mHitDirectionFlags |= rightHit ? Mask::mRightMask : 0;
-	mHitDirectionFlags |= leftHit ? Mask::mLeftMask : 0;
+	mHitDirectionFlags |= rightHit1 ? Mask::mRightMask : 0;
+	mHitDirectionFlags |= leftHit1 ? Mask::mLeftMask : 0;
 
 	// ‰Ÿ‚µ•Ô‚µƒvƒƒZƒX
 	if (upHit)
@@ -268,28 +268,24 @@ void BlockHitChecker::Update()
 		mOwner->SetMoveVector(vel);
 	}
 
-	if (rightHit)
+	if (rightHit1)
 	{
 		float rightBlockEdgeL = blockSize * rightXBlock;
 		float overlapX = box.mMax.x - rightBlockEdgeL;
 
-		Vector3D v = mOwner->GetPosition();
-		v.x -= overlapX;
-		mOwner->SetPosition(v);
+		mOwner->SetFixVector(Vector3D(-overlapX, 0, 0));
 
 		Vector3D vel = mOwner->GetMoveVector();
 		vel.x = 0.0f;
 		mOwner->SetMoveVector(vel);
 	}
 
-	if (leftHit)
+	if (leftHit1)
 	{
 		float leftBlockEdgeR = blockSize * (leftXBlock + 1);
 		float overlapX = leftBlockEdgeR - box.mMin.x;
 
-		Vector3D v = mOwner->GetPosition();
-		v.x += overlapX;
-		mOwner->SetPosition(v);
+		mOwner->SetFixVector(Vector3D(overlapX, 0, 0));
 
 		Vector3D vel = mOwner->GetMoveVector();
 		vel.x = 0.0f;

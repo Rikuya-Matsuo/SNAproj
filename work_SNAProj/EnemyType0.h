@@ -19,6 +19,8 @@ public:
 
 	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
+	friend EnemyManager;
+
 private:
 	static const float mTackleWait;
 
@@ -64,6 +66,7 @@ private:
 
 	void OnFlip() override;
 
+	void OnPressedByplayer(const ColliderComponentBase * caller, Uint8 opponentAtt);
 
 	void DetectPlayer(const ColliderComponentBase * caller, Uint8 opponentAtt);
 };

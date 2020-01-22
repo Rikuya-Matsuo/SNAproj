@@ -15,6 +15,8 @@ const EnemyType0::FlagType EnemyType0::mDamageAnimFlagMask = 1 << 0;
 const EnemyType0::FlagType EnemyType0::mFindPlayerFlagMask = 1 << 1;
 const EnemyType0::FlagType EnemyType0::mTackleFlagMask = 1 << 2;
 
+using namespace BlockHitDirectionFlagMask;
+
 EnemyType0::EnemyType0():
 	mNormalLimit(Vector3D(30.0f, 0.0f, 30.0f)),
 	mTackleLimit(Vector3D(70.0f, 0.0f, 50.0f)),
@@ -35,6 +37,8 @@ EnemyType0::EnemyType0():
 	Vector3D size = original.mMax - original.mMin;
 
 	AABB body = original;
+	body.mMax.y += EnemyBase::mDepth;
+	body.mMin.y -= EnemyBase::mDepth;
 	mBodyCollision = new BoxColliderComponent(this, ColAtt_Enemy);
 	mBodyCollision->SetObjectBox(body);
 
@@ -56,6 +60,8 @@ EnemyType0::EnemyType0():
 
 	mClamper = new ClampSpeedComponent(this, mNormalLimit);
 
+	SetScale(25.0f);
+
 	mPrevFlag_Enemy0 = mFlags_Enemy0;
 }
 
@@ -69,6 +75,24 @@ void EnemyType0::UpdateEnemy0()
 
 void EnemyType0::UpdateEnemy1()
 {
+	const Uint8 a = mBlockChecker->GetFlags();
+	if (a & mDownMask)
+	{
+		SetAffectGravityFlag(false);
+	}
+
+	if (mFlags_Enemy & mLookRightFlagMask_EBase)
+	{
+		if (a & mRightMask)
+		{
+			Flip();
+		}
+	}
+	else if (a & mLeftMask)
+	{
+		Flip();
+	}
+
 	mPrevFlag_Enemy0 = mFlags_Enemy0;
 }
 
@@ -76,12 +100,16 @@ void EnemyType0::OnHit(const ColliderComponentBase * caller, const ColliderCompo
 {
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	DetectPlayer(caller, opponentAtt);
+
+	OnPressedByplayer(caller, opponentAtt);
 }
 
 void EnemyType0::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	DetectPlayer(caller, opponentAtt);
+
+	OnPressedByplayer(caller, opponentAtt);
 }
 
 void EnemyType0::OnFlip()
@@ -89,6 +117,15 @@ void EnemyType0::OnFlip()
 	bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
 	BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
 	mAutoMoveComp->ReverseVelocity();
+}
+
+void EnemyType0::OnPressedByplayer(const ColliderComponentBase * caller, Uint8 opponentAtt)
+{
+	if (caller == mBodyCollision && opponentAtt == ColAtt_Player && mPushedVector.z < 0)
+	{
+		mFixVector.z -= mPushedVector.z;
+		mPushedVector.z = 0;
+	}
 }
 
 void EnemyType0::DetectPlayer(const ColliderComponentBase * caller, Uint8 opponentAtt)

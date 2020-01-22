@@ -1,5 +1,5 @@
 #include "EnemyManager.h"
-#include "EnemyTest.h"
+#include "EnemyType0.h"
 #include "StageBase.h"
 #include "AutoMoveComponent.h"
 #include "Block.h"
@@ -7,7 +7,7 @@
 #include <fstream>
 
 #ifdef DEBUG_SNA
-const int debugEnemyMassLimit = -1;
+const int debugEnemyMassLimit = 3;
 #endif
 
 EnemyManager::EnemyManager(StageBase * stage):
@@ -91,12 +91,12 @@ void EnemyManager::GenerateEnemy(int type, int inX, int inY)
 	}
 
 	// ê∂ê¨
-	EnemyTest * enemy = new EnemyTest;
+	EnemyType0 * enemy = new EnemyType0;
 	if (type == 1)
 	{
 		enemy->Flip();
 		enemy->mAutoMoveComp->ReverseVelocity();
-		enemy->mFlags_Enemy |= EnemyTest::mLookRightFlagMask_EBase;
+		enemy->mFlags_Enemy |= EnemyType0::mLookRightFlagMask_EBase;
 	}
 
 	// à íuåvéZ
