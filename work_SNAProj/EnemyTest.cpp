@@ -115,6 +115,8 @@ EnemyTest::EnemyTest():
 	//mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
 	mFallSpeedRate = 1.0f;
+
+	mFlags &= ~mAffectGravityFlagMask_Base;
 }
 
 EnemyTest::~EnemyTest()
@@ -187,7 +189,7 @@ void EnemyTest::UpdateEnemy0()
 	case mLDetectGroundFlagMask:
 		if (mFlags_Enemy & mLookRightFlagMask_EBase)
 		{
-			Flip();
+			//Flip();
 		}
 		break;
 
@@ -195,7 +197,7 @@ void EnemyTest::UpdateEnemy0()
 	case mRDetectGroundFlagMask:
 		if (!(mFlags_Enemy & mLookRightFlagMask_EBase))
 		{
-			Flip();
+			//Flip();
 		}
 		break;
 

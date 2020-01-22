@@ -115,6 +115,82 @@ void BlockHitChecker::Update()
 		}
 	}
 
+	bool rightHit1 = false;
+	if (Uint8 m = (mHitDirectionFlags & (Mask::mRUVerMask | Mask::mRDVerMask)))
+	{
+		if (m == (Mask::mRDVerMask | Mask::mRUVerMask))
+		{
+			rightHit1 = true;
+		}
+		else if (m)
+		{
+			if (checkBlock(rightXBlock, midYBlock))
+			{
+				rightHit1 = true;
+			}
+			else
+			{
+				float blockEdgeL = blockSize * rightXBlock;
+				float overlapX = box.mMax.x - blockEdgeL;
+				
+				float overlapY;
+				if (m == Mask::mRDVerMask)
+				{
+					float blockHead = highest - (footHeightBlock * blockSize);
+					overlapY = box.mMin.z - blockHead;
+				}
+				else
+				{
+					float blockFoot = highest - ((headHeightBlock + 1) * blockSize);
+					overlapY = blockFoot - box.mMax.z;
+				}
+
+				if (overlapX < overlapY)
+				{
+					rightHit1 = true;
+				}
+			}
+		}
+	}
+
+	bool leftHit1 = false;
+	if (Uint8 m = (mHitDirectionFlags & (Mask::mLUVerMask | Mask::mLDVerMask)))
+	{
+		if (m == (Mask::mLDVerMask | Mask::mLUVerMask))
+		{
+			leftHit1 = true;
+		}
+		else if (m)
+		{
+			if (checkBlock(leftXBlock, midYBlock))
+			{
+				leftHit1 = true;
+			}
+			else
+			{
+				float blockEdgeR = blockSize * leftXBlock;
+				float overlapX = blockEdgeR - box.mMin.x;
+
+				float overlapY;
+				if (m == Mask::mRDVerMask)
+				{
+					float blockHead = highest - (footHeightBlock * blockSize);
+					overlapY = box.mMin.z - blockHead;
+				}
+				else
+				{
+					float blockFoot = highest - ((headHeightBlock + 1) * blockSize);
+					overlapY = blockFoot - box.mMax.z;
+				}
+
+				if (overlapX < overlapY)
+				{
+					leftHit1 = true;
+				}
+			}
+		}
+	}
+
 	/*
 	if (upHit && (rightHit || leftHit))
 	{
