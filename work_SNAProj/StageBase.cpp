@@ -129,6 +129,7 @@ void StageBase::Construct()
 	///////////////////////////////////////
 	// ブロック生成
 	///////////////////////////////////////
+	const float blockSize = Block::mModelSize * mBlockScale;
 	for (int yBlock = 0; yBlock < mBlockMassY; ++yBlock)
 	{
 		for (int xBlock = 0; xBlock < mBlockMassX; ++xBlock)
@@ -142,11 +143,11 @@ void StageBase::Construct()
 			}
 
 			// 生成
-			Block * const bk = new Block(mBlockTexturePath);
+			Block * const bk = new Block(mBlockTexturePath, yBlock == mBlockMassY - 1);
 			bk->SetScale(mBlockScale);
 
 			// ブロックの高さの半分を計算
-			const float blockHalfHeight = (Block::mModelSize / 2) * mBlockScale;
+			const float blockHalfHeight = blockSize / 2;
 
 			// 一番下の段のブロックの上面が高さ0となるよう、生成する位置を計算
 			// xも左が0となるように。
@@ -159,6 +160,9 @@ void StageBase::Construct()
 			bk->SetPosition(pos);
 		}
 	}
+
+	// 終端4ブロックに踏み込んだ時点でゴールとする
+	mGoalLineX = blockSize * (mBlockMassX - 4);
 
 	////////////////////////////////////////////////
 	// ブロックのさらに下に表示する床の生成

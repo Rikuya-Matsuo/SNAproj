@@ -40,7 +40,9 @@ public:
 
 	void SetScene(SceneBase * in_scene) { mCurrentScene = in_scene; }
 
-	float GetDeltaTime() { return mDeltaTime; }
+	float GetDeltaTime() const { return mDeltaTime; }
+
+	//float GetAverageDeltaTime() const { return mAverageDeltaTime; }
 
 	void ResisterActor(const Actor * in_act);
 
@@ -72,7 +74,13 @@ private:
 	Camera * mActiveCamera;
 
 	float mDeltaTime;
+	/*
+	static const Uint8 mSampleDeltaTimeMass = 64;
+	float mSampleDeltaTimes[mSampleDeltaTimeMass];
+	float mAverageDeltaTime;
 
+	Uint8 mNextWriteSampleIndex;
+	*/
 	int mWindowWidth;
 
 	int mWindowHeight;

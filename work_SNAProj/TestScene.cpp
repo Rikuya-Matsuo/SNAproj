@@ -20,7 +20,7 @@ TestScene::TestScene()
 {
 	mPlayer = new Player;
 	mActors.emplace_back(mPlayer);
-	mPlayer->SetPosition(Vector3D(0.0f, 0.0f, 50.0f));
+	mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
 	mPlayer->SetScale(25.0f);
 
 	mStage = new TestStage;
@@ -55,6 +55,7 @@ TestScene::TestScene()
 
 TestScene::~TestScene()
 {
+	delete mStage;
 }
 
 void TestScene::Update()
@@ -89,6 +90,12 @@ void TestScene::Update()
 	if (!mPlayer->GetAliveFlag())
 	{
 		mNextScene = new GameOverScene;
+		mFlags |= mSceneChangeFlagMask;
+	}
+
+	if (mPlayer->GetPosition().x >= mStage->GetGoalLine())
+	{
+		mNextScene = new GameClearScene;
 		mFlags |= mSceneChangeFlagMask;
 	}
 }

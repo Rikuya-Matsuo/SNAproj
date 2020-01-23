@@ -9,6 +9,7 @@ class CompletionMeshActor;
 class EnemyBase;
 class Effect;
 class NinjaArtsBase;
+class BlockHitChecker;
 
 class Player final : public Actor
 {
@@ -53,6 +54,8 @@ private:
 	BoxColliderComponent * mGroundChecker;
 
 	BoxColliderComponent * mAttackCollider;
+
+	BlockHitChecker * mHitChecker;
 
 	JumpComponent * mJumpComponent;
 

@@ -14,6 +14,7 @@
 #include "EnemyBase.h"
 #include "Effect.h"
 #include "NinjaArtsBase.h"
+#include "BlockHitChecker.h"
 
 const char Player::mLifeMax = 3;
 const char Player::mDashAttackPower = 1;
@@ -80,6 +81,8 @@ Player::Player() :
 		mGroundChecker->SetObjectBox(box);
 	}
 
+	mHitChecker = new BlockHitChecker(this, mBoxCollider);
+
 	AABB attackCol = mMesh->GetCollisionBox();
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
 	attackCol.mMin.x += bodyColSizeX;
@@ -100,7 +103,7 @@ Player::Player() :
 
 	// ジャンプ機能
 	mJumpComponent = new JumpComponent(this);
-	mJumpComponent->SetPower(6.0f);
+	mJumpComponent->SetPower(9.0f);
 
 	// 最大速度を調整
 	Vector3D limitSpeed(170.0f, 0.0f, 100.0f);
@@ -119,7 +122,7 @@ Player::Player() :
 	mFallSpeedRate = 25.0f;
 
 	// 落下スピードの制限値設定
-	mFallSpeedMax = 50.0f;
+	mFallSpeedMax = 6.0f;
 
 	// プレイヤーであることを示すフラグ
 	//mFlags |= mPlayerFlagMask_Base;
@@ -135,6 +138,11 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
+	if (mPosition.z < -100.0f)
+	{
+		mPosition.z = 100.0f;
+	}
+
 	if (mLife <= 0 && !(mFlags_Player & mImmortalFlagMask))
 	{
 		OnLifeRunOut();

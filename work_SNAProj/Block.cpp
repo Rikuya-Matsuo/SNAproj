@@ -7,7 +7,7 @@
 
 const float Block::mModelSize = 100.0f;
 
-Block::Block(const std::string & texturePath):
+Block::Block(const std::string & texturePath, bool isGroundBlock):
 	Actor()
 {
 	mMeshComponent = new MeshComponent(this, 100);
@@ -20,8 +20,14 @@ Block::Block(const std::string & texturePath):
 
 	mMeshComponent->SetMesh(msh);
 
+	AABB box = msh->GetCollisionBox();
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
-	bcc->SetObjectBox(msh->GetCollisionBox());
+	if (isGroundBlock)
+	{
+		Vector3D boxSize = box.mMax - box.mMin;
+		box.mMin.z -= boxSize.z * 3.0f;
+	}
+	bcc->SetObjectBox(box);
 
 	// 重力落下を行わない。ヒット時に押し返されない。
 	mFlags &= ~(mAffectGravityFlagMask_Base | mMovalFlagMask_Base);

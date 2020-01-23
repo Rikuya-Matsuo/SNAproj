@@ -16,6 +16,8 @@ public:
 
 	float GetFloorHeight() const { return mFloorHeight; }
 
+	float GetGoalLine() const { return mGoalLineX; }
+
 	int GetBlockMassX() const { return mBlockMassX; }
 	int GetBlockMassY() const { return mBlockMassY; }
 
@@ -28,6 +30,8 @@ protected:
 	int mBlockMassY;
 
 	static float mBlockScale;
+
+	float mGoalLineX;
 
 	std::string mBlockTexturePath;
 

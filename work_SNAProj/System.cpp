@@ -119,8 +119,6 @@ void System::Run()
 		}
 #endif // DEBUG_SNA
 
-		FixActorPosition();
-
 		GravityFall();
 
 		UpdateScene();
@@ -129,6 +127,8 @@ void System::Run()
 		
 		// 当たり判定
 		PhysicManager::GetInstance().CheckHit();
+
+		FixActorPosition();
 
 		// カメラ更新
 		if (mActiveCamera != nullptr)
@@ -209,11 +209,37 @@ void System::UpdateDeltaTime()
 		SDL_Log("Delta time over\n");
 	}
 
+	mDeltaTime = mMaxDeltaTime;
+
 #ifdef SHOW_GAME_TIME
 	static float timer = 0.0f;
 	timer += mDeltaTime;
 	SDL_Log("%lf", timer);
 #endif
+
+	/*
+	// 平均デルタタイム計算プロセス
+	mSampleDeltaTimes[mNextWriteSampleIndex++] = mDeltaTime;
+	if (mNextWriteSampleIndex >= mSampleDeltaTimeMass)
+	{
+		mNextWriteSampleIndex = 0;
+	}
+	Uint8 i = 0;
+	float sum = 0.0f;
+	for (; i < mSampleDeltaTimeMass; ++i)
+	{
+		if (mSampleDeltaTimes[i] >= 0.0f)
+		{
+			sum += mSampleDeltaTimes[i];
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	mAverageDeltaTime = sum / i;
+	*/
 }
 
 void System::SortActor()

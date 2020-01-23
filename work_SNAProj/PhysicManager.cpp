@@ -436,7 +436,7 @@ void PhysicManager::GravityAffect(Actor * actor) const
 	const float limiter = actor->GetFallSpeedMax();
 	if (vec.z < -fabsf(limiter))
 	{
-		vec.z = limiter;
+		vec.z = -limiter;
 	}
 
 	actor->SetMoveVector(vec);

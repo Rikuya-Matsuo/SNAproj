@@ -334,7 +334,7 @@ void EnemyTest::UpdateEnemy1()
 		{
 			Flip();
 		}
-		else if (!(blhit & mRDVerMask))
+		else if (!(blhit & mRDVerMask) && blhit & mLDVerMask)
 		{
 			Flip();
 		}
@@ -343,7 +343,7 @@ void EnemyTest::UpdateEnemy1()
 	{
 		Flip();
 	}
-	else if (!(blhit & mLDVerMask))
+	else if (!(blhit & mLDVerMask) && blhit & mRDVerMask)
 	{
 		Flip();
 	}

@@ -26,6 +26,7 @@ void JumpComponent::Update()
 	{
 		Vector3D moveVec = mOwner->GetMoveVector();
 
+		//float rate = System::GetInstance().GetDeltaTime() / System::GetInstance().GetAverageDeltaTime();
 		moveVec.z += mPower;
 
 		mJumpFlags &= ~mTimingFlagMask;

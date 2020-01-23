@@ -39,10 +39,24 @@ void BlockHitChecker::Update()
 	int midYBlock = static_cast<int>((highest - (box.mMin.z + (box.mMax.z - box.mMin.z) / 2)) / blockSize);
 
 	int leftXBlock = static_cast<int>(box.mMin.x / blockSize);
+	if (box.mMin.x < 0.0f)
+	{
+		// •‰‚Ì—Ìˆæ‚¾‚Æ-1‚É‹­§
+		leftXBlock = -1;
+	}
 
 	int rightXBlock = static_cast<int>(box.mMax.x / blockSize);
+	if (box.mMax.x < 0.0f)
+	{
+		rightXBlock = -1;
+	}
 
-	int midXBlock = static_cast<int>((box.mMin.x + (box.mMax.x - box.mMin.x) / 2) / blockSize);
+	float boxXMidPos = (box.mMin.x + (box.mMax.x - box.mMin.x) / 2);
+	int midXBlock = static_cast<int>(boxXMidPos / blockSize);
+	if (boxXMidPos < 0.0f)
+	{
+		midXBlock = -1;
+	}
 
 	auto checkBlock = [this, blockArray](int x, int y)
 	{

@@ -252,7 +252,7 @@ void Actor::FixPosition()
 	{
 		mPosition += mFixVector;
 
-		mFlags |= mCalculateTransformFlagMask_Base;
+		CalculateWorldTransform();
 
 		if (mFixVector.x)
 		{
