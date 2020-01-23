@@ -16,7 +16,7 @@
 #include "NinjaArtsBase.h"
 #include "BlockHitChecker.h"
 
-const char Player::mLifeMax = 3;
+const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
 const Player::FlagType Player::mLandingFlagMask			= 1 << 0;

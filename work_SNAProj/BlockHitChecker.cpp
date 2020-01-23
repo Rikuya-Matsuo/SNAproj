@@ -289,8 +289,11 @@ void BlockHitChecker::Update()
 		mOwner->SetFixVector(Vector3D(0, 0, -overlapY));
 
 		Vector3D vel = mOwner->GetMoveVector();
-		vel.z = 0.0f;
-		mOwner->SetMoveVector(vel);
+		if (vel.z > 0.0f)
+		{
+			vel.z = 0.0f;
+			mOwner->SetMoveVector(vel);
+		}
 	}
 	
 	if (downHit1)
@@ -301,8 +304,11 @@ void BlockHitChecker::Update()
 		mOwner->SetFixVector(Vector3D(0, 0, overlapY - 0.001f));
 
 		Vector3D vel = mOwner->GetMoveVector();
-		vel.z = 0.0f;
-		mOwner->SetMoveVector(vel);
+		if (vel.z < 0.0f)
+		{
+			vel.z = 0.0f;
+			mOwner->SetMoveVector(vel);
+		}
 	}
 
 	if (rightHit1)
@@ -313,8 +319,11 @@ void BlockHitChecker::Update()
 		mOwner->SetFixVector(Vector3D(-overlapX - 0.001f, 0, 0));
 
 		Vector3D vel = mOwner->GetMoveVector();
-		vel.x = 0.0f;
-		mOwner->SetMoveVector(vel);
+		if (vel.x > 0.0f)
+		{
+			vel.x = 0.0f;
+			mOwner->SetMoveVector(vel);
+		}
 	}
 
 	if (leftHit1)
@@ -325,8 +334,11 @@ void BlockHitChecker::Update()
 		mOwner->SetFixVector(Vector3D(overlapX, 0, 0));
 
 		Vector3D vel = mOwner->GetMoveVector();
-		vel.x = 0.0f;
-		mOwner->SetMoveVector(vel);
+		if (vel.x < 0.0f)
+		{
+			vel.x = 0.0f;
+			mOwner->SetMoveVector(vel);
+		}
 	}
 }
 

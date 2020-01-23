@@ -253,18 +253,31 @@ void Actor::FixPosition()
 		mPosition += mFixVector;
 
 		CalculateWorldTransform();
+		auto isMinus = [](float value)
+		{
+			return value < 0.0f;
+		};
 
 		if (mFixVector.x)
 		{
-			mMoveVector.x = 0.0f;
+			if (isMinus(mMoveVector.x) != isMinus(mFixVector.x))
+			{
+				mMoveVector.x = 0.0f;
+			}
 		}
 		else if (mFixVector.y)
 		{
-			mMoveVector.y = 0.0f;
+			if (isMinus(mMoveVector.y) != isMinus(mFixVector.y))
+			{
+				mMoveVector.y = 0.0f;
+			}
 		}
 		else if (mFixVector.z)
 		{
-			mMoveVector.z = 0.0f;
+			if (isMinus(mMoveVector.z) != isMinus(mFixVector.z))
+			{
+				mMoveVector.z = 0.0f;
+			}
 		}
 
 		mFixVector = Vector3D::zero;

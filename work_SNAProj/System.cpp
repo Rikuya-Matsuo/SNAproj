@@ -119,12 +119,12 @@ void System::Run()
 		}
 #endif // DEBUG_SNA
 
-		GravityFall();
-
 		UpdateScene();
 
 		UpdateActor();
-		
+
+		GravityFall();
+
 		// 当たり判定
 		PhysicManager::GetInstance().CheckHit();
 

@@ -142,16 +142,6 @@ void EnemyTest::UpdateEnemy0()
 	mFlags_EnemyTest |= blhit & mRDVerMask ? mRDetectGroundFlagMask : 0;
 	mFlags_EnemyTest |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
 	
-	if (mFlags_EnemyTest & mKnockBackFlagMask)
-	{
-		if (!(mPrevFlags_EnemyTest & mKnockBackFlagMask))
-		{
-			mMoveVector = mKnockBackVector;
-		}
-		mMoveVector.x = mKnockBackVector.x;
-		mAutoMoveComp->SetActive(false);
-	}
-
 	if (mFlags_EnemyTest & mDamageAnimFlagMask)
 	{
 		mTextureIndex++;
@@ -272,8 +262,6 @@ void EnemyTest::UpdateEnemy0()
 	{
 		mMoveVector.x = 0.0f;
 	}
-
-	mFlags |= mPlayerFlagMask_Base;
 }
 
 void EnemyTest::TackleProcess()
@@ -314,6 +302,16 @@ void EnemyTest::OnPressedByPlayerAndCheckIfWhen(const ColliderComponentBase * ca
 
 void EnemyTest::UpdateEnemy1()
 {
+	if (mFlags_EnemyTest & mKnockBackFlagMask)
+	{
+		if (!(mPrevFlags_EnemyTest & mKnockBackFlagMask))
+		{
+			mMoveVector = mKnockBackVector;
+		}
+		mMoveVector.x = mKnockBackVector.x;
+		mAutoMoveComp->SetActive(false);
+	}
+
 	if (mPrevFlags_EnemyTest & mKnockBackFlagMask && !(mFlags_EnemyTest & mKnockBackFlagMask))
 	{
 		Vector3D lim = (mFlags_EnemyTest & mTackleFlagMask) ? mTackleVelocityLimit : mNormalVelocityLimit;
@@ -322,7 +320,7 @@ void EnemyTest::UpdateEnemy1()
 	}
 
 	const Uint8 blhit = mBlockChecker->GetFlags();
-	if (blhit & mDownMask)
+	if (blhit & mDownMask && !(mFlags_EnemyTest & mKnockBackFlagMask))
 	{
 		mMoveVector.z = 0;
 		SetAffectGravityFlag(false);
@@ -385,6 +383,8 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 		mKnockBackVector.x *= (x < 0.0f) ? 1.0f : -1.0f;
 		mClamper->SetLimit(mKnockBackVecLimit);
 		mClamper->SetClampDirectionFlags(true, false, true);
+
+		mFixVector.x = 0.0f;
 	}
 
 	// 地面検出装置の処理

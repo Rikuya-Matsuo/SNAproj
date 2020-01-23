@@ -17,7 +17,7 @@ Renderer::Renderer()
 	,mContext(0)
 	,mMeshShader(nullptr)
 	,mSkinnedShader(nullptr)
-	,mFieldOfView(Common::DegToRad(160.0f))
+	,mFieldOfView(Common::DegToRad(155.0f))
 {
 }
 
