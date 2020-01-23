@@ -212,7 +212,7 @@ void EnemyTest::UpdateEnemy0()
 	// 着地中は重力の影響を受けない(ノックバック例外）
 	if (detectFlags != 0 && !(mFlags_EnemyTest & mKnockBackFlagMask))
 	{
-		//SetAffectGravityFlag(false);
+		SetAffectGravityFlag(false);
 	}
 
 	// 着地時

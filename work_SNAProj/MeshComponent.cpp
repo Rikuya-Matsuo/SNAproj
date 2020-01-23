@@ -35,6 +35,11 @@ MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal)
 
 MeshComponent::~MeshComponent()
 {
+	if (mMesh)
+	{
+		mMesh->DeleteActorInfo(mOwner);
+	}
+
 	//printf("remove MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), mOwner);
 	System::GetInstance().GetRenderer()->RemoveMeshComponent(this);
 }

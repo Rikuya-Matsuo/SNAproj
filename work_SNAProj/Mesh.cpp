@@ -41,6 +41,7 @@ Mesh::Mesh()
 	, mRadius(0.0f)
 	, mSpecPower(100.0f)
 	, mFlags(0)
+	, mDefaultTexture(nullptr)
 {
 	
 }
@@ -147,16 +148,13 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 		}
 
 		// メッシュ読み込み時にデフォルトで設定されるテクスチャの設定
-		if (mDefaultTexture.find(actor) != mDefaultTexture.end() &&
-			mDefaultTexture[actor] != t)
+		if (mDefaultTexture == nullptr)
 		{
-			delete mDefaultTexture[actor];
+			mDefaultTexture = t;
 		}
 
-		mDefaultTexture[actor] = t;
-
 		// 現時点のテクスチャをデフォルトのものとして設定する
-		mCurrentTexture[actor] = mDefaultTexture[actor];
+		mCurrentTexture[actor] = mDefaultTexture;
 	}
 
 	// 頂点読み込み
@@ -364,3 +362,29 @@ AnimationChips * Mesh::GetAnimChips(const Actor* actor, int index)
 	return nullptr;
 }
 
+void Mesh::DeleteActorInfo(const Actor * actor)
+{
+	auto itrCT = mCurrentTexture.find(actor);
+	if (itrCT != mCurrentTexture.end())
+	{
+		mCurrentTexture.erase(itrCT);
+	}
+
+	auto itrAC = mAnimations.find(actor);
+	if (itrAC != mAnimations.end())
+	{
+		for (auto anims : itrAC->second)
+		{
+			delete anims.second;
+			anims.second = nullptr;
+		}
+		itrAC->second.clear();
+		mAnimations.erase(itrAC);
+	}
+
+	auto itrACIndex = mActiveAnimIndex.find(actor);
+	if (itrACIndex != mActiveAnimIndex.end())
+	{
+		mActiveAnimIndex.erase(itrACIndex);
+	}
+}

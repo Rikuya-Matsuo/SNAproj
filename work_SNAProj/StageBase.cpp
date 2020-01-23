@@ -161,8 +161,8 @@ void StageBase::Construct()
 		}
 	}
 
-	// 終端4ブロックに踏み込んだ時点でゴールとする
-	mGoalLineX = blockSize * (mBlockMassX - 4);
+	// 終端3ブロックに踏み込んだ時点でゴールとする
+	mGoalLineX = blockSize * (mBlockMassX - 3);
 
 	////////////////////////////////////////////////
 	// ブロックのさらに下に表示する床の生成

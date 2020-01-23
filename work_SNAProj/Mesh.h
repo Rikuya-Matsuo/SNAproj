@@ -60,7 +60,9 @@ public:
 
 	void SetIsBoardFlagTrue() { mFlags |= mIsBoardFlagMask; }
 
-	void DuplicateDefaultTexture(const Actor * actor) { mCurrentTexture[actor] = mDefaultTexture[actor] = mDefaultTexture.begin()->second; }
+	void DuplicateDefaultTexture(const Actor * actor) { mCurrentTexture[actor] = mDefaultTexture; }
+
+	void DeleteActorInfo(const Actor * actor);
 
 private:
 	static const char* mBoardMeshPath;
@@ -74,7 +76,7 @@ private:
 	FlagType mFlags;
 
 	// メッシュのテクスチャ
-	std::unordered_map<const Actor *, Texture *> mDefaultTexture;
+	Texture * mDefaultTexture;
 
 	std::unordered_map<const Actor *, Texture *> mCurrentTexture;
 
