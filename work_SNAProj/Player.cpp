@@ -128,7 +128,7 @@ Player::Player() :
 	//mFlags |= mPlayerFlagMask_Base;
 
 	// プレイヤーを不死身に
-	mFlags_Player |= mImmortalFlagMask;
+	//mFlags_Player |= mImmortalFlagMask;
 }
 
 Player::~Player()

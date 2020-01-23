@@ -9,7 +9,7 @@ Effect::Effect(const std::string & texPath, int priority):
 	mAppearSecond(1.0f),
 	mTimer(0.0f)
 {
-	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/board.gpmesh", this);
+	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	mesh->LoadTexture(texPath, System::GetInstance().GetRenderer(), this);
 	MeshComponent * mc = new MeshComponent(this, 500);
 	mc->SetMesh(mesh);
