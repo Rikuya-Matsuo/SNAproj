@@ -18,6 +18,8 @@ public:
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
 
+	bool GetAttackFlag() const { return mFlags_Enemy & mAttackFlagMask_EBase; }
+
 	friend EnemyManager;
 
 protected:
@@ -25,6 +27,7 @@ protected:
 	static const FlagType mAliveFlagMask_EBase;
 	static const FlagType mImmortalFlagMask_EBase;
 	static const FlagType mLookRightFlagMask_EBase;
+	static const FlagType mAttackFlagMask_EBase;
 
 	static const float mDepth;
 

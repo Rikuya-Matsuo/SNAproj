@@ -37,6 +37,8 @@ private:
 	static const FlagType mLookRightFlagMask;
 	static const FlagType mImmortalFlagMask;
 	static const FlagType mAliveFlagMask;
+	static const FlagType mKnockBackFlagMask;
+
 
 	enum AnimationPattern
 	{
@@ -92,5 +94,5 @@ private:
 
 	void OnLifeRunOut();
 
-	Effect * FindNonActiveEffect(const Effect ** effArray, size_t mass) const;
+	Effect * FindNonActiveEffect(Effect ** effArray, size_t mass) const;
 };

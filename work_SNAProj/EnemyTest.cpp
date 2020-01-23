@@ -251,6 +251,7 @@ void EnemyTest::UpdateEnemy0()
 			mClamper->SetLimit(mNormalVelocityLimit);
 
 			mFlags_EnemyTest &= ~mTackleFlagMask;
+			mFlags_Enemy &= ~mAttackFlagMask_EBase;
 		}
 
 		mTackleWaitTimer = 0.0f;
@@ -277,6 +278,7 @@ void EnemyTest::TackleProcess()
 	{
 		// 突進開始
 		mFlags_EnemyTest |= mTackleFlagMask;
+		mFlags_Enemy |= mAttackFlagMask_EBase;
 
 		if (!(mPrevFlags_EnemyTest & mTackleFlagMask))
 		{

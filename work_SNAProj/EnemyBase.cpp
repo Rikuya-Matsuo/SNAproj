@@ -6,6 +6,7 @@
 const EnemyBase::FlagType EnemyBase::mAliveFlagMask_EBase = 1 << 0;
 const EnemyBase::FlagType EnemyBase::mImmortalFlagMask_EBase = 1 << 1;
 const EnemyBase::FlagType EnemyBase::mLookRightFlagMask_EBase = 1 << 2;
+const EnemyBase::FlagType EnemyBase::mAttackFlagMask_EBase = 1 << 3;
 
 const float EnemyBase::mDepth = 0.05f;
 

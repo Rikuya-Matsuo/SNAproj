@@ -24,6 +24,7 @@ const Player::FlagType Player::mDetectGroundFlagMask	= 1 << 1;
 const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
 const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
 const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
+const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
 
 Player::Player() :
 	Actor(),
@@ -227,7 +228,7 @@ void Player::UpdateActor1()
 	}
 
 	// ブレーキ
-	if (!mInputComponent->GetHorizonInputFlag())
+	if (!mInputComponent->GetHorizonInputFlag() && !(mFlags_Player & mKnockBackFlagMask))
 	{
 		mMoveVector.x *= 0.05f;
 
@@ -344,6 +345,26 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 		}
 	}
 
+	if (callerAtt == ColAtt_Player && opponentAtt == ColAtt_Enemy)
+	{
+		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
+		if (enemy->GetAttackFlag())
+		{
+			float x = enemy->GetPosition().x - mPosition.x;
+			mMoveVector = Vector3D(20.0f, 0.0f, 8.0f);
+			mMoveVector.x *= x < 0.0f ? 1.0f : -1.0f;
+
+			mFlags_Player |= mKnockBackFlagMask;
+
+			Effect * eff = FindNonActiveEffect(mHitEffects, mHitEffectMass);
+			if (eff)
+			{
+				eff->SetPosition(mPosition);
+				eff->SetActive(true);
+			}
+		}
+	}
+
 	if (callerAtt == ColliderAttribute::ColAtt_PlayerAttack && opponentAtt == ColliderAttribute::ColAtt_Enemy)
 	{
 		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
@@ -354,7 +375,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 			enemy->Damage(mDashAttackPower);
 			mHitList.emplace_back(enemy);
 
-			Effect * eff = FindNonActiveEffect(const_cast<const Effect**>(mHitEffects), mHitEffectMass);
+			Effect * eff = FindNonActiveEffect(mHitEffects, mHitEffectMass);
 			if (eff)
 			{
 				eff->SetPosition(enemy->GetPosition());
@@ -390,6 +411,11 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 
 	mFlags_Player |= mDetectGroundFlagMask;
 
+	if (mPrevFlags_Player & mKnockBackFlagMask)
+	{
+		mFlags_Player &= ~mKnockBackFlagMask;
+	}
+
 	SetAffectGravityFlag(false);
 }
 
@@ -403,7 +429,7 @@ void Player::OnLifeRunOut()
 	mFlags_Player &= ~mAliveFlagMask;
 }
 
-Effect * Player::FindNonActiveEffect(const Effect ** effArray, size_t mass) const
+Effect * Player::FindNonActiveEffect(Effect ** effArray, size_t mass) const
 {
 	Effect * ret = nullptr;
 
