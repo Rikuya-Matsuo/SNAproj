@@ -193,9 +193,15 @@ void System::Finish()
 
 void System::UpdateDeltaTime()
 {
+	mDeltaTime = 0.0f;
 	Uint32 ticksCount = SDL_GetTicks();
-	mDeltaTime = (ticksCount - mPrevTicksCount) / 1000.0f;
+	while (mDeltaTime < mMaxDeltaTime)
+	{
+		ticksCount = SDL_GetTicks();
+		mDeltaTime = (ticksCount - mPrevTicksCount) / 1000.0f;
+	}
 	mPrevTicksCount = ticksCount;
+	mDeltaTime = mMaxDeltaTime;
 
 #ifdef SHOW_DELTA_TIME
 	// 調整前のデルタタイム表示
@@ -208,9 +214,6 @@ void System::UpdateDeltaTime()
 		mDeltaTime = mMaxDeltaTime;
 		SDL_Log("Delta time over\n");
 	}
-
-	mDeltaTime = mMaxDeltaTime;
-
 #ifdef SHOW_GAME_TIME
 	static float timer = 0.0f;
 	timer += mDeltaTime;
