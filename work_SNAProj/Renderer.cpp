@@ -232,7 +232,11 @@ Texture* Renderer::GetTexture(const std::string & fileName)
 			tex = nullptr;
 		}
 	}
-	printf("Load Texture Success : %s \n", fileName.c_str());
+
+	if (tex)
+	{
+		printf("Load Texture Success : %s \n", fileName.c_str());
+	}
 	return tex;
 }
 

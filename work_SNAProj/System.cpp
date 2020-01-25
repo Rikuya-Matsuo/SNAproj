@@ -282,11 +282,6 @@ void System::Draw()
 
 	mRenderer->Draw();
 
-	for (auto sprCmp : mSpriteComponentList)
-	{
-		sprCmp->Draw();
-	}
-
 	mRenderer->WindowFlip();
 }
 

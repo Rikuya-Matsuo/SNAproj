@@ -35,6 +35,9 @@ public:
 
 	void StartPlaying() { mFlags &= ~mStopFlagMask; }
 
+	void SetRoutine(const int * frameNumberArray, size_t arraySize);
+	void SetRoutine(const int * frameNumberArray);		// 末尾を-1にすること。
+
 private:
 	typedef Uint8 FlagType;
 	static const FlagType mLoopEndFlagMask;
@@ -48,6 +51,9 @@ private:
 	std::vector<Texture *> mChipTextures;
 
 	size_t mCurrentTextureIndex;
+
+	std::vector<size_t> mRoutine;
+	size_t mCurrentRoutineIndex;
 
 	float mSecondPerFrame;
 

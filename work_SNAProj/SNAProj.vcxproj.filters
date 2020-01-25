@@ -244,7 +244,7 @@
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
     <ClCompile Include="AnimationEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -432,7 +432,7 @@
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
     <ClInclude Include="AnimationEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

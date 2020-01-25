@@ -3,6 +3,8 @@
 #include "Renderer.h"
 #include "Texture.h"
 
+#include <climits>
+
 const AnimationChips::FlagType AnimationChips::mLoopEndFlagMask = 1 << 0;
 const AnimationChips::FlagType AnimationChips::mStopFlagMask = 1 << 1;
 std::unordered_map<std::string, std::vector<Texture*>> AnimationChips::mFrameTextureList;
@@ -10,7 +12,8 @@ std::unordered_map<std::string, std::vector<Texture*>> AnimationChips::mFrameTex
 AnimationChips::AnimationChips():
 	mFlags(0),
 	mCurrentTextureIndex(0),
-	mSecondPerFrame(1.0f / 60)
+	mSecondPerFrame(1.0f / 60),
+	mCurrentRoutineIndex(0)
 {
 }
 
@@ -18,6 +21,11 @@ AnimationChips::~AnimationChips()
 {
 	mChipTextures.clear();
 	mChipTextures.shrink_to_fit();
+	std::vector<Texture*>().swap(mChipTextures);
+
+	mRoutine.clear();
+	mRoutine.shrink_to_fit();
+	std::vector<size_t>().swap(mRoutine);
 }
 
 void AnimationChips::Update()
@@ -39,17 +47,41 @@ void AnimationChips::Update()
 	{
 		// タイマーをもとにアニメーションを何枚進めるかを計算
 		int animProceed = static_cast<int>(mTimer / mSecondPerFrame);
-
-		// コマを進める
-		mCurrentTextureIndex += animProceed;
-
-		// コマ数をオーバーしていれば0に戻す
-		if (mCurrentTextureIndex >= mChipTextures.size())
+		
+		// 「0.0秒でコマを進める」指定は「1フレームごとにコマを進める」という意味と解釈する。
+		if (mSecondPerFrame == 0.0f)
 		{
-			mCurrentTextureIndex -= mChipTextures.size();
+			animProceed = 1;
+		}
 
-			// アニメーションのループが一周したことを示すフラグを立てる
-			mFlags |= mLoopEndFlagMask;
+		// 表示するコマ順が指定されていない場合
+		if (mRoutine.empty())
+		{
+			// コマを進める
+			mCurrentTextureIndex += animProceed;
+
+			// コマ数をオーバーしていれば0に戻す
+			if (mCurrentTextureIndex >= mChipTextures.size())
+			{
+				mCurrentTextureIndex -= mChipTextures.size();
+
+				// アニメーションのループが一周したことを示すフラグを立てる
+				mFlags |= mLoopEndFlagMask;
+			}
+		}
+		// 表示するコマ順が指定されている場合
+		else
+		{
+			mCurrentRoutineIndex += animProceed;
+
+			if (mCurrentRoutineIndex >= mRoutine.size())
+			{
+				mCurrentRoutineIndex -= mRoutine.size();
+
+				mFlags |= mLoopEndFlagMask;
+			}
+
+			mCurrentTextureIndex = mRoutine[mCurrentRoutineIndex];
 		}
 
 		// コマを進めた分タイマーを減らす
@@ -119,24 +151,6 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 	gMask = 0x0000FF00;
 	bMask = 0x00FF0000;
 	aMask = 0xFF000000;
-#endif
-
-#ifdef DEBUG_SNA
-
-	auto maskCheck = [](Uint32 srcMask, Uint32 mask, const std::string& maskName)
-	{
-		if (srcMask != mask)
-		{
-			SDL_Log((maskName + " mask is strange.\n").c_str());
-		}
-		return;
-	};
-
-	maskCheck(srcFormat->Rmask, rMask, "Red");
-	maskCheck(srcFormat->Gmask, gMask, "Green");
-	maskCheck(srcFormat->Bmask, bMask, "Blue");
-	maskCheck(srcFormat->Amask, aMask, "Alpha");
-
 #endif
 
 	// 縦横で二重ループ
@@ -224,4 +238,23 @@ void AnimationChips::SetTextureIndex(size_t num)
 	{
 		SDL_Delay(0);
 	}
+}
+
+void AnimationChips::SetRoutine(const int * frameNumberArray, size_t arraySize)
+{
+	mRoutine.clear();
+	for (size_t i = 0; i < arraySize; ++i)
+	{
+		if (frameNumberArray[i] < 0)
+		{
+			break;
+		}
+		mRoutine.emplace_back(frameNumberArray[i]);
+	}
+	mRoutine.shrink_to_fit();
+}
+
+void AnimationChips::SetRoutine(const int * frameNumberArray)
+{
+	SetRoutine(frameNumberArray, UINT32_MAX);
 }
