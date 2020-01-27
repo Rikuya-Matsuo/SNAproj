@@ -8,17 +8,21 @@ const Uint8 CompletionMeshActor::mFlipXFlagMask = 1 << 0;
 const Uint8 CompletionMeshActor::mFlipYFlagMask = 1 << 1;
 const Uint8 CompletionMeshActor::mNowFlippingFlagMask = 1 << 2;
 
+const CompletionMeshActor::FlagType CompletionMeshActor::mSyncPositionFlagMask = 1 << 0;
+const CompletionMeshActor::FlagType CompletionMeshActor::mSyncScaleFlagMask = 1 << 1;
+const CompletionMeshActor::FlagType CompletionMeshActor::mSyncRotationFlagMask = 1 << 2;
+
 CompletionMeshActor::CompletionMeshActor(const Actor * owner, int drawOrder):
 	mOwner(owner),
 	mCurrentIndex(-1),
 	mPositionOffset(Vector3D::zero),
-	mFlipFlag(0)
+	mFlipFlag(0),
+	mTransformUpdateFlags(mSyncPositionFlagMask | mSyncRotationFlagMask | mSyncRotationFlagMask)
 {
 	mRotationAxis = mOwner->GetRotationAxis();
 
 	mMeshComponent = new MeshComponent(this, drawOrder);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
-	mMesh->SetAnimModeFlag(true);
 	mMeshComponent->SetMesh(mMesh);
 	//mMeshComponent->SetActive(false);
 
@@ -42,6 +46,7 @@ void CompletionMeshActor::LoadAnimation(const std::string & filePath, Renderer *
 	if (itr != mAnimIndexList.end() || mAnimIndexList.empty())
 	{
 		mAnimIndexList.emplace_back(animIndex);
+		mMesh->SetAnimModeFlag(true);
 	}
 	else
 	{
@@ -92,18 +97,26 @@ void CompletionMeshActor::ResetAnimation(int index)
 	anim->Reset();
 }
 
+void CompletionMeshActor::SetTexture(Texture * tex)
+{
+	mMesh->SetTexture(this, tex);
+}
+
 void CompletionMeshActor::UpdateActor0()
 {
 	UpdateTransformData();
 
-	// インデックスを検索。ヒットすれば描画するが、しなければ描画しない。
-	auto itr = std::find(mAnimIndexList.begin(), mAnimIndexList.end(), mCurrentIndex);
-	bool drawFlag = (itr != mAnimIndexList.end());
-	BitFlagFunc::SetFlagByBool(!drawFlag, mFlags, mStopDrawFlagMask_Base);
-
-	if (drawFlag)
+	if (mMesh->GetUseAnimFlag(this))
 	{
-		mMesh->SetAnimIndex(this, mCurrentIndex);
+		// インデックスを検索。ヒットすれば描画するが、しなければ描画しない。
+		auto itr = std::find(mAnimIndexList.begin(), mAnimIndexList.end(), mCurrentIndex);
+		bool drawFlag = (itr != mAnimIndexList.end());
+		BitFlagFunc::SetFlagByBool(!drawFlag, mFlags, mStopDrawFlagMask_Base);
+
+		if (drawFlag)
+		{
+			mMesh->SetAnimIndex(this, mCurrentIndex);
+		}
 	}
 }
 
@@ -114,9 +127,9 @@ void CompletionMeshActor::UpdateActor1()
 
 void CompletionMeshActor::UpdateTransformData()
 {
-	bool scaleFlag = mScale != mOwner->GetScale();
-	bool rotaFlag = mRotationAngle != mOwner->GetRotationAngle();
-	bool posFlag = mPosition != (mOwner->GetPosition() + mPositionOffset);
+	bool scaleFlag = mScale != mOwner->GetScale() && mTransformUpdateFlags & mSyncScaleFlagMask;
+	bool rotaFlag = mRotationAngle != mOwner->GetRotationAngle() && mTransformUpdateFlags & mSyncRotationFlagMask;
+	bool posFlag = mPosition != (mOwner->GetPosition() + mPositionOffset) && mTransformUpdateFlags & mSyncPositionFlagMask;
 
 	if (scaleFlag)
 	{

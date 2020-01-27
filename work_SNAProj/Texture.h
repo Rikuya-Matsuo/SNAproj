@@ -8,6 +8,8 @@
 #pragma once
 #include <string>
 
+struct SDL_Surface;
+
 class Texture
 {
 public:
@@ -16,7 +18,7 @@ public:
 
 	bool Load(const std::string& fileName);                      // テクスチャをファイルからロードする
 	void Unload();                                               // テクスチャ解放処理
-	void CreateFromSurface(struct SDL_Surface* surface);         // SDLサーフェスからテクスチャを作成する
+	void CreateFromSurface(SDL_Surface* surface);         // SDLサーフェスからテクスチャを作成する
 
 	void SetActive();                                            // このテクスチャをアクティブ(ポリゴン描画で使用）にする
 
@@ -26,4 +28,6 @@ private:
 	unsigned int mTextureID;                                     // テクスチャID
 	int mWidth;                                                  // テクスチャ幅
 	int mHeight;                                                 // テクスチャ高さ
+
+	void BlitSurfaceProcess(SDL_Surface * & surface);
 };

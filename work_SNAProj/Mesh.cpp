@@ -362,6 +362,16 @@ AnimationChips * Mesh::GetAnimChips(const Actor* actor, int index)
 	return nullptr;
 }
 
+bool Mesh::GetUseAnimFlag(const Actor * actor) const
+{
+	if (mAnimations.find(actor) == mAnimations.end())
+	{
+		return false;
+	}
+
+	return !mAnimations.at(actor).empty();
+}
+
 void Mesh::DeleteActorInfo(const Actor * actor)
 {
 	auto itrCT = mCurrentTexture.find(actor);

@@ -4,6 +4,7 @@
 class MeshComponent;
 class Mesh;
 class Renderer;
+class Texture;
 
 class CompletionMeshActor : public Actor
 {
@@ -33,13 +34,28 @@ public:
 
 	bool IsResisteredIndex(int index) const { return std::find(mAnimIndexList.begin(), mAnimIndexList.end(), index) != mAnimIndexList.end(); }
 
+	void SetTexture(Texture * tex);
+
+	void SetSyncPositionFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mTransformUpdateFlags, mSyncPositionFlagMask); }
+
+	void SetSyncScaleFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mTransformUpdateFlags, mSyncScaleFlagMask); }
+
+	void SetSyncRotationFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mTransformUpdateFlags, mSyncRotationFlagMask); }
+
 private:
 	static const Uint8 mFlipXFlagMask;
 	static const Uint8 mFlipYFlagMask;
 	static const Uint8 mNowFlippingFlagMask;
+	
+	typedef Uint8 FlagType;
+	static const FlagType mSyncPositionFlagMask;
+	static const FlagType mSyncScaleFlagMask;
+	static const FlagType mSyncRotationFlagMask;
 
 
 	Uint8 mFlipFlag;
+
+	FlagType mTransformUpdateFlags;
 
 	const Actor * mOwner;
 

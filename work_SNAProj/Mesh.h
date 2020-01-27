@@ -51,6 +51,7 @@ public:
 
 	void SetAnimModeFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAnimModeFlagMask); }
 	bool GetAnimModeFlag() const { return mFlags & mAnimModeFlagMask; }
+	bool GetUseAnimFlag(const Actor * actor) const;
 
 	void SetAnimIndex(const Actor * actor, int index) { mActiveAnimIndex[actor] = index; }
 
@@ -63,6 +64,8 @@ public:
 	void DuplicateDefaultTexture(const Actor * actor) { mCurrentTexture[actor] = mDefaultTexture; }
 
 	void DeleteActorInfo(const Actor * actor);
+
+	void SetTexture(const Actor * actor, Texture * tex) { mCurrentTexture[actor] = tex; }
 
 private:
 	static const char* mBoardMeshPath;

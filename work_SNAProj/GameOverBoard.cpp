@@ -7,8 +7,8 @@
 GameOverBoard::GameOverBoard():
 	TitleBoard()
 {
-	Mesh * mesh = const_cast<Mesh*>(mMeshComp->GetMesh());
-	mesh->LoadTexture("Assets/gameOverKari.png", System::GetInstance().GetRenderer(), this);
+	//Mesh * mesh = const_cast<Mesh*>(mMeshComp->GetMesh());
+	//mesh->LoadTexture("Assets/gameOverKari.png", System::GetInstance().GetRenderer(), this);
 }
 
 GameOverBoard::~GameOverBoard()

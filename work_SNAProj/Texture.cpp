@@ -38,6 +38,9 @@ bool Texture::Load(const std::string& fileName)
 		return false;
 	}
 
+	// 透過を有効にするため、一度BlitSurfaceしてみる。
+	//BlitSurfaceProcess(surf);
+
 	// サーフェスからテクスチャを作る
 	tex = SDL_CreateTextureFromSurface(System::GetInstance().GetSDLRenderer(), surf);
 	if (!tex)
@@ -98,4 +101,42 @@ void Texture::CreateFromSurface(SDL_Surface* surface)
 void Texture::SetActive()
 {
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
+}
+
+void Texture::BlitSurfaceProcess(SDL_Surface *& surface)
+{
+	// マスクの取得
+	Uint32 rMask, gMask, bMask, aMask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rMask = 0xFF000000;
+	gMask = 0x00FF0000;
+	bMask = 0x0000FF00;
+	aMask = 0x000000FF;
+#else
+	rMask = 0x000000FF;
+	gMask = 0x0000FF00;
+	bMask = 0x00FF0000;
+	aMask = 0xFF000000;
+#endif
+
+	SDL_Surface * blited =
+		SDL_CreateRGBSurface(0, surface->w, surface->h, 32, rMask, gMask, bMask, aMask);
+
+	SDL_Rect sRect, dRect;
+	sRect.x = sRect.y = 0;
+	sRect.w = surface->w;
+	sRect.h = surface->h;
+
+	dRect.x = dRect.y = 0;
+
+	int errorCode = SDL_BlitSurface(surface, &sRect, blited, &dRect);
+	if (errorCode)
+	{
+		SDL_Log("Fail to blit graph\n-----%s-----\n", SDL_GetError());
+		SDL_FreeSurface(blited);
+		return;
+	}
+
+	SDL_FreeSurface(surface);
+	surface = blited;
 }
