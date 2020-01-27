@@ -63,7 +63,7 @@ void MeshComponent::Draw(Shader* shader)
 		// ボード描画用の設定ではなく、ボードのメッシュであるとき
 		if (!forBoardSetting && isBoard)
 		{
-			glEnable(GL_DEPTH_TEST);
+			glDisable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);
 			glDepthMask(GL_TRUE);
 
