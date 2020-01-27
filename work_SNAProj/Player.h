@@ -44,6 +44,7 @@ private:
 	{
 		Anim_Stay = 0,
 		Anim_DashAttack,
+		Anim_Run,
 		Anim_Invalid
 	};
 

@@ -49,6 +49,11 @@ Player::Player() :
 	mMesh->LoadDivTexture("Assets/NinjaDashAttack02.png", System::GetInstance().GetRenderer(), this,
 		8, 8, 1, 128, 128, dashAttackAnimSpeed, AnimationPattern::Anim_DashAttack);
 	mc->SetMesh(mMesh);
+	mMesh->LoadDivTexture("Assets/NinjaRun02.png", System::GetInstance().GetRenderer(), this,
+		5, 5, 1, 128, 128, 0.05f, AnimationPattern::Anim_Run);
+	AnimationChips * runChips = mMesh->GetAnimChips(this, Anim_Run);
+	int routine[] = { 0,1,2,3,-1 };
+	runChips->SetRoutine(routine);
 
 	// チップからはみ出た部分を描画するためのアクター
 	mCompletionMeshActor = new CompletionMeshActor(this, drawOrder);
@@ -171,8 +176,6 @@ void Player::UpdateActor0()
 	{
 		mCurrentAnimation = AnimationPattern::Anim_DashAttack;
 
-		mMesh->SetAnimIndex(this, mCurrentAnimation);
-
 		mAttackCollider->SetActive(true);
 	}
 
@@ -192,6 +195,19 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
+	// 走る
+	if (mInputComponent->GetHorizonInputFlag())
+	{
+		if (mCurrentAnimation != Anim_DashAttack)
+		{
+			mCurrentAnimation = AnimationPattern::Anim_Run;
+		}
+	}
+	else if (mCurrentAnimation != Anim_DashAttack)
+	{
+		mCurrentAnimation = Anim_Stay;
+	}
+
 	// ダッシュアタック終了判定
 	if (mCurrentAnimation == AnimationPattern::Anim_DashAttack && mMesh->GetAnimLoopEndFlag())
 	{
@@ -278,6 +294,9 @@ void Player::UpdateActor1()
 
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;
+
+	// メッシュにアニメーションの変更を伝える
+	mMesh->SetAnimIndex(this, mCurrentAnimation);
 
 	// チップ補完アクターにも現在のアニメーションを伝える
 	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
