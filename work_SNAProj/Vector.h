@@ -13,6 +13,72 @@ public:
 
 	static const Vector2D zero;
 
+	// Vector addition (a + b)
+	friend Vector2D operator+(const Vector2D& a, const Vector2D& b)
+	{
+		return Vector2D(a.x + b.x, a.y + b.y);
+	}
+
+	// Vector subtraction (a - b)
+	friend Vector2D operator-(const Vector2D& a, const Vector2D& b)
+	{
+		return Vector2D(a.x - b.x, a.y - b.y);
+	}
+
+	// Component-wise multiplication
+	friend Vector2D operator*(const Vector2D& left, const Vector2D& right)
+	{
+		return Vector2D(left.x * right.x, left.y * right.y);
+	}
+
+	// Scalar multiplication
+	friend Vector2D operator*(const Vector2D& vec, float scalar)
+	{
+		return Vector2D(vec.x * scalar, vec.y * scalar);
+	}
+
+	// Scalar multiplication
+	friend Vector2D operator*(float scalar, const Vector2D& vec)
+	{
+		return Vector2D(vec.x * scalar, vec.y * scalar);
+	}
+
+	friend bool operator==(const Vector2D& left, const Vector2D& right)
+	{
+		return
+			left.x == right.x &&
+			left.y == right.y;
+	}
+
+	friend bool operator!=(const Vector2D& left, const Vector2D& right)
+	{
+		return !(left == right);
+	}
+
+	// Scalar *=
+	Vector2D& operator*=(float scalar)
+	{
+		x *= scalar;
+		y *= scalar;
+		return *this;
+	}
+
+	// Vector +=
+	Vector2D& operator+=(const Vector2D& right)
+	{
+		x += right.x;
+		y += right.y;
+		return *this;
+	}
+
+	// Vector -=
+	Vector2D& operator-=(const Vector2D& right)
+	{
+		x -= right.x;
+		y -= right.y;
+		return *this;
+	}
+
 	operator Vector3D() const;
 };
 

@@ -1,119 +1,77 @@
-﻿#include "Sprite.h"
-#include <cmath>
-#include <cstdio>
+#include "Sprite.h"
+#include "System.h"
+#include "Texture.h"
+#include "Shader.h"
 
-const Sprite::FlagType Sprite::mXFlipFlagMask = 1 << 0;
-//const Sprite::FlagType Sprite::mPrevXFlipFlagMask = 1 << 1;
+const Sprite::FlagType Sprite::mDrawFlagMask = 1 << 0;
 
-Sprite::Sprite():
-	mPixels(nullptr),
-	mFlags(0)
+Sprite::Sprite(const char * texPath):
+	mFlags(mDrawFlagMask),
+	mPosition(Vector2D::zero),
+	mSize(Vector2D(100, 100))
 {
+	System::GetInstance().ResisterSprite(this);
+
+	if (texPath)
+	{
+		mTexture = System::GetInstance().GetRenderer()->GetTexture(texPath);
+	}
 }
 
 Sprite::~Sprite()
 {
+	System::GetInstance().DeresisterSprite(this);
 }
 
-void Sprite::Draw(const Vector2D& pos) const
+void Sprite::Draw()
 {
-	glRasterPos2f(pos.x, pos.y);
-	glDrawPixels(mWidth, mHeight, GL_RGBA, GL_UNSIGNED_BYTE, mPixels);
+	if (mFlags & mDrawFlagMask && mTexture)
+	{
+		mTexture->SetActive();
+
+		Vector2D leftUp, rightDown;
+		CalculatePosition(mPosition, leftUp);
+		CalculatePosition(mPosition + mSize, rightDown);
+
+		/*
+		// Scale the quad by the width/height of texture
+		Matrix4 scaleMat = Matrix4::CreateScale(
+			mSize.x,
+			mSize.y,
+			1.0f);
+		// Translate to position on screen
+		Matrix4 transMat = Matrix4::CreateTranslation(
+			Vector3D(mPosition.x, mPosition.y, 0.0f));
+		// Set world transform
+		Matrix4 world = scaleMat * transMat;
+		System::GetInstance().GetRenderer()->SetMeshShader(world);
+		*/
+
+		glBegin(GL_POLYGON);
+		const bool test = false;
+		if (!test)
+		{
+			glTexCoord2f(0, 0); glVertex2f(leftUp.x, leftUp.y);
+			glTexCoord2f(0, 1); glVertex2f(leftUp.x, rightDown.y);
+			glTexCoord2f(1, 0); glVertex2f(rightDown.x, leftUp.y);
+			glTexCoord2f(1, 1); glVertex2f(rightDown.x, rightDown.y);
+		}
+		else
+		{
+			glTexCoord2f(0, 0); glVertex2f(-1.0f, 1.0f);
+			glTexCoord2f(0, 1); glVertex2f(-1.0f, -1.0f);
+			glTexCoord2f(1, 0); glVertex2f(1.0f, 1.0f);
+			glTexCoord2f(1, 1); glVertex2f(1.0f, -1.0f);
+		}
+		glEnd();
+	}
 }
 
-void Sprite::ConvertSDLSurface(SDL_Surface * surface)
+void Sprite::CalculatePosition(const Vector2D & pos, Vector2D & result)
 {
-	// ロックを解除
-	SDL_LockSurface(surface);
+	float screenW = System::GetInstance().GetRenderer()->GetScreenWidth();
+	float screenH = System::GetInstance().GetRenderer()->GetScreenHeight();
 
-	// 画像サイズを設定
-	mWidth = abs(surface->w);
-	mHeight = abs(surface->h);
-
-	// ピクセル数計算
-	const unsigned int pixelMass = mWidth * mHeight;
-
-	// メモリ確保
-	mPixels = new GLuint[pixelMass];
-
-	// ピクセルのコピー
-	for (unsigned int i = 0; i < pixelMass; ++i)
-	{
-		// サーフェイスのピクセル色を取得
-		Uint8 r, g, b, a;
-		Uint32 surfacePixel = reinterpret_cast<Uint32*>(surface->pixels)[i];
-		SDL_GetRGBA(surfacePixel, surface->format, &r, &g, &b, &a);
-
-		// 規格が違う？255から引いてみる
-		auto adjust = [](Uint8 & value) { value = 255 - value; };
-		adjust(r);
-		adjust(g);
-		adjust(b);
-
-		if (a < 16)
-		{
-			r = g = b = 0;
-		}
-
-		// ピクセル初期化
-		// Windowsならこっち
-		GLuint* pixel = &mPixels[pixelMass - (i + 1)];
-		*pixel = 0;
-
-		// コピー
-		for (char j = 0; j < 4; ++j)
-		{
-			GLuint color;
-			switch (j)
-			{
-			case 0:
-				color = r;
-				break;
-			case 1:
-				color = g;
-				break;
-			case 2:
-				color = b;
-				break;
-			case 3:
-				color = a;
-				break;
-			default:
-				break;
-			}
-
-			*pixel |= color << ((3 - j) * 8);
-		}
-	}
-
-	// 横が反転された状態でロードされているので反転
-	XFlip();
-
-	// ロック解除
-	SDL_UnlockSurface(surface);
-}
-
-void Sprite::XFlip()
-{
-	for (unsigned int i = 0; i < mHeight; ++i)
-	{
-		for (unsigned int j = 0; j < mWidth / 2; ++j)
-		{
-			unsigned int element[2];
-			element[0] = i * mWidth + j;
-			element[1] = i * mWidth + (mWidth - (j + 1));
-			GLuint tmp = mPixels[element[0]];
-			mPixels[element[0]] = mPixels[element[1]];
-			mPixels[element[1]] = tmp;
-		}
-	}
-
-	if (mFlags & mXFlipFlagMask)
-	{
-		mFlags &= ~mXFlipFlagMask;
-	}
-	else
-	{
-		mFlags |= mXFlipFlagMask;
-	}
+	result.x = (pos.x / (screenW / 2)) - 1.0f;
+	result.y = -((pos.y / (screenH / 2)) - 1.0f);
 }

@@ -2,11 +2,11 @@
 #include "Input.h"
 #include "PhysicManager.h"
 #include "Common.h"
-#include "DrawComponentBase.h"
 #include "Player.h"
 #include "SceneBase.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "Sprite.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -169,8 +169,6 @@ void System::Finish()
 	Common::DeleteContainerOfPointer(mActorList);
 	std::list<Actor *>().swap(mActorList);
 
-	std::list<DrawComponentBase *>().swap(mSpriteComponentList);
-
 	if (mCurrentScene != nullptr)
 	{
 		delete mCurrentScene;
@@ -282,7 +280,17 @@ void System::Draw()
 
 	mRenderer->Draw();
 
+	DrawSprites();
+
 	mRenderer->WindowFlip();
+}
+
+void System::DrawSprites()
+{
+	for (auto spr : mSpriteList)
+	{
+		spr->Draw();
+	}
 }
 
 void System::ChangeScene(bool & quitFlag)
@@ -362,30 +370,18 @@ void System::DeresisterActor(const Actor * in_act)
 	}
 }
 
-void System::ResisterDrawComponent(const DrawComponentBase * in_cmp)
+void System::ResisterSprite(const Sprite * in_spr)
 {
-	const int drawOrder = in_cmp->GetDrawOrder();
-
-	for (auto itr : mSpriteComponentList)
-	{
-		if (drawOrder < itr->GetDrawOrder())
-		{
-			auto insertPoint = std::find(mSpriteComponentList.begin(), mSpriteComponentList.end(), itr);
-			mSpriteComponentList.insert(insertPoint, const_cast<DrawComponentBase*>(in_cmp));
-			return;
-		}
-	}
-
-	mSpriteComponentList.emplace_back(const_cast<DrawComponentBase*>(in_cmp));
+	mSpriteList.emplace_back(const_cast<Sprite*>(in_spr));
 }
 
-void System::DeresisterDrawComponent(const DrawComponentBase * in_cmp)
+void System::DeresisterSprite(const Sprite * in_spr)
 {
-	auto target = std::find(mSpriteComponentList.begin(), mSpriteComponentList.end(), in_cmp);
+	auto target = std::find(mSpriteList.begin(), mSpriteList.end(), const_cast<Sprite*>(in_spr));
 
-	if (target != mSpriteComponentList.end())
+	if (target != mSpriteList.end())
 	{
-		mSpriteComponentList.erase(target);
+		mSpriteList.erase(target);
 	}
 }
 

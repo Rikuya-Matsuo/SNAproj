@@ -204,7 +204,6 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CompletionMeshActor.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
-    <ClCompile Include="DrawComponentBase.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EnemyTest.cpp" />
@@ -234,6 +233,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="SkeletalMeshComponent.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="StageBase.cpp" />
     <ClCompile Include="System.cpp" />
@@ -266,7 +266,6 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="Common.h" />
     <ClInclude Include="CompletionMeshActor.h" />
     <ClInclude Include="ComponentBase.h" />
-    <ClInclude Include="DrawComponentBase.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EnemyTest.h" />
@@ -298,6 +297,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="StageBase.h" />
     <ClInclude Include="System.h" />

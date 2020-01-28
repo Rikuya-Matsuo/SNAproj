@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "SceneBase.h"
 
+class Sprite;
+
 class TitleScene : public SceneBase
 {
 public:
@@ -8,5 +10,8 @@ public:
 	~TitleScene();
 
 	void Update() override;
+
+private:
+	Sprite * mUITest;
 };
 

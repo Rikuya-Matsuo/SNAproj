@@ -6,7 +6,7 @@
 GameClearBoard::GameClearBoard()
 {
 	Mesh * mesh = const_cast<Mesh*>(mMeshComp->GetMesh());
-	mesh->LoadTexture("Assets/gameClearKari.png", System::GetInstance().GetRenderer(), this);
+	mesh->LoadTexture("Assets/GameClear.png", System::GetInstance().GetRenderer(), this);
 }
 
 

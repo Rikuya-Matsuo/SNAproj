@@ -12,7 +12,7 @@ GameOverScene::GameOverScene()
 
 	Camera * cam = new Camera(gob);
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), gob->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
-	cam->SetDistanceVector(Vector3D(0.0f, 55.0f, 0.0f));
+	cam->SetDistanceVector(Vector3D(0.0f, 20.0f, 0.0f));
 	cam->SetActive();
 }
 

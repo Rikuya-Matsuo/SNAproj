@@ -12,7 +12,7 @@ GameClearScene::GameClearScene()
 
 	Camera * cam = new Camera(gcb);
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), gcb->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
-	cam->SetDistanceVector(Vector3D(0.0f, 55.0f, 0.0f));
+	cam->SetDistanceVector(Vector3D(0.0f, 20.0f, 0.0f));
 	cam->SetActive();
 }
 

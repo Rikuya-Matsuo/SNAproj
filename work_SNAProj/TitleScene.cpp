@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Input.h"
 #include "TestScene.h"
+#include "Sprite.h"
 
 TitleScene::TitleScene()
 {
@@ -14,6 +15,12 @@ TitleScene::TitleScene()
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), tb->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
 	cam->SetDistanceVector(Vector3D(0.0f, 55.0f, 0.0f));
 	cam->SetActive();
+	//cam->SetWatchTargetFlag(false);
+	//cam->SetChaseTargetFlag(false);
+
+	mUITest = new Sprite("Assets/effectKari.png");
+	mUITest->SetPosition(Vector2D(0.0f, 0.0f));
+	mUITest->SetSize(Vector2D(1024, 1024));
 }
 
 TitleScene::~TitleScene()
@@ -23,6 +30,8 @@ TitleScene::~TitleScene()
 		delete mCameras.back();
 		mCameras.pop_back();
 	}
+
+	delete mUITest;
 }
 
 void TitleScene::Update()

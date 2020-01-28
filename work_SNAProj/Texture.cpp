@@ -38,9 +38,6 @@ bool Texture::Load(const std::string& fileName)
 		return false;
 	}
 
-	// 透過を有効にするため、一度BlitSurfaceしてみる。
-	//BlitSurfaceProcess(surf);
-
 	// サーフェスからテクスチャを作る
 	tex = SDL_CreateTextureFromSurface(System::GetInstance().GetSDLRenderer(), surf);
 	if (!tex)

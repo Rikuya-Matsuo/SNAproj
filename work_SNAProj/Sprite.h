@@ -1,29 +1,39 @@
-﻿#pragma once
-#include "SDL/SDL_image.h"
-#include "GL/glew.h"
+#pragma once
+#include "SDL/SDL.h"
 #include "Vector.h"
+#include "BitFlagFunc.h"
+
+class Texture;
 
 class Sprite
 {
 public:
-	Sprite();
+	Sprite(const char * texPath = nullptr);
 	~Sprite();
 
-	void Draw(const Vector2D& pos) const;
+	void Draw();
 
-	void ConvertSDLSurface(SDL_Surface * surface);
+	void SetPosition(const Vector2D & pos) { mPosition = pos; }
+	const Vector2D& GetPosition() const { return mPosition; }
 
-	void XFlip();
+	void SetSize(const Vector2D & size) { mSize = size; }
+	const Vector2D& GetSize() const { return mSize; }
 
-private:
+	void SetDrawFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mDrawFlagMask); }
+
+protected:
 	typedef Uint8 FlagType;
-	static const FlagType mXFlipFlagMask;
-	//static const FlagType mPrevXFlipFlagMask;
+	static const FlagType mDrawFlagMask;
 
-	GLuint * mPixels;
 
-	GLuint mWidth;
-	GLuint mHeight;
+	FlagType mFlags;
 
-	Uint8 mFlags;
+	Texture * mTexture;
+
+	Vector2D mPosition;
+
+	Vector2D mSize;
+
+	void CalculatePosition(const Vector2D& pos, Vector2D & result);
 };
+

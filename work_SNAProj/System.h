@@ -14,6 +14,7 @@ class Camera;
 class DrawComponentBase;
 class SceneBase;
 class Renderer;
+class Sprite;
 
 class System final
 {
@@ -50,9 +51,9 @@ public:
 
 	void RequestSortActor() { mSortActorFlag = true; }
 
-	void ResisterDrawComponent(const DrawComponentBase * in_cmp);
+	void ResisterSprite(const Sprite * in_spr);
 
-	void DeresisterDrawComponent(const DrawComponentBase * in_cmp);
+	void DeresisterSprite(const Sprite * in_spr);
 
 	Renderer * GetRenderer() const { return mRenderer; }
 
@@ -89,7 +90,7 @@ private:
 
 	std::list<Actor *> mActorList;
 
-	std::list<DrawComponentBase *> mSpriteComponentList;
+	std::list<Sprite *> mSpriteList;
 
 	void UpdateDeltaTime();
 	
@@ -102,6 +103,8 @@ private:
 	void UpdateActor();
 
 	void Draw();
+
+	void DrawSprites();
 
 	void ChangeScene(bool & quitFlag);
 
