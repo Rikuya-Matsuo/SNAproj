@@ -7,7 +7,7 @@ class BoxColliderComponent;
 class JumpComponent;
 class CompletionMeshActor;
 class EnemyBase;
-class Effect;
+class AnimationEffect;
 class NinjaArtsBase;
 class BlockHitChecker;
 
@@ -45,6 +45,7 @@ private:
 		Anim_Stay = 0,
 		Anim_DashAttack,
 		Anim_Run,
+		Anim_KnockBack,
 		Anim_Invalid
 	};
 
@@ -77,7 +78,7 @@ private:
 	std::list<EnemyBase *> mHitList;
 
 	const size_t mHitEffectMass;
-	Effect ** mHitEffects;
+	AnimationEffect ** mHitEffects;
 
 	void UpdateActor0() override;
 
@@ -95,5 +96,5 @@ private:
 
 	void OnLifeRunOut();
 
-	Effect * FindNonActiveEffect(Effect ** effArray, size_t mass) const;
+	AnimationEffect * FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const;
 };

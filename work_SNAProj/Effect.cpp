@@ -14,10 +14,10 @@ Effect::Effect(const char * texPath, int priority):
 	{
 		mMesh->LoadTexture(texPath, System::GetInstance().GetRenderer(), this);
 	}
-	MeshComponent * mc = new MeshComponent(this, 500);
-	mc->SetMesh(mMesh);
+	mMeshComp = new MeshComponent(this, 500);
+	mMeshComp->SetMesh(mMesh);
 
-	mFlags |= mStopUpdateFlagMask_Base;
+	mFlags |= (mStopUpdateFlagMask_Base | mStopDrawFlagMask_Base);
 	mFlags &= ~(mAffectGravityFlagMask_Base);
 
 	if (mPriority != priority)
@@ -36,7 +36,7 @@ void Effect::UpdateActor0()
 
 	if (mTimer > mAppearSecond)
 	{
-		mFlags |= mStopUpdateFlagMask_Base;
+		StopProcess();
 	}
 
 	if (mPosition.y != mDepth)
@@ -55,4 +55,17 @@ void Effect::OnBecomeActive()
 	Actor::OnBecomeActive();
 
 	mFlags |= mCalculateTransformFlagMask_Base;
+	mFlags &= ~mStopDrawFlagMask_Base;
+}
+
+void Effect::OnBecomeNotActive()
+{
+	Actor::OnBecomeNotActive();
+
+	mMeshComp->SetActive(true);
+}
+
+void Effect::StopProcess()
+{
+	mFlags |= (mStopUpdateFlagMask_Base | mStopDrawFlagMask_Base);
 }

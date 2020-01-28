@@ -17,3 +17,18 @@ AnimationEffect::AnimationEffect(int priority, const std::string & animPath, int
 AnimationEffect::~AnimationEffect()
 {
 }
+
+void AnimationEffect::UpdateActor0()
+{
+	return;
+}
+
+void AnimationEffect::UpdateActor1()
+{
+	if (mAnimChip->GetLoopEndFlag())
+	{
+		StopProcess();
+
+		mAnimChip->Reset();
+	}
+}

@@ -10,6 +10,11 @@ public:
 	AnimationEffect(int priority, const std::string & animPath, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame);
 	~AnimationEffect();
 
+	void UpdateActor0() override;
+	void UpdateActor1() override;
+
+	AnimationChips * GetAnimChips() const { return mAnimChip; }
+
 private:
 	AnimationChips * mAnimChip;
 };

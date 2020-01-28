@@ -2,6 +2,7 @@
 #include "Actor.h"
 
 class Mesh;
+class MeshComponent;
 
 class Effect : public Actor
 {
@@ -15,6 +16,7 @@ protected:
 	static const float mDepth;
 
 	Mesh * mMesh;
+	MeshComponent * mMeshComp;
 
 	// èoåªéûä‘
 	float mAppearSecond;
@@ -24,5 +26,9 @@ protected:
 	void UpdateActor0() override;
 
 	void OnBecomeActive() override;
+
+	void OnBecomeNotActive() override;
+
+	virtual void StopProcess();
 };
 

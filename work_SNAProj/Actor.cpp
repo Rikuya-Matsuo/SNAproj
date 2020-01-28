@@ -47,6 +47,18 @@ Actor::~Actor()
 
 void Actor::Update()
 {
+	// アクティブ化した or アクティブでなくなった判定・処理
+	bool getNonActive = !(mPrevFlags & mStopUpdateFlagMask_Base) && mFlags & mStopUpdateFlagMask_Base;
+	bool getActive = mPrevFlags & mStopUpdateFlagMask_Base && !(mFlags & mStopUpdateFlagMask_Base);
+	if (getNonActive)
+	{
+		OnBecomeNotActive();
+	}
+	else if (getActive)
+	{
+		OnBecomeActive();
+	}
+
 	if (mPrevRotationAngle != mRotationAngle)
 	{
 		mRotation = Quaternion(mRotationAxis, mRotationAngle);
@@ -61,18 +73,6 @@ void Actor::Update()
 		CalculateWorldTransform();
 
 		mFlags &= ~mCalculateTransformFlagMask_Base;
-	}
-
-	// アクティブ化した or アクティブでなくなった判定・処理
-	bool getNonActive = !(mPrevFlags & mStopUpdateFlagMask_Base) && mFlags & mStopUpdateFlagMask_Base;
-	bool getActive = mPrevFlags & mStopUpdateFlagMask_Base && !(mFlags & mStopUpdateFlagMask_Base);
-	if (getNonActive)
-	{
-		OnBecomeNotActive();
-	}
-	else if (getActive)
-	{
-		OnBecomeActive();
 	}
 
 	bool isActive = !(mFlags & mStopUpdateFlagMask_Base);

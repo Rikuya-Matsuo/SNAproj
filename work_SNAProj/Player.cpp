@@ -12,7 +12,7 @@
 #include "Renderer.h"
 #include "Input.h"
 #include "EnemyBase.h"
-#include "Effect.h"
+#include "AnimationEffect.h"
 #include "NinjaArtsBase.h"
 #include "BlockHitChecker.h"
 
@@ -34,7 +34,7 @@ Player::Player() :
 	mCurrentCursorNinjaArts(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
 	mLife(mLifeMax),
-	mHitEffectMass(2)
+	mHitEffectMass(4)
 {
 	// フラグコピー
 	mPrevFlags_Player = mFlags_Player;
@@ -44,16 +44,22 @@ Player::Player() :
 	const float dashAttackAnimSpeed = 0.05f;
 	MeshComponent * mc = new MeshComponent(this, drawOrder);
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
+	// 待機アニメーション
 	mMesh->LoadDivTexture("Assets/NinjaStay.png", System::GetInstance().GetRenderer(), this,
 		10, 10, 1, 128, 128, 0.07f, AnimationPattern::Anim_Stay);
+	// 攻撃アニメーション
 	mMesh->LoadDivTexture("Assets/NinjaDashAttack02.png", System::GetInstance().GetRenderer(), this,
 		8, 8, 1, 128, 128, dashAttackAnimSpeed, AnimationPattern::Anim_DashAttack);
-	mc->SetMesh(mMesh);
+	// 走りアニメーション
 	mMesh->LoadDivTexture("Assets/NinjaRun02.png", System::GetInstance().GetRenderer(), this,
 		5, 5, 1, 128, 128, 0.05f, AnimationPattern::Anim_Run);
 	AnimationChips * runChips = mMesh->GetAnimChips(this, Anim_Run);
 	int routine[] = { 0,1,2,3,-1 };
 	runChips->SetRoutine(routine);
+	// ノックバックアニメーション
+	mMesh->LoadDivTexture("Assets/NinjaDown.png", System::GetInstance().GetRenderer(), this,
+		6, 6, 1, 128, 128, 0.06f, AnimationPattern::Anim_KnockBack);
+	mc->SetMesh(mMesh);
 
 	// チップからはみ出た部分を描画するためのアクター
 	mCompletionMeshActor = new CompletionMeshActor(this, drawOrder);
@@ -117,11 +123,12 @@ Player::Player() :
 	csc->SetClampDirectionFlags(true, false, false);
 
 	// 攻撃ヒットエフェクトの配列
-	mHitEffects = new Effect*[mHitEffectMass];
+	mHitEffects = new AnimationEffect*[mHitEffectMass];
 	for (size_t i = 0; i < mHitEffectMass; ++i)
 	{
-		mHitEffects[i] = new Effect("Assets/effectKari.png", mPriority + 50);
-		mHitEffects[i]->SetScale(20.0f);
+		mHitEffects[i] = new AnimationEffect(mPriority + 50,
+			"Assets/hitEff1.png", 4, 2, 2, 256, 256, 0.09f);
+		mHitEffects[i]->SetScale(50.0f);
 	}
 
 	// 落下スピード割合の調整
@@ -226,6 +233,25 @@ void Player::UpdateActor1()
 		mAttackCollider->SetActive(false);
 
 		mHitList.clear();
+	}
+
+	// ノックバックアニメーション
+	AnimationChips * knockBackAnim = mMesh->GetAnimChips(this, Anim_KnockBack);
+	if (mFlags_Player & mKnockBackFlagMask)
+	{
+		mCurrentAnimation = AnimationPattern::Anim_KnockBack;
+
+		if (knockBackAnim->GetLoopEndFlag())
+		{
+			knockBackAnim->StopPlaying();
+
+			knockBackAnim->SetTextureIndex(5);
+		}
+	}
+	else
+	{
+		knockBackAnim->Reset();
+		knockBackAnim->StartPlaying();
 	}
 
 	// チップ補完アクターの設置方向を再設定
@@ -430,7 +456,7 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 
 	mFlags_Player |= mDetectGroundFlagMask;
 
-	if (mPrevFlags_Player & mKnockBackFlagMask)
+	if ((mFlags_Player & mPrevFlags_Player & mKnockBackFlagMask) && mPushedVector.z > 0.0f)
 	{
 		mFlags_Player &= ~mKnockBackFlagMask;
 	}
@@ -448,15 +474,15 @@ void Player::OnLifeRunOut()
 	mFlags_Player &= ~mAliveFlagMask;
 }
 
-Effect * Player::FindNonActiveEffect(Effect ** effArray, size_t mass) const
+AnimationEffect * Player::FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const
 {
-	Effect * ret = nullptr;
+	AnimationEffect * ret = nullptr;
 
 	for (size_t i = 0; i < mass; ++i)
 	{
 		if (!effArray[i]->GetActiveFlag())
 		{
-			ret = const_cast<Effect*>(effArray[i]);
+			ret = effArray[i];
 			break;
 		}
 	}
