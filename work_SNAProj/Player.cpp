@@ -407,6 +407,10 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 				eff->SetPosition(mPosition);
 				eff->SetActive(true);
 			}
+			else
+			{
+				SDL_Delay(0);
+			}
 		}
 	}
 
@@ -425,6 +429,10 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 			{
 				eff->SetPosition(enemy->GetPosition());
 				eff->SetActive(true);
+			}
+			else
+			{
+				SDL_Delay(0);
 			}
 		}
 	}

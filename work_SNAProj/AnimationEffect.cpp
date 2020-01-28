@@ -20,7 +20,11 @@ AnimationEffect::~AnimationEffect()
 
 void AnimationEffect::UpdateActor0()
 {
-	return;
+	if (mPosition.y != mDepth)
+	{
+		mPosition.y = mDepth;
+		mFlags |= mCalculateTransformFlagMask_Base;
+	}
 }
 
 void AnimationEffect::UpdateActor1()
