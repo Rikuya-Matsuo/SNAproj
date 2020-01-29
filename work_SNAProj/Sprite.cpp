@@ -66,11 +66,6 @@ void Sprite::Draw()
 			glTexCoord2f(1, 1); glVertex2f(1.0f, -1.0f);
 		}
 		glEnd();
-
-		int screenW, screenH;
-		screenW = static_cast<int>(System::GetInstance().GetRenderer()->GetScreenWidth());
-		screenH = static_cast<int>(System::GetInstance().GetRenderer()->GetScreenHeight());
-		glViewport(0, 0, screenW, screenH);
 	}
 }
 
