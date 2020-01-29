@@ -10,7 +10,6 @@
 #include "Animation.h"
 #include "Camera.h"
 #include "Common.h"
-#include "System.h"
 
 Renderer::Renderer()
 	:mWindow(nullptr)
@@ -18,7 +17,6 @@ Renderer::Renderer()
 	,mContext(0)
 	,mMeshShader(nullptr)
 	,mSkinnedShader(nullptr)
-	,mSpriteShader(nullptr)
 	,mFieldOfView(Common::DegToRad(155.0f))
 {
 }
@@ -162,10 +160,6 @@ void Renderer::Draw()
 	// 有効視野角のなかにあるかを調べるラムダ式
 	auto isInFieldOfView = [this](MeshComponent * mc)
 	{
-#ifdef DEBUG_SNA
-		return true;
-#endif // DEBUG_SNA
-
 		// 視野角計算
 		Vector3D acCamDir = mc->GetOwner()->GetPosition() - mCameraPointer->GetPosition();
 		Vector3D camVec = mCameraPointer->GetViewVector();
@@ -213,14 +207,6 @@ void Renderer::Draw()
 		}
 
 		sk->GetOwner()->SetInCameraFlag(inFOV);
-	}
-
-	mSpriteShader->SetActive();
-	mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
-	SetLightUniforms(mSpriteShader);
-	for (auto ui : mUIs)
-	{
-		ui->Draw(mSpriteShader);
 	}
 
 }
@@ -359,24 +345,14 @@ void Renderer::SetWindowTitle(const std::string & title)
 	SDL_SetWindowTitle(mWindow, title.c_str());
 }
 
-void Renderer::AddUI(MeshComponent * mesh)
-{
-	mUIs.emplace_back(mesh);
-}
-
-void Renderer::RemoveUI(MeshComponent * mesh)
-{
-	auto itr = std::find(mUIs.begin(), mUIs.end(), mesh);
-	if (itr != mUIs.end())
-	{
-		mUIs.erase(itr);
-	}
-}
-
 bool Renderer::LoadShaders()
 {
+	// メッシュシェーダー（ボード用）
+	//mMeshShaderForBoard = new Shader();
+
 	// メッシュシェーダー
 	mMeshShader = new Shader();
+	//"Shaders/Phong.frag";
 	if (!mMeshShader->Load("Shaders/BasicMesh.vert", "Shaders/BasicMesh.frag"))
 	{
 		return false;
@@ -397,14 +373,6 @@ bool Renderer::LoadShaders()
 	}
 	mSkinnedShader->SetActive();
 	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
-
-	mSpriteShader = new Shader();
-	if (!mSpriteShader->Load("Shaders/SpriteMesh.vert", "Shaders/SpriteMesh.frag"))
-	{
-		return false;
-	}
-	mSpriteShader->SetActive();
-	mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
 
 	return true;
 }

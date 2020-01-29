@@ -18,9 +18,11 @@ TitleScene::TitleScene()
 	//cam->SetWatchTargetFlag(false);
 	//cam->SetChaseTargetFlag(false);
 
+	/*
 	SpriteActor * UITest = new SpriteActor("Assets/titleKari.png");
 	UITest->SetScale(25.0f);
 	UITest->SetPosition(Vector3D::zero);
+	*/
 }
 
 TitleScene::~TitleScene()
