@@ -280,10 +280,6 @@ void System::Draw()
 
 	mRenderer->Draw();
 
-	mRenderer->PrepareSprite();
-
-	DrawSprites();
-
 	mRenderer->WindowFlip();
 }
 

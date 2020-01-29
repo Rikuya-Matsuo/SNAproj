@@ -18,6 +18,7 @@ Renderer::Renderer()
 	,mContext(0)
 	,mMeshShader(nullptr)
 	,mSkinnedShader(nullptr)
+	,mSpriteShader(nullptr)
 	,mFieldOfView(Common::DegToRad(155.0f))
 {
 }
@@ -189,7 +190,7 @@ void Renderer::Draw()
 	for (auto mc : mMeshComponents)
 	{
 		bool inFOV = isInFieldOfView(mc);
-		if ((inFOV && mc->GetVisible()) || mc->GetSpecialDrawFlag())
+		if ((inFOV && mc->GetVisible()) || mc->GetRangeOutDrawFlag())
 		{
 			mc->Draw(mMeshShader);
 		}
@@ -212,6 +213,14 @@ void Renderer::Draw()
 		}
 
 		sk->GetOwner()->SetInCameraFlag(inFOV);
+	}
+
+	mSpriteShader->SetActive();
+	mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	SetLightUniforms(mSpriteShader);
+	for (auto ui : mUIs)
+	{
+		ui->Draw(mSpriteShader);
 	}
 
 }
@@ -350,20 +359,24 @@ void Renderer::SetWindowTitle(const std::string & title)
 	SDL_SetWindowTitle(mWindow, title.c_str());
 }
 
-void Renderer::PrepareSprite()
+void Renderer::AddUI(MeshComponent * mesh)
 {
-	mMeshShader->SetActive();
-	mView = Matrix4::CreateLookAt(Vector3D::zero, Vector3D(1.0f), Vector3D(0.0f, 0.0f, 1.0f));
+	mUIs.emplace_back(mesh);
+}
+
+void Renderer::RemoveUI(MeshComponent * mesh)
+{
+	auto itr = std::find(mUIs.begin(), mUIs.end(), mesh);
+	if (itr != mUIs.end())
+	{
+		mUIs.erase(itr);
+	}
 }
 
 bool Renderer::LoadShaders()
 {
-	// メッシュシェーダー（ボード用）
-	//mMeshShaderForBoard = new Shader();
-
 	// メッシュシェーダー
 	mMeshShader = new Shader();
-	//"Shaders/Phong.frag";
 	if (!mMeshShader->Load("Shaders/BasicMesh.vert", "Shaders/BasicMesh.frag"))
 	{
 		return false;
@@ -384,6 +397,14 @@ bool Renderer::LoadShaders()
 	}
 	mSkinnedShader->SetActive();
 	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
+
+	mSpriteShader = new Shader();
+	if (!mSpriteShader->Load("Shaders/SpriteMesh.vert", "Shaders/SpriteMesh.frag"))
+	{
+		return false;
+	}
+	mSpriteShader->SetActive();
+	mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
 
 	return true;
 }

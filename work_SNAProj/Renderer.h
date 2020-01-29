@@ -48,8 +48,8 @@ public:
 	void                   WindowClear(){ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);} // ウィンドウ描画クリア
 	void                   WindowFlip() { SDL_GL_SwapWindow(mWindow); }                        // ウィンドウフリップ
 	void                   SetWindowTitle(const std::string& title);                           // ウィンドウタイトルのセット
-
-	void PrepareSprite();
+	void AddUI(class MeshComponent * mesh);
+	void RemoveUI(class MeshComponent * mesh);
 
 private:
 
@@ -62,6 +62,7 @@ private:
 	std::unordered_map<std::string, class Mesh*>      mMeshs;            // メッシュ登録配列
 	std::vector<class MeshComponent*>                 mMeshComponents;   // メッシュコンポーネント登録配列
 	std::vector<class SkeletalMeshComponent*>         mSkeletalMeshes;   // スケルタルメッシュの描画に使われる
+	std::vector<class MeshComponent*>				  mUIs;
 	std::unordered_map<std::string, class Skeleton*>  mSkeletons; // スケルタルデータ
 	std::unordered_map<std::string, class Animation*> mAnims;    // アニメーションデータ
 
@@ -69,8 +70,8 @@ private:
 
 	//シェーダー関連
 	class Shader*										mMeshShader;			// メッシュシェーダー
-	class Shader*										mMeshShaderForBoard;	// メッシュシェーダー（ボードメッシュ用）
 	class Shader*										mSkinnedShader;			// スキンメッシュシェーダー
+	class Shader* mSpriteShader;
 
 	// 基本行列関連
 	Matrix4                                           mView;             // ビュー行列

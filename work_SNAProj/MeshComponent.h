@@ -17,7 +17,7 @@ class Mesh;
 class MeshComponent : public ComponentBase
 {
 public:
-	MeshComponent(class Actor* owner, int drawOrder, bool isSkeletal = false);       // メッシュコンポーネントコンストラクタ。（要：親アクター）
+	MeshComponent(class Actor* owner, int drawOrder, bool isSkeletal = false, bool uiFlag = false);       // メッシュコンポーネントコンストラクタ。（要：親アクター）
 	~MeshComponent();
 
 	void Update() override;
@@ -34,15 +34,16 @@ public:
 
 	int GetDrawOrder() const { return mDrawOrder; }
 
-	void SetSpecialDrawFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mMeshCompFlags, mSpecialDrawFlagMask); }
-	bool GetSpecialDrawFlag() const { return mMeshCompFlags & mSpecialDrawFlagMask; }
+	void SetRangeOutDrawFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mMeshCompFlags, mRangeOutDrawFlagMask); }
+	bool GetRangeOutDrawFlag() const { return mMeshCompFlags & mRangeOutDrawFlagMask; }
 
 protected:
 	typedef Uint8 FlagType;
 	static const FlagType mVisibleFlagMask;
 	static const FlagType mIsSkeletalFlagMask;
 	static const FlagType mAnimationModeFlagMask;
-	static const FlagType mSpecialDrawFlagMask;			//視野角の外にあっても描画を行う。やたらと真にすると重くなる可能性あり。
+	static const FlagType mRangeOutDrawFlagMask;			//視野角の外にあっても描画を行う。やたらと真にすると重くなる可能性あり。
+	static const FlagType mUIFlagMask;						// UIとして描画するかのフラグ
 
 
 	FlagType mMeshCompFlags;

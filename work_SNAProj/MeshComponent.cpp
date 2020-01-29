@@ -19,17 +19,26 @@
 const MeshComponent::FlagType MeshComponent::mVisibleFlagMask = 1 << 0;
 const MeshComponent::FlagType MeshComponent::mIsSkeletalFlagMask = 1 << 1;
 const MeshComponent::FlagType MeshComponent::mAnimationModeFlagMask = 1 << 2;
-const MeshComponent::FlagType MeshComponent::mSpecialDrawFlagMask = 1 << 3;
+const MeshComponent::FlagType MeshComponent::mRangeOutDrawFlagMask = 1 << 3;
+const MeshComponent::FlagType MeshComponent::mUIFlagMask = 1 << 4;
 
 // メッシュコンポーネント　ownerとスキンメッシュかの情報入れる
-MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal)
+MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal, bool uiFlag)
 	:ComponentBase(owner)
 	, mMesh(nullptr)
 	, mDrawOrder(drawOrder)
 	, mTextureIndex(0)
 	, mMeshCompFlags(mVisibleFlagMask | (isSkeletal ? mIsSkeletalFlagMask : 0))
 {
-	System::GetInstance().GetRenderer()->AddMeshComponent(this);
+	if (uiFlag && !isSkeletal)
+	{
+		mMeshCompFlags |= mUIFlagMask;
+		System::GetInstance().GetRenderer()->AddUI(this);
+	}
+	else
+	{
+		System::GetInstance().GetRenderer()->AddMeshComponent(this);
+	}
 	//printf("new MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), owner);
 }
 
@@ -40,8 +49,15 @@ MeshComponent::~MeshComponent()
 		mMesh->DeleteActorInfo(mOwner);
 	}
 
-	//printf("remove MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), mOwner);
-	System::GetInstance().GetRenderer()->RemoveMeshComponent(this);
+	if (mMeshCompFlags & mUIFlagMask)
+	{
+		System::GetInstance().GetRenderer()->RemoveUI(this);
+	}
+	else
+	{
+		//printf("remove MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), mOwner);
+		System::GetInstance().GetRenderer()->RemoveMeshComponent(this);
+	}
 }
 
 void MeshComponent::Update()
