@@ -49,6 +49,8 @@ public:
 	void                   WindowFlip() { SDL_GL_SwapWindow(mWindow); }                        // ウィンドウフリップ
 	void                   SetWindowTitle(const std::string& title);                           // ウィンドウタイトルのセット
 
+	void PrepareSprite();
+
 private:
 
 	bool                                              LoadShaders();                          // シェーダーの初期化

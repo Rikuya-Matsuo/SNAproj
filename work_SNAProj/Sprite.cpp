@@ -47,8 +47,10 @@ void Sprite::Draw()
 		System::GetInstance().GetRenderer()->SetMeshShader(world);
 		*/
 
+		//glDrawElements(GL_POLYGON, 2, GL_UNSIGNED_INT, nullptr);
+
 		glBegin(GL_POLYGON);
-		const bool test = false;
+		const bool test = true;
 		if (!test)
 		{
 			glTexCoord2f(0, 0); glVertex2f(leftUp.x, leftUp.y);
@@ -64,6 +66,11 @@ void Sprite::Draw()
 			glTexCoord2f(1, 1); glVertex2f(1.0f, -1.0f);
 		}
 		glEnd();
+
+		int screenW, screenH;
+		screenW = static_cast<int>(System::GetInstance().GetRenderer()->GetScreenWidth());
+		screenH = static_cast<int>(System::GetInstance().GetRenderer()->GetScreenHeight());
+		glViewport(0, 0, screenW, screenH);
 	}
 }
 

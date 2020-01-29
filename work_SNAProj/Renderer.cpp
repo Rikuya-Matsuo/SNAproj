@@ -10,6 +10,7 @@
 #include "Animation.h"
 #include "Camera.h"
 #include "Common.h"
+#include "System.h"
 
 Renderer::Renderer()
 	:mWindow(nullptr)
@@ -160,6 +161,10 @@ void Renderer::Draw()
 	// 有効視野角のなかにあるかを調べるラムダ式
 	auto isInFieldOfView = [this](MeshComponent * mc)
 	{
+#ifdef DEBUG_SNA
+		return true;
+#endif // DEBUG_SNA
+
 		// 視野角計算
 		Vector3D acCamDir = mc->GetOwner()->GetPosition() - mCameraPointer->GetPosition();
 		Vector3D camVec = mCameraPointer->GetViewVector();
@@ -343,6 +348,12 @@ void Renderer::ShowResource()
 void Renderer::SetWindowTitle(const std::string & title)
 {
 	SDL_SetWindowTitle(mWindow, title.c_str());
+}
+
+void Renderer::PrepareSprite()
+{
+	mMeshShader->SetActive();
+	mView = Matrix4::CreateLookAt(Vector3D::zero, Vector3D(1.0f), Vector3D(0.0f, 0.0f, 1.0f));
 }
 
 bool Renderer::LoadShaders()
