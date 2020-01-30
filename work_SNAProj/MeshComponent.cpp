@@ -74,45 +74,92 @@ void MeshComponent::Draw(Shader* shader)
 {
 	if ((mOwner->GetActiveFlag()) && (mMeshCompFlags & mVisibleFlagMask) && mMesh)
 	{
-		static bool forBoardSetting = false;
-		bool isBoard = mMesh->GetIsBoardFlag();
-		// ボード描画用の設定ではなく、ボードのメッシュであるとき
-		if (!forBoardSetting && isBoard)
+		static bool forUISetting = false;
+		if (mMeshCompFlags & mUIFlagMask)
 		{
-			glDisable(GL_DEPTH_TEST);
-			glEnable(GL_BLEND);
-			glDepthMask(GL_TRUE);
+			if (!forUISetting)
+			{
+				glDisable(GL_DEPTH_TEST);
+				glEnable(GL_BLEND);
 
-			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-
-			forBoardSetting = true;
+				//glOrtho(0, System::GetInstance().GetRenderer()->GetScreenWidth(), 0, System::GetInstance().GetRenderer()->GetScreenHeight(), -1000, 1000);
+				forUISetting = true;
+			}
 		}
-		// ボード描画用の設定で、ボードではないとき
-		else if (forBoardSetting && !isBoard)
+		else
 		{
-			glEnable(GL_DEPTH_TEST);
-			glDisable(GL_BLEND);
-			glDepthMask(GL_TRUE);
-			forBoardSetting = false;
+			static bool forBoardSetting = false;
+			bool isBoard = mMesh->GetIsBoardFlag();
+			// ボード描画用の設定ではなく、ボードのメッシュであるとき
+			if (!forBoardSetting && isBoard)
+			{
+				glDisable(GL_DEPTH_TEST);
+				glEnable(GL_BLEND);
+
+				//glMatrixMode(GL_PROJECTION);
+
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
+				forBoardSetting = true;
+			}
+			// ボード描画用の設定で、ボードではないとき
+			else if (forBoardSetting && !isBoard)
+			{
+				glEnable(GL_DEPTH_TEST);
+				glDisable(GL_BLEND);
+
+				//glMatrixMode(GL_PROJECTION);
+
+				forBoardSetting = false;
+			}
+			forUISetting = false;
 		}
 
-		// Set the world transform　ワールド変換をセット
-		shader->SetMatrixUniform("uWorldTransform",
-			mOwner->GetWorldTransform());
-		// Set specular power　スペキュラ強度セット
-		shader->SetFloatUniform("uSpecPower", 100);
-		// Set the active texture　アクティブテクスチャセット
-		Texture* t = mMesh->GetTexture(mOwner);
-		if (t)
+		if (!(mMeshCompFlags & mUIFlagMask))
 		{
+			// Set the world transform　ワールド変換をセット
+			shader->SetMatrixUniform("uWorldTransform",
+				mOwner->GetWorldTransform());
+			// Set specular power　スペキュラ強度セット
+			shader->SetFloatUniform("uSpecPower", 100);
+			// Set the active texture　アクティブテクスチャセット
+			Texture* t = mMesh->GetTexture(mOwner);
+			if (t)
+			{
+				t->SetActive();
+			}
+			// Set the mesh's vertex array as active　頂点配列をアクティブに
+			VertexArray* va = mMesh->GetVertexArray();
+			va->SetActive();
+			// Draw　描画するー
+			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
+		}
+		else
+		{
+			Texture * t = mMesh->GetTexture(mOwner);
+			Matrix4 scaleMat = Matrix4::CreateScale(
+				mOwner->GetScale(),
+				1.0f,
+				mOwner->GetScale());
+
+			Vector3D v = mOwner->GetPosition();
+			v.y = 0.0f;
+			Matrix4 transMat = Matrix4::CreateTranslation(v);
+
+			Matrix4 world = scaleMat * transMat;
+
+			// Set the world transform　ワールド変換をセット
+			shader->SetMatrixUniform("uWorldTransform",
+				world);
+
 			t->SetActive();
+			// Set the mesh's vertex array as active　頂点配列をアクティブに
+			VertexArray* va = mMesh->GetVertexArray();
+			va->SetActive();
+			// Draw　描画するー
+			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 		}
-		// Set the mesh's vertex array as active　頂点配列をアクティブに
-		VertexArray* va = mMesh->GetVertexArray();
-		va->SetActive();
-		// Draw　描画するー
-		glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 	}
 }
 

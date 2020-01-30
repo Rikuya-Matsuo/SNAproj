@@ -399,7 +399,7 @@ bool Renderer::LoadShaders()
 	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
 
 	mSpriteShader = new Shader();
-	if (!mSpriteShader->Load("Shaders/SpriteMesh.vert", "Shaders/SpriteMesh.frag"))
+	if (!mSpriteShader->Load("Shaders/Sprite.vert", "Shaders/Sprite.frag"))
 	{
 		return false;
 	}
