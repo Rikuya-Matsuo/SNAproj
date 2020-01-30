@@ -52,7 +52,15 @@ bool System::Init()
 	SDL_Log("Success to initialize SDL\n");
 
 	mRenderer = new Renderer;
-	if (!mRenderer->Initialize(mWindowWidth, mWindowHeight, false))
+
+	bool fullScreen;
+#ifdef DEBUG_SNA
+	fullScreen = false;
+#else
+	fullScreen = true;
+#endif
+
+	if (!mRenderer->Initialize(mWindowWidth, mWindowHeight, fullScreen))
 	{
 		SDL_Log("Failed to initialize the renderer.\n");
 	}

@@ -3,15 +3,16 @@
 #include "MeshComponent.h"
 #include "Mesh.h"
 
-SpriteActor::SpriteActor(const char * texPath)
+SpriteActor::SpriteActor(const char * texPath):
+	mMesh(nullptr)
 {
-	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
+	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	if (texPath)
 	{
-		msh->LoadTexture(texPath, System::GetInstance().GetRenderer(), this);
+		mMesh->LoadTexture(texPath, System::GetInstance().GetRenderer(), this);
 	}
 	MeshComponent * mc = new MeshComponent(this, 0, false, true);
-	mc->SetMesh(msh);
+	mc->SetMesh(mMesh);
 
 	mFlags &= ~mAffectGravityFlagMask_Base;
 }

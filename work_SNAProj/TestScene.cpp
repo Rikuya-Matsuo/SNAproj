@@ -15,7 +15,7 @@
 #include "Input.h"
 #include "GameOverScene.h"
 #include "GameClearScene.h"
-#include "SpriteActor.h"
+#include "LifeUIManager.h"
 
 TestScene::TestScene()
 {
@@ -48,9 +48,7 @@ TestScene::TestScene()
 	cam->SetChaseTargetFlag(true);
 	cam->SetActive();
 
-	SpriteActor * ui = new SpriteActor("Assets/titleKari.png");
-	ui->SetScale(30.f);
-	ui->SetPosition(Vector3D(-90, 0, 30));
+	mLifeUI = new LifeUIManager(mPlayer);
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
@@ -60,6 +58,7 @@ TestScene::TestScene()
 
 TestScene::~TestScene()
 {
+	delete mLifeUI;
 	delete mStage;
 }
 
@@ -91,6 +90,8 @@ void TestScene::Update()
 	}
 
 #endif // DEBUG_SNA
+
+	mLifeUI->Update();
 
 	if (!mPlayer->GetAliveFlag())
 	{

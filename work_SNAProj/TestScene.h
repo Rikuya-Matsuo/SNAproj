@@ -2,6 +2,7 @@
 #include "SceneBase.h"
 
 class Player;
+class LifeUIManager;
 
 class TestScene : public SceneBase
 {
@@ -13,6 +14,8 @@ public:
 
 private:
 	Player * mPlayer;
+
+	LifeUIManager * mLifeUI;
 
 	void GenerateBGWall(float height);
 

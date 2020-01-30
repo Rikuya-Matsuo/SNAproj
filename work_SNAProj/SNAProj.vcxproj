@@ -218,6 +218,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputMoveComponent.cpp" />
     <ClCompile Include="JumpComponent.cpp" />
+    <ClCompile Include="LifeUIManager.cpp" />
+    <ClCompile Include="LifeUISprite.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -283,6 +285,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputMoveComponent.h" />
     <ClInclude Include="JumpComponent.h" />
+    <ClInclude Include="LifeUIManager.h" />
+    <ClInclude Include="LifeUISprite.h" />
     <ClInclude Include="MathExpantion.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MatrixPalette.h" />
