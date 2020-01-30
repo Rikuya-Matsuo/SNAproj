@@ -15,6 +15,7 @@
 #include "Input.h"
 #include "GameOverScene.h"
 #include "GameClearScene.h"
+#include "SpriteActor.h"
 
 TestScene::TestScene()
 {
@@ -46,6 +47,10 @@ TestScene::TestScene()
 	cam->SetDistanceVector(Vector3D(0, 150, 50));
 	cam->SetChaseTargetFlag(true);
 	cam->SetActive();
+
+	SpriteActor * ui = new SpriteActor("Assets/titleKari.png");
+	ui->SetScale(30.f);
+	ui->SetPosition(Vector3D(-90, 0, 30));
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);

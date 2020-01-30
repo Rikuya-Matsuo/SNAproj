@@ -22,6 +22,8 @@ const MeshComponent::FlagType MeshComponent::mAnimationModeFlagMask = 1 << 2;
 const MeshComponent::FlagType MeshComponent::mRangeOutDrawFlagMask = 1 << 3;
 const MeshComponent::FlagType MeshComponent::mUIFlagMask = 1 << 4;
 
+Vector3D MeshComponent::mCamOffset = Vector3D::zero;
+
 // メッシュコンポーネント　ownerとスキンメッシュかの情報入れる
 MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal, bool uiFlag)
 	:ComponentBase(owner)
@@ -143,7 +145,7 @@ void MeshComponent::Draw(Shader* shader)
 				1.0f,
 				mOwner->GetScale());
 
-			Vector3D v = mOwner->GetPosition();
+			Vector3D v = mOwner->GetPosition() + mCamOffset;
 			v.y = 0.0f;
 			Matrix4 transMat = Matrix4::CreateTranslation(v);
 

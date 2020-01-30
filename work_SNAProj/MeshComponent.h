@@ -37,6 +37,8 @@ public:
 	void SetRangeOutDrawFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mMeshCompFlags, mRangeOutDrawFlagMask); }
 	bool GetRangeOutDrawFlag() const { return mMeshCompFlags & mRangeOutDrawFlagMask; }
 
+	static void SetViewMatrix(const Vector3D & camPos) { mCamOffset = camPos; }
+
 protected:
 	typedef Uint8 FlagType;
 	static const FlagType mVisibleFlagMask;
@@ -51,6 +53,8 @@ protected:
 	Mesh* mMesh;                                                // メッシュオブジェクトの取得
 
 	size_t mTextureIndex;                                             // テクスチャーのインデックス
+
+	static Vector3D mCamOffset;
 
 	const int mDrawOrder;
 };
