@@ -6,7 +6,7 @@ class Mesh;
 class SpriteActor : public Actor
 {
 public:
-	SpriteActor(const char * texPath);
+	SpriteActor(const char * texPath, int drawOrder = 0);
 	~SpriteActor();
 
 	void UpdateActor1() override;

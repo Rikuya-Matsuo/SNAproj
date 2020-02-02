@@ -105,6 +105,10 @@ public:
 	void SetRotation(const Quaternion & q) { mRotation = q; }
 	const Quaternion& GetRotation() const { return mRotation; }
 
+	void SetRotationAxis(const Vector3D & axis) { mRotationAxis = axis; }
+
+	void SetRotationAngle(float angle) { mRotationAngle = angle; }
+
 	// コンポーネントの登録・登録解除
 	void ResisterComponent(const ComponentBase * in_cmp);
 	void DeresisterComponent(const ComponentBase * in_cmp);

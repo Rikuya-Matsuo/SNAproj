@@ -3,7 +3,7 @@
 #include "MeshComponent.h"
 #include "Mesh.h"
 
-SpriteActor::SpriteActor(const char * texPath):
+SpriteActor::SpriteActor(const char * texPath, int drawOrder):
 	mMesh(nullptr)
 {
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
@@ -11,7 +11,7 @@ SpriteActor::SpriteActor(const char * texPath):
 	{
 		mMesh->LoadTexture(texPath, System::GetInstance().GetRenderer(), this);
 	}
-	MeshComponent * mc = new MeshComponent(this, 0, false, true);
+	MeshComponent * mc = new MeshComponent(this, drawOrder, false, true);
 	mc->SetMesh(mMesh);
 
 	mFlags &= ~mAffectGravityFlagMask_Base;

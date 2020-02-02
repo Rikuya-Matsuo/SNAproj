@@ -213,7 +213,7 @@ void Renderer::Draw()
 
 	mSpriteShader->SetActive();
 	mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
-	MeshComponent::SetCameraPosition(mCameraPointer->GetPosition());
+	MeshComponent::SetViewMatrix(mCameraPointer->GetPosition());
 	SetLightUniforms(mSpriteShader);
 	for (auto ui : mUIs)
 	{
