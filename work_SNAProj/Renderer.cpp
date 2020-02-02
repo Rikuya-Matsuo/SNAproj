@@ -162,10 +162,6 @@ void Renderer::Draw()
 	// 有効視野角のなかにあるかを調べるラムダ式
 	auto isInFieldOfView = [this](MeshComponent * mc)
 	{
-#ifdef DEBUG_SNA
-		return true;
-#endif // DEBUG_SNA
-
 		// 視野角計算
 		Vector3D acCamDir = mc->GetOwner()->GetPosition() - mCameraPointer->GetPosition();
 		Vector3D camVec = mCameraPointer->GetViewVector();
@@ -217,7 +213,7 @@ void Renderer::Draw()
 
 	mSpriteShader->SetActive();
 	mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
-	MeshComponent::SetViewMatrix(mCameraPointer->GetPosition());
+	MeshComponent::SetCameraPosition(mCameraPointer->GetPosition());
 	SetLightUniforms(mSpriteShader);
 	for (auto ui : mUIs)
 	{

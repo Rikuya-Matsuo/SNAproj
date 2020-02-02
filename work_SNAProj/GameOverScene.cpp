@@ -22,7 +22,8 @@ GameOverScene::~GameOverScene()
 
 void GameOverScene::Update()
 {
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_RETURN))
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_RETURN) ||
+		Input::GetInstance().GetAnyButtonPressedDown())
 	{
 		mNextScene = new TitleScene;
 

@@ -37,6 +37,8 @@ public:
 	float GetLStickX() const { return mLStickX; }
 	float GetLStickY() const { return mLStickY; }
 
+	bool GetAnyButtonPressedDown() const;
+
 private:
 	Input();
 

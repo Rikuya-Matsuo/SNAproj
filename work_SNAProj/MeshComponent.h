@@ -37,7 +37,7 @@ public:
 	void SetRangeOutDrawFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mMeshCompFlags, mRangeOutDrawFlagMask); }
 	bool GetRangeOutDrawFlag() const { return mMeshCompFlags & mRangeOutDrawFlagMask; }
 
-	static void SetViewMatrix(const Vector3D & camPos) { mCamOffset = camPos; }
+	static void SetCameraPosition(const Vector3D & camPos) { mCamOffset = camPos; }
 
 protected:
 	typedef Uint8 FlagType;

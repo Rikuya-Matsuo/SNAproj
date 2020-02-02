@@ -146,6 +146,10 @@ Player::Player() :
 
 Player::~Player()
 {
+	// インスタンス自体はActorクラスを継承しているため、Systemクラスによってメモリ解放が行われる
+	delete[] mHitEffects;
+	mHitEffects = nullptr;
+
 	SDL_Log("Player is deleted\n");
 }
 
@@ -173,19 +177,21 @@ void Player::UpdateActor0()
 	}
 	mFlags_Player &= ~mDetectGroundFlagMask;
 
-	if (mFlags_Player & mLandingFlagMask && Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
+	bool jumpInput = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A);
+	if (mFlags_Player & mLandingFlagMask && jumpInput)
 	{
 		mJumpComponent->Jump();
 	}
 
 	// ダッシュアタック
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_A))
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_A) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_B))
 	{
 		mCurrentAnimation = AnimationPattern::Anim_DashAttack;
 
 		mAttackCollider->SetActive(true);
 	}
 
+	// 制作展では使わない
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N))
 	{
 		if (mCurrentCursorNinjaArts)
@@ -194,10 +200,12 @@ void Player::UpdateActor0()
 		}
 	}
 
+#ifdef DEBUG_SNA
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
 	{
 		SDL_Log("height : %lf", mPosition.z);
 	}
+#endif // DEBUG_SNA
 }
 
 void Player::UpdateActor1()
@@ -287,8 +295,6 @@ void Player::UpdateActor1()
 		{
 			mRotationAngle = 0.0f;
 
-			//mRotation = Quaternion(mRotationAxis, mRotationAngle);
-
 			mFlags_Player |= mLookRightFlagMask;
 
 			if (mCompletionMeshActor->GetNowFlippingFlag())
@@ -304,8 +310,6 @@ void Player::UpdateActor1()
 		if ((mFlags_Player & mLookRightFlagMask))
 		{
 			mRotationAngle = static_cast<float>(M_PI);
-
-			//mRotation = Quaternion(mRotationAxis, mRotationAngle);
 
 			mFlags_Player &= ~mLookRightFlagMask;
 

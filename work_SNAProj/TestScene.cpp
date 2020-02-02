@@ -16,6 +16,7 @@
 #include "GameOverScene.h"
 #include "GameClearScene.h"
 #include "LifeUIManager.h"
+#include "GuideUI.h"
 
 TestScene::TestScene()
 {
@@ -49,6 +50,8 @@ TestScene::TestScene()
 	cam->SetActive();
 
 	mLifeUI = new LifeUIManager(mPlayer);
+
+	GuideUI * guideUI = new GuideUI("Assets/guide.png");
 
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);

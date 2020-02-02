@@ -112,6 +112,14 @@ void Input::ConnectGamePad(int padIndex)
 	}
 }
 
+bool Input::GetAnyButtonPressedDown() const
+{
+	bool nowPressed = mGamePadButtonFlags > 0;
+	bool pressedDown = mGamePadButtonFlags > mPrevGamePadButtonFlags;
+
+	return nowPressed && pressedDown;
+}
+
 void Input::UpdateGamePad()
 {
 	SDL_GameControllerUpdate();

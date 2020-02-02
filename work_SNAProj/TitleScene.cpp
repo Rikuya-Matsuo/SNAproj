@@ -30,7 +30,8 @@ TitleScene::~TitleScene()
 
 void TitleScene::Update()
 {
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_RETURN))
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_RETURN) ||
+		Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A))
 	{
 		mNextScene = new TestScene;
 

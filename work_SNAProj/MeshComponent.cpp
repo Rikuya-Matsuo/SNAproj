@@ -149,7 +149,8 @@ void MeshComponent::Draw(Shader* shader)
 			v.y = 0.0f;
 			Matrix4 transMat = Matrix4::CreateTranslation(v);
 
-			Matrix4 world = scaleMat * transMat;
+			Matrix4 rot = Matrix4::CreateFromQuaternion(mOwner->GetRotation());
+			Matrix4 world = scaleMat * rot * transMat;
 
 			// Set the world transform　ワールド変換をセット
 			shader->SetMatrixUniform("uWorldTransform",

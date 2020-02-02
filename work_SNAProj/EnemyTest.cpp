@@ -114,8 +114,7 @@ EnemyTest::EnemyTest():
 
 	mBlockChecker = new BlockHitChecker(this, mBodyCollision);
 
-	// デバッグしやすくなるフラグぅ
-	//mPrevFlags_EnemyTest = mFlags_EnemyTest;
+	mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
 	mFallSpeedRate = 1.0f;
 
