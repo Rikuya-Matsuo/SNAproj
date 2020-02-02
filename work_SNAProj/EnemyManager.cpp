@@ -1,5 +1,4 @@
 #include "EnemyManager.h"
-#include "EnemyType0.h"
 #include "EnemyTest.h"
 #include "StageBase.h"
 #include "AutoMoveComponent.h"

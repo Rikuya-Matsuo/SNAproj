@@ -237,9 +237,6 @@
     <ClCompile Include="BlockHitChecker.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyType0.cpp">
-      <Filter>ソース ファイル\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="AnimationEffect.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
@@ -439,9 +436,6 @@
     </ClInclude>
     <ClInclude Include="BlockHitChecker.h">
       <Filter>ヘッダー ファイル\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyType0.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
     <ClInclude Include="AnimationEffect.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
