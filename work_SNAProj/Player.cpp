@@ -155,9 +155,9 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
-	if (mPosition.z < -100.0f)
+	if (mPosition.z < -50.0f)
 	{
-		mPosition.z = 100.0f;
+		mLife = 0;
 	}
 
 	if (mLife <= 0 && !(mFlags_Player & mImmortalFlagMask))
