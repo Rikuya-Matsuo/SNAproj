@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SpriteActor.h"
 
 class LifeUISprite : public SpriteActor

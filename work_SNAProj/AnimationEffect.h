@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Effect.h"
 
 class Texture;

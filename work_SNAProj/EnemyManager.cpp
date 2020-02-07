@@ -1,4 +1,4 @@
-#include "EnemyManager.h"
+ï»¿#include "EnemyManager.h"
 #include "EnemyTest.h"
 #include "StageBase.h"
 #include "AutoMoveComponent.h"
@@ -90,14 +90,14 @@ void EnemyManager::GenerateEnemy(int type, int inX, int inY)
 		return;
 	}
 
-	// ¶¬
+	// ç”Ÿæˆ
 	EnemyTest * enemy = new EnemyTest;
 	if (type == 1)
 	{
 		enemy->Flip();
 	}
 
-	// ˆÊ’uŒvŽZ
+	// ä½ç½®è¨ˆç®—
 	const int yIndexFromLowest = (mStage->GetBlockMassY() - 1) - inY;
 	const float blockSize = StageBase::GetBlockScale() * Block::mModelSize;
 	Vector3D pos = Vector3D::zero;

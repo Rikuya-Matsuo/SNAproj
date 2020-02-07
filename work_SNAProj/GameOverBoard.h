@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "TitleBoard.h"
 
-// ‰¼‚Ì‚à‚Ì‚¾‚µAƒ^ƒCƒgƒ‹ƒ{[ƒh‚ğ—¬—p‚·‚é
+// ä»®ã®ã‚‚ã®ã ã—ã€ã‚¿ã‚¤ãƒˆãƒ«ãƒœãƒ¼ãƒ‰ã‚’æµç”¨ã™ã‚‹
 class GameOverBoard : public TitleBoard
 {
 public:

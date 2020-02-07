@@ -1,4 +1,4 @@
-#include "AnimationEffect.h"
+﻿#include "AnimationEffect.h"
 #include "AnimationChips.h"
 #include "Mesh.h"
 #include "System.h"

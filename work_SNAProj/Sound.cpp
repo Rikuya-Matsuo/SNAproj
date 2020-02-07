@@ -1,4 +1,4 @@
-#include "Sound.h"
+﻿#include "Sound.h"
 
 Sound::Sound():
 	mChunk(nullptr),

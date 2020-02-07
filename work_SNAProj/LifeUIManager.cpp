@@ -1,4 +1,4 @@
-#include "LifeUIManager.h"
+﻿#include "LifeUIManager.h"
 #include "Player.h"
 
 LifeUIManager::LifeUIManager(Player * p):

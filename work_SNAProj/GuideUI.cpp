@@ -1,4 +1,4 @@
-#include "GuideUI.h"
+﻿#include "GuideUI.h"
 #include "Common.h"
 
 GuideUI::GuideUI(const char * texPath):

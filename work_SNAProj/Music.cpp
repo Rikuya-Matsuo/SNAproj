@@ -1,4 +1,4 @@
-#include "Music.h"
+ï»¿#include "Music.h"
 
 Music::Music():
 	mMusic(nullptr),
@@ -29,7 +29,7 @@ void Music::Play() const
 {
 	if (mMusic)
 	{
-		Mix_PlayMusic(mMusic, -1); // -1‚Íƒ‹[ƒv‚·‚éİ’è
+		Mix_PlayMusic(mMusic, -1); // -1ã¯ãƒ«ãƒ¼ãƒ—ã™ã‚‹è¨­å®š
 	}
 }
 

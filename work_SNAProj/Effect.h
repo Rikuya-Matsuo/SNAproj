@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Actor.h"
 
 class Mesh;
@@ -18,7 +18,7 @@ protected:
 	Mesh * mMesh;
 	MeshComponent * mMeshComp;
 
-	// oŒ»ŠÔ
+	// å‡ºç¾æ™‚é–“
 	float mAppearSecond;
 
 	float mTimer;

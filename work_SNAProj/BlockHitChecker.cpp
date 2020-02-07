@@ -1,4 +1,4 @@
-#include "BlockHitChecker.h"
+ï»¿#include "BlockHitChecker.h"
 #include "SceneBase.h"
 #include "StageBase.h"
 #include "Block.h"
@@ -22,12 +22,12 @@ void BlockHitChecker::Update()
 		return;
 	}
 
-	// ƒuƒƒbƒNî•ñŽæ“¾
+	// ãƒ–ãƒ­ãƒƒã‚¯æƒ…å ±å–å¾—
 	Uint8 **const blockArray = mStage->GetBlocks();
 	const float blockSize = mStage->GetBlockScale() * Block::mModelSize;
 	const float highest = mStage->GetFloorHeight() + (mStage->GetBlockMassY() * blockSize);
 
-	// ƒ{ƒbƒNƒX‚ÌŽæ“¾
+	// ãƒœãƒƒã‚¯ã‚¹ã®å–å¾—
 	AABB box = *mBox->GetWorldBox();
 	//box.mMin += mOwner->GetMoveVector();
 	//box.mMax += mOwner->GetMoveVector();
@@ -41,7 +41,7 @@ void BlockHitChecker::Update()
 	int leftXBlock = static_cast<int>(box.mMin.x / blockSize);
 	if (box.mMin.x < 0.0f)
 	{
-		// •‰‚Ì—Ìˆæ‚¾‚Æ-1‚É‹­§
+		// è² ã®é ˜åŸŸã ã¨-1ã«å¼·åˆ¶
 		leftXBlock = -1;
 	}
 
@@ -280,7 +280,7 @@ void BlockHitChecker::Update()
 	mHitDirectionFlags |= rightHit1 ? Mask::mRightMask : 0;
 	mHitDirectionFlags |= leftHit1 ? Mask::mLeftMask : 0;
 
-	// ‰Ÿ‚µ•Ô‚µƒvƒƒZƒX
+	// æŠ¼ã—è¿”ã—ãƒ—ãƒ­ã‚»ã‚¹
 	if (upHit1)
 	{
 		float blockFoot = highest - (blockSize * (headHeightBlock + 1));

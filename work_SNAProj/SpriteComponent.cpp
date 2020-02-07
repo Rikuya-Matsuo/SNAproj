@@ -1,4 +1,4 @@
-#include "SpriteComponent.h"
+﻿#include "SpriteComponent.h"
 #include "VertexArray.h"
 
 SpriteComponent::SpriteComponent(Actor * owner, const Vector3D& size):

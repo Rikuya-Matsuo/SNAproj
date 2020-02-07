@@ -1,4 +1,4 @@
-#include "Effect.h"
+ï»¿#include "Effect.h"
 #include "Mesh.h"
 #include "MeshComponent.h"
 #include "System.h"
@@ -48,10 +48,10 @@ void Effect::UpdateActor0()
 
 void Effect::OnBecomeActive()
 {
-	// ƒ^ƒCƒ}[‰Šú‰»
+	// ã‚¿ã‚¤ãƒãƒ¼åˆæœŸåŒ–
 	mTimer = 0.0f;
 
-	// ‰Á‚¦‚Ä‘SƒRƒ“ƒ|[ƒlƒ“ƒgƒAƒNƒeƒBƒu‰»
+	// åŠ ãˆã¦å…¨ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
 	Actor::OnBecomeActive();
 
 	mFlags |= mCalculateTransformFlagMask_Base;

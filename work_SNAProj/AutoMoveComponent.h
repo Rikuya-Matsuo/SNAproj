@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ComponentBase.h"
 
 class AutoMoveComponent : public ComponentBase

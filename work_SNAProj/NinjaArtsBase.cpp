@@ -1,4 +1,4 @@
-#include "NinjaArtsBase.h"
+﻿#include "NinjaArtsBase.h"
 #include "Player.h"
 
 NinjaArtsBase::NinjaArtsBase(Player * user):

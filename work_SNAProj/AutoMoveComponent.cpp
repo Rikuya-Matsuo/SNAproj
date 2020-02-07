@@ -1,4 +1,4 @@
-#include "AutoMoveComponent.h"
+ï»¿#include "AutoMoveComponent.h"
 #include "System.h"
 
 const Uint8 AutoMoveComponent::mReverseFlagMask = 1 << 0;
@@ -30,7 +30,7 @@ void AutoMoveComponent::SetReverseFlag(bool x, bool y, bool z)
 	Uint8 yMask = y ? mReverseYFlagMask : 0;
 	Uint8 zMask = z ? mReverseZFlagMask : 0;
 
-	// ”½“]ƒtƒ‰ƒO‚ðœ‚­‚·‚×‚Ä‚ð‰Šú‰»
+	// åè»¢ãƒ•ãƒ©ã‚°ã‚’é™¤ãã™ã¹ã¦ã‚’åˆæœŸåŒ–
 	mFlags_AMC &= mReverseFlagMask;
 
 	mFlags_AMC |= (xMask | yMask | zMask);
