@@ -32,6 +32,7 @@ void BlockHitChecker::Update()
 	//box.mMin += mOwner->GetMoveVector();
 	//box.mMax += mOwner->GetMoveVector();
 
+	// ボックスの各辺が何番目のブロックかを計算
 	int headHeightBlock = static_cast<int>((highest - box.mMax.z) / blockSize);
 
 	int footHeightBlock = static_cast<int>((highest - box.mMin.z) / blockSize);
@@ -41,7 +42,7 @@ void BlockHitChecker::Update()
 	int leftXBlock = static_cast<int>(box.mMin.x / blockSize);
 	if (box.mMin.x < 0.0f)
 	{
-		// 負の領域だと-1に強制
+		// 負の領域だと-1に矯正
 		leftXBlock = -1;
 	}
 
@@ -58,6 +59,7 @@ void BlockHitChecker::Update()
 		midXBlock = -1;
 	}
 
+	// 指定したブロックインデックスの位置にブロックがあるか否かのフラグを返す。
 	auto checkBlock = [this, blockArray](int x, int y)
 	{
 		bool xRangeOut = (x >= mStage->GetBlockMassX() || x < 0);
@@ -72,6 +74,7 @@ void BlockHitChecker::Update()
 		return ret;
 	};
 
+	// 各位置のブロックの有無をビットフラグに記録
 	mHitDirectionFlags = 0;
 	mHitDirectionFlags |=	checkBlock(rightXBlock, headHeightBlock) ? Mask::mRUVerMask : 0;
 	mHitDirectionFlags |=	checkBlock(rightXBlock, footHeightBlock) ? Mask::mRDVerMask : 0;

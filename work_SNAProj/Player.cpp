@@ -16,6 +16,8 @@
 #include "NinjaArtsBase.h"
 #include "BlockHitChecker.h"
 
+using namespace BlockHitDirectionFlagMask;
+
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
@@ -155,11 +157,13 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
+	// 落下時は死亡とする
 	if (mPosition.z < -50.0f)
 	{
 		mLife = 0;
 	}
 
+	// ライフが０以下、かつ不死身フラグが立っていない場合
 	if (mLife <= 0 && !(mFlags_Player & mImmortalFlagMask))
 	{
 		OnLifeRunOut();
@@ -169,13 +173,6 @@ void Player::UpdateActor0()
 	{
 		SetAllComponentActive(false);
 	}
-
-	if (!(mFlags_Player & mDetectGroundFlagMask))
-	{
-		SetAffectGravityFlag(true);
-		mFlags_Player &= ~mLandingFlagMask;
-	}
-	mFlags_Player &= ~mDetectGroundFlagMask;
 
 	bool jumpInput = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A);
 	if (mFlags_Player & mLandingFlagMask && jumpInput)
@@ -210,6 +207,33 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
+	// 二次元的当たり判定の結果を見て処理
+	Uint8 hitDir = mHitChecker->GetHitDirectionFlags();
+
+	// フラグリセット
+	mFlags_Player &= ~mLandingFlagMask;
+
+	// 床と接触した場合
+	if (hitDir & mDownMask)
+	{
+		OnDetectGround();
+
+		if (mMoveVector.z < 0.0f)
+		{
+			mMoveVector.z = 0.0f;
+		}
+	}
+
+	// 着地していない場合
+	if (!(mFlags_Player & mLandingFlagMask))
+	{
+		// 重力有効化
+		SetAffectGravityFlag(true);
+
+		// 着地フラグを切る
+		mFlags_Player &= ~mLandingFlagMask;
+	}
+
 	// 走る
 	if (mInputComponent->GetHorizonInputFlag())
 	{
@@ -349,7 +373,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 	if (callerAtt == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
 	{
-		OnDetectGround(opponent);
+		OnDetectGround();
 
 		return;
 	}
@@ -411,10 +435,6 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 				eff->SetPosition(mPosition);
 				eff->SetActive(true);
 			}
-			else
-			{
-				SDL_Delay(0);
-			}
 		}
 	}
 
@@ -447,7 +467,7 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
 	{
-		OnDetectGround(opponent);
+		OnDetectGround();
 
 		return;
 	}
@@ -462,7 +482,7 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 {
 }
 
-void Player::OnDetectGround(const ColliderComponentBase * opponent)
+void Player::OnDetectGround()
 {
 	mFlags_Player |= mLandingFlagMask;
 

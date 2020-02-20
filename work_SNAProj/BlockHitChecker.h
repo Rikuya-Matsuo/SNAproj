@@ -21,7 +21,7 @@ namespace BlockHitDirectionFlagMask
 class BlockHitChecker : public ComponentBase
 {
 public:
-	Uint8 GetFlags() const { return mHitDirectionFlags; }
+	Uint8 GetHitDirectionFlags() const { return mHitDirectionFlags; }
 
 	BlockHitChecker(Actor * owner, BoxColliderComponent * box = nullptr);
 

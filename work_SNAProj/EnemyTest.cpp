@@ -139,7 +139,7 @@ void EnemyTest::UpdateEnemy0()
 	// 画面外にいる間はプレイヤー検知装置を非アクティブに
 	mPlayerDetector->SetActive(GetInCameraFlag());
 	
-	const Uint8 blhit = mBlockChecker->GetFlags();
+	const Uint8 blhit = mBlockChecker->GetHitDirectionFlags();
 
 	mFlags_EnemyTest |= blhit & mRDVerMask ? mRDetectGroundFlagMask : 0;
 	mFlags_EnemyTest |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
@@ -323,7 +323,7 @@ void EnemyTest::UpdateEnemy1()
 		mClamper->SetClampDirectionFlags(true, false, false);
 	}
 
-	const Uint8 blhit = mBlockChecker->GetFlags();
+	const Uint8 blhit = mBlockChecker->GetHitDirectionFlags();
 	if (blhit & mDownMask && !(mFlags_EnemyTest & mKnockBackFlagMask))
 	{
 		mMoveVector.z = 0;
