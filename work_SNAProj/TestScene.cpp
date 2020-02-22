@@ -20,14 +20,14 @@
 
 TestScene::TestScene()
 {
+	mStage = new TestStage;
+	mStage->SetBlockScale(0.3f);
+	mStage->Load("Map/map.csv");
+
 	mPlayer = new Player;
 	mActors.emplace_back(mPlayer);
 	mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
 	mPlayer->SetScale(25.0f);
-
-	mStage = new TestStage;
-	mStage->SetBlockScale(0.3f);
-	mStage->Load("Map/map.csv");
 
 	const bool genEnemy = true;
 	if (genEnemy)

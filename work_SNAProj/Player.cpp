@@ -95,6 +95,7 @@ Player::Player() :
 		mGroundChecker->SetObjectBox(box);
 	}
 
+	// 二次元的当たり判定コンポーネント
 	mHitChecker = new BlockHitChecker(this, mBoxCollider);
 
 	AABB attackCol = mMesh->GetCollisionBox();
