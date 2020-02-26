@@ -3,7 +3,6 @@
 #include "ComponentBase.h"
 
 class Actor;
-class StageBase;
 class BoxColliderComponent;
 
 namespace BlockHitDirectionFlagMask
@@ -33,8 +32,6 @@ private:
 	Uint8 mHitDirectionFlags;
 
 	BoxColliderComponent * mBox;
-
-	StageBase * mStage;
 
 	void CheckProcess();
 

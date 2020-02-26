@@ -9,23 +9,24 @@ namespace Mask = BlockHitDirectionFlagMask;
 BlockHitChecker::BlockHitChecker(Actor * owner, BoxColliderComponent * box):
 	ComponentBase(owner, 1000),
 	mHitDirectionFlags(0),
-	mBox(box),
-	mStage(nullptr)
+	mBox(box)
 {
-	mStage = const_cast<StageBase*>(mOwner->GetBelongScene()->GetStage());
 }
 
 void BlockHitChecker::Update()
 {
-	if (mStage == nullptr || mBox == nullptr)
+	// ステージ情報を取得
+	const StageBase * stage = mOwner->GetBelongScene()->GetStage();
+
+	if (stage == nullptr || mBox == nullptr)
 	{
 		return;
 	}
 
 	// ブロック情報取得
-	Uint8 **const blockArray = mStage->GetBlocks();
-	const float blockSize = mStage->GetBlockScale() * Block::mModelSize;
-	const float highest = mStage->GetFloorHeight() + (mStage->GetBlockMassY() * blockSize);
+	Uint8 **const blockArray = stage->GetBlocks();
+	const float blockSize = stage->GetBlockScale() * Block::mModelSize;
+	const float highest = stage->GetFloorHeight() + (stage->GetBlockMassY() * blockSize);
 
 	// ボックスの取得
 	AABB box = *mBox->GetWorldBox();
@@ -60,10 +61,10 @@ void BlockHitChecker::Update()
 	}
 
 	// 指定したブロックインデックスの位置にブロックがあるか否かのフラグを返す。
-	auto checkBlock = [this, blockArray](int x, int y)
+	auto checkBlock = [stage, blockArray](int x, int y)
 	{
-		bool xRangeOut = (x >= mStage->GetBlockMassX() || x < 0);
-		bool yRangeOut = (y >= mStage->GetBlockMassY() || y < 0);
+		bool xRangeOut = (x >= stage->GetBlockMassX() || x < 0);
+		bool yRangeOut = (y >= stage->GetBlockMassY() || y < 0);
 
 		if (xRangeOut || yRangeOut)
 		{
