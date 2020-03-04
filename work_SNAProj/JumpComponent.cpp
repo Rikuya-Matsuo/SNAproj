@@ -3,6 +3,12 @@
 #include "System.h"
 #include "PhysicManager.h"
 
+#ifdef DEBUG_SNA
+#include "Input.h"
+bool debugFlag = false;
+#endif // DEBUG_SNA
+
+
 const float JumpComponent::mPushUpTimeCount = 0.5f;
 
 const JumpComponent::FlagType JumpComponent::mTimingFlagMask = 1 << 0;
@@ -22,8 +28,18 @@ JumpComponent::~JumpComponent()
 
 void JumpComponent::Update()
 {
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
+	{
+		debugFlag = !debugFlag;
+	}
+
 	if (mJumpFlags & mTimingFlagMask)
 	{
+		if (debugFlag)
+		{
+			SDL_Delay(0);
+		}
+
 		Vector3D moveVec = mOwner->GetMoveVector();
 
 		//float rate = System::GetInstance().GetDeltaTime() / System::GetInstance().GetAverageDeltaTime();

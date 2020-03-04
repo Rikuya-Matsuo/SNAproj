@@ -27,6 +27,7 @@ const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
 const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
 const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
 const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
+const Player::FlagType Player::mJumpInputFlagMask		= 1 << 6;
 
 Player::Player() :
 	Actor(),
@@ -175,8 +176,15 @@ void Player::UpdateActor0()
 		SetAllComponentActive(false);
 	}
 
-	bool jumpInput = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A);
-	if (mFlags_Player & mLandingFlagMask && jumpInput)
+	// ジャンプ操作受付
+	mFlags_Player &= ~mJumpInputFlagMask;
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A))
+	{
+		mFlags_Player |= mJumpInputFlagMask;
+	}
+
+	// ジャンプ実行
+	if (mFlags_Player & mLandingFlagMask && mFlags_Player & mJumpInputFlagMask)
 	{
 		mJumpComponent->Jump();
 	}
@@ -495,6 +503,15 @@ void Player::OnDetectGround()
 	}
 
 	SetAffectGravityFlag(false);
+
+#ifdef DEBUG_SNA
+	static char test = 0;
+	SDL_Log("Detect ground.%d\n", test);
+	if (++test > 100)
+	{
+		test = 0;
+	}
+#endif
 }
 
 void Player::OnLanding()

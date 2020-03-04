@@ -30,6 +30,8 @@ void BoxColliderComponent::CalculateWorldBox()
 	}
 
 	// 平行移動
-	mWorldBox.mMin += mOwner->GetPosition();
-	mWorldBox.mMax += mOwner->GetPosition();
+	Vector3D trans = mOwner->GetPosition();
+	//trans += mOwner->GetMoveVector();
+	mWorldBox.mMin += trans;
+	mWorldBox.mMax += trans;
 }

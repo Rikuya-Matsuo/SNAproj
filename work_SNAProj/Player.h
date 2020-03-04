@@ -38,6 +38,7 @@ private:
 	static const FlagType mImmortalFlagMask;
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
+	static const FlagType mJumpInputFlagMask;
 
 
 	enum AnimationPattern

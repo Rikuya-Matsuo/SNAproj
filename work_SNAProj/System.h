@@ -22,7 +22,7 @@ public:
 	~System();
 
 #ifdef DEBUG_SNA
-	static Uint64 frameCount;
+	static Uint64 mFrameCount;
 #endif // DEBUG_SNA
 
 	static const float mMaxDeltaTime;

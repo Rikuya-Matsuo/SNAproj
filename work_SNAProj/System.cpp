@@ -13,7 +13,7 @@
 #include <algorithm>
 
 #ifdef DEBUG_SNA
-Uint64 System::frameCount = 0;
+Uint64 System::mFrameCount = 0;
 #endif // DEBUG_SNA
 
 const float System::mMaxDeltaTime = 1.0f / 30.0f;
@@ -165,7 +165,7 @@ void System::Run()
 		Input::GetInstance().LastUpdate();
 
 #ifdef DEBUG_SNA
-		frameCount++;
+		mFrameCount++;
 #endif // DEBUG_SNA
 	}
 
