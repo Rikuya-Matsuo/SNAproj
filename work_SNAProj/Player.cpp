@@ -140,12 +140,6 @@ Player::Player() :
 
 	// 落下スピードの制限値設定
 	mFallSpeedMax = 6.0f;
-
-	// プレイヤーであることを示すフラグ
-	//mFlags |= mPlayerFlagMask_Base;
-
-	// プレイヤーを不死身に
-	//mFlags_Player |= mImmortalFlagMask;
 }
 
 Player::~Player()

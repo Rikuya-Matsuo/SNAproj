@@ -4,12 +4,13 @@
 #include "Quaternion.h"
 #include "BitFlagFunc.h"
 #include <list>
-#include <vector>
+#include <unordered_map>
 
 class ComponentBase;
 class ColliderComponentBase;
 class SceneBase;
 enum ColliderAttribute;
+enum UpdateTiming;
 
 class Actor
 {
@@ -28,7 +29,8 @@ protected:
 
 	FlagType mFlags;
 
-	std::list<ComponentBase *> mComponentList;
+	typedef std::list<ComponentBase *> ComponentList;
+	std::unordered_map<UpdateTiming, ComponentList> mComponentLists;
 
 	Vector3D mPosition;
 
@@ -59,7 +61,7 @@ protected:
 
 	SceneBase * mBelongScene;
 
-	virtual void UpdateComponents() final;
+	virtual void UpdateComponents(UpdateTiming timing) final;
 
 	void SortComponents();
 

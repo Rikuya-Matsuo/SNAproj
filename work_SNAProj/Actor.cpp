@@ -39,8 +39,12 @@ Actor::Actor():
 
 Actor::~Actor()
 {
-	Common::DeleteContainerOfPointer(mComponentList);
-	std::list<ComponentBase *>().swap(mComponentList);
+	for (auto cmpList : mComponentLists)
+	{
+		// secondを使って書きたかったが、なぜか参照が本体と同期していないため、添え字で指定する方法を使う
+		Common::DeleteContainerOfPointer(mComponentLists[cmpList.first]);
+		std::list<ComponentBase *>().swap(mComponentLists[cmpList.first]);
+	}
 
 	System::GetInstance().DeresisterActor(this);
 }
@@ -90,7 +94,7 @@ void Actor::Update()
 		mPrevRotationAngle = mRotationAngle;
 	}
 
-	UpdateComponents();
+	UpdateComponents(UpdateTiming::UpdateTiming_Normal);
 
 	if (isActive)
 	{
@@ -100,15 +104,12 @@ void Actor::Update()
 	// 移動が発生しているなら移動させる
 	if (mMoveVector.LengthSq())
 	{
-		if (mFlags & mPlayerFlagMask_Base)
-		{
-			SDL_Delay(0);
-		}
-
 		mPosition += mMoveVector;
 
 		mFlags |= mCalculateTransformFlagMask_Base;
 	}
+
+	UpdateComponents(UpdateTiming::UpdateTiming_AfterAddMoveVector);
 
 	// アップデート中にアクティブでなくなる可能性があるのでもう一度判定・処理を行う
 	bool getNonActive_after = !(mPrevFlags & mStopUpdateFlagMask_Base) && mFlags & mStopUpdateFlagMask_Base;
@@ -146,30 +147,34 @@ void Actor::ResisterComponent(const ComponentBase * in_cmp)
 {
 	const int priority = in_cmp->GetPriority();
 
-	for (auto itr : mComponentList)
+	const UpdateTiming timing = in_cmp->GetUpdateTiming();
+
+	for (auto itr : mComponentLists[timing])
 	{
 		if (priority < itr->GetPriority())
 		{
-			auto insertPoint = std::find(mComponentList.begin(), mComponentList.end(), itr);
-			mComponentList.insert(insertPoint, const_cast<ComponentBase*>(in_cmp));
+			auto insertPoint = std::find(mComponentLists[timing].begin(), mComponentLists[timing].end(), itr);
+			mComponentLists[timing].insert(insertPoint, const_cast<ComponentBase*>(in_cmp));
 			return;
 		}
 	}
 
-	mComponentList.emplace_back(const_cast<ComponentBase*>(in_cmp));
+	mComponentLists[timing].emplace_back(const_cast<ComponentBase*>(in_cmp));
 }
 
 void Actor::DeresisterComponent(const ComponentBase * in_cmp)
 {
-	auto target = std::find(mComponentList.begin(), mComponentList.end(), const_cast<ComponentBase*>(in_cmp));
+	const UpdateTiming timing = in_cmp->GetUpdateTiming();
 
-	if (target != mComponentList.end())
+	auto target = std::find(mComponentLists[timing].begin(), mComponentLists[timing].end(), const_cast<ComponentBase*>(in_cmp));
+
+	if (target != mComponentLists[timing].end())
 	{
-		mComponentList.erase(target);
+		mComponentLists[timing].erase(target);
 	}
 }
 
-void Actor::UpdateComponents()
+void Actor::UpdateComponents(UpdateTiming timing)
 {
 	// コンポーネントのソートがリクエストされていた場合はソートを行う
 	if (mFlags & mRequestComponentSortMask_Base)
@@ -180,7 +185,7 @@ void Actor::UpdateComponents()
 		mFlags &= ~mRequestComponentSortMask_Base;
 	}
 
-	for (auto component : mComponentList)
+	for (auto component : mComponentLists[timing])
 	{
 		if (component != nullptr && component->GetActiveFlag())
 		{
@@ -191,8 +196,11 @@ void Actor::UpdateComponents()
 
 void Actor::SortComponents()
 {
-	// 見よ！これがラムダ式を使ったソートである！
-	mComponentList.sort([](const ComponentBase * lhs, const ComponentBase * rhs) { return lhs->GetPriority() <= rhs->GetPriority(); });
+	for (auto list : mComponentLists)
+	{
+		// ラムダ式を使ってソートする
+		list.second.sort([](const ComponentBase * lhs, const ComponentBase * rhs) { return lhs->GetPriority() <= rhs->GetPriority(); });
+	}
 }
 
 void Actor::UpdateActor0()
@@ -233,9 +241,12 @@ void Actor::OnBecomeActive()
 
 void Actor::SetAllComponentActive(bool active)
 {
-	for (auto cmp : mComponentList)
+	for (auto list : mComponentLists)
 	{
-		cmp->SetActive(active);
+		for (auto cmp : list.second)
+		{
+			cmp->SetActive(active);
+		}
 	}
 }
 

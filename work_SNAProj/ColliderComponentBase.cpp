@@ -6,7 +6,7 @@ const ColliderComponentBase::FlagType ColliderComponentBase::mPushOnHitFlagMask 
 const ColliderComponentBase::FlagType ColliderComponentBase::mRotatableFlagMask = 1 << 2;
 
 ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute colAtt, ColliderShape colShape) :
-	ComponentBase(owner, 300),
+	ComponentBase(owner, 300, UpdateTiming::UpdateTiming_AfterAddMoveVector),
 	mAttribute(colAtt),
 	mShape(colShape),
 	mFlags_CCBase(mMoveOnHitFlagMask | mPushOnHitFlagMask | mRotatableFlagMask)

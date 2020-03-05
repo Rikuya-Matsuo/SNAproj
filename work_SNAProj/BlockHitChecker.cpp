@@ -7,7 +7,7 @@
 namespace Mask = BlockHitDirectionFlagMask;
 
 BlockHitChecker::BlockHitChecker(Actor * owner, BoxColliderComponent * box):
-	ComponentBase(owner, 1000),
+	ComponentBase(owner, 1000, UpdateTiming::UpdateTiming_AfterAddMoveVector),
 	mHitDirectionFlags(0),
 	mBox(box)
 {

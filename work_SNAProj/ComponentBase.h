@@ -6,10 +6,17 @@
 
 class Actor;
 
+enum UpdateTiming
+{
+	UpdateTiming_Normal = 0,
+	UpdateTiming_AfterAddMoveVector,
+	UpdateTiming_Invalid
+};
+
 class ComponentBase
 {
 public:
-	ComponentBase(Actor * owner, int priority = 100);
+	ComponentBase(Actor * owner, int priority = 100, UpdateTiming updateTiming = UpdateTiming_Normal);
 	virtual ~ComponentBase();
 
 	virtual void Update() = 0;
@@ -21,10 +28,14 @@ public:
 	void SetActive(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mActiveFlagMask); }
 	bool GetActiveFlag() const { return mFlags & mActiveFlagMask; }
 
+	UpdateTiming GetUpdateTiming() const { return static_cast<UpdateTiming>(mUpdateTiming); }
+
 protected:
 	typedef Uint8 FlagType;
 
 	static const FlagType mActiveFlagMask;
+
+	const Uint8 mUpdateTiming;
 
 	FlagType mFlags;
 
