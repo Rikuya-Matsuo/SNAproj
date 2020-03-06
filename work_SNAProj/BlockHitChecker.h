@@ -28,10 +28,26 @@ public:
 
 	void Update();
 
+	void SetOnHitDownFunction(void(*onHitDown)(Actor*)) { mOnHitDown = onHitDown; }
+
+	void SetOnHitUpFunction(void(*onHitUp)(Actor*)) { mOnHitUp = onHitUp; }
+
+	void SetOnHitRightFunction(void(*onHitRight)(Actor*)) { mOnHitRight = onHitRight; }
+
+	void SetOnHitLeftFunction(void(*onHitLeft)(Actor*)) { mOnHitLeft = onHitLeft; }
+
 private:
 	Uint8 mHitDirectionFlags;
 
 	BoxColliderComponent * mBox;
+
+	void(*mOnHitDown)(Actor*);
+
+	void(*mOnHitUp)(Actor*);
+
+	void(*mOnHitRight)(Actor*);
+
+	void(*mOnHitLeft)(Actor*);
 
 	void CheckProcess();
 

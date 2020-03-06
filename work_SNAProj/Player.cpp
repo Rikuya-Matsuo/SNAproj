@@ -98,6 +98,7 @@ Player::Player() :
 
 	// 二次元的当たり判定コンポーネント
 	mHitChecker = new BlockHitChecker(this, mBoxCollider);
+	mHitChecker->SetOnHitDownFunction(OnHitDown);
 
 	AABB attackCol = mMesh->GetCollisionBox();
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
@@ -147,6 +148,8 @@ Player::~Player()
 	// インスタンス自体はActorクラスを継承しているため、Systemクラスによってメモリ解放が行われる
 	delete[] mHitEffects;
 	mHitEffects = nullptr;
+
+	std::list<EnemyBase *>().swap(mHitList);
 
 	SDL_Log("Player is deleted\n");
 }
@@ -516,6 +519,13 @@ void Player::OnLanding()
 void Player::OnLifeRunOut()
 {
 	mFlags_Player &= ~mAliveFlagMask;
+}
+
+void Player::OnHitDown(Actor * actor)
+{
+	Player * p = static_cast<Player*>(actor);
+
+	p->OnDetectGround();
 }
 
 AnimationEffect * Player::FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const

@@ -97,5 +97,7 @@ private:
 
 	void OnLifeRunOut();
 
+	static void OnHitDown(Actor * actor);
+
 	AnimationEffect * FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const;
 };
