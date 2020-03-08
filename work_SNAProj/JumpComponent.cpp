@@ -5,7 +5,7 @@
 
 #ifdef DEBUG_SNA
 #include "Input.h"
-bool debugFlag = false;
+static bool debugFlag = false;
 #endif // DEBUG_SNA
 
 
@@ -28,17 +28,21 @@ JumpComponent::~JumpComponent()
 
 void JumpComponent::Update()
 {
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
+#ifdef DEBUG_SNA
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_RCTRL))
 	{
 		debugFlag = !debugFlag;
 	}
+#endif // DEBUG_SNA
 
 	if (mJumpFlags & mTimingFlagMask)
 	{
+#ifdef DEBUG_SNA
 		if (debugFlag)
 		{
 			SDL_Delay(0);
 		}
+#endif
 
 		Vector3D moveVec = mOwner->GetMoveVector();
 

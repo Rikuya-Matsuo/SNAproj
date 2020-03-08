@@ -16,6 +16,10 @@
 #include "NinjaArtsBase.h"
 #include "BlockHitChecker.h"
 
+#ifdef DEBUG_SNA
+static bool debugFlag = false;
+#endif // DEBUG_SNA
+
 using namespace BlockHitDirectionFlagMask;
 
 const char Player::mLifeMax = 10;
@@ -156,6 +160,13 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
+#ifdef DEBUG_SNA
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
+	{
+		debugFlag = !debugFlag;
+	}
+#endif // DEBUG_SNA
+
 	// 落下時は死亡とする
 	if (mPosition.z < -50.0f)
 	{
@@ -179,7 +190,12 @@ void Player::UpdateActor0()
 	{
 		mFlags_Player |= mJumpInputFlagMask;
 	}
-
+#ifdef DEBUG_SNA
+	if (debugFlag && mFlags_Player & mJumpInputFlagMask)
+	{
+		SDL_Delay(0);
+	}
+#endif
 	// ジャンプ実行
 	if (mFlags_Player & mLandingFlagMask && mFlags_Player & mJumpInputFlagMask)
 	{
@@ -222,6 +238,15 @@ void Player::UpdateActor1()
 	// 床と接触した場合
 	if (hitDir & mDownMask)
 	{
+#ifdef DEBUG_SNA
+		static char test = 0;
+		SDL_Log("Down Hit.%d\n", test);
+		if (++test > 100)
+		{
+			test = 0;
+		}
+#endif
+
 		OnDetectGround();
 
 		if (mMoveVector.z < 0.0f)
@@ -500,15 +525,6 @@ void Player::OnDetectGround()
 	}
 
 	SetAffectGravityFlag(false);
-
-#ifdef DEBUG_SNA
-	static char test = 0;
-	SDL_Log("Detect ground.%d\n", test);
-	if (++test > 100)
-	{
-		test = 0;
-	}
-#endif
 }
 
 void Player::OnLanding()
