@@ -4,6 +4,13 @@
 #include "Block.h"
 #include "BoxColliderComponent.h"
 
+#include "System.h"
+#ifdef DEBUG_SNA
+#include "Input.h"
+static bool debugFrameFlag = false;
+#endif // DEBUG_SNA
+
+
 namespace Mask = BlockHitDirectionFlagMask;
 
 BlockHitChecker::BlockHitChecker(Actor * owner, BoxColliderComponent * box):
@@ -26,6 +33,22 @@ void BlockHitChecker::Update()
 	{
 		return;
 	}
+
+#ifdef DEBUG_SNA
+
+	// デバッグするフレームか否かの判定
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_1))
+	{
+		debugFrameFlag = true;
+	}
+
+	// ブレークポイント
+	if (debugFrameFlag && mOwner->IsPlayer())
+	{
+		SDL_Delay(0);
+	}
+
+#endif // DEBUG_SNA
 
 	// ブロック情報取得
 	Uint8 **const blockArray = stage->GetBlocks();
@@ -119,13 +142,13 @@ void BlockHitChecker::Update()
 				if (overlapX >= overlapY)
 				{
 					upHit1 = true;
-
-					if (mOnHitUp)
-					{
-						mOnHitUp(mOwner);
-					}
 				}
 			}
+		}
+
+		if (mOnHitUp && upHit1)
+		{
+			mOnHitUp(mOwner);
 		}
 	}
 
@@ -162,13 +185,13 @@ void BlockHitChecker::Update()
 				if (overlapX >= overlapY)
 				{
 					downHit1 = true;
-
-					if (mOnHitDown)
-					{
-						mOnHitDown(mOwner);
-					}
 				}
 			}
+		}
+
+		if (mOnHitDown && downHit1)
+		{
+			mOnHitDown(mOwner);
 		}
 	}
 
@@ -205,13 +228,13 @@ void BlockHitChecker::Update()
 				if (overlapX < overlapY)
 				{
 					rightHit1 = true;
-
-					if (mOnHitRight)
-					{
-						mOnHitRight(mOwner);
-					}
 				}
 			}
+		}
+
+		if (mOnHitRight && rightHit1)
+		{
+			mOnHitRight(mOwner);
 		}
 	}
 
@@ -248,13 +271,13 @@ void BlockHitChecker::Update()
 				if (overlapX < overlapY)
 				{
 					leftHit1 = true;
-
-					if (mOnHitLeft)
-					{
-						mOnHitLeft(mOwner);
-					}
 				}
 			}
+		}
+
+		if (mOnHitLeft && leftHit1)
+		{
+			mOnHitLeft(mOwner);
 		}
 	}
 
@@ -368,6 +391,11 @@ void BlockHitChecker::Update()
 			mOwner->SetMoveVector(vel);
 		}
 	}
+
+#ifdef DEBUG_SNA
+	// デバッグフラグを負にする
+	debugFrameFlag = false;
+#endif // DEBUG_SNA
 }
 
 void BlockHitChecker::CheckProcess()

@@ -150,6 +150,8 @@ public:
 
 	FlagType GetBitFlag() const { return mFlags; }
 
+	virtual bool IsPlayer() const { return false; }
+
 private:
 	FlagType mPrevFlags;
 

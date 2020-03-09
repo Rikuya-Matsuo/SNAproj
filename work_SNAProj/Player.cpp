@@ -191,9 +191,14 @@ void Player::UpdateActor0()
 		mFlags_Player |= mJumpInputFlagMask;
 	}
 #ifdef DEBUG_SNA
-	if (debugFlag && mFlags_Player & mJumpInputFlagMask)
+	if (debugFlag && mFlags_Player & mLandingFlagMask)
 	{
-		SDL_Delay(0);
+		static char test = 0;
+		SDL_Log("Landing.%d\n", test);
+		if (++test > 100)
+		{
+			test = 0;
+		}
 	}
 #endif
 	// ジャンプ実行
@@ -239,12 +244,14 @@ void Player::UpdateActor1()
 	if (hitDir & mDownMask)
 	{
 #ifdef DEBUG_SNA
+		/*
 		static char test = 0;
 		SDL_Log("Down Hit.%d\n", test);
 		if (++test > 100)
 		{
 			test = 0;
 		}
+		*/
 #endif
 
 		OnDetectGround();

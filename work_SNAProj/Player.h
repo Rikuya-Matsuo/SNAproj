@@ -23,6 +23,8 @@ public:
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
 
+	bool IsPlayer() const override { return true; }
+
 	static const char mLifeMax;
 
 	friend NinjaArtsBase;
