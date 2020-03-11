@@ -84,7 +84,7 @@ Player::Player() :
 	AABB bodyCol = mMesh->GetCollisionBox();
 	mBoxCollider->SetObjectBox(bodyCol);
 
-	const bool genDetectorFlag = true;
+	const bool genDetectorFlag = false;
 	if (genDetectorFlag)
 	{
 		AABB box = bodyCol;
