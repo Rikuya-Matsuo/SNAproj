@@ -124,6 +124,7 @@ void StageBase::Construct()
 	else if (mBlockMassX <= 0 || mBlockMassY <= 0)
 	{
 		SDL_Log("Stage : Block mass is invalid value. Fail to construction.\n");
+		return;
 	}
 
 	///////////////////////////////////////
