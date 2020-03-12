@@ -25,6 +25,12 @@ public:
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
 
+	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
+
+	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
+
+	void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
+
 	static const char mLifeMax;
 
 	friend NinjaArtsBase;
@@ -85,12 +91,6 @@ private:
 	void UpdateActor0() override;
 
 	void UpdateActor1() override;
-
-	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
-
-	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
-
-	void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
 	void OnDetectGround(const ColliderComponentBase * opponent);
 
