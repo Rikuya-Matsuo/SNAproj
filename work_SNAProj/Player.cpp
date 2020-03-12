@@ -336,100 +336,17 @@ void Player::UpdateActor1()
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	ColliderAttribute callerAtt = caller->GetColliderAttribute();
-	ColliderAttribute opponentAtt = opponent->GetColliderAttribute();
 
-	if (callerAtt == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
-	{
-		OnDetectGround(opponent);
-
-		return;
-	}
-
-	if (mPushedVector.z > 0.0f)
-	{
-		OnLanding();
-	}
-
-	if (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy)
-	{
-		// 押し返しの無効化
-		InvalidateFixVectorOnBeSetAlready();
-	}
-
-	if (callerAtt == ColAtt_Player && opponentAtt == ColAtt_Enemy)
-	{
-		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
-		if (enemy->GetAttackFlag())
-		{
-			float x = enemy->GetPosition().x - mPosition.x;
-			mMoveVector = Vector3D(20.0f, 0.0f, 8.0f);
-			mMoveVector.x *= x < 0.0f ? 1.0f : -1.0f;
-
-			mFlags_Player |= mKnockBackFlagMask;
-
-			Effect * eff = FindNonActiveEffect(mHitEffects, mHitEffectMass);
-			if (eff)
-			{
-				eff->SetPosition(mPosition);
-				eff->SetActive(true);
-			}
-			else
-			{
-				SDL_Delay(0);
-			}
-		}
-	}
-
-	if (callerAtt == ColliderAttribute::ColAtt_PlayerAttack && opponentAtt == ColliderAttribute::ColAtt_Enemy)
-	{
-		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
-
-		auto itr = std::find(mHitList.begin(), mHitList.end(), enemy);
-		if (itr == mHitList.end())
-		{
-			enemy->Damage(mDashAttackPower);
-			mHitList.emplace_back(enemy);
-
-			Effect * eff = FindNonActiveEffect(mHitEffects, mHitEffectMass);
-			if (eff)
-			{
-				eff->SetPosition(enemy->GetPosition());
-				eff->SetActive(true);
-			}
-			else
-			{
-				SDL_Delay(0);
-			}
-		}
-	}
 }
 
 void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	ColliderAttribute callerAtt = caller->GetColliderAttribute();
-	ColliderAttribute opponentAtt = opponent->GetColliderAttribute();
 
-	if (caller == mBoxCollider && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
-	{
-		InvalidateFixVectorOnBeSetAlready();
-	}
-
-	if (callerAtt == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
-	{
-		OnDetectGround(opponent);
-
-		return;
-	}
-
-	if (mPushedVector.z > 0.0f)
-	{
-		OnLanding();
-	}
 }
 
 void Player::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
+
 }
 
 void Player::OnDetectGround(const ColliderComponentBase * opponent)
