@@ -4,23 +4,12 @@
 #include "Block.h"
 #include "BoxColliderComponent.h"
 
-#include "System.h"
-#ifdef DEBUG_SNA
-#include "Input.h"
-static bool debugFrameFlag = false;
-#endif // DEBUG_SNA
-
-
 namespace Mask = BlockHitDirectionFlagMask;
 
 BlockHitChecker::BlockHitChecker(Actor * owner, BoxColliderComponent * box):
 	ComponentBase(owner, 1000, UpdateTiming::UpdateTiming_AfterAddMoveVector),
 	mHitDirectionFlags(0),
-	mBox(box),
-	mOnHitDown(nullptr),
-	mOnHitUp(nullptr),
-	mOnHitRight(nullptr),
-	mOnHitLeft(nullptr)
+	mBox(box)
 {
 }
 
@@ -33,22 +22,6 @@ void BlockHitChecker::Update()
 	{
 		return;
 	}
-
-#ifdef DEBUG_SNA
-
-	// デバッグするフレームか否かの判定
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_1))
-	{
-		debugFrameFlag = true;
-	}
-
-	// ブレークポイント
-	if (debugFrameFlag && mOwner->IsPlayer())
-	{
-		SDL_Delay(0);
-	}
-
-#endif // DEBUG_SNA
 
 	// ブロック情報取得
 	Uint8 **const blockArray = stage->GetBlocks();
@@ -145,11 +118,6 @@ void BlockHitChecker::Update()
 				}
 			}
 		}
-
-		if (mOnHitUp && upHit1)
-		{
-			mOnHitUp(mOwner);
-		}
 	}
 
 	bool downHit1 = false;
@@ -187,11 +155,6 @@ void BlockHitChecker::Update()
 					downHit1 = true;
 				}
 			}
-		}
-
-		if (mOnHitDown && downHit1)
-		{
-			mOnHitDown(mOwner);
 		}
 	}
 
@@ -231,11 +194,6 @@ void BlockHitChecker::Update()
 				}
 			}
 		}
-
-		if (mOnHitRight && rightHit1)
-		{
-			mOnHitRight(mOwner);
-		}
 	}
 
 	bool leftHit1 = false;
@@ -273,11 +231,6 @@ void BlockHitChecker::Update()
 					leftHit1 = true;
 				}
 			}
-		}
-
-		if (mOnHitLeft && leftHit1)
-		{
-			mOnHitLeft(mOwner);
 		}
 	}
 
@@ -391,11 +344,6 @@ void BlockHitChecker::Update()
 			mOwner->SetMoveVector(vel);
 		}
 	}
-
-#ifdef DEBUG_SNA
-	// デバッグフラグを負にする
-	debugFrameFlag = false;
-#endif // DEBUG_SNA
 }
 
 void BlockHitChecker::CheckProcess()

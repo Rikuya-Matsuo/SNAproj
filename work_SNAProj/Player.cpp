@@ -16,12 +16,6 @@
 #include "NinjaArtsBase.h"
 #include "BlockHitChecker.h"
 
-#ifdef DEBUG_SNA
-static bool debugFlag = false;
-#endif // DEBUG_SNA
-
-using namespace BlockHitDirectionFlagMask;
-
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
@@ -31,7 +25,6 @@ const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
 const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
 const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
 const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
-const Player::FlagType Player::mJumpInputFlagMask		= 1 << 6;
 
 Player::Player() :
 	Actor(),
@@ -84,7 +77,7 @@ Player::Player() :
 	AABB bodyCol = mMesh->GetCollisionBox();
 	mBoxCollider->SetObjectBox(bodyCol);
 
-	const bool genDetectorFlag = false;
+	const bool genDetectorFlag = true;
 	if (genDetectorFlag)
 	{
 		AABB box = bodyCol;
@@ -100,9 +93,7 @@ Player::Player() :
 		mGroundChecker->SetObjectBox(box);
 	}
 
-	// 二次元的当たり判定コンポーネント
 	mHitChecker = new BlockHitChecker(this, mBoxCollider);
-	mHitChecker->SetOnHitDownFunction(OnHitDown);
 
 	AABB attackCol = mMesh->GetCollisionBox();
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
@@ -145,6 +136,12 @@ Player::Player() :
 
 	// 落下スピードの制限値設定
 	mFallSpeedMax = 6.0f;
+
+	// プレイヤーであることを示すフラグ
+	//mFlags |= mPlayerFlagMask_Base;
+
+	// プレイヤーを不死身に
+	//mFlags_Player |= mImmortalFlagMask;
 }
 
 Player::~Player()
@@ -153,27 +150,16 @@ Player::~Player()
 	delete[] mHitEffects;
 	mHitEffects = nullptr;
 
-	std::list<EnemyBase *>().swap(mHitList);
-
 	SDL_Log("Player is deleted\n");
 }
 
 void Player::UpdateActor0()
 {
-#ifdef DEBUG_SNA
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_LCTRL))
-	{
-		debugFlag = !debugFlag;
-	}
-#endif // DEBUG_SNA
-
-	// 落下時は死亡とする
 	if (mPosition.z < -50.0f)
 	{
 		mLife = 0;
 	}
 
-	// ライフが０以下、かつ不死身フラグが立っていない場合
 	if (mLife <= 0 && !(mFlags_Player & mImmortalFlagMask))
 	{
 		OnLifeRunOut();
@@ -184,25 +170,15 @@ void Player::UpdateActor0()
 		SetAllComponentActive(false);
 	}
 
-	// ジャンプ操作受付
-	mFlags_Player &= ~mJumpInputFlagMask;
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A))
+	if (!(mFlags_Player & mDetectGroundFlagMask))
 	{
-		mFlags_Player |= mJumpInputFlagMask;
+		SetAffectGravityFlag(true);
+		mFlags_Player &= ~mLandingFlagMask;
 	}
-#ifdef DEBUG_SNA
-	if (debugFlag && mFlags_Player & mLandingFlagMask)
-	{
-		static char test = 0;
-		SDL_Log("Landing.%d\n", test);
-		if (++test > 100)
-		{
-			test = 0;
-		}
-	}
-#endif
-	// ジャンプ実行
-	if (mFlags_Player & mLandingFlagMask && mFlags_Player & mJumpInputFlagMask)
+	mFlags_Player &= ~mDetectGroundFlagMask;
+
+	bool jumpInput = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A);
+	if (mFlags_Player & mLandingFlagMask && jumpInput)
 	{
 		mJumpComponent->Jump();
 	}
@@ -234,44 +210,6 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
-	// 二次元的当たり判定の結果を見て処理
-	Uint8 hitDir = mHitChecker->GetHitDirectionFlags();
-
-	// フラグリセット
-	mFlags_Player &= ~mLandingFlagMask;
-
-	// 床と接触した場合
-	if (hitDir & mDownMask)
-	{
-#ifdef DEBUG_SNA
-		/*
-		static char test = 0;
-		SDL_Log("Down Hit.%d\n", test);
-		if (++test > 100)
-		{
-			test = 0;
-		}
-		*/
-#endif
-
-		OnDetectGround();
-
-		if (mMoveVector.z < 0.0f)
-		{
-			mMoveVector.z = 0.0f;
-		}
-	}
-
-	// 着地していない場合
-	if (!(mFlags_Player & mLandingFlagMask))
-	{
-		// 重力有効化
-		SetAffectGravityFlag(true);
-
-		// 着地フラグを切る
-		mFlags_Player &= ~mLandingFlagMask;
-	}
-
 	// 走る
 	if (mInputComponent->GetHorizonInputFlag())
 	{
@@ -411,7 +349,7 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 	if (callerAtt == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
 	{
-		OnDetectGround();
+		OnDetectGround(opponent);
 
 		return;
 	}
@@ -473,6 +411,10 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 				eff->SetPosition(mPosition);
 				eff->SetActive(true);
 			}
+			else
+			{
+				SDL_Delay(0);
+			}
 		}
 	}
 
@@ -505,7 +447,7 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
 	{
-		OnDetectGround();
+		OnDetectGround(opponent);
 
 		return;
 	}
@@ -520,7 +462,7 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 {
 }
 
-void Player::OnDetectGround()
+void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
 	mFlags_Player |= mLandingFlagMask;
 
@@ -542,13 +484,6 @@ void Player::OnLanding()
 void Player::OnLifeRunOut()
 {
 	mFlags_Player &= ~mAliveFlagMask;
-}
-
-void Player::OnHitDown(Actor * actor)
-{
-	Player * p = static_cast<Player*>(actor);
-
-	p->OnDetectGround();
 }
 
 AnimationEffect * Player::FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const

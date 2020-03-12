@@ -17,13 +17,13 @@ public:
 	Player();
 	~Player();
 
+	bool IsPlayer() const override { return true; }
+
 	bool GetAliveFlag() const { return mFlags_Player & mAliveFlagMask; }
 
 	char GetLife() const { return mLife; }
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
-
-	bool IsPlayer() const override { return true; }
 
 	static const char mLifeMax;
 
@@ -40,7 +40,6 @@ private:
 	static const FlagType mImmortalFlagMask;
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
-	static const FlagType mJumpInputFlagMask;
 
 
 	enum AnimationPattern
@@ -93,13 +92,11 @@ private:
 
 	void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
-	void OnDetectGround();
+	void OnDetectGround(const ColliderComponentBase * opponent);
 
 	void OnLanding();
 
 	void OnLifeRunOut();
-
-	static void OnHitDown(Actor * actor);
 
 	AnimationEffect * FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const;
 };
