@@ -334,22 +334,20 @@ void Player::UpdateActor1()
 	mPrevFlags_Player = mFlags_Player;
 }
 
-void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
+void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
 {
-	Uint8 callerAtt = caller->GetColliderAttribute();
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
-	// エネミーへの攻撃がヒットした時の処理
-	bool callerIsAttackCollider = (callerAtt == ColliderAttribute::ColAtt_PlayerAttack);
+	// エネミーとの判定
 	bool opponentIsEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
-	if (callerIsAttackCollider && opponentIsEnemy)
+	if (opponentIsEnemy)
 	{
 		// そのエネミーが一回の攻撃で二度目のヒットをしていないかのチェック
 		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
 
 		// 一度の攻撃で誰が当たったかをリストアップしたものから検索する
 		auto itr = std::find(mHitList.begin(), mHitList.end(), enemy);
-		
+
 		// ヒットした場合
 		if (itr == mHitList.end())
 		{
@@ -375,10 +373,54 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 	}
 }
 
+void Player::OnGroundCheckerHits(const ColliderComponentBase * opponent)
+{
+}
+
+void Player::OnBodyHits(const ColliderComponentBase * opponent)
+{
+}
+
+void Player::OnGroundCheckerTouching(const ColliderComponentBase * opponent)
+{
+}
+
+void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
+{
+	// 当たったのが自身の本体のコライダーの場合
+	bool isCallerBody = (caller == mBoxCollider);
+	if (isCallerBody)
+	{
+		OnBodyHits(opponent);
+		return;
+	}
+
+	// 当たったのが自身の地面検出装置の場合
+	bool isCallerGroundChecker = (caller == mGroundChecker);
+	if (isCallerGroundChecker)
+	{
+		OnGroundCheckerHits(opponent);
+		return;
+	}
+
+	// 当たったのが自身の攻撃判定コライダーの場合
+	bool isCallerAttackCollider = (caller == mAttackCollider);
+	if (isCallerAttackCollider)
+	{
+		OnAttackColliderHits(opponent);
+		return;
+	}
+}
+
 void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	Uint8 callerAtt = caller->GetColliderAttribute();
-	Uint8 opponentAtt = opponent->GetColliderAttribute();
+	// 当たっているのが自身の地面検出装置の場合
+	bool isCallerGroundChecker = (caller == mGroundChecker);
+	if (isCallerGroundChecker)
+	{
+		OnGroundCheckerTouching(opponent);
+		return;
+	}
 }
 
 void Player::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)

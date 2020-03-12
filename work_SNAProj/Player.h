@@ -92,6 +92,14 @@ private:
 
 	void UpdateActor1() override;
 
+	void OnAttackColliderHits(const ColliderComponentBase * opponent);
+
+	void OnGroundCheckerHits(const ColliderComponentBase * opponent);
+
+	void OnBodyHits(const ColliderComponentBase * opponent);
+
+	void OnGroundCheckerTouching(const ColliderComponentBase * opponent);
+
 	void OnDetectGround(const ColliderComponentBase * opponent);
 
 	void OnLanding();
