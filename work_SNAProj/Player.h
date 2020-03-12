@@ -96,6 +96,8 @@ private:
 
 	void OnLanding();
 
+	void InvalidateFixVectorOnBeSetAlready();
+
 	void OnLifeRunOut();
 
 	AnimationEffect * FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const;

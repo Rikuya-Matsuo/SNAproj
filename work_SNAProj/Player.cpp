@@ -353,37 +353,8 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 	if (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy)
 	{
-		// すでにその方向への押し返しが働いている場合は、押し返しを無効化する
-		// 着地中ならば常に押し返しを無効化する
-		bool invalidationFlag = false;
-
-		if (mPushedVector.x)
-		{
-			if (mFixVector.x)
-			{
-				invalidationFlag = true;
-			}
-		}
-		else if (mPushedVector.y)
-		{
-			if (mFixVector.y)
-			{
-				invalidationFlag = true;
-			}
-		}
-		else if (mPushedVector.z)
-		{
-			if (mFixVector.z)
-			{
-				invalidationFlag = true;
-			}
-		}
-
-		// 無効化
-		if (invalidationFlag)
-		{
-			mFixVector -= mPushedVector;
-		}
+		// 押し返しの無効化
+		InvalidateFixVectorOnBeSetAlready();
 	}
 
 	if (callerAtt == ColAtt_Player && opponentAtt == ColAtt_Enemy)
@@ -436,8 +407,15 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 
 void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-	Uint8 opponentAtt = opponent->GetColliderAttribute();
-	if (caller->GetColliderAttribute() == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
+	ColliderAttribute callerAtt = caller->GetColliderAttribute();
+	ColliderAttribute opponentAtt = opponent->GetColliderAttribute();
+
+	if (caller == mBoxCollider && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
+	{
+		InvalidateFixVectorOnBeSetAlready();
+	}
+
+	if (callerAtt == ColliderAttribute::ColAtt_Detector && (opponentAtt == ColliderAttribute::ColAtt_Block || opponentAtt == ColliderAttribute::ColAtt_Enemy))
 	{
 		OnDetectGround(opponent);
 
@@ -471,6 +449,39 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 void Player::OnLanding()
 {
 	mFlags_Player |= mLandingFlagMask;
+}
+
+void Player::InvalidateFixVectorOnBeSetAlready()
+{
+	bool invalidationFlag = false;
+
+	if (mPushedVector.x)
+	{
+		if (mFixVector.x)
+		{
+			invalidationFlag = true;
+		}
+	}
+	else if (mPushedVector.y)
+	{
+		if (mFixVector.y)
+		{
+			invalidationFlag = true;
+		}
+	}
+	else if (mPushedVector.z)
+	{
+		if (mFixVector.z)
+		{
+			invalidationFlag = true;
+		}
+	}
+
+	// 無効化
+	if (invalidationFlag)
+	{
+		mFixVector -= mPushedVector;
+	}
 }
 
 void Player::OnLifeRunOut()
