@@ -10,7 +10,6 @@
 
 const float PhysicManager::mGravityAcceleration = 1.0f;
 
-#define HIT_CHECK_TYPE 1
 void PhysicManager::CheckHit()
 {
 	// ループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除
@@ -537,7 +536,7 @@ PhysicManager::PhysicManager()
 	mColliderID.reserve(256);
 	mHitColliderPairState.reserve(32);
 
-	//ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Block);
+	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Block);
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Block);
 	//ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);

@@ -16,7 +16,7 @@ class Actor
 {
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
-	typedef Uint16 FlagType;
+	typedef Uint8 FlagType;
 	static const FlagType mRequestComponentSortMask_Base;		// コンポーネントのソートを要請するフラグのマスク
 	static const FlagType mStopDrawFlagMask_Base;				// 描画をしないフラグのマスク
 	static const FlagType mBeyondSceneFlagMask_Base;			// シーンをまたいでもアクターの削除をスキップするフラグのマスク
@@ -25,7 +25,6 @@ protected:
 	static const FlagType mCalculateTransformFlagMask_Base;		// 変形行列計算が必要であることのフラグマスク（デフォルトで真）
 	static const FlagType mStopUpdateFlagMask_Base;				// 更新を止めるか否かのフラグマスク
 	static const FlagType mInCameraFlagMask_Base;
-	static const FlagType mPlayerFlagMask_Base;					// 本番ではいらないかも
 
 	FlagType mFlags;
 
@@ -130,8 +129,6 @@ public:
 
 	void SetActive(bool value) { BitFlagFunc::SetFlagByBool(!value, mFlags, mStopUpdateFlagMask_Base); }
 	bool GetActiveFlag() const { return !(mFlags & mStopUpdateFlagMask_Base); }
-
-	bool GetPlayerFlag() const { return mFlags & mPlayerFlagMask_Base; }
 
 	void SetInCameraFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mInCameraFlagMask_Base); }
 	bool GetInCameraFlag() const { return mFlags & mInCameraFlagMask_Base; }

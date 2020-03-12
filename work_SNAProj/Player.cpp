@@ -14,7 +14,7 @@
 #include "EnemyBase.h"
 #include "AnimationEffect.h"
 #include "NinjaArtsBase.h"
-#include "BlockHitChecker.h"
+//#include "BlockHitChecker.h"
 
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
@@ -93,8 +93,6 @@ Player::Player() :
 		mGroundChecker->SetObjectBox(box);
 	}
 
-	mHitChecker = new BlockHitChecker(this, mBoxCollider);
-
 	AABB attackCol = mMesh->GetCollisionBox();
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
 	attackCol.mMin.x += bodyColSizeX;
@@ -136,12 +134,6 @@ Player::Player() :
 
 	// 落下スピードの制限値設定
 	mFallSpeedMax = 6.0f;
-
-	// プレイヤーであることを示すフラグ
-	//mFlags |= mPlayerFlagMask_Base;
-
-	// プレイヤーを不死身に
-	//mFlags_Player |= mImmortalFlagMask;
 }
 
 Player::~Player()
