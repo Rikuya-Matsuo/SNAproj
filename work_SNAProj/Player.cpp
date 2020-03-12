@@ -336,12 +336,49 @@ void Player::UpdateActor1()
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
+	Uint8 callerAtt = caller->GetColliderAttribute();
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
+	// エネミーへの攻撃がヒットした時の処理
+	bool callerIsAttackCollider = (callerAtt == ColliderAttribute::ColAtt_PlayerAttack);
+	bool opponentIsEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
+	if (callerIsAttackCollider && opponentIsEnemy)
+	{
+		// そのエネミーが一回の攻撃で二度目のヒットをしていないかのチェック
+		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
+
+		// 一度の攻撃で誰が当たったかをリストアップしたものから検索する
+		auto itr = std::find(mHitList.begin(), mHitList.end(), enemy);
+		
+		// ヒットした場合
+		if (itr == mHitList.end())
+		{
+			// リストへの追加
+			mHitList.emplace_back(enemy);
+
+			// ダメージを与える
+			enemy->Damage(mDashAttackPower);
+
+			// ヒットエフェクトの発生
+			AnimationEffect * hitEffect = FindNonActiveEffect(mHitEffects, mHitEffectMass);
+			// 非アクティブなエフェクトインスタンスが見つからなかったら関数終了
+			if (!hitEffect)
+			{
+				return;
+			}
+
+			hitEffect->SetActive(true);
+			// エフェクトの位置の設定
+			const Vector3D& enemyPosition = enemy->GetPosition();
+			hitEffect->SetPosition(enemyPosition);
+		}
+	}
 }
 
 void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
-
+	Uint8 callerAtt = caller->GetColliderAttribute();
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
 }
 
 void Player::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
