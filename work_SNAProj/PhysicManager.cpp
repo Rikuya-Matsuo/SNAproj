@@ -426,7 +426,7 @@ bool PhysicManager::CheckPrevHit(const ColliderPair& pair)
 	bool ret = false;
 
 	// 前フレームの接触を判定
-	const char state = mHitColliderPairState[pair];
+	const char state = itr->second;
 	if (state == HitState::HitState_Touching || state == HitState::HitState_Hit)
 	{
 		ret = true;

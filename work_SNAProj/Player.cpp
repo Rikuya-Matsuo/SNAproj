@@ -339,8 +339,8 @@ void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
 	// エネミーとの判定
-	bool opponentIsEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
-	if (opponentIsEnemy)
+	bool isOpponentEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
+	if (isOpponentEnemy)
 	{
 		// そのエネミーが一回の攻撃で二度目のヒットをしていないかのチェック
 		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
@@ -375,6 +375,14 @@ void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
 
 void Player::OnGroundCheckerHits(const ColliderComponentBase * opponent)
 {
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+
+	// ブロックとの判定
+	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
+	if (isOpponentBlock)
+	{
+		OnDetectGround();
+	}
 }
 
 void Player::OnBodyHits(const ColliderComponentBase * opponent)
@@ -383,6 +391,14 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 
 void Player::OnGroundCheckerTouching(const ColliderComponentBase * opponent)
 {
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+
+	// ブロックとの判定
+	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
+	if (isOpponentBlock)
+	{
+		OnDetectGround();
+	}
 }
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
@@ -428,7 +444,7 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 }
 
-void Player::OnDetectGround(const ColliderComponentBase * opponent)
+void Player::OnDetectGround()
 {
 	mFlags_Player |= mLandingFlagMask;
 

@@ -100,7 +100,7 @@ private:
 
 	void OnGroundCheckerTouching(const ColliderComponentBase * opponent);
 
-	void OnDetectGround(const ColliderComponentBase * opponent);
+	void OnDetectGround();
 
 	void OnLanding();
 
