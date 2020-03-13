@@ -46,6 +46,7 @@ private:
 	static const FlagType mImmortalFlagMask;
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
+	static const FlagType mLandingPushUpFlagMask;
 
 
 	enum AnimationPattern
@@ -103,8 +104,6 @@ private:
 	void OnDetectGround();
 
 	void OnLanding();
-
-	void InvalidateFixVectorOnBeSetAlready();
 
 	void OnLifeRunOut();
 

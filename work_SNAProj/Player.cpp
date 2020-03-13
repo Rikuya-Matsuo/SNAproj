@@ -25,6 +25,7 @@ const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
 const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
 const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
 const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
+const Player::FlagType Player::mLandingPushUpFlagMask	= 1 << 6;
 
 Player::Player() :
 	Actor(),
@@ -147,6 +148,9 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
+	// フラグのリセット
+	mFlags_Player &= ~mLandingPushUpFlagMask;
+	
 	if (mPosition.z < -50.0f)
 	{
 		mLife = 0;
@@ -387,6 +391,13 @@ void Player::OnGroundCheckerHits(const ColliderComponentBase * opponent)
 
 void Player::OnBodyHits(const ColliderComponentBase * opponent)
 {
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+
+	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
+	if (isOpponentBlock)
+	{
+		OnLanding();
+	}
 }
 
 void Player::OnGroundCheckerTouching(const ColliderComponentBase * opponent)
@@ -460,39 +471,15 @@ void Player::OnDetectGround()
 
 void Player::OnLanding()
 {
-	mFlags_Player |= mLandingFlagMask;
-}
-
-void Player::InvalidateFixVectorOnBeSetAlready()
-{
-	bool invalidationFlag = false;
-
-	if (mPushedVector.x)
-	{
-		if (mFixVector.x)
-		{
-			invalidationFlag = true;
-		}
-	}
-	else if (mPushedVector.y)
-	{
-		if (mFixVector.y)
-		{
-			invalidationFlag = true;
-		}
-	}
-	else if (mPushedVector.z)
-	{
-		if (mFixVector.z)
-		{
-			invalidationFlag = true;
-		}
-	}
-
-	// 無効化
-	if (invalidationFlag)
+	// 既に押し返しなら押し返しを無効化
+	if (mFlags_Player & mLandingPushUpFlagMask)
 	{
 		mFixVector -= mPushedVector;
+	}
+	// まだしていないならフラグを立てる
+	else
+	{
+		mFlags_Player |= mLandingPushUpFlagMask;
 	}
 }
 
