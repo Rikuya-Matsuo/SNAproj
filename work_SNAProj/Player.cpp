@@ -86,7 +86,7 @@ Player::Player() :
 		box.mMax.z -= boxSize.z * 0.9f;
 		box.mMin.z = bodyCol.mMin.z - 0.1f;
 
-		float detectorXOffset = boxSize.x * 0.95f / 2;
+		float detectorXOffset = 0.1f;
 		box.mMax.x -= detectorXOffset;
 		box.mMin.x += detectorXOffset;
 
