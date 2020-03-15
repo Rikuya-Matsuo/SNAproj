@@ -88,7 +88,7 @@ Player::Player() :
 		box.mMax.z -= boxSize.z * 0.9f;
 		box.mMin.z = bodyCol.mMin.z - 0.1f;
 
-		float detectorXOffset = 0.1f;
+		float detectorXOffset = 0.15f;
 		box.mMax.x -= detectorXOffset;
 		box.mMin.x += detectorXOffset;
 
@@ -150,19 +150,34 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
+	// （壁走りバグ対策）
+	// 地面を検出していて且つ、下からの押し上げがなく且つ、ジャンプ中である場合
+	// 検出したブロックは地面ではなかったとして重力を有効化する
+	bool detectGroundFlag = mFlags_Player & mDetectGroundFlagMask;
+	bool notPushedUpFlag = !(mFlags_Player & mLandingPushUpFlagMask);
+	bool isJumping = mMoveVector.z > 0;
+	if (detectGroundFlag && notPushedUpFlag && isJumping)
+	{
+		mFlags_Player &= ~mDetectGroundFlagMask;
+		SetAffectGravityFlag(true);
+	}
+
 	// フラグのリセット
 	mFlags_Player &= ~mLandingPushUpFlagMask;
 	
+	// 落下時死亡
 	if (mPosition.z < -50.0f)
 	{
 		mLife = 0;
 	}
 
+	// 死亡時関数
 	if (mLife <= 0 && !(mFlags_Player & mImmortalFlagMask))
 	{
 		OnLifeRunOut();
 	}
 
+	// 死亡したフレームなら全てのコンポーネントを非アクティブ化
 	if (!(mFlags_Player & mAliveFlagMask) && mPrevFlags_Player & mAliveFlagMask)
 	{
 		SetAllComponentActive(false);
