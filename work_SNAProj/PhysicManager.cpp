@@ -10,6 +10,10 @@
 
 const float PhysicManager::mGravityAcceleration = 1.0f;
 
+#ifdef DEBUG_SNA
+static size_t checkCounter = 0;
+#endif
+
 void PhysicManager::CheckHit()
 {
 	// ループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除
@@ -29,6 +33,11 @@ void PhysicManager::CheckHit()
 	{
 		CheckLoop(attCombi);
 	}
+
+#ifdef DEBUG_SNA
+	SDL_Log("The number of checked collider is %d\n", checkCounter);
+	checkCounter = 0;
+#endif // DEBUG_SNA
 }
 
 void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
@@ -128,6 +137,11 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 					continue;
 				}
 			}
+
+#ifdef DEBUG_SNA
+			// デバッグのため、チェックを記録
+			checkCounter++;
+#endif // DEBUG_SNA
 
 			// ペアを作成(IDの値が小さいほうをfirstとする)
 			ColliderPair pair =
