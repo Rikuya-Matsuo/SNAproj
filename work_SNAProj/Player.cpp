@@ -388,6 +388,7 @@ void Player::OnGroundCheckerHits(const ColliderComponentBase * opponent)
 	if (isOpponentBlock)
 	{
 		OnDetectGround();
+		return;
 	}
 }
 
@@ -399,6 +400,7 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 	if (isOpponentBlock)
 	{
 		OnLanding();
+		return;
 	}
 
 	bool isOpponentEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
@@ -410,6 +412,7 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 		{
 			OnBeAttacked(enemy);
 		}
+		return;
 	}
 }
 
@@ -422,6 +425,7 @@ void Player::OnGroundCheckerTouching(const ColliderComponentBase * opponent)
 	if (isOpponentBlock)
 	{
 		OnDetectGround();
+		return;
 	}
 }
 
@@ -474,7 +478,7 @@ void Player::OnDetectGround()
 
 	mFlags_Player |= mDetectGroundFlagMask;
 
-	if ((mFlags_Player & mPrevFlags_Player & mKnockBackFlagMask) && mPushedVector.z > 0.0f)
+	if (mFlags_Player & mKnockBackFlagMask)
 	{
 		mFlags_Player &= ~mKnockBackFlagMask;
 	}
