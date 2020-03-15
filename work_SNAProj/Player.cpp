@@ -27,6 +27,8 @@ const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
 const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
 const Player::FlagType Player::mLandingPushUpFlagMask	= 1 << 6;
 
+const Vector3D Player::mKnockBackVector = Vector3D(20.0f, 0.0f, 8.0f);
+
 Player::Player() :
 	Actor(),
 	mFlags_Player(mLookRightFlagMask | mAliveFlagMask),
@@ -398,6 +400,17 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 	{
 		OnLanding();
 	}
+
+	bool isOpponentEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
+	if (isOpponentEnemy)
+	{
+		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
+
+		if (enemy->GetAttackFlag())
+		{
+			OnBeAttacked(enemy);
+		}
+	}
 }
 
 void Player::OnGroundCheckerTouching(const ColliderComponentBase * opponent)
@@ -480,6 +493,31 @@ void Player::OnLanding()
 	else
 	{
 		mFlags_Player |= mLandingPushUpFlagMask;
+	}
+}
+
+void Player::OnBeAttacked(const EnemyBase * enemy)
+{
+	// ノックバック方向の設定
+	// とりあえず右方向に飛ぶ前提で設定
+	mMoveVector = mKnockBackVector;
+
+	// 相手が自身よりも右にいる場合はx方向を反転
+	bool isEnemyRight = (enemy->GetPosition().x > mPosition.x);
+	if (isEnemyRight)
+	{
+		mMoveVector.x *= -1.0f;
+	}
+
+	// ノックバック中フラグを立てる
+	mFlags_Player |= mKnockBackFlagMask;
+
+	// エフェクト発生
+	AnimationEffect * effect = FindNonActiveEffect(mHitEffects, mHitEffectMass);
+	if (effect)
+	{
+		effect->SetPosition(mPosition);
+		effect->SetActive(true);
 	}
 }
 

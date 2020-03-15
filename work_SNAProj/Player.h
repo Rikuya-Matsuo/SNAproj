@@ -48,6 +48,7 @@ private:
 	static const FlagType mKnockBackFlagMask;
 	static const FlagType mLandingPushUpFlagMask;
 
+	static const Vector3D mKnockBackVector;
 
 	enum AnimationPattern
 	{
@@ -101,9 +102,13 @@ private:
 
 	void OnGroundCheckerTouching(const ColliderComponentBase * opponent);
 
+	// 地面検出装置が地面を検出した際の関数
 	void OnDetectGround();
 
+	// 地面からの押し返しを受けた時の関数
 	void OnLanding();
+
+	void OnBeAttacked(const EnemyBase * enemy);
 
 	void OnLifeRunOut();
 
