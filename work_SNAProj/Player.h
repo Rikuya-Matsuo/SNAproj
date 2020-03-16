@@ -9,7 +9,6 @@ class CompletionMeshActor;
 class EnemyBase;
 class AnimationEffect;
 class NinjaArtsBase;
-//class BlockHitChecker;
 
 class Player final : public Actor
 {

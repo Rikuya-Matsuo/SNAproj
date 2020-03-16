@@ -14,7 +14,6 @@
 #include "EnemyBase.h"
 #include "AnimationEffect.h"
 #include "NinjaArtsBase.h"
-//#include "BlockHitChecker.h"
 
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
@@ -87,7 +86,7 @@ Player::Player() :
 		AABB box = bodyCol;
 		const Vector3D boxSize = bodyCol.mMax - bodyCol.mMin;
 		box.mMax.z -= box.mMin.z;
-		box.mMin.z = bodyCol.mMin.z - 0.05f;
+		box.mMin.z = bodyCol.mMin.z - 0.01f;
 
 		float detectorXOffset = 0.15f;
 		box.mMax.x -= detectorXOffset;
@@ -454,6 +453,13 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 	if (isOpponentBlock)
 	{
 		OnLanding(opponent);
+
+		// 天井に当たった時、重力を有効化
+		if (mPushedVector.z < 0.0f)
+		{
+			SetAffectGravityFlag(true);
+		}
+
 		return;
 	}
 
