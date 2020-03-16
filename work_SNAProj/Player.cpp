@@ -36,6 +36,7 @@ Player::Player() :
 	mAttackCollider(nullptr),
 	mCurrentCursorNinjaArts(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
+	mWallPointer(nullptr),
 	mLife(mLifeMax),
 	mHitEffectMass(4)
 {
@@ -85,8 +86,8 @@ Player::Player() :
 	{
 		AABB box = bodyCol;
 		const Vector3D boxSize = bodyCol.mMax - bodyCol.mMin;
-		box.mMax.z -= boxSize.z * 0.9f;
-		box.mMin.z = bodyCol.mMin.z - 0.1f;
+		box.mMax.z -= box.mMin.z;
+		box.mMin.z = bodyCol.mMin.z - 0.05f;
 
 		float detectorXOffset = 0.15f;
 		box.mMax.x -= detectorXOffset;
@@ -375,6 +376,9 @@ void Player::UpdateActor1()
 
 	// 地面ブロック記録のクリア
 	mGroundList.clear();
+
+	// 壁ブロック記録のリセット
+	mWallPointer = nullptr;
 }
 
 void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
@@ -449,7 +453,7 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
-		OnLanding();
+		OnLanding(opponent);
 		return;
 	}
 
@@ -558,10 +562,30 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 	SetAffectGravityFlag(false);
 }
 
-void Player::OnLanding()
+void Player::OnLanding(const ColliderComponentBase * opponent)
 {
+	// 壁ブロックの真下にあるブロックは地面ブロックとみなさない
+	if (mWallPointer)
+	{
+		auto getPosition = [](const ColliderComponentBase * collider)
+		{
+			return collider->GetOwner()->GetPosition();
+		};
+		Vector3D wallToOpponent = getPosition(opponent) - getPosition(mWallPointer);
+		
+		// 接触対象の位置ベクトルから壁の位置ベクトルを引き、
+		// そのx成分が0ならば真下である。
+		if (!wallToOpponent.x && mPushedVector.z)
+		{
+			mFixVector -= mPushedVector;
+			SetActive(true);
+			return;
+		}
+	}
+
 	// 既に押し返しなら押し返しを無効化
-	if (mFlags_Player & mLandingPushUpFlagMask)
+	bool isPushedUpAlready = mFlags_Player & mLandingPushUpFlagMask;
+	if (isPushedUpAlready)
 	{
 		mFixVector -= mPushedVector;
 	}

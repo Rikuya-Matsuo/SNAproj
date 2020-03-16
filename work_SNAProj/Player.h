@@ -118,7 +118,7 @@ private:
 	void OnDetectGround(const ColliderComponentBase * opponent);
 
 	// 地面からの押し返しを受けた時の関数
-	void OnLanding();
+	void OnLanding(const ColliderComponentBase * opponent);
 
 	void OnBeAttacked(const EnemyBase * enemy);
 
