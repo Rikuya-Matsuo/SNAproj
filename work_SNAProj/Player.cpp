@@ -19,7 +19,7 @@
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
-const Player::FlagType Player::mLandingFlagMask			= 1 << 0;
+const Player::FlagType Player::mDetectWallFlagMask		= 1 << 0;
 const Player::FlagType Player::mDetectGroundFlagMask	= 1 << 1;
 const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
 const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
@@ -95,6 +95,20 @@ Player::Player() :
 		mGroundChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 		mGroundChecker->SetObjectBox(box);
 	}
+	
+	{
+		AABB box = bodyCol;
+		const Vector3D boxSize = bodyCol.mMax - bodyCol.mMin;
+		float zOffset = boxSize.z * 0.3f;
+		box.mMax.z -= zOffset;
+		box.mMin.z += zOffset;
+
+		box.mMin.x = box.mMax.x;
+		box.mMax.x += 0.05f;
+
+		mWallChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
+		mWallChecker->SetObjectBox(box);
+	}
 
 	AABB attackCol = mMesh->GetCollisionBox();
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
@@ -150,6 +164,11 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
+	if (mGroundList.size() > 2)
+	{
+		SDL_Delay(0);
+	}
+
 	// （壁走りバグ対策）
 	// 地面を検出していて且つ、下からの押し上げがなく且つ、ジャンプ中である場合
 	// 検出したブロックは地面ではなかったとして重力を有効化する
@@ -162,9 +181,6 @@ void Player::UpdateActor0()
 		SetAffectGravityFlag(true);
 	}
 
-	// フラグのリセット
-	mFlags_Player &= ~mLandingPushUpFlagMask;
-	
 	// 落下時死亡
 	if (mPosition.z < -50.0f)
 	{
@@ -183,17 +199,15 @@ void Player::UpdateActor0()
 		SetAllComponentActive(false);
 	}
 
+	bool jumpInput = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A);
+	if (mFlags_Player & mDetectGroundFlagMask && jumpInput)
+	{
+		mJumpComponent->Jump();
+	}
+
 	if (!(mFlags_Player & mDetectGroundFlagMask))
 	{
 		SetAffectGravityFlag(true);
-		mFlags_Player &= ~mLandingFlagMask;
-	}
-	mFlags_Player &= ~mDetectGroundFlagMask;
-
-	bool jumpInput = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A);
-	if (mFlags_Player & mLandingFlagMask && jumpInput)
-	{
-		mJumpComponent->Jump();
 	}
 
 	// ダッシュアタック
@@ -353,6 +367,14 @@ void Player::UpdateActor1()
 
 	// フラグ記録
 	mPrevFlags_Player = mFlags_Player;
+
+	// フラグのリセット
+	mFlags_Player &= ~mLandingPushUpFlagMask;
+	mFlags_Player &= ~mDetectGroundFlagMask;
+	mFlags_Player &= ~mDetectWallFlagMask;
+
+	// 地面ブロック記録のクリア
+	mGroundList.clear();
 }
 
 void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
@@ -402,7 +424,20 @@ void Player::OnGroundCheckerHits(const ColliderComponentBase * opponent)
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
-		OnDetectGround();
+		OnDetectGround(opponent);
+		return;
+	}
+}
+
+void Player::OnWallCheckerHits(const ColliderComponentBase * opponent)
+{
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+
+	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
+	if (isOpponentBlock)
+	{
+		mFlags_Player |= mDetectWallFlagMask;
+		mWallPointer = opponent;
 		return;
 	}
 }
@@ -439,9 +474,15 @@ void Player::OnGroundCheckerTouching(const ColliderComponentBase * opponent)
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
-		OnDetectGround();
+		OnDetectGround(opponent);
 		return;
 	}
+}
+
+void Player::OnWallCheckerTouching(const ColliderComponentBase * opponent)
+{
+	// 処理は同じなので。
+	OnWallCheckerHits(opponent);
 }
 
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
@@ -459,6 +500,14 @@ void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponent
 	if (isCallerGroundChecker)
 	{
 		OnGroundCheckerHits(opponent);
+		return;
+	}
+
+	// 当たったのが自身の壁検出装置の場合
+	bool isCallerWallChecker = (caller == mWallChecker);
+	if (isCallerWallChecker)
+	{
+		OnWallCheckerHits(opponent);
 		return;
 	}
 
@@ -480,6 +529,14 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 		OnGroundCheckerTouching(opponent);
 		return;
 	}
+
+	// 当たっているのが自身の壁検出装置の場合
+	bool isCallerWallChecker = (caller == mWallChecker);
+	if (isCallerWallChecker)
+	{
+		OnWallCheckerTouching(opponent);
+		return;
+	}
 }
 
 void Player::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
@@ -487,16 +544,16 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 }
 
-void Player::OnDetectGround()
+void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
-	mFlags_Player |= mLandingFlagMask;
-
 	mFlags_Player |= mDetectGroundFlagMask;
 
 	if (mFlags_Player & mKnockBackFlagMask)
 	{
 		mFlags_Player &= ~mKnockBackFlagMask;
 	}
+
+	mGroundList.emplace_back(opponent);
 
 	SetAffectGravityFlag(false);
 }

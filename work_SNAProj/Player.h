@@ -40,7 +40,7 @@ private:
 
 
 	typedef Uint8 FlagType;
-	static const FlagType mLandingFlagMask;
+	static const FlagType mDetectWallFlagMask;
 	static const FlagType mDetectGroundFlagMask;
 	static const FlagType mLookRightFlagMask;
 	static const FlagType mImmortalFlagMask;
@@ -69,7 +69,12 @@ private:
 
 	BoxColliderComponent * mAttackCollider;
 
-	//BlockHitChecker * mHitChecker;
+	BoxColliderComponent * mWallChecker;
+
+	// ヒットした壁へのポインタを記録する変数
+	// なぜ変数なのにconstが付いているのかということを考えると気持ち悪いが、
+	// この位置のconstは「ポインタの指すインスタンスを弄らない」という約束みたいなもの。
+	const ColliderComponentBase * mWallPointer;
 
 	JumpComponent * mJumpComponent;
 
@@ -87,6 +92,9 @@ private:
 
 	std::list<EnemyBase *> mHitList;
 
+	// 床として接触したブロックへのポインタのリスト
+	std::list<const ColliderComponentBase *> mGroundList;
+
 	const size_t mHitEffectMass;
 	AnimationEffect ** mHitEffects;
 
@@ -98,12 +106,16 @@ private:
 
 	void OnGroundCheckerHits(const ColliderComponentBase * opponent);
 
+	void OnWallCheckerHits(const ColliderComponentBase * opponent);
+
 	void OnBodyHits(const ColliderComponentBase * opponent);
 
 	void OnGroundCheckerTouching(const ColliderComponentBase * opponent);
 
+	void OnWallCheckerTouching(const ColliderComponentBase * opponent);
+
 	// 地面検出装置が地面を検出した際の関数
-	void OnDetectGround();
+	void OnDetectGround(const ColliderComponentBase * opponent);
 
 	// 地面からの押し返しを受けた時の関数
 	void OnLanding();

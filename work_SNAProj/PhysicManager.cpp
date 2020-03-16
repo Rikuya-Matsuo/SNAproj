@@ -43,7 +43,7 @@ void PhysicManager::CheckHit()
 void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 {
 	// いずれかのコライダーの数が0ならば判定を行わない
-	if (!mColliders[attCombi.first].size() || !mColliders[attCombi.second].size())
+	if (mColliders[attCombi.first].empty() || mColliders[attCombi.second].empty())
 	{
 		return;
 	}
