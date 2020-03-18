@@ -85,8 +85,8 @@ Player::Player() :
 	{
 		AABB box = bodyCol;
 		const Vector3D boxSize = bodyCol.mMax - bodyCol.mMin;
-		box.mMax.z -= box.mMin.z;
-		box.mMin.z = bodyCol.mMin.z - 0.01f;
+		box.mMax.z = box.mMin.z;
+		box.mMin.z -= 0.1f;
 
 		float detectorXOffset = 0.15f;
 		box.mMax.x -= detectorXOffset;
@@ -452,7 +452,11 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
-		OnLanding(opponent);
+		// 地面に当たった時の処理
+		if (mPushedVector.z > 0.0f)
+		{
+			OnLanding(opponent);
+		}
 
 		// 天井に当たった時、重力を有効化
 		if (mPushedVector.z < 0.0f)
