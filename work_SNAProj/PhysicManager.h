@@ -46,6 +46,8 @@ public:
 
 	void ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8>& pair);
 
+	void RequestSortCollider(Uint8 attribute) { mSortAttributeList.emplace_back(attribute); }
+
 	friend class HashColliderPair;
 
 private:
@@ -68,9 +70,9 @@ private:
 	std::list<std::pair<Uint8, Uint8>> mCheckableAttributeCombination;
 
 	// Detectorアトリビュートの検出対象になるアトリビュート
-	std::list<Uint8> mDetectSubject;
+	std::list<Uint8> mDetectSubjectList;
 
-	//std::list<unsigned short> mAssignedIDList;
+	std::list<Uint8> mSortAttributeList;
 
 	void HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol);
 
@@ -87,4 +89,6 @@ private:
 	void ResetHitState(const ColliderComponentBase * col);
 
 	void RefreshHitState();
+
+	void SortColliders();
 };

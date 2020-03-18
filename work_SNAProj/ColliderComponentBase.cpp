@@ -9,7 +9,8 @@ ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute co
 	ComponentBase(owner, 300, UpdateTiming::UpdateTiming_AfterAddMoveVector),
 	mAttribute(colAtt),
 	mShape(colShape),
-	mFlags_CCBase(mMoveOnHitFlagMask | mPushOnHitFlagMask | mRotatableFlagMask)
+	mFlags_CCBase(mMoveOnHitFlagMask | mPushOnHitFlagMask | mRotatableFlagMask),
+	mCheckOrder(100)
 {
 	if (mAttribute == ColliderAttribute::ColAtt_Detector)
 	{
@@ -24,4 +25,10 @@ ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute co
 ColliderComponentBase::~ColliderComponentBase()
 {
 	PhysicManager::GetInstance().DeresisterCollider(this);
+}
+
+void ColliderComponentBase::SetCheckOrder(int value)
+{
+	mCheckOrder = value;
+	PhysicManager::GetInstance().RequestSortCollider(mAttribute);
 }

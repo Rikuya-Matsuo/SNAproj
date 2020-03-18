@@ -11,16 +11,23 @@
 const float PhysicManager::mGravityAcceleration = 1.0f;
 
 #ifdef DEBUG_SNA
+//#define COLLISION_CHECK
 static size_t checkCounter = 0;
 #endif
 
 void PhysicManager::CheckHit()
 {
+	// 何かのアトリビュートでソートが要請されているならソートする
+	if (!mSortAttributeList.empty())
+	{
+		SortColliders();
+	}
+
 	// ループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除
 	RefreshHitState();
 
 	// Detectorを先に判定
-	for (auto detectSub : mDetectSubject)
+	for (auto detectSub : mDetectSubjectList)
 	{
 		std::pair<Uint8, Uint8> attCombi =
 			std::make_pair(ColliderAttribute::ColAtt_Detector, detectSub);
@@ -34,7 +41,7 @@ void PhysicManager::CheckHit()
 		CheckLoop(attCombi);
 	}
 
-#ifdef DEBUG_SNA
+#ifdef COLLISION_CHECK
 	SDL_Log("The number of checked collider is %d\n", checkCounter);
 	checkCounter = 0;
 #endif // DEBUG_SNA
@@ -138,7 +145,7 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 				}
 			}
 
-#ifdef DEBUG_SNA
+#ifdef COLLISION_CHECK
 			// デバッグのため、チェックを記録
 			checkCounter++;
 #endif // DEBUG_SNA
@@ -318,7 +325,7 @@ void PhysicManager::ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8
 		// 両方か片方だけか
 		(pair.first == pair.second) ?
 			mCheckableAttributeCombination.emplace_back(pair) : 
-			mDetectSubject.emplace_back((pair.first == detectorAtt) ? pair.second : pair.first);
+			mDetectSubjectList.emplace_back((pair.first == detectorAtt) ? pair.second : pair.first);
 
 		return;
 	}
@@ -539,6 +546,21 @@ void PhysicManager::RefreshHitState()
 	}
 }
 
+void PhysicManager::SortColliders()
+{
+	for (auto attribute : mSortAttributeList)
+	{
+		auto sortByCheckOrder = [](const ColliderComponentBase * col1, const ColliderComponentBase * col2)
+		{
+			return col1->GetCheckOrder() <= col2->GetCheckOrder();
+		};
+
+		std::sort(mColliders[attribute].begin(), mColliders[attribute].end(), sortByCheckOrder);
+	}
+
+	mSortAttributeList.clear();
+}
+
 PhysicManager::PhysicManager()
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
@@ -576,7 +598,7 @@ PhysicManager::~PhysicManager()
 
 	std::list<std::pair<Uint8, Uint8>>().swap(mCheckableAttributeCombination);
 
-	std::list<Uint8>().swap(mDetectSubject);
+	std::list<Uint8>().swap(mDetectSubjectList);
 }
 
 

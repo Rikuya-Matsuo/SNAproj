@@ -52,6 +52,12 @@ public:
 	// アクターの回転についていくか（デフォルトで真）
 	void SetRotatableFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags_CCBase, mRotatableFlagMask); }
 
+	// 同じアトリビュート内での当たり判定の早さを設定する（デフォルトは100）
+	// 値が小さければ早く判定される
+	void SetCheckOrder(int value);
+
+	int GetCheckOrder() const { return mCheckOrder; }
+
 protected:
 	typedef Uint8 FlagType;
 	static const FlagType mMoveOnHitFlagMask;
@@ -64,4 +70,8 @@ protected:
 	const Uint8 mShape;
 
 	FlagType mFlags_CCBase;
+
+	// 同じアトリビュート内の当たり判定の早さ
+	// 小さければ早く判定される
+	int mCheckOrder;
 };

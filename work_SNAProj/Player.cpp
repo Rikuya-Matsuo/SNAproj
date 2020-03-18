@@ -108,6 +108,7 @@ Player::Player() :
 
 		mWallChecker = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 		mWallChecker->SetObjectBox(box);
+		mWallChecker->SetCheckOrder(50);
 	}
 
 	AABB attackCol = mMesh->GetCollisionBox();
@@ -560,6 +561,22 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
+	// 壁の真下にあるブロックは地面として扱わない
+	if (mWallPointer && mWallPointer != opponent)
+	{
+		auto getPosition = [](const ColliderComponentBase * collider)
+		{
+			return collider->GetOwner()->GetPosition();
+		};
+		float wallToOpponentX = getPosition(opponent).x - getPosition(mWallPointer).x;
+
+		if (!wallToOpponentX)
+		{
+			SDL_Log("aaa\n");
+			return;
+		}
+	}
+
 	mFlags_Player |= mDetectGroundFlagMask;
 
 	if (mFlags_Player & mKnockBackFlagMask)
@@ -587,6 +604,8 @@ void Player::OnLanding(const ColliderComponentBase * opponent)
 		// そのx成分が0ならば真下である。
 		if (!wallToOpponent.x && mPushedVector.z)
 		{
+			SDL_Log("HogeHogeHoge!\n");
+			mFlags_Player &= ~mDetectGroundFlagMask;
 			mFixVector -= mPushedVector;
 			SetActive(true);
 			return;
