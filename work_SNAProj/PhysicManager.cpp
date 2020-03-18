@@ -548,6 +548,7 @@ void PhysicManager::RefreshHitState()
 
 void PhysicManager::SortColliders()
 {
+	// ソート要請があったものをソートしていく
 	for (auto attribute : mSortAttributeList)
 	{
 		auto sortByCheckOrder = [](const ColliderComponentBase * col1, const ColliderComponentBase * col2)
@@ -558,6 +559,7 @@ void PhysicManager::SortColliders()
 		std::sort(mColliders[attribute].begin(), mColliders[attribute].end(), sortByCheckOrder);
 	}
 
+	// ソート要請をクリア
 	mSortAttributeList.clear();
 }
 

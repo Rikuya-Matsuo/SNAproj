@@ -30,5 +30,7 @@ ColliderComponentBase::~ColliderComponentBase()
 void ColliderComponentBase::SetCheckOrder(int value)
 {
 	mCheckOrder = value;
+
+	// ソートを要請
 	PhysicManager::GetInstance().RequestSortCollider(mAttribute);
 }

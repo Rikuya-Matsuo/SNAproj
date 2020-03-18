@@ -165,11 +165,6 @@ Player::~Player()
 
 void Player::UpdateActor0()
 {
-	if (mGroundList.size() > 2)
-	{
-		SDL_Delay(0);
-	}
-
 	// （壁走りバグ対策）
 	// 地面を検出していて且つ、下からの押し上げがなく且つ、ジャンプ中である場合
 	// 検出したブロックは地面ではなかったとして重力を有効化する
@@ -457,15 +452,15 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 		if (mPushedVector.z > 0.0f)
 		{
 			OnLanding(opponent);
+			return;
 		}
 
 		// 天井に当たった時、重力を有効化
 		if (mPushedVector.z < 0.0f)
 		{
 			SetAffectGravityFlag(true);
+			return;
 		}
-
-		return;
 	}
 
 	bool isOpponentEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
