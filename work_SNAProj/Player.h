@@ -45,7 +45,6 @@ private:
 	static const FlagType mImmortalFlagMask;
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
-	static const FlagType mLandingPushUpFlagMask;
 
 	static const Vector3D mKnockBackVector;
 
@@ -84,6 +83,17 @@ private:
 	char mCurrentAnimation;
 
 	char mLife;
+	
+	// 押し返しが発生したフラグ。
+	// 正負によって方向を表す。
+	struct PushedFlag
+	{
+		char horizon : 4;
+		char vertical : 4;
+
+		void Init() { horizon = vertical = 0; }
+	};
+	PushedFlag mPushedFlags;
 
 	FlagType mFlags_Player;
 
@@ -118,6 +128,8 @@ private:
 
 	// 地面からの押し返しを受けた時の関数
 	void OnLanding(const ColliderComponentBase * opponent);
+
+	void OnBePushedByWall();
 
 	void OnBeAttacked(const EnemyBase * enemy);
 

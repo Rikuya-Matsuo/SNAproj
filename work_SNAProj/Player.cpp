@@ -24,7 +24,6 @@ const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
 const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
 const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
 const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
-const Player::FlagType Player::mLandingPushUpFlagMask	= 1 << 6;
 
 const Vector3D Player::mKnockBackVector = Vector3D(20.0f, 0.0f, 8.0f);
 
@@ -39,6 +38,8 @@ Player::Player() :
 	mLife(mLifeMax),
 	mHitEffectMass(4)
 {
+	mPushedFlags.Init();
+
 	// フラグコピー
 	mPrevFlags_Player = mFlags_Player;
 
@@ -169,7 +170,7 @@ void Player::UpdateActor0()
 	// 地面を検出していて且つ、下からの押し上げがなく且つ、ジャンプ中である場合
 	// 検出したブロックは地面ではなかったとして重力を有効化する
 	bool detectGroundFlag = mFlags_Player & mDetectGroundFlagMask;
-	bool notPushedUpFlag = !(mFlags_Player & mLandingPushUpFlagMask);
+	bool notPushedUpFlag = mPushedFlags.vertical > 0;
 	bool isJumping = mMoveVector.z > 0;
 	if (detectGroundFlag && notPushedUpFlag && isJumping)
 	{
@@ -365,9 +366,10 @@ void Player::UpdateActor1()
 	mPrevFlags_Player = mFlags_Player;
 
 	// フラグのリセット
-	mFlags_Player &= ~mLandingPushUpFlagMask;
 	mFlags_Player &= ~mDetectGroundFlagMask;
 	mFlags_Player &= ~mDetectWallFlagMask;
+
+	mPushedFlags.Init();
 
 	// 地面ブロック記録のクリア
 	mGroundList.clear();
@@ -448,17 +450,27 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
-		// 地面に当たった時の処理
-		if (mPushedVector.z > 0.0f)
+		if (mPushedVector.z)
 		{
-			OnLanding(opponent);
-			return;
-		}
+			// 地面に当たった時の処理
+			if (mPushedVector.z > 0.0f)
+			{
+				OnLanding(opponent);
+				return;
+			}
 
-		// 天井に当たった時、重力を有効化
-		if (mPushedVector.z < 0.0f)
+			// 天井に当たった時、重力を有効化
+			if (mPushedVector.z < 0.0f)
+			{
+				mPushedFlags.vertical = -1;
+				SetAffectGravityFlag(true);
+				return;
+			}
+		}
+		else
 		{
-			SetAffectGravityFlag(true);
+			// 壁に当たった時の処理
+			OnBePushedByWall();
 			return;
 		}
 	}
@@ -608,7 +620,7 @@ void Player::OnLanding(const ColliderComponentBase * opponent)
 	}
 
 	// 既に押し返しなら押し返しを無効化
-	bool isPushedUpAlready = mFlags_Player & mLandingPushUpFlagMask;
+	bool isPushedUpAlready = mPushedFlags.vertical > 0;
 	if (isPushedUpAlready)
 	{
 		mFixVector -= mPushedVector;
@@ -616,7 +628,28 @@ void Player::OnLanding(const ColliderComponentBase * opponent)
 	// まだしていないならフラグを立てる
 	else
 	{
-		mFlags_Player |= mLandingPushUpFlagMask;
+		mPushedFlags.vertical = 1;
+	}
+}
+
+void Player::OnBePushedByWall()
+{
+	if (!mPushedVector.x)
+	{
+		return;
+	}
+
+	char dir = (mPushedVector.x < 0.0f) ? -1 : 1;
+
+	// もし既に同じ方向から押し返しを受けていたらこのフレームで受けた力を無効化
+	if (mPushedFlags.horizon == dir)
+	{
+		mFixVector -= mPushedVector;
+	}
+	// まだ受けていないならフラグを記録
+	else
+	{
+		mPushedFlags.horizon = dir;
 	}
 }
 
