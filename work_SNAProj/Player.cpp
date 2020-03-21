@@ -394,7 +394,7 @@ void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
 		// 一度の攻撃で誰が当たったかをリストアップしたものから検索する
 		auto itr = std::find(mHitList.begin(), mHitList.end(), enemy);
 
-		// ヒットした場合
+		// ヒットしなかった場合
 		if (itr == mHitList.end())
 		{
 			// リストへの追加
