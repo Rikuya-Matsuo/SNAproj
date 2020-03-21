@@ -461,11 +461,10 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 				return;
 			}
 
-			// 天井に当たった時、重力を有効化
+			// 天井に当たった時の処理
 			if (mPushedVector.z < 0.0f)
 			{
-				mPushedFlags.vertical = -1;
-				SetAffectGravityFlag(true);
+				OnCollideCeiling(opponent);
 				return;
 			}
 		}
@@ -601,7 +600,7 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 	// 壁の真下にあるブロックは地面として扱わない
 	if (mWallPointer && mWallPointer != opponent)
 	{
-		auto getPosition = [](const ColliderComponentBase * collider)
+		auto getPosition = [](const ColliderComponentBase * collider) -> const Vector3D &
 		{
 			return collider->GetOwner()->GetPosition();
 		};
@@ -636,7 +635,7 @@ void Player::OnLanding(const ColliderComponentBase * opponent)
 	// 壁ブロックの真下にあるブロックは地面ブロックとみなさない
 	if (mWallPointer)
 	{
-		auto getPosition = [](const ColliderComponentBase * collider)
+		auto getPosition = [](const ColliderComponentBase * collider) -> const Vector3D &
 		{
 			return collider->GetOwner()->GetPosition();
 		};
@@ -664,6 +663,35 @@ void Player::OnLanding(const ColliderComponentBase * opponent)
 	{
 		mPushedFlags.vertical = 1;
 	}
+}
+
+void Player::OnCollideCeiling(const ColliderComponentBase * opponent)
+{
+	// 壁の真上のブロックなら天井として扱わない
+	if (mWallPointer)
+	{
+		auto getPosition = [](const ColliderComponentBase * collider) -> const Vector3D &
+		{
+			return collider->GetOwner()->GetPosition();
+		};
+		Vector3D wallToOpponent = getPosition(opponent) - getPosition(mWallPointer);
+
+		if (!wallToOpponent.x && mPushedVector.z)
+		{
+			mFixVector -= mPushedVector;
+			return;
+		}
+	}
+
+	// 既にブロックから下方向への押し返しを受けている場合は、押し返しを無効化
+	if (mPushedFlags.vertical == -1)
+	{
+		mFixVector -= mPushedVector;
+		return;
+	}
+
+	mPushedFlags.vertical = -1;
+	SetAffectGravityFlag(true);
 }
 
 void Player::OnBePushedByWall()

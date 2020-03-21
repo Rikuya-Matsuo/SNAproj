@@ -133,6 +133,9 @@ private:
 	// 地面からの押し返しを受けた時の関数
 	void OnLanding(const ColliderComponentBase * opponent);
 
+	// 天井と衝突判定した時の関数
+	void OnCollideCeiling(const ColliderComponentBase * opponent);
+
 	void OnBePushedByWall();
 
 	void OnBeAttacked(const EnemyBase * enemy);
