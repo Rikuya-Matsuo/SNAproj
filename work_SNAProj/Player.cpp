@@ -507,6 +507,21 @@ void Player::OnWallCheckerTouching(const ColliderComponentBase * opponent)
 	OnWallCheckerHits(opponent);
 }
 
+void Player::OnBodyTouching(const ColliderComponentBase * opponent)
+{
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+
+	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
+	if (isOpponentBlock)
+	{
+		if (mPushedVector.x)
+		{
+			OnBePushedByWall();
+			return;
+		}
+	}
+}
+
 void Player::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 	// 当たったのが自身の本体のコライダーの場合
@@ -558,6 +573,13 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 	{
 		OnWallCheckerTouching(opponent);
 		return;
+	}
+
+	// 当たっているのが自身の本体のコライダーの場合
+	bool isCallerBody = (caller == mBoxCollider);
+	if (isCallerBody)
+	{
+		OnBodyTouching(opponent);
 	}
 }
 

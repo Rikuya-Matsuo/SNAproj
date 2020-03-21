@@ -123,6 +123,8 @@ private:
 
 	void OnWallCheckerTouching(const ColliderComponentBase * opponent);
 
+	void OnBodyTouching(const ColliderComponentBase * opponent);
+
 	// 地面検出装置が地面を検出した際の関数
 	void OnDetectGround(const ColliderComponentBase * opponent);
 
