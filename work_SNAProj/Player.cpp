@@ -613,6 +613,12 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 		}
 	}
 
+	// opponentが、検知している壁である場合も、地面として扱わない
+	if (mWallPointer == opponent)
+	{
+		return;
+	}
+
 	mFlags_Player |= mDetectGroundFlagMask;
 
 	if (mFlags_Player & mKnockBackFlagMask)
