@@ -275,14 +275,14 @@ void Actor::FixPosition()
 				mMoveVector.x = 0.0f;
 			}
 		}
-		else if (mFixVector.y)
+		if (mFixVector.y)
 		{
 			if (isMinus(mMoveVector.y) != isMinus(mFixVector.y))
 			{
 				mMoveVector.y = 0.0f;
 			}
 		}
-		else if (mFixVector.z)
+		if (mFixVector.z)
 		{
 			if (isMinus(mMoveVector.z) != isMinus(mFixVector.z))
 			{

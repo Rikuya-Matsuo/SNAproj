@@ -99,6 +99,8 @@ private:
 
 	FlagType mPrevFlags_Player;
 
+	bool mPrevGravityFlag;
+
 	std::list<EnemyBase *> mHitList;
 
 	// 床として接触したブロックへのポインタのリスト

@@ -40,6 +40,8 @@ Player::Player() :
 {
 	mPushedFlags.Init();
 
+	mPrevGravityFlag = GetAffectGravityFlag();
+
 	// フラグコピー
 	mPrevFlags_Player = mFlags_Player;
 
@@ -519,6 +521,11 @@ void Player::OnBodyTouching(const ColliderComponentBase * opponent)
 			OnBePushedByWall();
 			return;
 		}
+		else if (mPushedVector.z)
+		{
+			OnLanding(opponent);
+			return;
+		}
 	}
 }
 
@@ -580,6 +587,7 @@ void Player::OnTouching(const ColliderComponentBase * caller, const ColliderComp
 	if (isCallerBody)
 	{
 		OnBodyTouching(opponent);
+		return;
 	}
 }
 
@@ -601,7 +609,6 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 
 		if (!wallToOpponentX)
 		{
-			SDL_Log("aaa\n");
 			return;
 		}
 	}
@@ -633,10 +640,9 @@ void Player::OnLanding(const ColliderComponentBase * opponent)
 		// そのx成分が0ならば真下である。
 		if (!wallToOpponent.x && mPushedVector.z)
 		{
-			SDL_Log("HogeHogeHoge!\n");
 			mFlags_Player &= ~mDetectGroundFlagMask;
 			mFixVector -= mPushedVector;
-			SetActive(true);
+			SetAffectGravityFlag(true);
 			return;
 		}
 	}
