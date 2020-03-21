@@ -170,7 +170,7 @@ void Player::UpdateActor0()
 	// 地面を検出していて且つ、下からの押し上げがなく且つ、ジャンプ中である場合
 	// 検出したブロックは地面ではなかったとして重力を有効化する
 	bool detectGroundFlag = mFlags_Player & mDetectGroundFlagMask;
-	bool notPushedUpFlag = mPushedFlags.vertical > 0;
+	bool notPushedUpFlag = mPushedFlags.vertical != 1;
 	bool isJumping = mMoveVector.z > 0;
 	if (detectGroundFlag && notPushedUpFlag && isJumping)
 	{
