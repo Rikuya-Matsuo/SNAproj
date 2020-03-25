@@ -15,6 +15,10 @@
 #include "AnimationEffect.h"
 #include "NinjaArtsBase.h"
 
+#ifdef DEBUG_SNA
+#define IMMORTAL_PLAYER
+#endif
+
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
@@ -42,6 +46,9 @@ Player::Player() :
 
 	mPrevGravityFlag = GetAffectGravityFlag();
 
+#ifdef IMMORTAL_PLAYER
+	mFlags_Player |= mImmortalFlagMask;
+#endif
 	// フラグコピー
 	mPrevFlags_Player = mFlags_Player;
 

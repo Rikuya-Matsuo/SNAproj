@@ -14,9 +14,11 @@ const Actor::FlagType Actor::mMovalFlagMask_Base					= 1 << 4;
 const Actor::FlagType Actor::mCalculateTransformFlagMask_Base		= 1 << 5;
 const Actor::FlagType Actor::mStopUpdateFlagMask_Base				= 1 << 6;
 const Actor::FlagType Actor::mInCameraFlagMask_Base					= 1 << 7;
+const Actor::FlagType Actor::mBuryDeeplyFlagMask_Base				= 1 << 8;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
+	mPositionBeforeMove(Vector3D::zero),
 	mMoveVector(Vector3D::zero),
 	mRotationAxis(Vector3D(0.0f, 0.0f, 1.0f)),
 	mFixVector(Vector3D::zero),
@@ -50,6 +52,19 @@ Actor::~Actor()
 
 void Actor::Update()
 {
+	// もし当たり判定で何かに深く埋まった場合、変な場所に飛び出すことを防止するため、前フレームのアップデート前の位置に戻す
+	if (mFlags & mBuryDeeplyFlagMask_Base)
+	{
+		mPosition = mPositionBeforeMove;
+		mMoveVector = Vector3D::zero;
+		mFlags &= ~mBuryDeeplyFlagMask_Base;
+	}
+	// そうでなければ、アップデート実行前の位置ベクトルを記録
+	else
+	{
+		mPositionBeforeMove = mPosition;
+	}
+
 	// アクティブ化した or アクティブでなくなった判定・処理
 	bool getNonActive = !(mPrevFlags & mStopUpdateFlagMask_Base) && mFlags & mStopUpdateFlagMask_Base;
 	bool getActive = mPrevFlags & mStopUpdateFlagMask_Base && !(mFlags & mStopUpdateFlagMask_Base);

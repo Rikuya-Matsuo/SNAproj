@@ -16,7 +16,7 @@ class Actor
 {
 protected:
 	// ビットフラグとして使う型。ここを書き換えることでサイズを一括で変えれる！
-	typedef Uint8 FlagType;
+	typedef Uint16 FlagType;
 	static const FlagType mRequestComponentSortMask_Base;		// コンポーネントのソートを要請するフラグのマスク
 	static const FlagType mStopDrawFlagMask_Base;				// 描画をしないフラグのマスク
 	static const FlagType mBeyondSceneFlagMask_Base;			// シーンをまたいでもアクターの削除をスキップするフラグのマスク
@@ -25,6 +25,7 @@ protected:
 	static const FlagType mCalculateTransformFlagMask_Base;		// 変形行列計算が必要であることのフラグマスク（デフォルトで真）
 	static const FlagType mStopUpdateFlagMask_Base;				// 更新を止めるか否かのフラグマスク
 	static const FlagType mInCameraFlagMask_Base;
+	static const FlagType mBuryDeeplyFlagMask_Base;
 
 	FlagType mFlags;
 
@@ -32,6 +33,8 @@ protected:
 	std::unordered_map<UpdateTiming, ComponentList> mComponentLists;
 
 	Vector3D mPosition;
+
+	Vector3D mPositionBeforeMove;
 
 	Vector3D mMoveVector;
 
@@ -144,6 +147,8 @@ public:
 	virtual void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent);
 	virtual void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent);
 	virtual void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent);
+
+	void OnBuryDeeply() { mFlags |= mBuryDeeplyFlagMask_Base; }
 
 	FlagType GetBitFlag() const { return mFlags; }
 

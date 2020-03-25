@@ -61,6 +61,10 @@ private:
 
 	PhysicManager();
 
+	// 埋まっていると判断する割合
+	// コライダーの辺がこのレート分埋まっていればOnBuryDeeply()を呼ぶ
+	const float mBuryRate;
+
 	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>> mColliders;
 
 	std::unordered_map<ColliderPair, char, HashColliderPair> mHitColliderPairState;

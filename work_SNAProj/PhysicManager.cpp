@@ -379,6 +379,16 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 		float contactX = checkContact(movalBox->mMin.x, movalBox->mMax.x, fixedBox->mMin.x, fixedBox->mMax.x);
 		float contactZ = checkContact(movalBox->mMin.z, movalBox->mMax.z, fixedBox->mMin.z, fixedBox->mMax.z);
 
+		// 深く埋まったかどうかの判定
+		Vector3D movalBoxSize = movalBox->mMax - movalBox->mMin;
+		bool buryDeeplyFlag =
+			contactX >= movalBoxSize.x * mBuryRate &&
+			contactZ >= movalBoxSize.z * mBuryRate;
+		if (buryDeeplyFlag)
+		{
+			movalCol->GetOwner()->OnBuryDeeply();
+		}
+
 		// 絶対値を比較し、小さい方の（符号付きの）そのままの値を返す
 		// サイズ２の配列で使うこと！
 		auto absCmp = [](float * val)
@@ -563,7 +573,8 @@ void PhysicManager::SortColliders()
 	mSortAttributeList.clear();
 }
 
-PhysicManager::PhysicManager()
+PhysicManager::PhysicManager() :
+	mBuryRate(2.0f / 3.0f)
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
