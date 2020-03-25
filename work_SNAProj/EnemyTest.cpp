@@ -295,13 +295,45 @@ void EnemyTest::TackleProcess()
 	}
 }
 
-void EnemyTest::OnPressedByPlayerAndCheckIfWhen(const ColliderComponentBase * caller, Uint8 oppAtt)
+void EnemyTest::OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8 oppAtt)
 {
-	if (caller == mBodyCollision && oppAtt == ColliderAttribute::ColAtt_Player && mPushedVector.z < 0)
+	if (caller != mBodyCollision || oppAtt != ColliderAttribute::ColAtt_Player)
 	{
-		mFixVector.z -= mPushedVector.z;
-		mPushedVector.z = 0;
+		return;
 	}
+
+	if (mPushedVector.z < 0.0f)
+	{
+		OnBePressedByPlayer();
+		return;
+	}
+
+	if (mPushedVector.x)
+	{
+		namespace hitDirMask = BlockHitDirectionFlagMask;
+		Uint8 hitBlockDir = mBlockChecker->GetHitDirectionFlags();
+
+		bool pushInvalidateFlag = false;
+		if (mPushedVector.x > 0.0f)
+		{
+			pushInvalidateFlag = (hitBlockDir & hitDirMask::mRightMask);
+		}
+		else
+		{
+			pushInvalidateFlag = (hitBlockDir & hitDirMask::mLeftMask);
+		}
+
+		if (pushInvalidateFlag)
+		{
+			mFixVector -= mPushedVector;
+		}
+	}
+}
+
+void EnemyTest::OnBePressedByPlayer()
+{
+	mFixVector.z -= mPushedVector.z;
+	mPushedVector.z = 0;
 }
 
 void EnemyTest::UpdateEnemy1()
@@ -369,7 +401,7 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
 
-	OnPressedByPlayerAndCheckIfWhen(caller, opponentAtt);
+	OnBePushedByPlayer(caller, opponentAtt);
 
 	if (mFlags_EnemyTest & mTackleFlagMask && opponentAtt == ColAtt_Player)
 	{
@@ -425,7 +457,7 @@ void EnemyTest::OnTouching(const ColliderComponentBase * caller, const ColliderC
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
 
-	OnPressedByPlayerAndCheckIfWhen(caller, opponentAtt);
+	OnBePushedByPlayer(caller, opponentAtt);
 
 	// 地面検出装置の処理
 	auto checkPointer = 

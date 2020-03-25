@@ -92,5 +92,7 @@ private:
 
 	void TackleProcess();
 
-	void OnPressedByPlayerAndCheckIfWhen(const ColliderComponentBase * caller, Uint8 oppAtt);
+	void OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8 oppAtt);
+
+	void OnBePressedByPlayer();
 };

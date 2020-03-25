@@ -3,6 +3,7 @@
 #include "StageBase.h"
 #include "Block.h"
 #include "BoxColliderComponent.h"
+#include "PhysicManager.h"
 
 namespace Mask = BlockHitDirectionFlagMask;
 
@@ -60,6 +61,9 @@ void BlockHitChecker::Update()
 		midXBlock = -1;
 	}
 
+	///////////////////////////////////////
+	// 判定プロセス
+	///////////////////////////////////////
 	// 指定したブロックインデックスの位置にブロックがあるか否かのフラグを返す。
 	auto checkBlock = [stage, blockArray](int x, int y)
 	{
@@ -234,63 +238,26 @@ void BlockHitChecker::Update()
 		}
 	}
 
-	/*
-	if (upHit && (rightHit || leftHit))
-	{
-		float blockFootHeight = highest - (blockSize * (headHeightBlock + 1));
-		float overlapY = box.mMax.z - blockFootHeight;
-		float leftBlockEdgeR = blockSize * (leftXBlock + 1);
-		float rightBlockEdgeL = blockSize * rightXBlock;
-		float overlapX = box.mMax.x - rightBlockEdgeL;
-		if (overlapX > leftBlockEdgeR - box.mMin.x)
-		{
-			overlapX = leftBlockEdgeR - box.mMin.x;
-		}
-
-		if (overlapX >= overlapY)
-		{
-			rightHit ? rightHit = false : leftHit = false;
-		}
-		else
-		{
-			upHit = false;
-		}
-	}
-
-	if (downHit && (rightHit || leftHit))
-	{
-		float blockHead = highest - (blockSize * footHeightBlock);
-		float overlapY = blockHead - box.mMin.z;
-		float leftBlockEdgeR = blockSize * (leftXBlock + 1);
-		float rightBlockEdgeL = blockSize * rightXBlock;
-		float overlapX = box.mMax.x - rightBlockEdgeL;
-		if (overlapX > leftBlockEdgeR - box.mMin.x)
-		{
-			overlapX = leftBlockEdgeR - box.mMin.x;
-		}
-
-		if (overlapX > overlapY)
-		{
-			rightHit ? rightHit = false : leftHit = false;
-		}
-		else
-		{
-			downHit = false;
-		}
-	}
-	*/
 	mHitDirectionFlags |= upHit1 ? Mask::mUpMask : 0;
 	mHitDirectionFlags |= downHit1 ? Mask::mDownMask : 0;
 	mHitDirectionFlags |= rightHit1 ? Mask::mRightMask : 0;
 	mHitDirectionFlags |= leftHit1 ? Mask::mLeftMask : 0;
 
+	///////////////////////////////////////
 	// 押し返しプロセス
+	///////////////////////////////////////
+	bool xBuryDeeplyFlag = false;
+	bool zBuryDeeplyFlag = false;
+	const Vector3D boxSize = box.mMax - box.mMin;
+	const float buryRate = PhysicManager::mBuryRate;
 	if (upHit1)
 	{
 		float blockFoot = highest - (blockSize * (headHeightBlock + 1));
 		float overlapY = box.mMax.z - blockFoot;
 
 		mOwner->SetFixVector(Vector3D(0, 0, -overlapY));
+
+		zBuryDeeplyFlag = overlapY >= boxSize.z * buryRate;
 
 		Vector3D vel = mOwner->GetMoveVector();
 		if (vel.z > 0.0f)
@@ -307,6 +274,8 @@ void BlockHitChecker::Update()
 
 		mOwner->SetFixVector(Vector3D(0, 0, overlapY - 0.001f));
 
+		zBuryDeeplyFlag = overlapY >= boxSize.z * buryRate;
+
 		Vector3D vel = mOwner->GetMoveVector();
 		if (vel.z < 0.0f)
 		{
@@ -321,6 +290,8 @@ void BlockHitChecker::Update()
 		float overlapX = box.mMax.x - rightBlockEdgeL;
 
 		mOwner->SetFixVector(Vector3D(-overlapX - 0.001f, 0, 0));
+
+		xBuryDeeplyFlag = overlapX >= boxSize.x * buryRate;
 
 		Vector3D vel = mOwner->GetMoveVector();
 		if (vel.x > 0.0f)
@@ -337,12 +308,20 @@ void BlockHitChecker::Update()
 
 		mOwner->SetFixVector(Vector3D(overlapX, 0, 0));
 
+		xBuryDeeplyFlag = overlapX >= boxSize.x * buryRate;
+
 		Vector3D vel = mOwner->GetMoveVector();
 		if (vel.x < 0.0f)
 		{
 			vel.x = 0.0f;
 			mOwner->SetMoveVector(vel);
 		}
+	}
+
+	// 過剰に埋まっているなら元の位置に戻す処理を行う
+	if (xBuryDeeplyFlag && zBuryDeeplyFlag)
+	{
+		mOwner->OnBuryDeeply();
 	}
 }
 

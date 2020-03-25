@@ -27,6 +27,11 @@ void LifeUIManager::Update()
 {
 	char life = mPlayer->GetLife();
 
+	if (life < 0)
+	{
+		return;
+	}
+
 	for (char i = 0; i < mLifeMax - life; ++i)
 	{
 		mSprites[mLifeMax - (i + 1)]->SetActive(false);

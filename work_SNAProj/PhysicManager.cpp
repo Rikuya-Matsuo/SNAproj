@@ -9,6 +9,7 @@
 #include <algorithm>
 
 const float PhysicManager::mGravityAcceleration = 1.0f;
+const float PhysicManager::mBuryRate = 2.0f / 3.0f;
 
 #ifdef DEBUG_SNA
 //#define COLLISION_CHECK
@@ -573,8 +574,7 @@ void PhysicManager::SortColliders()
 	mSortAttributeList.clear();
 }
 
-PhysicManager::PhysicManager() :
-	mBuryRate(2.0f / 3.0f)
+PhysicManager::PhysicManager()
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
