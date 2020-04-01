@@ -65,33 +65,6 @@ bool System::Init()
 		SDL_Log("Failed to initialize the renderer.\n");
 	}
 
-	// サウンドの初期化
-	if (!Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG))
-	{
-		delete mRenderer;
-		return false;
-	}
-	SDL_Log("Success to Initialize SDLMixer\n");
-	// SDLMixer API初期化　44100:音源の周波数 2:ステレオ 4096:内部バッファサイズ
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0)
-	{
-		delete mRenderer;
-		Mix_CloseAudio();
-		Mix_Quit();
-		return false;
-	}
-	int decordNum = Mix_GetNumMusicDecoders();
-	for (int i = 0; i < decordNum; ++i)
-	{
-		printf("MusicDecorder %d : %s\n", i, Mix_GetMusicDecoder(i));
-	}
-	int chunkNum = Mix_GetNumChunkDecoders();
-	for (int i = 0; i < chunkNum; ++i)
-	{
-		printf("SoundDecorder %d : %s\n", i, Mix_GetChunkDecoder(i));
-	}
-	SDL_Log("Success to Initialize SDLMixerAPI\n");
-
 	// 乱数種設定
 	unsigned int seed = static_cast<unsigned int>(time(nullptr));
 	srand(seed);

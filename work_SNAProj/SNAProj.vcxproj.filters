@@ -61,12 +61,6 @@
     <Filter Include="ヘッダー ファイル\NinjaArts">
       <UniqueIdentifier>{82c88034-18ec-46be-98dd-2c42e334fbfa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Audio">
-      <UniqueIdentifier>{aae5dff7-f580-4e4e-aa3c-a2a97a1c95e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Audio">
-      <UniqueIdentifier>{438d325f-aed9-4974-afda-dda9ab37c367}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -218,15 +212,6 @@
     </ClCompile>
     <ClCompile Include="NinjaArtsBase.cpp">
       <Filter>ソース ファイル\NinjaArts</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioManager.cpp">
-      <Filter>ソース ファイル\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>ソース ファイル\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Music.cpp">
-      <Filter>ソース ファイル\Audio</Filter>
     </ClCompile>
     <ClCompile Include="AutoMoveComponent.cpp">
       <Filter>ソース ファイル\Component</Filter>
@@ -418,15 +403,6 @@
     </ClInclude>
     <ClInclude Include="NinjaArtsBase.h">
       <Filter>ヘッダー ファイル\NinjaArts</Filter>
-    </ClInclude>
-    <ClInclude Include="AudioManager.h">
-      <Filter>ヘッダー ファイル\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Music.h">
-      <Filter>ヘッダー ファイル\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>ヘッダー ファイル\Audio</Filter>
     </ClInclude>
     <ClInclude Include="AutoMoveComponent.h">
       <Filter>ヘッダー ファイル\Component</Filter>
