@@ -4,11 +4,11 @@
 class Player;
 class LifeUIManager;
 
-class TestScene : public SceneBase
+class GameScene : public SceneBase
 {
 public:
-	TestScene();
-	~TestScene();
+	GameScene();
+	~GameScene();
 
 	void Update() override;
 

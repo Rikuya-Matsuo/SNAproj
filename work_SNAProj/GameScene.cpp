@@ -1,4 +1,4 @@
-﻿#include "TestScene.h"
+﻿#include "GameScene.h"
 #include "Player.h"
 #include "Camera.h"
 #include "System.h"
@@ -18,7 +18,7 @@
 #include "LifeUIManager.h"
 #include "GuideUI.h"
 
-TestScene::TestScene()
+GameScene::GameScene()
 {
 	mStage = new TestStage;
 	mStage->SetBlockScale(0.3f);
@@ -59,13 +59,13 @@ TestScene::TestScene()
 	dir.mSpecColor = Vector3D(0.8f, 0.8f, 0.8f);
 }
 
-TestScene::~TestScene()
+GameScene::~GameScene()
 {
 	delete mLifeUI;
 	delete mStage;
 }
 
-void TestScene::Update()
+void GameScene::Update()
 {
 #ifdef DEBUG_SNA
 
@@ -109,7 +109,7 @@ void TestScene::Update()
 	}
 }
 
-void TestScene::GenerateBGWall(float height)
+void GameScene::GenerateBGWall(float height)
 {
 	// 壁オブジェクトのスケール値
 	float wallScale = 0.5f;
@@ -132,7 +132,7 @@ void TestScene::GenerateBGWall(float height)
 	}
 }
 
-void TestScene::GenerateBGDecoration(float height)
+void GameScene::GenerateBGDecoration(float height)
 {
 	// キャプチャの意味をここで知ったのだ……
 	// []の中に変数を入れると、ラムダ式の中でそれが使えるらしい。

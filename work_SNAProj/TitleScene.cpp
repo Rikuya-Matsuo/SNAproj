@@ -2,7 +2,7 @@
 #include "TitleBoard.h"
 #include "Camera.h"
 #include "Input.h"
-#include "TestScene.h"
+#include "GameScene.h"
 #include "GuideUI.h"
 #include "Common.h"
 
@@ -42,7 +42,7 @@ void TitleScene::Update()
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_RETURN) ||
 		Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A))
 	{
-		mNextScene = new TestScene;
+		mNextScene = new GameScene;
 
 		mFlags |= mSceneChangeFlagMask;
 	}
