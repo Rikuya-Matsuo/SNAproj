@@ -1,13 +1,4 @@
-﻿// ----------------------------------------------------------------
-// From Game Programming in C++ by Sanjay Madhav
-// Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
-// Released under the BSD License
-// See LICENSE in root directory for full details.
-// ----------------------------------------------------------------
-
-/////////////////////////////////////////////////////////////////
-// 頂点レイアウト
+﻿// 頂点レイアウト
 // PosNormTex = 8 * sizeof(float) = 32 bytes
 // | 位置      | 法線      | Texture|
 // | x | y | z | x | y | z | u | v | 
