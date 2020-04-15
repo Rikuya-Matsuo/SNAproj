@@ -75,13 +75,7 @@ private:
 	Camera * mActiveCamera;
 
 	float mDeltaTime;
-	/*
-	static const Uint8 mSampleDeltaTimeMass = 64;
-	float mSampleDeltaTimes[mSampleDeltaTimeMass];
-	float mAverageDeltaTime;
 
-	Uint8 mNextWriteSampleIndex;
-	*/
 	int mWindowWidth;
 
 	int mWindowHeight;
