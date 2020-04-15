@@ -43,8 +43,6 @@ public:
 
 	float GetDeltaTime() const { return mDeltaTime; }
 
-	//float GetAverageDeltaTime() const { return mAverageDeltaTime; }
-
 	void ResisterActor(const Actor * in_act);
 
 	void DeresisterActor(const Actor * in_act);
