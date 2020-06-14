@@ -61,6 +61,12 @@
     <Filter Include="ヘッダー ファイル\NinjaArts">
       <UniqueIdentifier>{82c88034-18ec-46be-98dd-2c42e334fbfa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\UI">
+      <UniqueIdentifier>{f373be97-f156-403c-b1f1-5b3ffbf9116f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI">
+      <UniqueIdentifier>{7a3280ee-53e3-4e96-b7d2-ed7f0eaee3e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -242,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="GuideUI.cpp">
       <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="GuideUI.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
