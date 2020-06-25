@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "SpriteActor.h"
+#include "UIScreen.h"
 
-class LifeUISprite : public SpriteActor
+class LifeUISprite : public UIScreen
 {
 public:
 	LifeUISprite();

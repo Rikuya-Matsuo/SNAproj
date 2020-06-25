@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "SpriteActor.h"
+#include "UIScreen.h"
 
-class GuideUI : public SpriteActor
+class GuideUI : public UIScreen
 {
 public:
 	GuideUI(const char * texPath);

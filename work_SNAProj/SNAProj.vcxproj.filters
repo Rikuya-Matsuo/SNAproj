@@ -225,9 +225,6 @@
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteActor.cpp">
-      <Filter>ソース ファイル\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="LifeUISprite.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
@@ -239,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScreen.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,9 +413,6 @@
     <ClInclude Include="SpriteComponent.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteActor.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="LifeUISprite.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
@@ -427,6 +424,9 @@
     </ClInclude>
     <ClInclude Include="GameScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScreen.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
