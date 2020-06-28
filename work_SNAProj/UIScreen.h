@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <SDL/SDL.h>
 #include <string>
 #include <functional>
@@ -16,7 +16,7 @@ public:
 
 	virtual void Update();
 	virtual void Draw(Shader * shader);
-	virtual void ProcessInput(const uint8_t * keys);		//“ü—Í‚ğó‚¯æ‚éˆ—
+	virtual void ProcessInput(const uint8_t * keys);		//å…¥åŠ›ã‚’å—ã‘å–ã‚‹å‡¦ç†
 	virtual void HandleKeyPress(int key);
 
 	void Close();

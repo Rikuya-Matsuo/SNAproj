@@ -1,4 +1,4 @@
-#include "UIScreen.h"
+ï»¿#include "UIScreen.h"
 #include "System.h"
 
 
@@ -21,20 +21,20 @@ void UIScreen::Draw(Shader * shader)
 
 void UIScreen::ProcessInput(const uint8_t * keys)
 {
-	// ƒ{ƒ^ƒ“‚ª‚ ‚é‚©‚Ì”»’è
+	// ãƒœã‚¿ãƒ³ãŒã‚ã‚‹ã‹ã®åˆ¤å®š
 
-	// ƒ}ƒEƒX‚ÌˆÊ’u‚ğæ“¾
+	// ãƒã‚¦ã‚¹ã®ä½ç½®ã‚’å–å¾—
 	int x;
 	int y;
 
 	SDL_GetMouseState(&x, &y);
 
-	// ‰æ–Ê‚Ì’†‰›‚ğ(0,0)‚Æ‚·‚éÀ•W‚É•ÏŠ·‚·‚é
+	// ç”»é¢ã®ä¸­å¤®ã‚’(0,0)ã¨ã™ã‚‹åº§æ¨™ã«å¤‰æ›ã™ã‚‹
 	Vector2D mousePos(static_cast<float>(x), static_cast<float>(y));
 	mousePos.x -= System::GetInstance().GetRenderer()->GetScreenWidth() / 2.0f;
 	mousePos.y = System::GetInstance().GetRenderer()->GetScreenHeight() / 2.0f - mousePos.y;
 
-	// ƒ{ƒ^ƒ“‚Ì‹­’²
+	// ãƒœã‚¿ãƒ³ã®å¼·èª¿
 
 }
 
