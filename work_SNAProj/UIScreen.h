@@ -29,11 +29,8 @@ public:
 		std::function<void()> onClick);
 
 protected:
-	void DrawTexture(Shader * shader, Texture * texture,
-		const Vector2D & offset = Vector2D::zero,
-		float scale = 1.0f);
-
-	void SetRelativeMouseMode(bool relativeFlag);
+	typedef uint8_t FlagType;
+	FlagType mFlags_base;
 
 	Font * mFont;
 	Texture * mTitle;
@@ -44,4 +41,10 @@ protected:
 	Vector2D mTitlePos;
 	Vector2D mNextButtonPos;
 	Vector2D mBGPos;
+
+	void DrawTexture(Shader * shader, Texture * texture,
+		const Vector2D & offset = Vector2D::zero,
+		float scale = 1.0f);
+
+	void SetRelativeMouseMode(bool relativeFlag);
 };

@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Sprite.h"
+#include "UIScreen.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -110,6 +111,9 @@ void System::Run()
 		PhysicManager::GetInstance().CheckHit();
 
 		FixActorPosition();
+
+		// UI更新
+		UpdateTopUI();
 
 		// カメラ更新
 		if (mActiveCamera != nullptr)
@@ -253,6 +257,14 @@ void System::UpdateActor()
 	}
 }
 
+void System::UpdateTopUI()
+{
+	if (!mActiveUIList.empty())
+	{
+		mActiveUIList.back()->Update();
+	}
+}
+
 void System::Draw()
 {
 	//SDL_SetRenderDrawColor(GetSDLRenderer(), 0, 0, 0, 255);
@@ -361,6 +373,21 @@ void System::DeresisterSprite(const Sprite * in_spr)
 	if (target != mSpriteList.end())
 	{
 		mSpriteList.erase(target);
+	}
+}
+
+void System::ResisterUIScreen(const UIScreen * in_uiScr)
+{
+	mActiveUIList.emplace_back(const_cast<UIScreen*>(in_uiScr));
+}
+
+void System::DeresisterUIScreen(const UIScreen * in_uiScr)
+{
+	auto target = std::find(mActiveUIList.begin(), mActiveUIList.end(), const_cast<UIScreen*>(in_uiScr));
+
+	if (target != mActiveUIList.end())
+	{
+		mActiveUIList.erase(target);
 	}
 }
 

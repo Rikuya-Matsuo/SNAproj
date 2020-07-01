@@ -5,6 +5,7 @@
 #include "SpriteTest.h"
 #include "Camera.h"
 #include "Input.h"
+#include "UIScreen.h"
 
 TestScene01::TestScene01()
 {
@@ -27,11 +28,14 @@ TestScene01::TestScene01()
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
 	dir.mDiffuseColor = Vector3D(0.7f, 0.7f, 0.7f);
 	dir.mSpecColor = Vector3D(0.8f, 0.8f, 0.8f);
+
+	mTestUI = new UIScreen();
 }
 
 
 TestScene01::~TestScene01()
 {
+	delete mTestUI;
 }
 
 void TestScene01::Update()

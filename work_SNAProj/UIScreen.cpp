@@ -4,15 +4,18 @@
 
 UIScreen::UIScreen()
 {
+	System::GetInstance().ResisterUIScreen(this);
 }
 
 
 UIScreen::~UIScreen()
 {
+	System::GetInstance().DeresisterUIScreen(this);
 }
 
 void UIScreen::Update()
 {
+	//ProcessInput(nullptr);
 }
 
 void UIScreen::Draw(Shader * shader)
@@ -33,6 +36,11 @@ void UIScreen::ProcessInput(const uint8_t * keys)
 	Vector2D mousePos(static_cast<float>(x), static_cast<float>(y));
 	mousePos.x -= System::GetInstance().GetRenderer()->GetScreenWidth() / 2.0f;
 	mousePos.y = System::GetInstance().GetRenderer()->GetScreenHeight() / 2.0f - mousePos.y;
+
+#ifdef DEBUG_SNA
+	printf("MousePos : (%lf, %lf)\n", mousePos.x, mousePos.y);
+#endif // DEBUG_SNA
+
 
 	// ボタンの強調
 

@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "SceneBase.h"
 
+class UIScreen;
+
 class TestScene01 : public SceneBase
 {
 public:
@@ -8,5 +10,8 @@ public:
 	~TestScene01();
 
 	void Update() override;
+
+private:
+	UIScreen * mTestUI;
 };
 
