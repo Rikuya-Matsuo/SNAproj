@@ -1,6 +1,8 @@
 ﻿#include "UIScreen.h"
 #include "System.h"
-
+#include "Matrix.h"
+#include "Texture.h"
+#include "Shader.h"
 
 UIScreen::UIScreen()
 {
@@ -64,6 +66,21 @@ void UIScreen::AddButton(const std::string & name, std::function<void()> onClick
 
 void UIScreen::DrawTexture(Shader * shader, Texture * texture, const Vector2D & offset, float scale)
 {
+	Matrix4 scaleMat = Matrix4::CreateScale(
+		static_cast<float>(texture->GetWidth()) * scale,
+		static_cast<float>(texture->GetHeight()) * scale,
+		1.0f);
+
+	Matrix4 transMat = Matrix4::CreateTranslation(
+		static_cast<Vector3D>(offset));
+
+	Matrix4 worldMat = scaleMat * transMat;
+
+	shader->SetMatrixUniform("uWorldTransform", worldMat);
+
+	texture->SetActive();
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 void UIScreen::SetRelativeMouseMode(bool relativeFlag)
