@@ -241,6 +241,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TestScene01.cpp" />
     <ClCompile Include="TestStage.cpp" />
+    <ClCompile Include="TestUIScreen.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TitleBoard.cpp" />
@@ -307,6 +308,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="TestScene01.h" />
     <ClInclude Include="TestStage.h" />
+    <ClInclude Include="TestUIScreen.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TitleBoard.h" />

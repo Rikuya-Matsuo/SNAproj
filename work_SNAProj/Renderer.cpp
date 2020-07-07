@@ -1,6 +1,7 @@
 ﻿#include "Renderer.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <algorithm>
 #include "Texture.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -11,6 +12,7 @@
 #include "Camera.h"
 #include "Common.h"
 #include "System.h"
+#include "UIScreen.h"
 
 Renderer::Renderer()
 	:mWindow(nullptr)
@@ -356,14 +358,15 @@ void Renderer::SetWindowTitle(const std::string & title)
 	SDL_SetWindowTitle(mWindow, title.c_str());
 }
 
-void Renderer::AddUI(MeshComponent * mesh)
+void Renderer::AddUI(const UIScreen * ui)
 {
-	mUIs.emplace_back(mesh);
+	mUIs.emplace_back(ui);
 }
 
-void Renderer::RemoveUI(MeshComponent * mesh)
+void Renderer::RemoveUI(const UIScreen * ui)
 {
-	auto itr = std::find(mUIs.begin(), mUIs.end(), mesh);
+	auto itr = std::find(mUIs.begin(), mUIs.end(), ui);
+
 	if (itr != mUIs.end())
 	{
 		mUIs.erase(itr);

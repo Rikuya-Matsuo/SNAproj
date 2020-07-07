@@ -13,7 +13,6 @@ class Actor;
 class Camera;
 class DrawComponentBase;
 class SceneBase;
-class Renderer;
 class Sprite;
 class UIScreen;
 

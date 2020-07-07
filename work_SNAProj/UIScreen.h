@@ -15,7 +15,7 @@ public:
 	virtual ~UIScreen();
 
 	virtual void Update();
-	virtual void Draw(Shader * shader);
+	virtual void Draw(Shader * shader) const;
 	virtual void ProcessInput(const uint8_t * keys);		//入力を受け取る処理
 	virtual void HandleKeyPress(int key);
 
@@ -44,7 +44,7 @@ protected:
 
 	void DrawTexture(Shader * shader, Texture * texture,
 		const Vector2D & offset = Vector2D::zero,
-		float scale = 1.0f);
+		float scale = 1.0f) const;
 
 	void SetRelativeMouseMode(bool relativeFlag);
 };

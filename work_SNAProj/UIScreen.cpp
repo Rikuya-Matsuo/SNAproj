@@ -1,5 +1,6 @@
 ﻿#include "UIScreen.h"
 #include "System.h"
+#include "Renderer.h"
 #include "Matrix.h"
 #include "Texture.h"
 #include "Shader.h"
@@ -7,12 +8,14 @@
 UIScreen::UIScreen()
 {
 	System::GetInstance().ResisterUIScreen(this);
+	System::GetInstance().GetRenderer()->AddUI(this);
 }
 
 
 UIScreen::~UIScreen()
 {
 	System::GetInstance().DeresisterUIScreen(this);
+	System::GetInstance().GetRenderer()->RemoveUI(this);
 }
 
 void UIScreen::Update()
@@ -20,7 +23,7 @@ void UIScreen::Update()
 	//ProcessInput(nullptr);
 }
 
-void UIScreen::Draw(Shader * shader)
+void UIScreen::Draw(Shader * shader) const
 {
 }
 
@@ -64,7 +67,7 @@ void UIScreen::AddButton(const std::string & name, std::function<void()> onClick
 {
 }
 
-void UIScreen::DrawTexture(Shader * shader, Texture * texture, const Vector2D & offset, float scale)
+void UIScreen::DrawTexture(Shader * shader, Texture * texture, const Vector2D & offset, float scale) const
 {
 	Matrix4 scaleMat = Matrix4::CreateScale(
 		static_cast<float>(texture->GetWidth()) * scale,
