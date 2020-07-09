@@ -4,7 +4,7 @@
 
 TestUIScreen::TestUIScreen()
 {
-	mTexture = System::GetInstance().GetRenderer()->GetTexture("Assets/Cube.png");
+	mTexture = System::GetInstance().GetRenderer()->GetTexture("Assets/TitleLogo.png");
 }
 
 TestUIScreen::~TestUIScreen()
@@ -13,5 +13,5 @@ TestUIScreen::~TestUIScreen()
 
 void TestUIScreen::Draw(Shader * shader) const
 {
-	DrawTexture(shader, mTexture);
+	DrawTexture(shader, mTexture, Vector2D(0.0f, 0.0f), 100.0f);
 }
