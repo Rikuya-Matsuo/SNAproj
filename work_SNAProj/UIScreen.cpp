@@ -74,8 +74,11 @@ void UIScreen::DrawTexture(Shader * shader, Texture * texture, const Vector2D & 
 		static_cast<float>(texture->GetHeight()) * scale,
 		1.0f);
 
-	Matrix4 transMat = Matrix4::CreateTranslation(
-		static_cast<Vector3D>(offset));
+	Vector3D offset3D = Vector3D(offset.x, 0.0f, offset.y);
+
+	Matrix4 transMat =
+		//Matrix4::CreateTranslation(static_cast<Vector3D>(offset));
+		Matrix4::CreateTranslation(offset3D);
 
 	Matrix4 worldMat = scaleMat * transMat;
 

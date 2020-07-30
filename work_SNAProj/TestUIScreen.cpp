@@ -13,5 +13,6 @@ TestUIScreen::~TestUIScreen()
 
 void TestUIScreen::Draw(Shader * shader) const
 {
-	DrawTexture(shader, mTexture, Vector2D(0.0f, 0.0f), 100.0f);
+	Vector2D pos(0.0f, 0.0f);
+	DrawTexture(shader, mTexture, pos, 10.0f);
 }

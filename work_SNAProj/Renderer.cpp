@@ -213,6 +213,9 @@ void Renderer::Draw()
 		sk->GetOwner()->SetInCameraFlag(inFOV);
 	}
 
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+
 	mSpriteShader->SetActive();
 	//mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
 	//MeshComponent::SetViewMatrix(mCameraPointer->GetPosition());
