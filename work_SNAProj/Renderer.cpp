@@ -13,6 +13,7 @@
 #include "Common.h"
 #include "System.h"
 #include "UIScreen.h"
+#include "VertexArray.h"
 
 Renderer::Renderer()
 	:mWindow(nullptr)
@@ -108,6 +109,9 @@ bool Renderer::Initialize(int screenWidth, int screenHeight, bool fullScreen)
 		printf("シェーダーの初期化に失敗");
 		return false;
 	}
+
+	// UI描画用頂点データ作成
+	CreateSpriteVerts();
 
 	// カリング
 	glFrontFace(GL_CCW);
@@ -217,9 +221,10 @@ void Renderer::Draw()
 	glEnable(GL_BLEND);
 
 	mSpriteShader->SetActive();
+	mSpriteVerts->SetActive();
 	//mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
 	//MeshComponent::SetViewMatrix(mCameraPointer->GetPosition());
-	SetLightUniforms(mSpriteShader);
+	//SetLightUniforms(mSpriteShader);
 	for (auto ui : mUIs)
 	{
 		ui->Draw(mSpriteShader);
@@ -407,7 +412,8 @@ bool Renderer::LoadShaders()
 		return false;
 	}
 	mSpriteShader->SetActive();
-	mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
+	Matrix4 viewProj = Matrix4::CreateSimpleViewProj(static_cast<float>(mScreenWidth), static_cast<float>(mScreenHeight));
+	mSpriteShader->SetMatrixUniform("uViewProj", viewProj);
 
 	return true;
 }
@@ -426,6 +432,23 @@ void Renderer::SetLightUniforms(Shader* shader)
 	shader->SetVectorUniform("uDirLight.mDirection", mDirectionalLight.mDirection);
 	shader->SetVectorUniform("uDirLight.mDiffuseColor", mDirectionalLight.mDiffuseColor);
 	shader->SetVectorUniform("uDirLight.mSpecColor", mDirectionalLight.mSpecColor);
+}
+
+void Renderer::CreateSpriteVerts()
+{
+	float vertices[] = {
+		-0.5f, 0.5f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+		0.5f, 0.5f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f,
+		0.5f, -0.5f, 0.f, 0.f, 0.f, 0.f, 1.f, 1.f,
+		-0.5f,-0.5f, 0.f, 0.f, 0.f, 0.0f, 0.f, 1.f
+	};
+
+	unsigned int indeces[] = {
+		0, 2, 1,
+		2, 0, 3
+	};
+
+	mSpriteVerts = new VertexArray(vertices, 4, VertexArray::Layout::PosNormTex, indeces, 6);
 }
 
 //////////////////////////////////////////////////////////////

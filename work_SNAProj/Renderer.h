@@ -57,6 +57,7 @@ private:
 
 	bool                                              LoadShaders();                          // シェーダーの初期化
 	void                                              SetLightUniforms(class Shader* shader); // ライト値をシェーダーにセット
+	void CreateSpriteVerts();
 
 	int                                               mScreenWidth;      // スクリーン幅                                                           
 	int                                               mScreenHeight;     // スクリーン高さ
@@ -74,6 +75,9 @@ private:
 	class Shader*										mMeshShader;			// メッシュシェーダー
 	class Shader*										mSkinnedShader;			// スキンメッシュシェーダー
 	class Shader* mSpriteShader;
+
+	// UI描画用頂点データ
+	class VertexArray* mSpriteVerts;
 
 	// 基本行列関連
 	Matrix4                                           mView;             // ビュー行列
