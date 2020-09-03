@@ -29,6 +29,8 @@ TitleScene::TitleScene()
 
 TitleScene::~TitleScene()
 {
+	delete mUI;
+
 	while (!mCameras.empty())
 	{
 		delete mCameras.back();
