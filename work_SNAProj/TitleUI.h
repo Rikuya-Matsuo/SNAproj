@@ -13,5 +13,7 @@ public:
 
 private:
 	Texture * mLogo;
+
+	Texture * mGuide;
 };
 

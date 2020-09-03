@@ -17,14 +17,6 @@ TitleScene::TitleScene()
 	cam->SetActive();
 	//cam->SetWatchTargetFlag(false);
 	//cam->SetChaseTargetFlag(false);
-
-	GuideUI * guideUI = new GuideUI("Assets/titleGuide.png");
-	guideUI->SetRotationAngle(Common::DegToRad(0.0f));
-	Vector3D pos = guideUI->GetPosition();
-	pos.z += 578.f;
-	guideUI->SetPosition(pos);
-	float scale = guideUI->GetScale();
-	guideUI->SetScale(scale / 9);
 }
 
 TitleScene::~TitleScene()

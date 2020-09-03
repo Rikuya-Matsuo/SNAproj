@@ -220,6 +220,9 @@ void Renderer::Draw()
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 
+	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
 	mSpriteShader->SetActive();
 	mSpriteVerts->SetActive();
 	//mSpriteShader->SetMatrixUniform("uViewProj", mView * mProjection);
