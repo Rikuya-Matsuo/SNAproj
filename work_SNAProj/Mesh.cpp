@@ -315,10 +315,8 @@ bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, con
 {
 	bool ret = false;
 
-	Texture * textures = nullptr;
-
 	AnimationChips * animChips = new AnimationChips();
-	size_t frameMass = animChips->Load(renderer, fileName, allNum, xNum, yNum, chipW, chipH, secondPerFrame, textures);
+	size_t frameMass = animChips->Load(renderer, fileName, allNum, xNum, yNum, chipW, chipH, secondPerFrame);
 
 	if (frameMass == allNum)
 	{

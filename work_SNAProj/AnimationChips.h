@@ -19,7 +19,7 @@ public:
 
 	void Reset();
 
-	size_t Load(Renderer * renderer, const std::string & fileName, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, Texture * & texArray);
+	size_t Load(Renderer * renderer, const std::string & fileName, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame);
 
 	void SetSecondPerFrame(float second) { mSecondPerFrame = second; }
 

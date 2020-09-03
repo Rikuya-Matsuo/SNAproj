@@ -45,13 +45,17 @@ void AnimationChips::Update()
 	// タイマーに応じてフレームを進める
 	if (mTimer >= mSecondPerFrame)
 	{
-		// タイマーをもとにアニメーションを何枚進めるかを計算
-		int animProceed = static_cast<int>(mTimer / mSecondPerFrame);
+		// タイマーをもとにアニメーションを何枚進めるかの変数
+		int animProceed;
 		
 		// 「0.0秒でコマを進める」指定は「1フレームごとにコマを進める」という意味と解釈する。
 		if (mSecondPerFrame == 0.0f)
 		{
 			animProceed = 1;
+		}
+		else
+		{
+			animProceed = static_cast<int>(mTimer / mSecondPerFrame);
 		}
 
 		// 表示するコマ順が指定されていない場合
@@ -63,7 +67,7 @@ void AnimationChips::Update()
 			// コマ数をオーバーしていれば0に戻す
 			if (mCurrentTextureIndex >= mChipTextures.size())
 			{
-				mCurrentTextureIndex -= mChipTextures.size();
+				mCurrentTextureIndex %= mChipTextures.size();
 
 				// アニメーションのループが一周したことを示すフラグを立てる
 				mFlags |= mLoopEndFlagMask;
@@ -76,7 +80,7 @@ void AnimationChips::Update()
 
 			if (mCurrentRoutineIndex >= mRoutine.size())
 			{
-				mCurrentRoutineIndex -= mRoutine.size();
+				mCurrentRoutineIndex %= mRoutine.size();
 
 				mFlags |= mLoopEndFlagMask;
 			}
@@ -98,7 +102,7 @@ void AnimationChips::Reset()
 	mFlags &= ~mLoopEndFlagMask;
 }
 
-size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame, Texture * & texArray)
+size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame)
 {
 	// 検索し、同じ名前のファイルが読まれていた場合、その時のチップを渡す
 	if (mFrameTextureList.find(fileName) != mFrameTextureList.end())
@@ -109,8 +113,6 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 			mChipTextures.emplace_back(chip);
 		}
 		mChipTextures.shrink_to_fit();
-
-		texArray = *mChipTextures.data();
 
 		mSecondPerFrame = secondPerFrame;
 
@@ -224,7 +226,6 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 	// フレームごとの秒数を設定
 	mSecondPerFrame = secondPerFrame;
 
-	texArray = textures;
 	return sucessCount;
 }
 
@@ -233,10 +234,6 @@ void AnimationChips::SetTextureIndex(size_t num)
 	if (num < mChipTextures.size())
 	{
 		mCurrentTextureIndex = num;
-	}
-	else
-	{
-		SDL_Delay(0);
 	}
 }
 

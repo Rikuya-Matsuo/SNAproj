@@ -3,6 +3,7 @@
 
 class Player;
 class LifeUIManager;
+class UIScreen;
 
 class GameScene : public SceneBase
 {
@@ -15,9 +16,11 @@ public:
 private:
 	Player * mPlayer;
 
-	LifeUIManager * mLifeUI;
+	//LifeUIManager * mLifeUI;
 
 	void GenerateBGWall(float height);
 
 	void GenerateBGDecoration(float height);
+
+	UIScreen * mUI;
 };

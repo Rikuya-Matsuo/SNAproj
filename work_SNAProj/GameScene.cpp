@@ -17,7 +17,7 @@
 #include "GameClearScene.h"
 #include "LifeUIManager.h"
 #include "GuideUI.h"
-
+#include "GameUI.h"
 GameScene::GameScene()
 {
 	mStage = new TestStage;
@@ -49,7 +49,9 @@ GameScene::GameScene()
 	cam->SetChaseTargetFlag(true);
 	cam->SetActive();
 
-	mLifeUI = new LifeUIManager(mPlayer);
+	mUI = new GameUI(mPlayer);
+
+	//mLifeUI = new LifeUIManager(mPlayer);
 
 	GuideUI * guideUI = new GuideUI("Assets/guide.png");
 
@@ -61,7 +63,8 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	delete mLifeUI;
+	delete mUI;
+	//delete mLifeUI;
 	delete mStage;
 }
 
@@ -94,7 +97,9 @@ void GameScene::Update()
 
 #endif // DEBUG_SNA
 
-	mLifeUI->Update();
+	mUI->Update();
+
+	//mLifeUI->Update();
 
 	if (!mPlayer->GetAliveFlag())
 	{
