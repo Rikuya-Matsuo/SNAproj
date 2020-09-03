@@ -7,7 +7,7 @@ int main(int argc, char ** argv)
 {
 	bool successInit = System::GetInstance().Init();
 
-	System::GetInstance().SetScene(new TestScene01);
+	System::GetInstance().SetScene(new TitleScene);
 
 	if (successInit)
 	{
