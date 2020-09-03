@@ -26,7 +26,9 @@ public:
 	// セッター系
 	void                   SetViewMatrix(const Matrix4& view) { mView = view; }                // ビュー行列のセット
 	void                   SetAmbientLight(const Vector3D& ambientColor)                        // アンビエントライトのセット
-	                                       { mAmbientLight = ambientColor; }
+	{
+		mAmbientLight = ambientColor;
+	}
 	// ゲッター系
 	SDL_Renderer*          GetSDLRenderer() { return mSDLRenderer; }                           // SDL系の描画に必要なSDLrendererを得る
 	class Texture*         GetTexture(const std::string& fileName);                            // テクスチャをファイル名から返す
@@ -45,16 +47,17 @@ public:
 	void                   AddMeshComponent(class MeshComponent* mesh);                        // メッシュコンポーネントの追加
 	void                   RemoveMeshComponent(class MeshComponent* mesh);                     // メッシュコンポーネントの削除
 	void                   ShowResource();                                                     // 登録されている テクスチャ・メッシュリソースの表示（デバッグ用）
-	void                   WindowClear(){ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);} // ウィンドウ描画クリア
+	void                   WindowClear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); } // ウィンドウ描画クリア
 	void                   WindowFlip() { SDL_GL_SwapWindow(mWindow); }                        // ウィンドウフリップ
 	void                   SetWindowTitle(const std::string& title);                           // ウィンドウタイトルのセット
-	void AddUI(class MeshComponent * mesh);
-	void RemoveUI(class MeshComponent * mesh);
+	void AddUI(const class UIScreen * ui);
+	void RemoveUI(const class UIScreen * ui);
 
 private:
 
 	bool                                              LoadShaders();                          // シェーダーの初期化
 	void                                              SetLightUniforms(class Shader* shader); // ライト値をシェーダーにセット
+	void CreateSpriteVerts();
 
 	int                                               mScreenWidth;      // スクリーン幅                                                           
 	int                                               mScreenHeight;     // スクリーン高さ
@@ -62,7 +65,7 @@ private:
 	std::unordered_map<std::string, class Mesh*>      mMeshs;            // メッシュ登録配列
 	std::vector<class MeshComponent*>                 mMeshComponents;   // メッシュコンポーネント登録配列
 	std::vector<class SkeletalMeshComponent*>         mSkeletalMeshes;   // スケルタルメッシュの描画に使われる
-	std::vector<class MeshComponent*>				  mUIs;
+	std::vector<const class UIScreen*>				  mUIs;
 	std::unordered_map<std::string, class Skeleton*>  mSkeletons; // スケルタルデータ
 	std::unordered_map<std::string, class Animation*> mAnims;    // アニメーションデータ
 
@@ -72,6 +75,9 @@ private:
 	class Shader*										mMeshShader;			// メッシュシェーダー
 	class Shader*										mSkinnedShader;			// スキンメッシュシェーダー
 	class Shader* mSpriteShader;
+
+	// UI描画用頂点データ
+	class VertexArray* mSpriteVerts;
 
 	// 基本行列関連
 	Matrix4                                           mView;             // ビュー行列

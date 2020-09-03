@@ -7,14 +7,14 @@
 #include <list>
 
 // リリース版ではコメントアウトする
-//#define DEBUG_SNA
+#define DEBUG_SNA
 
 class Actor;
 class Camera;
 class DrawComponentBase;
 class SceneBase;
-class Renderer;
 class Sprite;
+class UIScreen;
 
 class System final
 {
@@ -53,6 +53,10 @@ public:
 
 	void DeresisterSprite(const Sprite * in_spr);
 
+	void ResisterUIScreen(const UIScreen * in_uiScr);
+
+	void DeresisterUIScreen(const UIScreen * in_uiScr);
+
 	Renderer * GetRenderer() const { return mRenderer; }
 
 	SDL_Renderer * GetSDLRenderer() const { return mRenderer->GetSDLRenderer(); }
@@ -84,6 +88,8 @@ private:
 
 	std::list<Sprite *> mSpriteList;
 
+	std::list<UIScreen *> mActiveUIList;
+
 	void UpdateDeltaTime();
 	
 	void SortActor();
@@ -93,6 +99,8 @@ private:
 	void UpdateScene();
 
 	void UpdateActor();
+
+	void UpdateTopUI();
 
 	void Draw();
 
