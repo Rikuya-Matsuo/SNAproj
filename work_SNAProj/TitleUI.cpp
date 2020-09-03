@@ -7,7 +7,6 @@ TitleUI::TitleUI()
 	mLogo = System::GetInstance().GetRenderer()->GetTexture("Assets/TitleLogo.png");
 }
 
-
 TitleUI::~TitleUI()
 {
 }
