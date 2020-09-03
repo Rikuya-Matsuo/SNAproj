@@ -5,15 +5,14 @@
 #include "GameScene.h"
 #include "GuideUI.h"
 #include "Common.h"
+#include "TitleUI.h"
 
 TitleScene::TitleScene()
 {
-	TitleBoard * tb = new TitleBoard;
-	tb->SetScale(80.0f);
-	tb->SetPosition(Vector3D::zero);
+	mUI = new TitleUI;
 
-	Camera * cam = new Camera(tb);
-	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), tb->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
+	Camera * cam = new Camera();
+	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), Vector3D::zero, Vector3D(0.0f, 0.0f, 1.0f));
 	cam->SetDistanceVector(Vector3D(0.0f, 55.0f, 0.0f));
 	cam->SetActive();
 	//cam->SetWatchTargetFlag(false);
