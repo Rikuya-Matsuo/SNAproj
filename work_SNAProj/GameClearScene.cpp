@@ -4,15 +4,14 @@
 #include "TitleScene.h"
 #include "Input.h"
 #include "GuideUI.h"
+#include "GameClearUI.h"
 
 GameClearScene::GameClearScene()
 {
-	GameClearBoard * gcb = new GameClearBoard;
-	gcb->SetScale(80.0f);
-	gcb->SetPosition(Vector3D::zero);
+	mUI = new GameClearUI();
 
-	Camera * cam = new Camera(gcb);
-	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), gcb->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
+	Camera * cam = new Camera();
+	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), Vector3D::zero, Vector3D(0.0f, 0.0f, 1.0f));
 	cam->SetDistanceVector(Vector3D(0.0f, 20.0f, 0.0f));
 	cam->SetActive();
 
@@ -21,6 +20,7 @@ GameClearScene::GameClearScene()
 
 GameClearScene::~GameClearScene()
 {
+	delete mUI;
 }
 
 void GameClearScene::Update()
