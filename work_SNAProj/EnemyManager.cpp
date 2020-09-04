@@ -1,6 +1,6 @@
 ﻿#include "EnemyManager.h"
 #include "EnemyTest.h"
-#include "StageBase.h"
+#include "Stage.h"
 #include "AutoMoveComponent.h"
 #include "Block.h"
 #include "System.h"
@@ -10,7 +10,7 @@
 const int debugEnemyMassLimit = -1;
 #endif
 
-EnemyManager::EnemyManager(StageBase * stage):
+EnemyManager::EnemyManager(Stage * stage):
 	mStage(stage)
 {
 }
@@ -99,7 +99,7 @@ void EnemyManager::GenerateEnemy(int type, int inX, int inY)
 
 	// 位置計算
 	const int yIndexFromLowest = (mStage->GetBlockMassY() - 1) - inY;
-	const float blockSize = StageBase::GetBlockScale() * Block::mModelSize;
+	const float blockSize = Stage::GetBlockScale() * Block::mModelSize;
 	Vector3D pos = Vector3D::zero;
 	pos.x = (inX * blockSize) + blockSize / 2.0f;
 	pos.z = yIndexFromLowest * blockSize - blockSize / 2.0f;

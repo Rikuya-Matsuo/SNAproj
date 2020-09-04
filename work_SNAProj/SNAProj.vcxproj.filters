@@ -159,12 +159,6 @@
     <ClCompile Include="AnimSpriteTest.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="TestStage.cpp">
-      <Filter>ソース ファイル\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="StageBase.cpp">
-      <Filter>ソース ファイル\Stage</Filter>
-    </ClCompile>
     <ClCompile Include="JumpComponent.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
@@ -267,6 +261,9 @@
     <ClCompile Include="GameOverUI.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>ソース ファイル\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -367,12 +364,6 @@
     </ClInclude>
     <ClInclude Include="AnimSpriteTest.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="StageBase.h">
-      <Filter>ヘッダー ファイル\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="TestStage.h">
-      <Filter>ヘッダー ファイル\Stage</Filter>
     </ClInclude>
     <ClInclude Include="JumpComponent.h">
       <Filter>ヘッダー ファイル\Component</Filter>
@@ -475,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="GameOverUI.h">
       <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>ヘッダー ファイル\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

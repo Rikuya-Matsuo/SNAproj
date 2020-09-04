@@ -5,7 +5,7 @@
 // 前方宣言
 class Actor;
 class Camera;
-class StageBase;
+class Stage;
 
 class SceneBase
 {
@@ -23,7 +23,7 @@ public:
 
 	bool GetSceneChangeFlag() const { return mFlags & mSceneChangeFlagMask; }
 
-	const StageBase * GetStage() const { return mStage; }
+	const Stage * GetStage() const { return mStage; }
 
 	static const SceneBase * GetLatestScene() { return mLatestScene; }
 
@@ -43,5 +43,5 @@ protected:
 
 	SceneBase * mNextScene;
 
-	StageBase * mStage;
+	Stage * mStage;
 };

@@ -1,6 +1,6 @@
 ﻿#include "BlockHitChecker.h"
 #include "SceneBase.h"
-#include "StageBase.h"
+#include "Stage.h"
 #include "Block.h"
 #include "BoxColliderComponent.h"
 #include "PhysicManager.h"
@@ -17,7 +17,7 @@ BlockHitChecker::BlockHitChecker(Actor * owner, BoxColliderComponent * box):
 void BlockHitChecker::Update()
 {
 	// ステージ情報を取得
-	const StageBase * stage = mOwner->GetBelongScene()->GetStage();
+	const Stage * stage = mOwner->GetBelongScene()->GetStage();
 
 	if (stage == nullptr || mBox == nullptr)
 	{

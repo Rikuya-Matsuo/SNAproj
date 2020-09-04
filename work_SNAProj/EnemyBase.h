@@ -2,7 +2,7 @@
 #include "Actor.h"
 
 class Block;
-class StageBase;
+class Stage;
 class Mesh;
 class EnemyManager;
 

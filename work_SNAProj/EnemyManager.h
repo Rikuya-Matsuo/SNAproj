@@ -1,12 +1,12 @@
 ﻿#pragma once
 #include <string>
 
-class StageBase;
+class Stage;
 
 class EnemyManager
 {
 public:
-	EnemyManager(StageBase * stage);
+	EnemyManager(Stage * stage);
 	~EnemyManager();
 
 	void LoadMapping(const std::string & path);
@@ -14,5 +14,5 @@ public:
 private:
 	void GenerateEnemy(int type, int x, int y);
 
-	StageBase * mStage;
+	Stage * mStage;
 };

@@ -8,7 +8,7 @@
 #include "AnimSpriteTest.h"
 #include "SpriteTest.h"
 #include "Block.h"
-#include "TestStage.h"
+#include "Stage.h"
 #include "BGObject.h"
 #include "EnemyTest.h"
 #include "EnemyManager.h"
@@ -21,7 +21,7 @@
 
 GameScene::GameScene()
 {
-	mStage = new StageBase;
+	mStage = new Stage;
 	mStage->SetBlockScale(0.3f);
 	mStage->Load("Map/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 
