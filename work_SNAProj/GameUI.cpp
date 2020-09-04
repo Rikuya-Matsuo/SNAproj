@@ -3,6 +3,8 @@
 #include "AnimationChips.h"
 #include "System.h"
 #include "Texture.h"
+#include <vector>
+#include <cstdlib>
 
 GameUI::GameUI(const Player * player):
 	UIScreen(),
@@ -12,7 +14,38 @@ GameUI::GameUI(const Player * player):
 	mLifeAnimTextures = new AnimationChips[mLifeMax];
 	for (char i = 0; i < mLifeMax; ++i)
 	{
-		size_t flameMass = mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", 9, 3, 3, 1024, 1024, 0.1f);
+		const int frameMass = 9;
+
+		mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", frameMass, 3, 3, 1024, 1024, 0.1f);
+
+		const bool useRandonFlame = true;
+		if (useRandonFlame)
+		{
+			// アニメーションチップの順番を個体ごとのランダムにする
+			std::vector<int> routine;
+
+			// 最初のフレームのインデックスを設定
+			int tmp = rand() % frameMass;
+			routine.emplace_back(tmp);
+
+			// 上で設定したフレームと合わせて、6~8フレームのルーチンとする
+			int routineFrameMass = 5 + rand() % 3;
+
+			for (int j = 0; j < routineFrameMass; ++j)
+			{
+				// 前のフレームより1~2フレーム進めたものをインデックスとして設定する
+				tmp += 1 + rand() % 2;
+
+				// tmpがフレーム数を超えて入れば、それ以内に収める
+				tmp %= frameMass;
+
+				// 設定
+				routine.emplace_back(tmp);
+			}
+
+			// routineに記録されたフレームの順番をmLifeAnimTextures[i]に登録
+			mLifeAnimTextures[i].SetRoutine(routine.data(), routine.size());
+		}
 	}
 
 	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");
