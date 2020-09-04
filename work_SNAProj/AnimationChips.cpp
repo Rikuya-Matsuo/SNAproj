@@ -13,6 +13,7 @@ AnimationChips::AnimationChips():
 	mFlags(0),
 	mCurrentTextureIndex(0),
 	mSecondPerFrame(1.0f / 60),
+	mTimer(0.0f),
 	mCurrentRoutineIndex(0)
 {
 }
