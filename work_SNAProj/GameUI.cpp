@@ -12,7 +12,7 @@ GameUI::GameUI(const Player * player):
 	mLifeAnimTextures = new AnimationChips[mLifeMax];
 	for (char i = 0; i < mLifeMax; ++i)
 	{
-		size_t flameMass = mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", 9, 3, 3, 1024, 1024, 0.05f);
+		size_t flameMass = mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", 9, 3, 3, 1024, 1024, 0.1f);
 	}
 
 	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");

@@ -11,4 +11,6 @@ public:
 
 private:
 	Texture * mGraph;
+
+	Texture * mGuide;
 };
