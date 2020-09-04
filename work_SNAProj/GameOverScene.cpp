@@ -1,19 +1,16 @@
 ﻿#include "GameOverScene.h"
 #include "Input.h"
 #include "TitleScene.h"
-#include "GameOverBoard.h"
 #include "Camera.h"
 #include "GuideUI.h"
+#include "GameOverUI.h"
 
 GameOverScene::GameOverScene()
 {
-	GameOverBoard * gob = new GameOverBoard;
-	gob->SetScale(80.0f);
-	gob->SetPosition(Vector3D::zero);
+	mUI = new GameOverUI();
 
-	Camera * cam = new Camera(gob);
-	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), gob->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
-	cam->SetDistanceVector(Vector3D(0.0f, 20.0f, 0.0f));
+	Camera * cam = new Camera();
+	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), Vector3D::zero, Vector3D(0.0f, 0.0f, 1.0f));
 	cam->SetActive();
 
 	GuideUI * guideUI = new GuideUI("Assets/resultGuide.png");
@@ -21,6 +18,7 @@ GameOverScene::GameOverScene()
 
 GameOverScene::~GameOverScene()
 {
+	delete mUI;
 }
 
 void GameOverScene::Update()
