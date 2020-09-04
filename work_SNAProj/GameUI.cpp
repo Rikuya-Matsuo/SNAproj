@@ -13,11 +13,9 @@ GameUI::GameUI(const Player * player):
 	for (char i = 0; i < mLifeMax; ++i)
 	{
 		size_t flameMass = mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", 9, 3, 3, 1024, 1024, 0.05f);
-		if (!flameMass)
-		{
-			printf("Fail to Load Animation chip...\n");
-		}
 	}
+
+	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");
 }
 
 GameUI::~GameUI()
@@ -37,6 +35,7 @@ void GameUI::Update()
 
 void GameUI::Draw(Shader * shader) const
 {
+	// ‘Ì—ÍUI
 	for (char i = 0; i < mPlayer->GetLife(); ++i)
 	{
 		Texture * tex = mLifeAnimTextures[i].GetCurrentTexture();
@@ -47,12 +46,17 @@ void GameUI::Draw(Shader * shader) const
 
 		float scale = 0.3f;
 
-		float x = -(System::GetInstance().GetRenderer()->GetScreenWidth() / 2) + (tex->GetWidth() / 3 * scale / 2) + (tex->GetWidth() / 3 * scale * i);
-
-		float y = System::GetInstance().GetRenderer()->GetScreenHeight() / 2 - tex->GetHeight() * scale / 2 + tex->GetHeight() * scale / 5;
-
-		Vector2D pos = Vector2D(x, y);
+		Vector2D pos;
+		pos.x = -(System::GetInstance().GetRenderer()->GetScreenWidth() / 2) + (tex->GetWidth() / 3 * scale / 2) + (tex->GetWidth() / 3 * scale * i);
+		pos.y = System::GetInstance().GetRenderer()->GetScreenHeight() / 2 - tex->GetHeight() * scale / 2 + tex->GetHeight() * scale / 5;
 
 		DrawTexture(shader, tex, pos, scale);
 	}
+
+	// ƒKƒCƒhUI
+	Vector2D guidePos;
+	guidePos.x = 0.0f;
+	guidePos.y = -System::GetInstance().GetRenderer()->GetScreenHeight() / 2 + mGuide->GetHeight() / 2;
+
+	DrawTexture(shader, mGuide, guidePos);
 }

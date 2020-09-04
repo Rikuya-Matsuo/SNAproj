@@ -20,4 +20,6 @@ private:
 	const Player * mPlayer;
 
 	AnimationChips * mLifeAnimTextures;
+
+	Texture * mGuide;
 };

@@ -18,6 +18,7 @@
 #include "LifeUIManager.h"
 #include "GuideUI.h"
 #include "GameUI.h"
+
 GameScene::GameScene()
 {
 	mStage = new TestStage;
@@ -51,10 +52,6 @@ GameScene::GameScene()
 
 	mUI = new GameUI(mPlayer);
 
-	//mLifeUI = new LifeUIManager(mPlayer);
-
-	GuideUI * guideUI = new GuideUI("Assets/guide.png");
-
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
 	dir.mDiffuseColor = Vector3D(0.7f, 0.7f, 0.7f);
@@ -64,7 +61,6 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete mUI;
-	//delete mLifeUI;
 	delete mStage;
 }
 
