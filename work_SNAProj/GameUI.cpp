@@ -1,4 +1,4 @@
-#include "GameUI.h"
+ï»¿#include "GameUI.h"
 #include "Player.h"
 #include "AnimationChips.h"
 #include "System.h"
@@ -21,29 +21,29 @@ GameUI::GameUI(const Player * player):
 		const bool useRandonFlame = true;
 		if (useRandonFlame)
 		{
-			// ƒAƒjƒ[ƒVƒ‡ƒ“ƒ`ƒbƒv‚Ì‡”Ô‚ğŒÂ‘Ì‚²‚Æ‚Ìƒ‰ƒ“ƒ_ƒ€‚É‚·‚é
+			// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒãƒƒãƒ—ã®é †ç•ªã‚’å€‹ä½“ã”ã¨ã®ãƒ©ãƒ³ãƒ€ãƒ ã«ã™ã‚‹
 			std::vector<int> routine;
 
-			// Å‰‚ÌƒtƒŒ[ƒ€‚ÌƒCƒ“ƒfƒbƒNƒX‚ğİ’è
+			// æœ€åˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¨­å®š
 			int tmp = rand() % frameMass;
 			routine.emplace_back(tmp);
 
-			// ã‚Åİ’è‚µ‚½ƒtƒŒ[ƒ€‚Æ‡‚í‚¹‚ÄA6~8ƒtƒŒ[ƒ€‚Ìƒ‹[ƒ`ƒ“‚Æ‚·‚é
+			// ä¸Šã§è¨­å®šã—ãŸãƒ•ãƒ¬ãƒ¼ãƒ ã¨åˆã‚ã›ã¦ã€6~8ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒ«ãƒ¼ãƒãƒ³ã¨ã™ã‚‹
 			int routineFrameMass = 5 + rand() % 3;
 
 			for (int j = 0; j < routineFrameMass; ++j)
 			{
-				// ‘O‚ÌƒtƒŒ[ƒ€‚æ‚è1~2ƒtƒŒ[ƒ€i‚ß‚½‚à‚Ì‚ğƒCƒ“ƒfƒbƒNƒX‚Æ‚µ‚Äİ’è‚·‚é
+				// å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚ˆã‚Š1~2ãƒ•ãƒ¬ãƒ¼ãƒ é€²ã‚ãŸã‚‚ã®ã‚’ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¨ã—ã¦è¨­å®šã™ã‚‹
 				tmp += 1 + rand() % 2;
 
-				// tmp‚ªƒtƒŒ[ƒ€”‚ğ’´‚¦‚Ä“ü‚ê‚ÎA‚»‚êˆÈ“à‚Éû‚ß‚é
+				// tmpãŒãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã‚’è¶…ãˆã¦å…¥ã‚Œã°ã€ãã‚Œä»¥å†…ã«åã‚ã‚‹
 				tmp %= frameMass;
 
-				// İ’è
+				// è¨­å®š
 				routine.emplace_back(tmp);
 			}
 
-			// routine‚É‹L˜^‚³‚ê‚½ƒtƒŒ[ƒ€‚Ì‡”Ô‚ğmLifeAnimTextures[i]‚É“o˜^
+			// routineã«è¨˜éŒ²ã•ã‚ŒãŸãƒ•ãƒ¬ãƒ¼ãƒ ã®é †ç•ªã‚’mLifeAnimTextures[i]ã«ç™»éŒ²
 			mLifeAnimTextures[i].SetRoutine(routine.data(), routine.size());
 		}
 	}
@@ -68,7 +68,7 @@ void GameUI::Update()
 
 void GameUI::Draw(Shader * shader) const
 {
-	// ‘Ì—ÍUI
+	// ä½“åŠ›UI
 	for (char i = 0; i < mPlayer->GetLife(); ++i)
 	{
 		Texture * tex = mLifeAnimTextures[i].GetCurrentTexture();
@@ -86,7 +86,7 @@ void GameUI::Draw(Shader * shader) const
 		DrawTexture(shader, tex, pos, scale);
 	}
 
-	// ƒKƒCƒhUI
+	// ã‚¬ã‚¤ãƒ‰UI
 	Vector2D guidePos;
 	guidePos.x = 0.0f;
 	guidePos.y = -System::GetInstance().GetRenderer()->GetScreenHeight() / 2 + mGuide->GetHeight() / 2;
