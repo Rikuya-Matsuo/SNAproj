@@ -27,13 +27,13 @@ StageBase::~StageBase()
 	}
 }
 
-void StageBase::Load(const std::string & fileName)
+void StageBase::Load(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)
 {
 	mBlockMassX = mBlockMassY = 0;
 
 	// ファイルオープン
 	std::ifstream mapFile;
-	mapFile.open(fileName.c_str());
+	mapFile.open(mapFilePath.c_str());
 
 	// 読み込み失敗時
 	if (mapFile.fail())
@@ -109,10 +109,10 @@ void StageBase::Load(const std::string & fileName)
 	mapFile.close();
 
 	// 生成
-	Construct();
+	Construct(blockTextureFilePath, floorTextureFilePath);
 }
 
-void StageBase::Construct()
+void StageBase::Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)
 {
 	// ブロックがnullなら行わない
 	if (mBlocks == nullptr)
@@ -144,7 +144,7 @@ void StageBase::Construct()
 			}
 
 			// 生成
-			Block * const bk = new Block(mBlockTexturePath, yBlock == mBlockMassY - 1);
+			Block * const bk = new Block(blockTextureFilePath, yBlock == mBlockMassY - 1);
 			bk->SetScale(mBlockScale);
 
 			// ブロックの高さの半分を計算
@@ -174,8 +174,12 @@ void StageBase::Construct()
 	flrPos.y = 0.0f;
 	flrPos.z = mFloorHeight = -(Block::mModelSize * mBlockScale);
 
+	// 床のスケールを設定
+	// マップの長さ + 5000.0f（端っこが見えないように）
+	mFloorScale = mBlockMassX * blockSize + 5000.0f;
+
 	// 生成
-	Floor * const flr = new Floor(mFloorTexturePath);
+	Floor * const flr = new Floor(floorTextureFilePath);
 	flr->SetPosition(flrPos);
 	flr->SetScale(mFloorScale);
 }

@@ -8,7 +8,7 @@ public:
 	StageBase();
 	~StageBase();
 
-	virtual void Load(const std::string & fileName);
+	virtual void Load(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
 
@@ -33,14 +33,10 @@ protected:
 
 	float mGoalLineX;
 
-	std::string mBlockTexturePath;
-
-	std::string mFloorTexturePath;
-
 	float mFloorScale;
 
 	float mFloorHeight;
 
 	// ブロック配置配列に基づいてブロックのインスタンスを生成する。
-	void Construct();
+	void Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 };
