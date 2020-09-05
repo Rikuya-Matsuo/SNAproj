@@ -24,6 +24,12 @@ void AutoMoveComponent::Update()
 	mOwner->SetMoveVector(v);
 }
 
+void AutoMoveComponent::SetVelocity(const Vector3D & vec)
+{
+	mVelocity = vec;
+	mFlags_AMC &= ~mReverseFlagMask;
+}
+
 void AutoMoveComponent::SetReverseFlag(bool x, bool y, bool z)
 {
 	Uint8 xMask = x ? mReverseXFlagMask : 0;

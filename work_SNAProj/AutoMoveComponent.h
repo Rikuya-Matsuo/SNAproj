@@ -9,7 +9,7 @@ public:
 
 	void Update() override;
 
-	void SetVelocity(const Vector3D & vec) { mVelocity = vec; mFlags_AMC &= ~mReverseFlagMask; }
+	void SetVelocity(const Vector3D & vec);
 	const Vector3D & GetVelocity() const { return mVelocity; }
 
 	void SetReverseFlag(bool x, bool y, bool z);

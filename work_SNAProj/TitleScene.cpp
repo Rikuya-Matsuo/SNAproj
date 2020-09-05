@@ -6,9 +6,12 @@
 #include "GuideUI.h"
 #include "Common.h"
 #include "TitleUI.h"
+#include "TitleCameraTargetActor.h"
 
 TitleScene::TitleScene()
 {
+	TitleCameraTargetActor * tcta = new TitleCameraTargetActor();
+
 	mUI = new TitleUI;
 
 	Camera * cam = new Camera();
