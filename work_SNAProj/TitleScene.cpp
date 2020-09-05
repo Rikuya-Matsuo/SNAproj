@@ -3,28 +3,33 @@
 #include "Camera.h"
 #include "Input.h"
 #include "GameScene.h"
-#include "GuideUI.h"
 #include "Common.h"
 #include "TitleUI.h"
 #include "TitleCameraTargetActor.h"
+#include "Stage.h"
 
 TitleScene::TitleScene()
 {
 	TitleCameraTargetActor * tcta = new TitleCameraTargetActor();
+	tcta->SetPosition(Vector3D(30.0f, 0.0f, 0.0f));
+	tcta->SetVelocity(Vector3D(1.0f, 0.0f, 0.0f));
 
 	mUI = new TitleUI;
 
-	Camera * cam = new Camera();
-	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), Vector3D::zero, Vector3D(0.0f, 0.0f, 1.0f));
-	cam->SetDistanceVector(Vector3D(0.0f, 55.0f, 0.0f));
+	mStage = new Stage;
+	mStage->Load("Map/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
+
+	Camera * cam = new Camera(tcta);
+	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), tcta->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
+	cam->SetDistanceVector(Vector3D(0.0f, 80.0f, 130.0f));
 	cam->SetActive();
-	//cam->SetWatchTargetFlag(false);
-	//cam->SetChaseTargetFlag(false);
 }
 
 TitleScene::~TitleScene()
 {
 	delete mUI;
+
+	delete mStage;
 
 	while (!mCameras.empty())
 	{

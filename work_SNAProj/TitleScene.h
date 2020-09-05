@@ -3,6 +3,7 @@
 
 class Sprite;
 class UIScreen;
+class Stage;
 
 class TitleScene : public SceneBase
 {
@@ -13,8 +14,8 @@ public:
 	void Update() override;
 
 private:
-	Sprite * mUITest;
-
 	UIScreen * mUI;
+
+	Stage * mStage;
 };
 
