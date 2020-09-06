@@ -53,10 +53,12 @@ private:
 	struct BGObjectPallet
 	{
 		std::string mModelFilePath;
-		std::string mTextureFilePath;
+		float mScale;
 	};
 
 	void LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet> & ret);
+
+	void LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos);
 
 	void ClearPallet(BGObjectPallet & pallet);
 };

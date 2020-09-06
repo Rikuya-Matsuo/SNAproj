@@ -191,6 +191,8 @@ void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, 
 	std::unordered_map<std::string, BGObjectPallet> pallet;
 
 	LoadBGObjectMapPallet(file, pallet);
+
+	LoadBGObjectMapPosition(file, pallet, xScale, yScale, zPos);
 }
 
 void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
@@ -199,7 +201,7 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 	{
 		Key = 0,
 		ModelPath,
-		TexturePath
+		Scale
 	};
 
 	std::string key;
@@ -243,10 +245,8 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 			buf.clear();
 			++currentSection;
 
-		case Section::TexturePath:
-			palletBuf.mTextureFilePath = buf;
-			buf.clear();
-			currentSection = Section::Key;
+		case Section::Scale:
+			palletBuf.mScale = std::stof(buf);
 
 			ret[key] = palletBuf;
 
@@ -258,8 +258,74 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 	}
 }
 
+void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos)
+{
+	std::string buf;
+
+	int xCell = 0;
+	int yCell = 0;
+
+	std::list<BGObject *> objectList;
+
+	char c;
+	while (true)
+	{
+		c = file.get();
+
+		if (file.eof())
+		{
+			break;
+		}
+
+		if (c != ',' && c != '\n')
+		{
+			buf += c;
+			continue;
+		}
+
+		// 生成位置の計算
+		// 高さを示す変数は、ファイルを読み終えるまで分からないので、一旦yCellの値を格納
+		Vector3D pos;
+		pos.x = xCell * xScale;
+		pos.y = zPos;
+		pos.z = static_cast<float>(yCell);
+
+		// 生成
+		BGObject * obj = new BGObject(pallet.at(buf).mModelFilePath);
+		obj->SetPosition(pos);
+		obj->SetScale(pallet.at(buf).mScale);
+
+		objectList.emplace_back(obj);
+
+		if (c == ',')
+		{
+			++xCell;
+		}
+		else
+		{
+			xCell = 0;
+			++yCell;
+		}
+
+		buf.clear();
+	}
+
+	// 高さの調整
+	for (auto itr : objectList)
+	{
+		Vector3D pos = itr->GetPosition();
+
+		// 下記の式の右辺において変数の果たす意味合い
+		// yCell	: 最終的な縦のセルの数
+		// pos.z	: 上から何番目のセルか（ゼロオリジン）
+		pos.z = (yCell - pos.z) * yScale;
+
+		itr->SetPosition(pos);
+	}
+}
+
 void Stage::ClearPallet(BGObjectPallet & pallet)
 {
 	pallet.mModelFilePath.clear();
-	pallet.mTextureFilePath.clear();
+	pallet.mScale = 0.0f;
 }
