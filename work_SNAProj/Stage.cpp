@@ -3,7 +3,6 @@
 #include "Floor.h"
 #include "BGObject.h"
 #include <vector>
-#include <fstream>
 
 float Stage::mBlockScale = 1.0f;
 
@@ -112,10 +111,6 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 	Construct(blockTextureFilePath, floorTextureFilePath);
 }
 
-void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, float yScale)
-{
-}
-
 void Stage::Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)
 {
 	// ブロックがnullなら行わない
@@ -186,4 +181,85 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 	Floor * const flr = new Floor(floorTextureFilePath);
 	flr->SetPosition(flrPos);
 	flr->SetScale(flrScale);
+}
+
+void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, float yScale, float zPos)
+{
+	std::ifstream file;
+	file.open(bgObjMapFilePath.c_str());
+
+	std::unordered_map<std::string, BGObjectPallet> pallet;
+
+	LoadBGObjectMapPallet(file, pallet);
+}
+
+void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
+{
+	enum Section
+	{
+		Key = 0,
+		ModelPath,
+		TexturePath
+	};
+
+	std::string key;
+
+	uint8_t currentSection = Section::Key;
+
+	BGObjectPallet palletBuf;
+
+	std::string buf;
+
+	char c;
+	while (true)
+	{
+		c = file.get();
+
+		if (file.eof())
+		{
+			break;
+		}
+
+		if (c != ',' && c != '\n')
+		{
+			buf += c;
+			continue;
+		}
+
+		if (buf == "</pallet>")
+		{
+			break;
+		}
+
+		switch (currentSection)
+		{
+		case Section::Key:
+			key = buf;
+			buf.clear();
+			++currentSection;
+
+		case Section::ModelPath:
+			palletBuf.mModelFilePath = buf;
+			buf.clear();
+			++currentSection;
+
+		case Section::TexturePath:
+			palletBuf.mTextureFilePath = buf;
+			buf.clear();
+			currentSection = Section::Key;
+
+			ret[key] = palletBuf;
+
+			//ClearPallet(palletBuf);
+
+		default:
+			break;
+		}
+	}
+}
+
+void Stage::ClearPallet(BGObjectPallet & pallet)
+{
+	pallet.mModelFilePath.clear();
+	pallet.mTextureFilePath.clear();
 }
