@@ -1,6 +1,7 @@
 ﻿#include "Stage.h"
 #include "Block.h"
 #include "Floor.h"
+#include "BGObject.h"
 #include <vector>
 #include <fstream>
 
@@ -26,7 +27,7 @@ Stage::~Stage()
 	}
 }
 
-void Stage::Load(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)
+void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)
 {
 	mBlockMassX = mBlockMassY = 0;
 
@@ -109,6 +110,10 @@ void Stage::Load(const std::string & mapFilePath, const std::string & blockTextu
 
 	// 生成
 	Construct(blockTextureFilePath, floorTextureFilePath);
+}
+
+void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, float yScale)
+{
 }
 
 void Stage::Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)

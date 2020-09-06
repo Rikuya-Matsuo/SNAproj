@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "SDL/SDL.h"
 #include <string>
+#include <list>
+
+class BGObject;
 
 class Stage
 {
@@ -8,7 +11,12 @@ public:
 	Stage();
 	~Stage();
 
-	virtual void Load(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
+	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
+
+	// 背景物の位置データcsvから、背景物を読み込む
+	// xScale	: csvの１セルでどのくらい水平座標が違うかの、目盛りの大きさ
+	// yScale	: csvの１セルでどのくらい鉛直座標が違うかの、目盛りの大きさ
+	virtual void LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, float yScale);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
 
