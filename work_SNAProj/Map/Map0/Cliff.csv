@@ -1,0 +1,5 @@
+c1,Assets/SM_IceCliffWall_01a.gpmesh,0.5,,,,,
+c2,Assets/SM_IceCliffWall_02a.gpmesh,0.5,,,,,
+c3,Assets/SM_IceCliffWall_03a.gpmesh,0.5,,,,,
+</pallet>,,,,,,,
+c1,c2,c1,c3,c3,c2,c1,c3

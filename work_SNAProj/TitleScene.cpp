@@ -17,7 +17,7 @@ TitleScene::TitleScene()
 	mUI = new TitleUI;
 
 	mStage = new Stage;
-	mStage->LoadMap("Map/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
+	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 
 	Camera * cam = new Camera(tcta);
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), tcta->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
