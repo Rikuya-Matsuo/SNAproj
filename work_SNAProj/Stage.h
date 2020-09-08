@@ -19,7 +19,7 @@ public:
 	// xScale	: csvの１セルでどのくらい水平座標が違うかの、目盛りの大きさ
 	// yScale	: csvの１セルでどのくらい鉛直座標が違うかの、目盛りの大きさ
 	// zPos		: 生成する奥行き
-	virtual void LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, float yScale, float zPos);
+	virtual void LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float zPos);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
 

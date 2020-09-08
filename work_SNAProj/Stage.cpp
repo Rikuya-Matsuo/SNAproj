@@ -228,6 +228,12 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 			continue;
 		}
 
+		// 空文字列だった場合スキップ
+		if (buf == "")
+		{
+			continue;
+		}
+
 		if (buf == "</pallet>")
 		{
 			break;
@@ -240,17 +246,27 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 			buf.clear();
 			++currentSection;
 
+			break;
+
 		case Section::ModelPath:
 			palletBuf.mModelFilePath = buf;
 			buf.clear();
 			++currentSection;
+			
+			break;
 
 		case Section::Scale:
 			palletBuf.mScale = std::stof(buf);
 
 			ret[key] = palletBuf;
 
+			buf.clear();
+
+			currentSection = Section::Key;
+
 			//ClearPallet(palletBuf);
+			
+			break;
 
 		default:
 			break;
@@ -258,12 +274,14 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 	}
 }
 
-void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos)
+void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xStartPos, float groundHeight, float depth)
 {
 	std::string buf;
 
 	int xCell = 0;
 	int yCell = 0;
+
+	float xOffset = 0.0f;
 
 	std::list<BGObject *> objectList;
 
@@ -299,14 +317,17 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 生成位置の計算
 		// 高さを示す変数は、ファイルを読み終えるまで分からないので、一旦yCellの値を格納
 		Vector3D pos;
-		pos.x = xCell * xScale;
-		pos.y = zPos;
+		pos.x = xOffset - xStartPos;
+		pos.y = depth;
 		pos.z = static_cast<float>(yCell);
 
 		// 生成
 		BGObject * obj = new BGObject(pallet.at(buf).mModelFilePath);
 		obj->SetPosition(pos);
 		obj->SetScale(pallet.at(buf).mScale);
+
+		// 次のオブジェクトの生成場所のx座標オフセットを記録
+		xOffset += obj->GetModelSize().x * obj->GetScale();
 
 		objectList.emplace_back(obj);
 
@@ -331,7 +352,7 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 下記の式の右辺において変数の果たす意味合い
 		// yCell	: 最終的な縦のセルの数
 		// pos.z	: 上から何番目のセルか（ゼロオリジン）
-		pos.z = (yCell - pos.z) * yScale;
+		pos.z = (yCell - pos.z) * groundHeight;
 
 		itr->SetPosition(pos);
 	}
