@@ -354,7 +354,7 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 下記の式の右辺において変数の果たす意味合い
 		// yCell	: 最終的な縦のセルの数
 		// pos.z	: 上から何番目のセルか（ゼロオリジン）
-		pos.z = (yCell - pos.z) * groundHeight;
+		pos.z = (yCell - pos.z) * yEmptyCellScale - groundHeight;
 
 		itr->SetPosition(pos);
 	}
