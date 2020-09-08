@@ -183,7 +183,7 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 	flr->SetScale(flrScale);
 }
 
-void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth)
+void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale)
 {
 	std::ifstream file;
 	file.open(bgObjMapFilePath.c_str());
@@ -192,7 +192,7 @@ void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPo
 
 	LoadBGObjectMapPallet(file, pallet);
 
-	LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth);
+	LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth, xEmptyCellScale, yEmptyCellScale);
 }
 
 void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
@@ -274,7 +274,7 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 	}
 }
 
-void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xStartPos, float groundHeight, float depth)
+void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale)
 {
 	std::string buf;
 
@@ -304,6 +304,8 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 空白（オブジェクトを生成しないセル）と指定された場合、バッファをクリアしてスキップする
 		if (buf == "-1")
 		{
+			xOffset += xEmptyCellScale;
+
 			buf.clear();
 			continue;
 		}

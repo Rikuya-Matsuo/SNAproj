@@ -16,7 +16,7 @@ public:
 	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
 	// 背景物の位置データcsvから、背景物を読み込む
-	virtual void LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float zPos);
+	virtual void LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
 
@@ -55,7 +55,7 @@ private:
 
 	void LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet> & ret);
 
-	void LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos);
+	void LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos, float xEmptyCellScale, float yEmptyCellScale);
 
 	void ClearPallet(BGObjectPallet & pallet);
 };
