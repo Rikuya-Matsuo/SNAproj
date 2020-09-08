@@ -283,6 +283,19 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 			continue;
 		}
 
+		// 空白（オブジェクトを生成しないセル）と指定された場合、バッファをクリアしてスキップする
+		if (buf == "-1")
+		{
+			buf.clear();
+			continue;
+		}
+
+		// 空文字列はスキップ
+		if (buf == "")
+		{
+			continue;
+		}
+
 		// 生成位置の計算
 		// 高さを示す変数は、ファイルを読み終えるまで分からないので、一旦yCellの値を格納
 		Vector3D pos;
