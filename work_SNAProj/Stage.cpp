@@ -183,7 +183,7 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 	flr->SetScale(flrScale);
 }
 
-void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, float yScale, float zPos)
+void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth)
 {
 	std::ifstream file;
 	file.open(bgObjMapFilePath.c_str());
@@ -192,7 +192,7 @@ void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xScale, 
 
 	LoadBGObjectMapPallet(file, pallet);
 
-	LoadBGObjectMapPosition(file, pallet, xScale, yScale, zPos);
+	LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth);
 }
 
 void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
@@ -317,7 +317,7 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 生成位置の計算
 		// 高さを示す変数は、ファイルを読み終えるまで分からないので、一旦yCellの値を格納
 		Vector3D pos;
-		pos.x = xOffset - xStartPos;
+		pos.x = xOffset + xStartPos;
 		pos.y = depth;
 		pos.z = static_cast<float>(yCell);
 

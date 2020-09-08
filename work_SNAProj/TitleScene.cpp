@@ -17,6 +17,7 @@ TitleScene::TitleScene()
 	mUI = new TitleUI;
 
 	mStage = new Stage;
+	mStage->SetBlockScale(0.3f);
 	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 	mStage->LoadBGObjectMap("Map/Map0/Cliff.csv", -100, mStage->GetFloorHeight(), -100);
 

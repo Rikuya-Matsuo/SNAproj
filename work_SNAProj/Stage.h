@@ -16,9 +16,6 @@ public:
 	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
 	// 背景物の位置データcsvから、背景物を読み込む
-	// xScale	: csvの１セルでどのくらい水平座標が違うかの、目盛りの大きさ
-	// yScale	: csvの１セルでどのくらい鉛直座標が違うかの、目盛りの大きさ
-	// zPos		: 生成する奥行き
 	virtual void LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float zPos);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
