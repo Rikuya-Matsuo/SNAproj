@@ -278,7 +278,6 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 {
 	std::string buf;
 
-	int xCell = 0;
 	int yCell = 0;
 
 	float xOffset = 0.0f;
@@ -333,13 +332,8 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 
 		objectList.emplace_back(obj);
 
-		if (c == ',')
+		if (c == '\n')
 		{
-			++xCell;
-		}
-		else
-		{
-			xCell = 0;
 			++yCell;
 		}
 
@@ -354,7 +348,7 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 下記の式の右辺において変数の果たす意味合い
 		// yCell	: 最終的な縦のセルの数
 		// pos.z	: 上から何番目のセルか（ゼロオリジン）
-		pos.z = (yCell - pos.z) * yEmptyCellScale - groundHeight;
+		pos.z = (yCell - pos.z) * yEmptyCellScale + groundHeight;
 
 		itr->SetPosition(pos);
 	}
