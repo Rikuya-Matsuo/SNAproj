@@ -20,6 +20,7 @@ TitleScene::TitleScene()
 	mStage->SetBlockScale(0.3f);
 	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 	mStage->LoadBGObjectMap("Map/Map0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
+	mStage->LoadBGObjectMap("Map/Map0/Wall.csv", 30, mStage->GetFloorHeight(), -75, 170, 0);
 
 	Camera * cam = new Camera(tcta);
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), tcta->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));
