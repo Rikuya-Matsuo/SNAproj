@@ -190,12 +190,15 @@ void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPo
 
 	std::unordered_map<std::string, BGObjectPallet> pallet;
 
-	LoadBGObjectMapPallet(file, pallet);
+	bool successToLoadPallet = LoadBGObjectMapPallet(file, pallet);
 
-	LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth, xEmptyCellScale, yEmptyCellScale);
+	if (successToLoadPallet)
+	{
+		LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth, xEmptyCellScale, yEmptyCellScale);
+	}
 }
 
-void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
+bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
 {
 	enum Section
 	{
@@ -212,6 +215,12 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 
 	std::string buf;
 
+	bool palletEndFlag = false;
+
+	bool isLastCharNewLine = false;
+
+	const char * errorMassage = "Fail to load stage decoration pallet. The file may not be correct format.\n";
+
 	char c;
 	while (true)
 	{
@@ -219,8 +228,12 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 
 		if (file.eof())
 		{
-			break;
+			printf(errorMassage);
+			return false;
 		}
+
+		// 改行文字だったかを記録
+		isLastCharNewLine = (c == '\n');
 
 		if (c != ',' && c != '\n')
 		{
@@ -236,6 +249,7 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 
 		if (buf == "</pallet>")
 		{
+			palletEndFlag = true;
 			break;
 		}
 
@@ -272,17 +286,67 @@ void Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 			break;
 		}
 	}
+
+	// パレット終了後も、次の改行文字まで読み進める
+	// ただし、前のループで既に、パレット終了記号の次の改行文字を読んでいるなら、この処理を行わない。
+	while (palletEndFlag && !isLastCharNewLine)
+	{
+		c = file.get();
+
+		if (file.eof())
+		{
+			printf(errorMassage);
+			return false;
+		}
+
+		if (c == '\n')
+		{
+			break;
+		}
+	}
+
+	return true;
 }
 
 void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale)
 {
 	std::string buf;
 
+	int xCell = 0;
+
+	// yCellはデータの形によるが、少なくともexcelからそのまま書きだした形だとゼロオリジンにならないよう。
+	// 改行してからeofか、改行せずにeofかの違いだが、両方に対応させてゼロオリジンにしたい。
 	int yCell = 0;
+
+	// xCellのとった最大値を記録
+	int xCellMax = -1;
 
 	float xOffset = 0.0f;
 
-	std::list<BGObject *> objectList;
+	// 生成したオブジェクトへのポインタと、記録されていたセルの情報をまとめた構造体
+	struct ObjCellData
+	{
+		BGObject * mObj;
+		int xCell;
+		int yCell;
+	};
+
+	std::list<ObjCellData *> objectList;
+	
+	// 最後に読んだ文字が改行文字だったかのフラグ
+	bool isLastCharNewLine = false;
+
+	// 改行文字を読んだときのラムダ式
+	auto onLoadNewLine = [&xCell, &xCellMax, &yCell]()
+	{
+		if (xCellMax < xCell)
+		{
+			xCellMax = xCell;
+		}
+
+		xCell = 0;
+		++yCell;
+	};
 
 	char c;
 	while (true)
@@ -294,11 +358,16 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 			break;
 		}
 
+		// ここで改行文字フラグを記録
+		isLastCharNewLine = (c == '\n');
+
 		if (c != ',' && c != '\n')
 		{
 			buf += c;
 			continue;
 		}
+
+		// ここから先へはcが','か'\n'の場合しか進めない
 
 		// 空白（オブジェクトを生成しないセル）と指定された場合、バッファをクリアしてスキップする
 		if (buf == "-1")
@@ -312,15 +381,21 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 空文字列はスキップ
 		if (buf == "")
 		{
+			// 読んだ文字が改行文字なら、その時の処理はここでしておく。
+			if (isLastCharNewLine)
+			{
+				onLoadNewLine();
+			}
+
 			continue;
 		}
 
 		// 生成位置の計算
-		// 高さを示す変数は、ファイルを読み終えるまで分からないので、一旦yCellの値を格納
+		// 高さを示す変数は、ファイルを読み終えるまで分からないので、一旦0として初期化
 		Vector3D pos;
 		pos.x = xOffset + xStartPos;
 		pos.y = depth;
-		pos.z = static_cast<float>(yCell);
+		pos.z = 0.0f;
 
 		// 生成
 		BGObject * obj = new BGObject(pallet.at(buf).mModelFilePath);
@@ -330,27 +405,82 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		// 次のオブジェクトの生成場所のx座標オフセットを記録
 		xOffset += obj->GetModelSize().x * obj->GetScale();
 
-		objectList.emplace_back(obj);
+		// オブジェクトへのポインタとセル情報をまとめた構造体インスタンスの生成
+		ObjCellData * ocd = new ObjCellData;
+		ocd->mObj = obj;
+		ocd->xCell = xCell;
+		ocd->yCell = yCell;
 
-		if (c == '\n')
+		objectList.emplace_back(ocd);
+
+		if (c == ',')
 		{
-			++yCell;
+			++xCell;
+		}
+		// '\n'が読まれた場合
+		else
+		{
+			onLoadNewLine();
 		}
 
 		buf.clear();
 	}
 
+	// 最後に読んだ文字が改行文字なら、ゼロオリジンにするためにyCellから1を引く
+	yCell -= isLastCharNewLine;
+
+	// 各オブジェクトの高さを調節するための変数群
+	// 各xセル座標のオブジェクトの調整する高さを記録
+	std::vector<float> yOffsets;
+	yOffsets.resize(xCellMax + 1);
+	for (auto itr = yOffsets.begin(); itr != yOffsets.end(); ++itr)
+	{
+		*itr = 0.0f;
+	}
+
+	// 添え字のxセル座標で、最後に位置を調整したyセル座標を記録
+	// オブジェクトを生成しないセルが何回連続で読まれたの計算に使う
+	std::vector<int> lastAdjustYCell;
+	lastAdjustYCell.resize(xCellMax + 1);
+	for (auto itr = lastAdjustYCell.begin(); itr != lastAdjustYCell.end(); ++itr)
+	{
+		*itr = yCell + 1;
+	}
+
 	// 高さの調整
+	// 性質上リストの反対側から調整をしなければならない。
+	// 逆イテレータなるものをこの時知る。使ってみる。
+	for (auto itr = objectList.rbegin(); itr != objectList.rend(); ++itr)
+	{
+		ObjCellData * data = *itr;
+
+		int x = data->xCell;
+		int y = data->yCell;
+
+		// 前に調整したオブジェクトから現在調整中のオブジェクトの間の、オブジェクトを生成しないセルの数
+		int notGenCellMass = (lastAdjustYCell[x] - y) - 1;
+
+		// 調整後の高さ
+		float newHeight = groundHeight + yOffsets[x] + yEmptyCellScale * notGenCellMass;
+		
+		// オフセットの計算
+		yOffsets[x] += yEmptyCellScale * notGenCellMass + data->mObj->GetModelSize().z * data->mObj->GetScale();
+
+		// 代入する
+		Vector3D pos = data->mObj->GetPosition();
+
+		pos.z = newHeight;
+
+		data->mObj->SetPosition(pos);
+
+		// 次のループに向けたデータの設定
+		lastAdjustYCell[x] = y;
+	}
+
+	// オブジェクトへのポインタとセル情報をまとめた構造体のメモリ解放
 	for (auto itr : objectList)
 	{
-		Vector3D pos = itr->GetPosition();
-
-		// 下記の式の右辺において変数の果たす意味合い
-		// yCell	: 最終的な縦のセルの数
-		// pos.z	: 上から何番目のセルか（ゼロオリジン）
-		pos.z = (yCell - pos.z) * yEmptyCellScale + groundHeight;
-
-		itr->SetPosition(pos);
+		delete itr;
 	}
 }
 
