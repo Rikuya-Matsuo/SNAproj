@@ -183,7 +183,7 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 	flr->SetScale(flrScale);
 }
 
-void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale)
+int Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors)
 {
 	std::ifstream file;
 	file.open(bgObjMapFilePath.c_str());
@@ -194,8 +194,12 @@ void Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPo
 
 	if (successToLoadPallet)
 	{
-		LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth, xEmptyCellScale, yEmptyCellScale);
+		int objMass = LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth, xEmptyCellScale, yEmptyCellScale, generatedActors);
+
+		return objMass;
 	}
+
+	return -1;
 }
 
 bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
@@ -308,7 +312,7 @@ bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 	return true;
 }
 
-void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale)
+int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors)
 {
 	std::string buf;
 
@@ -477,11 +481,25 @@ void Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_m
 		lastAdjustYCell[x] = y;
 	}
 
+	// ロード後にオブジェクトにアクセスできるように、Actor*型の配列を生成し、*generatedActorsに代入する
+	if (generatedActors != nullptr)
+	{
+		*generatedActors = new Actor * [objectList.size()];
+
+		size_t loopCount = 0;
+		for (auto itr : objectList)
+		{
+			(*generatedActors)[loopCount++] = itr->mObj;
+		}
+	}
+
 	// オブジェクトへのポインタとセル情報をまとめた構造体のメモリ解放
 	for (auto itr : objectList)
 	{
 		delete itr;
 	}
+
+	return objectList.size();
 }
 
 void Stage::ClearPallet(BGObjectPallet & pallet)

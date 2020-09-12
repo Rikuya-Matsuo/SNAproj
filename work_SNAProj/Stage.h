@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <fstream>
 
-class BGObject;
+class Actor;
 
 class Stage
 {
@@ -16,7 +16,10 @@ public:
 	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
 	// 背景物の位置データcsvから、背景物を読み込む
-	virtual void LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale);
+	// generatedActors :	生成されたオブジェクトへのポインタの配列へのポインタへのポインタ。
+	//						要するにActor**型変数Xへのポインタを入力することで、XはActor*型の配列となる。
+	//						この機能を使った場合は後でdelete[] X;　と、メモリを解放すること
+	virtual int LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors = nullptr);
 
 	static void SetBlockScale(float scale) { mBlockScale = scale; }
 
@@ -55,7 +58,7 @@ private:
 
 	bool LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet> & ret);
 
-	void LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos, float xEmptyCellScale, float yEmptyCellScale);
+	int LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors);
 
 	void ClearPallet(BGObjectPallet & pallet);
 };
