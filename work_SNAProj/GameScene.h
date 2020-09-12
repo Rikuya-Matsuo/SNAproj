@@ -16,11 +16,5 @@ public:
 private:
 	Player * mPlayer;
 
-	//LifeUIManager * mLifeUI;
-
-	void GenerateBGWall(float height);
-
-	void GenerateBGDecoration(float height);
-
 	UIScreen * mUI;
 };

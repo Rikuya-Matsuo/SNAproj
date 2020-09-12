@@ -188,6 +188,12 @@ int Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos
 	std::ifstream file;
 	file.open(bgObjMapFilePath.c_str());
 
+	if (file.fail())
+	{
+		printf("Fail to open BGObject File \"%s\"\n", bgObjMapFilePath.c_str());
+		return -1;
+	}
+
 	std::unordered_map<std::string, BGObjectPallet> pallet;
 
 	bool successToLoadPallet = LoadBGObjectMapPallet(file, pallet);
