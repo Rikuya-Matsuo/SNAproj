@@ -1,4 +1,4 @@
-#include "LoadingTimeUI.h"
+﻿#include "LoadingTimeUI.h"
 #include "System.h"
 #include "AnimationChips.h"
 #include "SceneBase.h"
