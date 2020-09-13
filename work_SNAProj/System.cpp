@@ -154,6 +154,8 @@ void System::Finish()
 	Common::DeleteContainerOfPointer(mActorList);
 	std::list<Actor *>().swap(mActorList);
 
+	SceneBase::OnEndGame();
+
 	if (mCurrentScene != nullptr)
 	{
 		delete mCurrentScene;

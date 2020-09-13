@@ -1,10 +1,13 @@
 ﻿#include "SceneBase.h"
 #include "Actor.h"
 #include "Camera.h"
+#include "LoadingTimeUI.h"
 
 const SceneBase::FlagType SceneBase::mSceneChangeFlagMask = 1 << 0;
 
 SceneBase * SceneBase::mLatestScene = nullptr;
+
+UIScreen * SceneBase::mLoadingTimeUI = nullptr;
 
 SceneBase::SceneBase():
 	mNextScene(nullptr),
@@ -14,6 +17,11 @@ SceneBase::SceneBase():
 	mCameras.reserve(1);
 
 	mLatestScene = this;
+
+	if (mLoadingTimeUI == nullptr)
+	{
+		mLoadingTimeUI = new LoadingTimeUI;
+	}
 }
 
 SceneBase::~SceneBase()
@@ -35,4 +43,9 @@ SceneBase::~SceneBase()
 
 void SceneBase::Draw()
 {
+}
+
+void SceneBase::OnEndGame()
+{
+	delete mLoadingTimeUI;
 }

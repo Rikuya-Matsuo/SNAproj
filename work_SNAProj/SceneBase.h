@@ -6,6 +6,7 @@
 class Actor;
 class Camera;
 class Stage;
+class UIScreen;
 
 class SceneBase
 {
@@ -27,12 +28,16 @@ public:
 
 	static const SceneBase * GetLatestScene() { return mLatestScene; }
 
+	static void OnEndGame();
+
 protected:
 	typedef Uint8 FlagType;
 
 	static const FlagType mSceneChangeFlagMask;
 
 	static SceneBase * mLatestScene;
+
+	static UIScreen * mLoadingTimeUI;
 
 	FlagType mFlags;
 
