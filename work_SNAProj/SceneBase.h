@@ -30,6 +30,8 @@ public:
 
 	static void OnEndGame();
 
+	static bool GetNowLoadingFlag() { return mNowLoadingFlag; }
+
 protected:
 	typedef Uint8 FlagType;
 
@@ -38,6 +40,8 @@ protected:
 	static SceneBase * mLatestScene;
 
 	static UIScreen * mLoadingTimeUI;
+
+	static bool mNowLoadingFlag;
 
 	FlagType mFlags;
 

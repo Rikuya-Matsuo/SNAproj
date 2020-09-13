@@ -3,11 +3,13 @@
 #include "Camera.h"
 #include "LoadingTimeUI.h"
 
-const SceneBase::FlagType SceneBase::mSceneChangeFlagMask = 1 << 0;
+const SceneBase::FlagType SceneBase::mSceneChangeFlagMask	= 1 << 0;
 
 SceneBase * SceneBase::mLatestScene = nullptr;
 
 UIScreen * SceneBase::mLoadingTimeUI = nullptr;
+
+bool SceneBase::mNowLoadingFlag = false;
 
 SceneBase::SceneBase():
 	mNextScene(nullptr),

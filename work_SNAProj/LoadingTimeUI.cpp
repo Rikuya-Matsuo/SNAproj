@@ -1,6 +1,7 @@
 #include "LoadingTimeUI.h"
 #include "System.h"
 #include "AnimationChips.h"
+#include "SceneBase.h"
 
 LoadingTimeUI::LoadingTimeUI()
 {
@@ -26,6 +27,11 @@ void LoadingTimeUI::Update()
 
 void LoadingTimeUI::Draw(Shader * shader) const
 {
+	if (!SceneBase::GetNowLoadingFlag())
+	{
+		return;
+	}
+
 	DrawTexture(shader, mBackGround, Vector2D::zero, 2000.0f);
 
 	float scale = 2.0f;
