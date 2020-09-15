@@ -14,6 +14,7 @@
 #include "System.h"
 #include "UIScreen.h"
 #include "VertexArray.h"
+#include "SceneBase.h"
 
 Renderer::Renderer()
 	:mWindow(nullptr)
@@ -189,15 +190,19 @@ void Renderer::Draw()
     // ライティング変数をセット
 	SetLightUniforms(mMeshShader);
 	// 全てのメッシュコンポーネントを描画
-	for (auto mc : mMeshComponents)
+	// ロード中の場合は描画しない
+	if (!SceneBase::GetNowLoadingFlag())
 	{
-		bool inFOV = isInFieldOfView(mc);
-		if ((inFOV && mc->GetVisible()) || mc->GetRangeOutDrawFlag())
+		for (auto mc : mMeshComponents)
 		{
-			mc->Draw(mMeshShader);
-		}
+			bool inFOV = isInFieldOfView(mc);
+			if ((inFOV && mc->GetVisible()) || mc->GetRangeOutDrawFlag())
+			{
+				mc->Draw(mMeshShader);
+			}
 
-		mc->GetOwner()->SetInCameraFlag(inFOV);
+			mc->GetOwner()->SetInCameraFlag(inFOV);
+		}
 	}
 
 	// Draw any skinned meshes now
@@ -232,11 +237,11 @@ void Renderer::Draw()
 	{
 		ui->Draw(mSpriteShader);
 	}
-
 }
 
 Texture* Renderer::GetTexture(const std::string & fileName)
 {
+	mTextureMutex.lock();
 	Texture* tex = nullptr;
 	auto iter = mTextures.find(fileName);
 	if (iter != mTextures.end())
@@ -256,6 +261,7 @@ Texture* Renderer::GetTexture(const std::string & fileName)
 			tex = nullptr;
 		}
 	}
+	mTextureMutex.unlock();
 
 	if (tex)
 	{

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "SDL/SDL.h"
 #include <vector>
+#include <thread>
 
 // 前方宣言
 class Actor;
@@ -44,6 +45,9 @@ protected:
 	static bool mNowLoadingFlag;
 
 	FlagType mFlags;
+
+	// ロード担当のスレッドを引き渡す
+	std::thread mLoadingThread;
 
 	// 次のシーンに引き渡すアクターは、これにポインタを格納する
 	std::vector<Actor *> mActors;

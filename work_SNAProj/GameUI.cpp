@@ -3,6 +3,7 @@
 #include "AnimationChips.h"
 #include "System.h"
 #include "Texture.h"
+#include "SceneBase.h"
 #include <vector>
 #include <cstdlib>
 
@@ -60,6 +61,12 @@ void GameUI::Update()
 {
 	UIScreen::Update();
 
+	// （マルチスレッド読み込み実装に際して）シーンが読み込み中の場合は更新しない
+	if (SceneBase::GetNowLoadingFlag())
+	{
+		return;
+	}
+
 	for (char i = 0; i < mLifeMax; ++i)
 	{
 		mLifeAnimTextures[i].Update();
@@ -68,6 +75,12 @@ void GameUI::Update()
 
 void GameUI::Draw(Shader * shader) const
 {
+	// （マルチスレッド読み込み実装に際して）シーンが読み込み中の場合は描画しない
+	if (SceneBase::GetNowLoadingFlag())
+	{
+		return;
+	}
+
 	// 体力UI
 	for (char i = 0; i < mPlayer->GetLife(); ++i)
 	{

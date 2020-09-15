@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ComponentBase.h"
 #include "Collision.h"
+#include <mutex>
 
 // Unityで言うところのTag
 enum ColliderAttribute
@@ -64,6 +65,7 @@ protected:
 	static const FlagType mPushOnHitFlagMask;
 	static const FlagType mRotatableFlagMask;
 
+	static std::mutex mColliderMutex;
 
 	const Uint8 mAttribute;
 

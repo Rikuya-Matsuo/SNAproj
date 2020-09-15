@@ -18,54 +18,16 @@
 #include "LifeUIManager.h"
 #include "GuideUI.h"
 #include "GameUI.h"
+#include <thread>
 
-GameScene::GameScene()
+GameScene::GameScene():
+	mPrevNowLoadingFlag(false)
 {
-	mStage = new Stage;
-	mStage->SetBlockScale(0.3f);
-	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
-	mStage->LoadBGObjectMap("Map/Map0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
-	Actor** walls;
-	int wallMass = mStage->LoadBGObjectMap("Map/Map0/Wall.csv", 30, mStage->GetFloorHeight(), -75, 170, 0, &walls);
-	if (wallMass != -1)
-	{
-		const Quaternion wallRota = Quaternion(Vector3D(0, 0, 1), static_cast<float>(M_PI / 2.0f));
+	SceneBase::mNowLoadingFlag = true;
 
-		for (int i = 0; i < wallMass; ++i)
-		{
-			walls[i]->SetRotation(wallRota);
-		}
+	std::thread th(Load, this);
 
-		delete[] walls;
-	}
-
-	mPlayer = new Player;
-	mActors.emplace_back(mPlayer);
-	mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
-	mPlayer->SetScale(25.0f);
-
-	const bool genEnemy = true;
-	if (genEnemy)
-	{
-		EnemyManager * em = new EnemyManager(mStage);
-		em->LoadMapping("Map/Map0/enemyMapping.csv");
-
-		delete em;
-	}
-
-	Camera * cam = new Camera(mPlayer);
-	mCameras.emplace_back(cam);
-	cam->Init(Vector3D(0, 100, 100), mPlayer->GetPosition(), Vector3D(0, 0, 1));
-	cam->SetDistanceVector(Vector3D(0, 150, 50));
-	cam->SetChaseTargetFlag(true);
-	cam->SetActive();
-
-	mUI = new GameUI(mPlayer);
-
-	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
-	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
-	dir.mDiffuseColor = Vector3D(0.7f, 0.7f, 0.7f);
-	dir.mSpecColor = Vector3D(0.8f, 0.8f, 0.8f);
+	th.swap(mLoadingThread);
 }
 
 GameScene::~GameScene()
@@ -76,6 +38,20 @@ GameScene::~GameScene()
 
 void GameScene::Update()
 {
+	// ロード中はゲームを動かさない
+	if (SceneBase::mNowLoadingFlag)
+	{
+		mPrevNowLoadingFlag = SceneBase::mNowLoadingFlag;
+		return;
+	}
+
+	// ロード完了後初めてのアップデートならばスレッドをジョイン
+	if (mPrevNowLoadingFlag)
+	{
+		mLoadingThread.join();
+		mPrevNowLoadingFlag = SceneBase::mNowLoadingFlag;
+	}
+
 #ifdef DEBUG_SNA
 
 	static bool clear = false;
@@ -118,4 +94,55 @@ void GameScene::Update()
 		mNextScene = new GameClearScene;
 		mFlags |= mSceneChangeFlagMask;
 	}
+}
+
+void GameScene::Load(GameScene * inputThisPtr)
+{
+	inputThisPtr->mStage = new Stage;
+	inputThisPtr->mStage->SetBlockScale(0.3f);
+	inputThisPtr->mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
+	inputThisPtr->mStage->LoadBGObjectMap("Map/Map0/Cliff.csv", -100, inputThisPtr->mStage->GetFloorHeight(), -100, 0.f, 0.f);
+	Actor** walls;
+	int wallMass = inputThisPtr->mStage->LoadBGObjectMap("Map/Map0/Wall.csv", 30, inputThisPtr->mStage->GetFloorHeight(), -75, 170, 0, &walls);
+	if (wallMass != -1)
+	{
+		const Quaternion wallRota = Quaternion(Vector3D(0, 0, 1), static_cast<float>(M_PI / 2.0f));
+
+		for (int i = 0; i < wallMass; ++i)
+		{
+			walls[i]->SetRotation(wallRota);
+		}
+
+		delete[] walls;
+	}
+
+	inputThisPtr->mPlayer = new Player;
+	inputThisPtr->mActors.emplace_back(inputThisPtr->mPlayer);
+	inputThisPtr->mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
+	inputThisPtr->mPlayer->SetScale(25.0f);
+
+	const bool genEnemy = true;
+	if (genEnemy)
+	{
+		EnemyManager * em = new EnemyManager(inputThisPtr->mStage);
+		em->LoadMapping("Map/Map0/enemyMapping.csv");
+
+		delete em;
+	}
+
+	Camera * cam = new Camera(inputThisPtr->mPlayer);
+	inputThisPtr->mCameras.emplace_back(cam);
+	cam->Init(Vector3D(0, 100, 100), inputThisPtr->mPlayer->GetPosition(), Vector3D(0, 0, 1));
+	cam->SetDistanceVector(Vector3D(0, 150, 50));
+	cam->SetChaseTargetFlag(true);
+	cam->SetActive();
+
+	inputThisPtr->mUI = new GameUI(inputThisPtr->mPlayer);
+
+	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
+	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
+	dir.mDiffuseColor = Vector3D(0.7f, 0.7f, 0.7f);
+	dir.mSpecColor = Vector3D(0.8f, 0.8f, 0.8f);
+
+	SceneBase::mNowLoadingFlag = false;
 }

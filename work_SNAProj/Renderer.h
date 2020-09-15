@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <unordered_map>
+#include <mutex>
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 #include "Matrix.h"
@@ -53,6 +54,8 @@ public:
 	void AddUI(const class UIScreen * ui);
 	void RemoveUI(const class UIScreen * ui);
 
+	std::mutex & GetTextureMutex() { return mTextureMutex; }
+
 private:
 
 	bool                                              LoadShaders();                          // シェーダーの初期化
@@ -93,6 +96,9 @@ private:
 	SDL_Renderer*                                     mSDLRenderer;      // SDLレンダリングハンドル
 
 	Camera*												mCameraPointer;
+
+	// テクスチャ関連のデータへのアクセスを管理するミューテクス
+	std::mutex mTextureMutex;
 };
 
 bool GLErrorHandle(const char* location);                              // OpenGLのエラーハンドル取得

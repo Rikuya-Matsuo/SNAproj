@@ -16,6 +16,8 @@ const Actor::FlagType Actor::mStopUpdateFlagMask_Base				= 1 << 6;
 const Actor::FlagType Actor::mInCameraFlagMask_Base					= 1 << 7;
 const Actor::FlagType Actor::mBuryDeeplyFlagMask_Base				= 1 << 8;
 
+std::mutex Actor::mActorMutex;
+
 Actor::Actor():
 	mPosition(Vector3D::zero),
 	mPositionBeforeMove(Vector3D::zero),
@@ -30,7 +32,9 @@ Actor::Actor():
 	mFallSpeedMax(30.0f),
 	mFlags(mAffectGravityFlagMask_Base | mMovalFlagMask_Base | mCalculateTransformFlagMask_Base)
 {
+	mActorMutex.lock();
 	System::GetInstance().ResisterActor(this);
+	mActorMutex.unlock();
 
 	mPrevFlags = mFlags;
 	mPrevRotationAngle = mRotationAngle;
@@ -47,7 +51,9 @@ Actor::~Actor()
 		std::list<ComponentBase *>().swap(mComponentLists[cmpList.first]);
 	}
 
+	mActorMutex.lock();
 	System::GetInstance().DeresisterActor(this);
+	mActorMutex.unlock();
 }
 
 void Actor::Update()

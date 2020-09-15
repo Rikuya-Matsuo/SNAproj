@@ -255,6 +255,13 @@ void System::UpdateActor()
 {
 	for (auto actor : mActorList)
 	{
+		// （マルチスレッド読み込み実装に際して）所属シーンの読み込みが完全に完了していない場合は、アップデートしない
+		bool isBelongSceneLatest = (actor->GetBelongScene() == SceneBase::GetLatestScene());
+		if (SceneBase::GetNowLoadingFlag() && isBelongSceneLatest)
+		{
+			continue;
+		}
+
 		actor->Update();
 	}
 }

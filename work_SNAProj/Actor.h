@@ -5,6 +5,7 @@
 #include "BitFlagFunc.h"
 #include <list>
 #include <unordered_map>
+#include <mutex>
 
 class ComponentBase;
 class ColliderComponentBase;
@@ -158,4 +159,6 @@ private:
 	FlagType mPrevFlags;
 
 	float mPrevRotationAngle;
+
+	static std::mutex mActorMutex;
 };

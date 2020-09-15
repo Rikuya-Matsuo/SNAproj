@@ -5,6 +5,7 @@
 #include "Collision.h"
 #include "System.h"
 #include "Common.h"
+#include "SceneBase.h"
 #include <cstdlib>
 #include <algorithm>
 
@@ -264,6 +265,17 @@ void PhysicManager::ResisterCollider(const ColliderComponentBase * in_colCmp)
 
 void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 {
+	auto isNowLoading = [](const ColliderComponentBase * col) -> bool
+	{
+		bool isBelongSceneLatest = (col->GetOwner()->GetBelongScene() == SceneBase::GetLatestScene());
+		return SceneBase::GetNowLoadingFlag() && isBelongSceneLatest;
+	};
+
+	if (isNowLoading(in_colCmp))
+	{
+		return;
+	}
+
 	ColliderComponentBase * collider = const_cast<ColliderComponentBase *>(in_colCmp);
 	Uint8 attribute = collider->GetColliderAttribute();
 
@@ -272,6 +284,12 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 	{
 		for (auto colOfVec : pair_att_colVec.second)
 		{
+			// （マルチスレッド読み込み実装にあたり）読み込み中のコライダーはパス
+			if (isNowLoading(colOfVec))
+			{
+				continue;
+			}
+
 			ColliderPair pair =
 				(mColliderID[collider] < mColliderID[colOfVec]) ?
 				std::make_pair(collider, colOfVec) :

@@ -17,4 +17,8 @@ private:
 	Player * mPlayer;
 
 	UIScreen * mUI;
+
+	bool mPrevNowLoadingFlag;
+
+	static void Load(GameScene * inputThisPtr);
 };

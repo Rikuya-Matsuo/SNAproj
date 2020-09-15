@@ -22,6 +22,8 @@ LoadingTimeUI::~LoadingTimeUI()
 
 void LoadingTimeUI::Update()
 {
+	UIScreen::Update();
+
 	mAnimation->Update();
 }
 
