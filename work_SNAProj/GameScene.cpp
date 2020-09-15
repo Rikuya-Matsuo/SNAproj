@@ -98,6 +98,18 @@ void GameScene::Update()
 
 void GameScene::Load(GameScene * inputThisPtr)
 {
+	SDL_Window * mainWindow = SDL_GL_GetCurrentWindow();
+	SDL_GLContext mainContext = SDL_GL_GetCurrentContext();
+
+	SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
+
+	SDL_Window * window = SDL_CreateWindow("Loading Thread's window", 0, 0, 0, 0,
+		SDL_WINDOW_OPENGL);
+
+	SDL_GLContext context = SDL_GL_CreateContext(window);
+
+	//SDL_GL_MakeCurrent(window, mainContext);
+
 	inputThisPtr->mStage = new Stage;
 	inputThisPtr->mStage->SetBlockScale(0.3f);
 	inputThisPtr->mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
@@ -143,6 +155,11 @@ void GameScene::Load(GameScene * inputThisPtr)
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
 	dir.mDiffuseColor = Vector3D(0.7f, 0.7f, 0.7f);
 	dir.mSpecColor = Vector3D(0.8f, 0.8f, 0.8f);
+
+	SDL_GL_MakeCurrent(mainWindow, mainContext);
+
+	SDL_GL_DeleteContext(context);
+	SDL_DestroyWindow(window);
 
 	SceneBase::mNowLoadingFlag = false;
 }
