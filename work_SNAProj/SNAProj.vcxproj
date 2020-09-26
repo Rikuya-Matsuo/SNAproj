@@ -91,7 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;..\..\libraries\glfw\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>
       </RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;</PreprocessorDefinitions>
@@ -99,13 +99,14 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;..\..\libraries\glfw\glfw\lib-mingw;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\libraries\SDL\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y</Command>
+xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
+xcopy "$(ProjectDir)\..\..\libraries\glfw\glfw\lib-mingw\glfw3.dll" "$(OutDir)" /i /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -114,13 +115,13 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;..\..\libraries\glfw\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OmitFramePointers>false</OmitFramePointers>
       <PreprocessorDefinitions>WIN32;</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;..\..\libraries\glfw\glfw\lib-mingw;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,7 +129,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\libraries\SDL\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y</Command>
+xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
+xcopy "$(ProjectDir)\..\..\libraries\glfw\glfw\lib-mingw\glfw3.dll" "$(OutDir)" /i /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -139,7 +141,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;..\..\libraries\glfw\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>
       </RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;</PreprocessorDefinitions>
@@ -149,13 +151,14 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;..\..\libraries\glfw\glfw\lib-mingw;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\libraries\SDL\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y</Command>
+xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
+xcopy "$(ProjectDir)\..\..\libraries\glfw\glfw\lib-mingw\glfw3.dll" "$(OutDir)" /i /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -166,7 +169,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libraries\SDL\include;..\..\libraries\GLEW\include;..\..\libraries\rapidjson\include;..\..\libraries\glfw\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OmitFramePointers>false</OmitFramePointers>
       <PreprocessorDefinitions>WIN32;</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -174,7 +177,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\libraries\SDL\lib\win\x86;..\..\libraries\GLEW\lib\win\x86;..\..\libraries\glfw\glfw\lib-mingw;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -182,7 +185,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\libraries\SDL\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
-xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y</Command>
+xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /y
+xcopy "$(ProjectDir)\..\..\libraries\glfw\glfw\lib-mingw\glfw3.dll" "$(OutDir)" /i /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
