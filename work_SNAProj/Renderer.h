@@ -4,6 +4,7 @@
 #include <mutex>
 #include <SDL/SDL.h>
 #include <GL/glew.h>
+#include <glfw3.h>
 #include "Matrix.h"
 
 typedef struct _DirectionalLight
