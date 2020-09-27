@@ -219,6 +219,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="GuideUI.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputMoveComponent.cpp" />
+    <ClCompile Include="SDLScreen.cpp" />
     <ClCompile Include="TitleCameraTargetActor.cpp" />
     <ClCompile Include="JumpComponent.cpp" />
     <ClCompile Include="LifeUIManager.cpp" />
@@ -289,6 +290,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="GuideUI.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputMoveComponent.h" />
+    <ClInclude Include="SDLScreen.h" />
     <ClInclude Include="TitleCameraTargetActor.h" />
     <ClInclude Include="JumpComponent.h" />
     <ClInclude Include="LifeUIManager.h" />

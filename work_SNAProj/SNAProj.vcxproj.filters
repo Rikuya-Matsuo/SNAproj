@@ -67,6 +67,9 @@
     <Filter Include="ヘッダー ファイル\UI">
       <UniqueIdentifier>{7a3280ee-53e3-4e96-b7d2-ed7f0eaee3e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\SDLScreen">
+      <UniqueIdentifier>{2df540c4-3668-4d84-b33e-7b24a92ddf09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -266,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="TitleCameraTargetActor.cpp">
       <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="SDLScreen.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,6 +481,9 @@
     </ClInclude>
     <ClInclude Include="TitleCameraTargetActor.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLScreen.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
