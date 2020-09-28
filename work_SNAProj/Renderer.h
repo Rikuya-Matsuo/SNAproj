@@ -36,8 +36,8 @@ public:
 	const class Skeleton*  GetSkeleton(const char* fileName);                                  // スケルタルモデルの取得
 	const class Animation* GetAnimation(const char* fileName, bool loop);                      // スケルタルアニメーションの取得
 
-	float                  GetScreenWidth() { return static_cast<float>(mScreenWidth); }       // スクリーン幅
-	float                  GetScreenHeight() { return static_cast<float>(mScreenHeight); }     // スクリーン高さ
+	float                  GetScreenWidth() const { return static_cast<float>(mScreenWidth); }       // スクリーン幅
+	float                  GetScreenHeight() const { return static_cast<float>(mScreenHeight); }     // スクリーン高さ
 	DirectionalLight&      GetDirectionalLight() { return mDirectionalLight; }                 // ディレクショナルライト
 	const Matrix4&         GetViewMatrix() { return mView; }
 	const Matrix4&         GetProjectionMatrix() { return mProjection; }

@@ -13,6 +13,8 @@ public:
 
 	void Update() override;
 
+	void Load();
+
 private:
 	Player * mPlayer;
 

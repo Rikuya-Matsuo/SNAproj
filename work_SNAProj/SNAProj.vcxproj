@@ -190,6 +190,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationChips.cpp" />
     <ClCompile Include="AnimationEffect.cpp" />
+    <ClCompile Include="AnimationTextureOfSDL.cpp" />
     <ClCompile Include="AnimSpriteTest.cpp" />
     <ClCompile Include="AutoMoveComponent.cpp" />
     <ClCompile Include="BGObject.cpp" />
@@ -219,7 +220,9 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="GuideUI.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputMoveComponent.cpp" />
+    <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="SDLScreen.cpp" />
+    <ClCompile Include="TextureOfSDL.cpp" />
     <ClCompile Include="TitleCameraTargetActor.cpp" />
     <ClCompile Include="JumpComponent.cpp" />
     <ClCompile Include="LifeUIManager.cpp" />
@@ -259,6 +262,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationChips.h" />
     <ClInclude Include="AnimationEffect.h" />
+    <ClInclude Include="AnimationTextureOfSDL.h" />
     <ClInclude Include="AnimSpriteTest.h" />
     <ClInclude Include="AutoMoveComponent.h" />
     <ClInclude Include="BGObject.h" />
@@ -290,7 +294,9 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="GuideUI.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputMoveComponent.h" />
+    <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="SDLScreen.h" />
+    <ClInclude Include="TextureOfSDL.h" />
     <ClInclude Include="TitleCameraTargetActor.h" />
     <ClInclude Include="JumpComponent.h" />
     <ClInclude Include="LifeUIManager.h" />

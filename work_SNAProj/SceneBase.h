@@ -1,11 +1,13 @@
 ﻿#pragma once
 #include "SDL/SDL.h"
 #include <vector>
+#include <thread>
 
 // 前方宣言
 class Actor;
 class Camera;
 class Stage;
+class SDLScreen;
 
 class SceneBase
 {
@@ -27,12 +29,18 @@ public:
 
 	static const SceneBase * GetLatestScene() { return mLatestScene; }
 
+	static bool GetNowLoadingFlag() { return mNowLoadingFlag; }
+
 protected:
 	typedef Uint8 FlagType;
 
 	static const FlagType mSceneChangeFlagMask;
 
 	static SceneBase * mLatestScene;
+
+	static SDLScreen * mLoadingScreen;
+
+	static bool mNowLoadingFlag;
 
 	FlagType mFlags;
 
@@ -44,4 +52,8 @@ protected:
 	SceneBase * mNextScene;
 
 	Stage * mStage;
+
+	static std::thread mLoadingScreenThread;
+
+	static void PlayLoadingScreen(SDL_Renderer * renderer);
 };
