@@ -15,6 +15,8 @@ public:
 
 	void OnHit(const ColliderComponentBase* caller, const ColliderComponentBase* opponent) override;
 
+	void Launch(bool lookRight);
+
 private:
 	const Vector3D mAutoMoveVector;
 
@@ -24,5 +26,5 @@ private:
 
 	AutoMoveComponent * mAutoMoveComp;
 
-	bool mLaunchedToRightFlag;
+	char mLaunchedXDirection;
 };

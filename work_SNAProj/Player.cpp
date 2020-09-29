@@ -13,7 +13,7 @@
 #include "Input.h"
 #include "EnemyBase.h"
 #include "AnimationEffect.h"
-#include "NinjaArtsBase.h"
+#include "NAReelString.h"
 
 #ifdef DEBUG_SNA
 #define IMMORTAL_PLAYER
@@ -156,6 +156,9 @@ Player::Player() :
 			"Assets/hitEff1.png", 4, 2, 2, 256, 256, 0.09f);
 		mHitEffects[i]->SetScale(50.0f);
 	}
+
+	// 忍術の設定
+	mCurrentCursorNinjaArts = new NAReelString(this);
 
 	// 落下スピード割合の調整
 	mFallSpeedRate = 25.0f;

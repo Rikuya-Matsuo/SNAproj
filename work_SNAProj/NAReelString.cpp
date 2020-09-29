@@ -17,5 +17,5 @@ void NAReelString::Use()
 {
 	bool lookRight = mUser->GetLookRightFlag();
 
-
+	mEdge->Launch(lookRight);
 }
