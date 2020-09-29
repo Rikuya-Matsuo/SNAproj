@@ -267,6 +267,12 @@
     <ClCompile Include="TitleCameraTargetActor.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="NAReelString.cpp">
+      <Filter>ソース ファイル\NinjaArts</Filter>
+    </ClCompile>
+    <ClCompile Include="ReelStringEdgeActor.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -474,6 +480,12 @@
       <Filter>ヘッダー ファイル\Stage</Filter>
     </ClInclude>
     <ClInclude Include="TitleCameraTargetActor.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="NAReelString.h">
+      <Filter>ヘッダー ファイル\NinjaArts</Filter>
+    </ClInclude>
+    <ClInclude Include="ReelStringEdgeActor.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>

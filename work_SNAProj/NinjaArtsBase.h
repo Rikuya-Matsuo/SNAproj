@@ -11,5 +11,7 @@ public:
 	virtual void Use() = 0;
 
 protected:
+	bool mIsUsedFlag;
+
 	Player * mUser;
 };

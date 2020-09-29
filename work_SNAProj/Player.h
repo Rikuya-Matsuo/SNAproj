@@ -24,6 +24,8 @@ public:
 	void Damage(unsigned char damageValue) { mLife -= damageValue; }
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
 
+	bool GetLookRightFlag() const { return mFlags_Player & mLookRightFlagMask; }
+
 	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
 	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
