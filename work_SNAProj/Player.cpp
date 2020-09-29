@@ -264,22 +264,21 @@ void Player::UpdateActor1()
 			SDL_Log("Completion has not finish\n");
 		}
 
+		OnEndAttack();
+		
 		mMesh->GetActiveAnimChips(this)->Reset();
-		mCompletionMeshActor->ResetAnimation(AnimationPattern::Anim_DashAttack);
 
 		mCurrentAnimation = AnimationPattern::Anim_Stay;
 
 		mMesh->SetAnimIndex(this, mCurrentAnimation);
-
-		mAttackCollider->SetActive(false);
-
-		mHitList.clear();
 	}
 
 	// ノックバックアニメーション
 	AnimationChips * knockBackAnim = mMesh->GetAnimChips(this, Anim_KnockBack);
 	if (mFlags_Player & mKnockBackFlagMask)
 	{
+		knockBackAnim->StartPlaying();
+
 		mCurrentAnimation = AnimationPattern::Anim_KnockBack;
 
 		if (knockBackAnim->GetLoopEndFlag())
@@ -288,11 +287,13 @@ void Player::UpdateActor1()
 
 			knockBackAnim->SetTextureIndex(5);
 		}
+
+		// 攻撃を終了する
+		OnEndAttack();
 	}
 	else
 	{
-		knockBackAnim->Reset();
-		knockBackAnim->StartPlaying();
+		knockBackAnim->Reset();		
 	}
 
 	// チップ補完アクターの設置方向を再設定
@@ -750,6 +751,16 @@ void Player::OnBeAttacked(const EnemyBase * enemy)
 void Player::OnLifeRunOut()
 {
 	mFlags_Player &= ~mAliveFlagMask;
+}
+
+void Player::OnEndAttack()
+{
+	mMesh->GetAnimChips(this, Anim_DashAttack)->Reset();
+	mCompletionMeshActor->ResetAnimation(AnimationPattern::Anim_DashAttack);
+
+	mAttackCollider->SetActive(false);
+
+	mHitList.clear();
 }
 
 AnimationEffect * Player::FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const

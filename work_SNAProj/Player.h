@@ -142,5 +142,8 @@ private:
 
 	void OnLifeRunOut();
 
+	// 攻撃終了時処理
+	void OnEndAttack();
+
 	AnimationEffect * FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const;
 };
