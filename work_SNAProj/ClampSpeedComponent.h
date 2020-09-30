@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ComponentBase.h"
 
+// 1秒に進む速さを制限するコンポーネントクラス
 class ClampSpeedComponent : ComponentBase
 {
 public:

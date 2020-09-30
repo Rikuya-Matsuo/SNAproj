@@ -1,14 +1,19 @@
-#include "ReelStringEdgeActor.h"
+﻿#include "ReelStringEdgeActor.h"
 #include "BoxColliderComponent.h"
 #include "AutoMoveComponent.h"
 #include "ClampSpeedComponent.h"
+#include "MeshComponent.h"
 #include "Player.h"
+#include "System.h"
+#include <cmath>
 
 ReelStringEdgeActor::ReelStringEdgeActor(Player * owner):
 	Actor(),
 	mOwner(owner),
 	mAutoMoveVector(Vector3D(10.0f, 0.0f, 0.0f)),
-	mLaunchedXDirection(0)
+	mLaunchedXDirection(0),
+	mDistance(Vector3D::zero),
+	mDistanceMaxSq(powf(100.0f, 2))
 {
 	mCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 
@@ -21,11 +26,20 @@ ReelStringEdgeActor::ReelStringEdgeActor(Player * owner):
 
 	mAutoMoveComp = new AutoMoveComponent(this);
 
-	ClampSpeedComponent * csc = new ClampSpeedComponent(this, Vector3D(250.0f, 0.0f, 0.0f));
+	ClampSpeedComponent * csc = new ClampSpeedComponent(this, Vector3D(300.0f, 0.0f, 0.0f));
+
+	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
+
+	MeshComponent * mc = new MeshComponent(this, 500, false);
+	mc->SetMesh(mesh);
 
 	SetAffectGravityFlag(false);
 
-	mScale = 0.2f;
+	SetActive(false);
+
+	SetVisible(false);
+
+	mScale = 5.0f;
 
 	SetPriority(mOwner->GetPriority() + 100);
 }
@@ -34,11 +48,26 @@ ReelStringEdgeActor::~ReelStringEdgeActor()
 {
 }
 
-void ReelStringEdgeActor::UpdateActor0()
+void ReelStringEdgeActor::UpdateActor1()
 {
-	Actor::UpdateActor0();
+	Actor::UpdateActor1();
 
+	// 距離の記録
+	mDistance += mMoveVector;
+
+	// 現在の進行方向算出
+	float velX = mAutoMoveComp->GetVelocity().x;
+	char dir = (velX > 0) ? 1 : -1;
+
+	// 一定距離まで行ったら戻る
+	// この判定は現在の進行方向とフラグが一致しているときのみ行う
+	if (mLaunchedXDirection == dir && mDistance.LengthSq() >= mDistanceMaxSq)
+	{
+		Vector3D v = mAutoMoveComp->GetVelocity();
+		v.x *= -1;
 	
+		mAutoMoveComp->SetVelocity(v);
+	}
 }
 
 void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const ColliderComponentBase* opponent)
@@ -56,12 +85,32 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		mOwner->SetPosition(mPosition);
 
 		mCollider->SetActive(false);
+
+		mLaunchedXDirection = 0;
+
+		SetActive(false);
+
+		SetVisible(false);
+	}
+	else if (oppAtt == ColliderAttribute::ColAtt_Player)
+	{
+		// 現在の進行方向
+		float velX = mAutoMoveComp->GetVelocity().x;
+		char dir = (velX > 0) ? 1 : -1;
+
+		// フラグと現在の進行方向が逆なら、戻ってる最中である。
+		if (mLaunchedXDirection == -dir)
+		{
+			SetActive(false);
+		}
 	}
 }
 
 void ReelStringEdgeActor::Launch(bool lookRight)
 {
 	mPosition = mOwner->GetPosition();
+
+	mDistance = mMoveVector = Vector3D::zero;
 
 	mLaunchedXDirection = (lookRight) ? 1 : -1;
 
@@ -71,4 +120,8 @@ void ReelStringEdgeActor::Launch(bool lookRight)
 	mAutoMoveComp->SetVelocity(v);
 
 	mCollider->SetActive(true);
+
+	SetActive(true);
+
+	SetVisible(true);
 }
