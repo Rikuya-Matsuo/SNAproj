@@ -25,6 +25,7 @@ ReelStringEdgeActor::ReelStringEdgeActor(Player * owner):
 	mCollider->SetActive(false);
 
 	mAutoMoveComp = new AutoMoveComponent(this);
+	mAutoMoveComp->SetReverseFlag(true, true, true);
 
 	ClampSpeedComponent * csc = new ClampSpeedComponent(this, Vector3D(300.0f, 0.0f, 0.0f));
 
@@ -60,13 +61,10 @@ void ReelStringEdgeActor::UpdateActor1()
 	char dir = (velX > 0) ? 1 : -1;
 
 	// 一定距離まで行ったら戻る
-	// この判定は現在の進行方向とフラグが一致しているときのみ行う
+	// この判定は現在の進行方向とフラグの示す方向が一致しているときのみ行う
 	if (mLaunchedXDirection == dir && mDistance.LengthSq() >= mDistanceMaxSq)
 	{
-		Vector3D v = mAutoMoveComp->GetVelocity();
-		v.x *= -1;
-	
-		mAutoMoveComp->SetVelocity(v);
+		mAutoMoveComp->ReverseVelocity();
 	}
 }
 
@@ -94,12 +92,8 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Player)
 	{
-		// 現在の進行方向
-		float velX = mAutoMoveComp->GetVelocity().x;
-		char dir = (velX > 0) ? 1 : -1;
-
-		// フラグと現在の進行方向が逆なら、戻ってる最中である。
-		if (mLaunchedXDirection == -dir)
+		// 戻ってる状態なら非アクティブに
+		if (mAutoMoveComp->IsNowReverse())
 		{
 			SetActive(false);
 		}
