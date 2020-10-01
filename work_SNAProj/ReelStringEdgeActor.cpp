@@ -1,4 +1,5 @@
 ﻿#include "ReelStringEdgeActor.h"
+#include "NAReelString.h"
 #include "BoxColliderComponent.h"
 #include "AutoMoveComponent.h"
 #include "ClampSpeedComponent.h"
@@ -7,9 +8,10 @@
 #include "System.h"
 #include <cmath>
 
-ReelStringEdgeActor::ReelStringEdgeActor(Player * owner):
+ReelStringEdgeActor::ReelStringEdgeActor(Player * owner, NAReelString * ninjaArts):
 	Actor(),
 	mOwner(owner),
+	mNinjaArts(ninjaArts),
 	mAutoMoveVector(Vector3D(10.0f, 0.0f, 0.0f)),
 	mLaunchedXDirection(0),
 	mDistance(Vector3D::zero),
@@ -66,6 +68,8 @@ void ReelStringEdgeActor::UpdateActor1()
 	{
 		mAutoMoveComp->ReverseVelocity();
 	}
+
+	mNinjaArts->TellRunningNinjaArts();
 }
 
 void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const ColliderComponentBase* opponent)
@@ -89,6 +93,8 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		SetActive(false);
 
 		SetVisible(false);
+
+		mNinjaArts->TellEndNinjaArts();
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Player)
 	{
@@ -96,6 +102,9 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		if (mAutoMoveComp->IsNowReverse())
 		{
 			SetActive(false);
+
+			// 忍術クラスに術が終了したことを教える。
+			mNinjaArts->TellEndNinjaArts();
 		}
 	}
 }

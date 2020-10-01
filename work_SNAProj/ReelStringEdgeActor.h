@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Actor.h"
 
+class NAReelString;
 class Player;
 class BoxColliderComponent;
 class AutoMoveComponent;
@@ -8,7 +9,7 @@ class AutoMoveComponent;
 class ReelStringEdgeActor : public Actor
 {
 public:
-	ReelStringEdgeActor(Player * owner);
+	ReelStringEdgeActor(Player * owner, NAReelString * ninjaArts);
 	~ReelStringEdgeActor();
 
 	void UpdateActor1() override;
@@ -21,6 +22,8 @@ private:
 	const Vector3D mAutoMoveVector;
 
 	const float mDistanceMaxSq;
+
+	NAReelString * mNinjaArts;
 
 	Player * mOwner;
 	

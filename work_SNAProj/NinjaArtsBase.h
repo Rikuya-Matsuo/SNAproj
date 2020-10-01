@@ -8,7 +8,9 @@ public:
 	NinjaArtsBase(Player * user);
 	virtual ~NinjaArtsBase();
 
-	virtual void Use() = 0;
+	virtual void Use();
+
+	bool IsUsed() const { return mIsUsedFlag; }
 
 protected:
 	bool mIsUsedFlag;

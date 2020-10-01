@@ -44,8 +44,6 @@ Player::Player() :
 {
 	mPushedFlags.Init();
 
-	mPrevGravityFlag = GetAffectGravityFlag();
-
 #ifdef IMMORTAL_PLAYER
 	mFlags_Player |= mImmortalFlagMask;
 #endif
@@ -90,8 +88,7 @@ Player::Player() :
 	AABB bodyCol = mMesh->GetCollisionBox();
 	mBoxCollider->SetObjectBox(bodyCol);
 
-	const bool genDetectorFlag = true;
-	if (genDetectorFlag)
+	// 地面を検出するコライダーの生成
 	{
 		AABB box = bodyCol;
 		const Vector3D boxSize = bodyCol.mMax - bodyCol.mMin;
@@ -106,6 +103,7 @@ Player::Player() :
 		mGroundChecker->SetObjectBox(box);
 	}
 	
+	// 壁を検出するコライダーの生成
 	{
 		AABB box = bodyCol;
 		const Vector3D boxSize = bodyCol.mMax - bodyCol.mMin;
@@ -121,6 +119,7 @@ Player::Player() :
 		mWallChecker->SetCheckOrder(50);
 	}
 
+	// 攻撃コライダーの生成
 	AABB attackCol = mMesh->GetCollisionBox();
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
 	attackCol.mMin.x += bodyColSizeX;
@@ -227,13 +226,18 @@ void Player::UpdateActor0()
 		mAttackCollider->SetActive(true);
 	}
 
-	// 制作展では使わない
+	// 忍術の発動
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N))
 	{
 		if (mCurrentCursorNinjaArts)
 		{
 			mCurrentCursorNinjaArts->Use();
 		}
+	}
+
+	if (mCurrentCursorNinjaArts->IsUsed())
+	{
+		SDL_Delay(0);
 	}
 
 #ifdef DEBUG_SNA
@@ -764,6 +768,14 @@ void Player::OnEndAttack()
 	mAttackCollider->SetActive(false);
 
 	mHitList.clear();
+}
+
+void Player::OnUseNinjaArts()
+{
+}
+
+void Player::OnEndNinjaArts()
+{
 }
 
 AnimationEffect * Player::FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const

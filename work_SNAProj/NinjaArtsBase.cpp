@@ -9,3 +9,8 @@ NinjaArtsBase::NinjaArtsBase(Player * user):
 NinjaArtsBase::~NinjaArtsBase()
 {
 }
+
+void NinjaArtsBase::Use()
+{
+	mIsUsedFlag = true;
+}

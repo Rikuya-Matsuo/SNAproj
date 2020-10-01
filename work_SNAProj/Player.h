@@ -101,7 +101,7 @@ private:
 
 	FlagType mPrevFlags_Player;
 
-	bool mPrevGravityFlag;
+	FlagType mFlagsBeforeGiveControl;
 
 	std::list<EnemyBase *> mHitList;
 
@@ -146,6 +146,12 @@ private:
 
 	// 攻撃終了時処理
 	void OnEndAttack();
+
+	// 忍術使用時の処理
+	void OnUseNinjaArts();
+
+	// 忍術終了時の処理
+	void OnEndNinjaArts();
 
 	AnimationEffect * FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const;
 };
