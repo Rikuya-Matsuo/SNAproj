@@ -34,4 +34,6 @@ void NAReelString::TellEndNinjaArts()
 void NAReelString::TellRunningNinjaArts()
 {
 	mUser->SetAffectGravityFlag(false);
+
+	mUser->SetMoveVector(Vector3D::zero);
 }
