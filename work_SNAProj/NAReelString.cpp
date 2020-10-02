@@ -1,7 +1,7 @@
 ﻿#include "NAReelString.h"
-#include "BoxColliderComponent.h"
 #include "Player.h"
 #include "ReelStringEdgeActor.h"
+#include "InputMoveComponent.h"
 
 NAReelString::NAReelString(Player * user):
 	NinjaArtsBase(user)
@@ -23,12 +23,22 @@ void NAReelString::Use()
 
 	mUser->SetAffectGravityFlag(false);
 
+	SetAllowJumpFlagOfUser(false);
+
+	GetInputMoveComponent()->SetActive(false);
+
 	mUser->SetMoveVector(Vector3D::zero);
 }
 
 void NAReelString::TellEndNinjaArts()
 {
 	mUser->SetAffectGravityFlag(true);
+
+	SetAllowJumpFlagOfUser(true);
+
+	GetInputMoveComponent()->SetActive(true);
+
+	mIsUsedFlag = false;
 }
 
 void NAReelString::TellRunningNinjaArts()

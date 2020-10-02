@@ -47,6 +47,7 @@ private:
 	static const FlagType mImmortalFlagMask;
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
+	static const FlagType mAllowJumpFlagMask;
 
 	static const Vector3D mKnockBackVector;
 
