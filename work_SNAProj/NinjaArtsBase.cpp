@@ -24,3 +24,8 @@ InputMoveComponent * NinjaArtsBase::GetInputMoveComponent() const
 {
 	return mUser->mInputComponent;
 }
+
+ClampSpeedComponent * NinjaArtsBase::GetClampSpeedComponent() const
+{
+	return nullptr;
+}

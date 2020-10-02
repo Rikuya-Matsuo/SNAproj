@@ -3,6 +3,7 @@
 
 class Player;
 class InputMoveComponent;
+class ClampSpeedComponent;
 
 class NinjaArtsBase
 {
@@ -14,6 +15,8 @@ public:
 
 	bool IsUsed() const { return mIsUsedFlag; }
 
+	Player * GetUserPlayer() const { return mUser; }
+	
 protected:
 	bool mIsUsedFlag;
 
@@ -23,4 +26,6 @@ protected:
 	void SetAllowJumpFlagOfUser(bool value);
 
 	InputMoveComponent * GetInputMoveComponent() const;
+
+	ClampSpeedComponent * GetClampSpeedComponent() const;
 };

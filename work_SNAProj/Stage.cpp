@@ -219,7 +219,7 @@ bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 
 	std::string key;
 
-	uint8_t currentSection = Section::Key;
+	Uint8 currentSection = Section::Key;
 
 	BGObjectPallet palletBuf;
 

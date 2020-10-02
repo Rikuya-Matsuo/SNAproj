@@ -5,17 +5,19 @@
 #include "ClampSpeedComponent.h"
 #include "MeshComponent.h"
 #include "Player.h"
+#include "EnemyBase.h"
 #include "System.h"
 #include <cmath>
 
-ReelStringEdgeActor::ReelStringEdgeActor(Player * owner, NAReelString * ninjaArts):
+ReelStringEdgeActor::ReelStringEdgeActor(NAReelString * ninjaArts):
 	Actor(),
-	mOwner(owner),
 	mNinjaArts(ninjaArts),
+	mHitEnemy(nullptr),
 	mAutoMoveVector(Vector3D(10.0f, 0.0f, 0.0f)),
 	mLaunchedXDirection(0),
 	mDistance(Vector3D::zero),
-	mDistanceMaxSq(powf(100.0f, 2))
+	mDistanceMaxSq(powf(100.0f, 2)),
+	mReelState(ReelState::ReelState_Invalid)
 {
 	mCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 
@@ -44,7 +46,7 @@ ReelStringEdgeActor::ReelStringEdgeActor(Player * owner, NAReelString * ninjaArt
 
 	mScale = 5.0f;
 
-	SetPriority(mOwner->GetPriority() + 100);
+	SetPriority(mNinjaArts->GetUserPlayer()->GetPriority() + 100);
 }
 
 ReelStringEdgeActor::~ReelStringEdgeActor()
@@ -78,28 +80,28 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 
 	if (oppAtt == ColliderAttribute::ColAtt_Enemy)
 	{
+		mHitEnemy = dynamic_cast<EnemyBase *>(opponent->GetOwner());
 
+		mReelState = ReelState::ReelState_Enemy;
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Block)
 	{
 		mAutoMoveComp->SetVelocity(Vector3D::zero);
 
-		mOwner->SetPosition(mPosition);
+		mMoveVector = Vector3D::zero;
+
+		mNinjaArts->CalculateDashVector();
 
 		mCollider->SetActive(false);
 
 		mLaunchedXDirection = 0;
 
-		SetActive(false);
-
-		SetVisible(false);
-
-		mNinjaArts->TellEndNinjaArts();
+		mReelState = ReelState::ReelState_Block;
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Player)
 	{
-		// 戻ってる状態なら非アクティブに
-		if (mAutoMoveComp->IsNowReverse())
+		// 戻ってる状態か、ブロックにヒットしている状態なら非アクティブに
+		if (mAutoMoveComp->IsNowReverse() || mReelState == ReelState::ReelState_Block)
 		{
 			SetActive(false);
 
@@ -111,9 +113,13 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 
 void ReelStringEdgeActor::Launch(bool lookRight)
 {
-	mPosition = mOwner->GetPosition();
+	mPosition = mNinjaArts->GetUserPlayer()->GetPosition();
 
 	mDistance = mMoveVector = Vector3D::zero;
+
+	mHitEnemy = nullptr;
+
+	mReelState = ReelState::ReelState_Invalid;
 
 	mLaunchedXDirection = (lookRight) ? 1 : -1;
 
