@@ -48,6 +48,7 @@ private:
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
 	static const FlagType mAllowJumpFlagMask;
+	static const FlagType mActiveBrakeFlag;
 
 	static const Vector3D mKnockBackVector;
 

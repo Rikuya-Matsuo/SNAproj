@@ -29,6 +29,8 @@ void NAReelString::Use()
 
 	GetInputMoveComponent()->SetActive(false);
 
+	SetActiveBrakeFlagOfUser(false);
+
 	mUser->SetMoveVector(Vector3D::zero);
 }
 
@@ -39,6 +41,8 @@ void NAReelString::TellEndNinjaArts()
 	SetAllowJumpFlagOfUser(true);
 
 	GetInputMoveComponent()->SetActive(true);
+
+	SetActiveBrakeFlagOfUser(true);
 
 	mIsUsedFlag = false;
 }

@@ -29,12 +29,13 @@ const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
 const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
 const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
 const Player::FlagType Player::mAllowJumpFlagMask		= 1 << 6;
+const Player::FlagType Player::mActiveBrakeFlag			= 1 << 7;
 
 const Vector3D Player::mKnockBackVector = Vector3D(20.0f, 0.0f, 8.0f);
 
 Player::Player() :
 	Actor(),
-	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask),
+	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlag),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
 	mCurrentCursorNinjaArts(nullptr),
@@ -321,7 +322,9 @@ void Player::UpdateActor1()
 	}
 
 	// ブレーキ
-	if (!mInputComponent->GetHorizonInputFlag() && !(mFlags_Player & mKnockBackFlagMask))
+	bool isKnockingBack = (mFlags_Player & mKnockBackFlagMask);
+	bool isActiveBrake = (mFlags_Player & mActiveBrakeFlag);
+	if (!mInputComponent->GetHorizonInputFlag() && !isKnockingBack && isActiveBrake)
 	{
 		mMoveVector.x *= 0.05f;
 

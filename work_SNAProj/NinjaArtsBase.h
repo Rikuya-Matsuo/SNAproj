@@ -3,7 +3,6 @@
 
 class Player;
 class InputMoveComponent;
-class ClampSpeedComponent;
 
 class NinjaArtsBase
 {
@@ -25,7 +24,8 @@ protected:
 	// ユーザーのジャンプ許可フラグをセットする関数
 	void SetAllowJumpFlagOfUser(bool value);
 
-	InputMoveComponent * GetInputMoveComponent() const;
+	// プレイヤーのブレーキ機能のアクティブ/非アクティブを切り替えられる関数
+	void SetActiveBrakeFlagOfUser(bool value);
 
-	ClampSpeedComponent * GetClampSpeedComponent() const;
+	InputMoveComponent * GetInputMoveComponent() const;
 };
