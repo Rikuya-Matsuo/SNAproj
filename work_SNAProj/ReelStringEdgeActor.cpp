@@ -92,8 +92,6 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 
 		mNinjaArts->CalculateDashVector();
 
-		mCollider->SetActive(false);
-
 		mLaunchedXDirection = 0;
 
 		mReelState = ReelState::ReelState_Block;
