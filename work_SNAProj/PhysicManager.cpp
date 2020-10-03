@@ -546,14 +546,12 @@ void PhysicManager::ResetHitState(const ColliderComponentBase * col)
 
 void PhysicManager::RefreshHitState()
 {
-	static size_t massRecord;
-
 	while (mContinueRefleshFlag)
 	{
 		auto itr = mHitColliderPairState.begin();
 		for (; itr != mHitColliderPairState.end(); ++itr)
 		{
-			massRecord = mHitColliderPairState.size();
+			size_t massRecord = mHitColliderPairState.size();
 
 			mColliderPairStateMutex.lock();
 
