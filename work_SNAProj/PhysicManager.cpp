@@ -18,14 +18,13 @@ static size_t checkCounter = 0;
 
 void PhysicManager::CheckHit()
 {
+	mColliderPairStateMutex.lock();
+
 	// 何かのアトリビュートでソートが要請されているならソートする
 	if (!mSortAttributeList.empty())
 	{
 		SortColliders();
 	}
-
-	// ループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除
-	RefreshHitState();
 
 	// Detectorを先に判定
 	for (auto detectSub : mDetectSubjectList)
@@ -41,6 +40,8 @@ void PhysicManager::CheckHit()
 	{
 		CheckLoop(attCombi);
 	}
+
+	mColliderPairStateMutex.unlock();
 
 #ifdef COLLISION_CHECK
 	SDL_Log("The number of checked collider is %d\n", checkCounter);
@@ -149,7 +150,7 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 #ifdef COLLISION_CHECK
 			// デバッグのため、チェックを記録
 			checkCounter++;
-#endif // DEBUG_SNA
+#endif //COLLISION_CHECK
 
 			// ペアを作成(IDの値が小さいほうをfirstとする)
 			ColliderPair pair =
@@ -268,19 +269,16 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 	Uint8 attribute = collider->GetColliderAttribute();
 
 	// 対象を含むコライダーペアの削除
-	for (auto pair_att_colVec : mColliders)
+	auto itr = mHitColliderPairState.begin();
+	for (; itr != mHitColliderPairState.end(); ++itr)
 	{
-		for (auto colOfVec : pair_att_colVec.second)
-		{
-			ColliderPair pair =
-				(mColliderID[collider] < mColliderID[colOfVec]) ?
-				std::make_pair(collider, colOfVec) :
-				std::make_pair(colOfVec, collider);
+		bool includedCollider =
+			(itr->first.first == collider || itr->first.second == collider);
 
-			if (mHitColliderPairState.count(pair))
-			{
-				mHitColliderPairState.erase(pair);
-			}
+		if (includedCollider)
+		{
+			// 削除は別スレッドに任せる
+			itr->second = HitState::HitState_NoTouch;
 		}
 	}
 
@@ -538,21 +536,32 @@ void PhysicManager::ResetHitState(const ColliderComponentBase * col)
 		{
 			ApartProcess(pair);
 
-			itr = mHitColliderPairState.erase(itr);
-			itr--;
+			itr->second = HitState::HitState_NoTouch;
 		}
 	}
 }
 
 void PhysicManager::RefreshHitState()
 {
-	auto itr = mHitColliderPairState.begin();
-	for (; itr != mHitColliderPairState.end(); ++itr)
+	while (mContinueRefleshFlag)
 	{
-		if (itr->second == HitState::HitState_NoTouch)
+		auto itr = mHitColliderPairState.begin();
+		for (; itr != mHitColliderPairState.end(); ++itr)
 		{
-			itr = mHitColliderPairState.erase(itr);
-			itr--;
+			mColliderPairStateMutex.lock();
+
+			if (itr->second == HitState::HitState_NoTouch)
+			{
+				itr = mHitColliderPairState.erase(itr);
+				itr--;
+			}
+
+			mColliderPairStateMutex.unlock();
+
+			if (!mContinueRefleshFlag)
+			{
+				break;
+			}
 		}
 	}
 }
@@ -574,7 +583,8 @@ void PhysicManager::SortColliders()
 	mSortAttributeList.clear();
 }
 
-PhysicManager::PhysicManager()
+PhysicManager::PhysicManager():
+	mContinueRefleshFlag(true)
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
@@ -588,11 +598,13 @@ PhysicManager::PhysicManager()
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Block);
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Block);
-	//ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);
+	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Player);
 	ResisterCheckableAttributeCombination(ColAtt_PlayerAttack, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_EnemyAttack, ColAtt_Player);
-	//ResisterCheckableAttributeCombination(ColAtt_Enemy, ColAtt_Block);
+
+	std::thread th(RefreshHitStateForThread);
+	mRefreshThread.swap(th);
 }
 
 PhysicManager::~PhysicManager()
@@ -606,6 +618,9 @@ PhysicManager::~PhysicManager()
 	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>>().swap(mColliders);
 
 	std::unordered_map<ColliderComponentBase *, unsigned short>().swap(mColliderID);
+
+	mContinueRefleshFlag = false;
+	mRefreshThread.join();
 
 	std::unordered_map<ColliderPair, char, HashColliderPair>().swap(mHitColliderPairState);
 

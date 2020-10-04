@@ -3,6 +3,8 @@
 #include <vector>
 #include <list>
 #include <unordered_map>
+#include <thread>
+#include <mutex>
 
 class Actor;
 class ColliderComponentBase;
@@ -78,6 +80,13 @@ private:
 
 	std::list<Uint8> mSortAttributeList;
 
+	// NoTouch状態の接触情報を削除し続けるスレッド
+	std::thread mRefreshThread;
+
+	std::mutex mColliderPairStateMutex;
+
+	bool mContinueRefleshFlag;
+
 	void HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol);
 
 	bool CheckPrevHit(const ColliderPair& pair);
@@ -92,7 +101,12 @@ private:
 
 	void ResetHitState(const ColliderComponentBase * col);
 
+	// ループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除する関数
 	void RefreshHitState();
+	static void RefreshHitStateForThread()
+	{
+		PhysicManager::GetInstance().RefreshHitState();
+	}
 
 	void SortColliders();
 };
