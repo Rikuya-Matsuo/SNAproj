@@ -242,15 +242,12 @@ void Actor::SetPriority(int value)
 
 void Actor::OnBecomeNotActive()
 {
-	SetAllComponentActive(false);
+	SleepAllComponent();
 }
 
 void Actor::OnBecomeActive()
 {
-	// よくよく考えたらこの設計はよくないかもしれない
-	// 以前アクターがアクティブだったときに、非アクティブだったコンポーネントもアクティブになる為。
-	// あとで考える。
-	SetAllComponentActive(true);
+	WakeAllComponent();
 }
 
 void Actor::SetAllComponentActive(bool active)
@@ -260,6 +257,28 @@ void Actor::SetAllComponentActive(bool active)
 		for (auto cmp : list.second)
 		{
 			cmp->SetActive(active);
+		}
+	}
+}
+
+void Actor::SleepAllComponent()
+{
+	for (auto list : mComponentLists)
+	{
+		for (auto cmp : list.second)
+		{
+			cmp->Sleep();
+		}
+	}
+}
+
+void Actor::WakeAllComponent()
+{
+	for (auto list : mComponentLists)
+	{
+		for (auto cmp : list.second)
+		{
+			cmp->Wake();
 		}
 	}
 }

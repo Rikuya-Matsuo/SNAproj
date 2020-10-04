@@ -30,10 +30,18 @@ public:
 
 	UpdateTiming GetUpdateTiming() const { return static_cast<UpdateTiming>(mUpdateTiming); }
 
+	// 現在のアクティブフラグの状態を記録してから、非アクティブにする
+	void Sleep();
+
+	// アクティブフラグをSleep()前の状態に戻す
+	void Wake();
+
 protected:
 	typedef Uint8 FlagType;
 
 	static const FlagType mActiveFlagMask;
+	static const FlagType mActiveFlagBeforeSleepMask;
+	static const FlagType mSleepFlagMask;
 
 	const Uint8 mUpdateTiming;
 

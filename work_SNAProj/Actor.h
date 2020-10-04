@@ -82,6 +82,10 @@ protected:
 
 	void SetAllComponentActive(bool active);
 
+	void SleepAllComponent();
+
+	void WakeAllComponent();
+
 public:
 	Actor();
 	virtual ~Actor();
