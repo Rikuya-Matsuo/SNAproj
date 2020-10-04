@@ -280,7 +280,8 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 
 			if (mHitColliderPairState.count(pair))
 			{
-				mHitColliderPairState.erase(pair);
+				// 削除は完全に別スレッドに任せる
+				mHitColliderPairState[pair] = HitState::HitState_NoTouch;
 			}
 		}
 	}
@@ -551,15 +552,7 @@ void PhysicManager::RefreshHitState()
 		auto itr = mHitColliderPairState.begin();
 		for (; itr != mHitColliderPairState.end(); ++itr)
 		{
-			size_t massRecord = mHitColliderPairState.size();
-
 			mColliderPairStateMutex.lock();
-
-			//ロック前に比べてサイズが減少していた場合、範囲外を読むことを避けるためbegin()に戻す
-			if (massRecord > mHitColliderPairState.size())
-			{
-				itr = mHitColliderPairState.begin();
-			}
 
 			if (itr->second == HitState::HitState_NoTouch)
 			{
