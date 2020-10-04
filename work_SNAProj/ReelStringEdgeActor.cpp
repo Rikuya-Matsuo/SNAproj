@@ -26,7 +26,6 @@ ReelStringEdgeActor::ReelStringEdgeActor(NAReelString * ninjaArts):
 	box.mMax = Vector3D(0.5f, 0.5f, 0.5f);
 
 	mCollider->SetObjectBox(box);
-	mCollider->SetActive(false);
 
 	mAutoMoveComp = new AutoMoveComponent(this);
 	mAutoMoveComp->SetReverseFlag(true, true, true);
