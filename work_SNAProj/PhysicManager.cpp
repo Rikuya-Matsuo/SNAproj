@@ -269,20 +269,16 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 	Uint8 attribute = collider->GetColliderAttribute();
 
 	// 対象を含むコライダーペアの削除
-	for (auto pair_att_colVec : mColliders)
+	auto itr = mHitColliderPairState.begin();
+	for (; itr != mHitColliderPairState.end(); ++itr)
 	{
-		for (auto colOfVec : pair_att_colVec.second)
-		{
-			ColliderPair pair =
-				(mColliderID[collider] < mColliderID[colOfVec]) ?
-				std::make_pair(collider, colOfVec) :
-				std::make_pair(colOfVec, collider);
+		bool includedCollider =
+			(itr->first.first == collider || itr->first.second == collider);
 
-			if (mHitColliderPairState.count(pair))
-			{
-				// 削除は完全に別スレッドに任せる
-				mHitColliderPairState[pair] = HitState::HitState_NoTouch;
-			}
+		if (includedCollider)
+		{
+			// 削除は別スレッドに任せる
+			itr->second = HitState::HitState_NoTouch;
 		}
 	}
 
