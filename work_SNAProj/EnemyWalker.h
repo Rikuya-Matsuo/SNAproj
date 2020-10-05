@@ -18,10 +18,12 @@ public:
 
 	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
+	void Capture() override;
+
 	friend EnemyManager;
 
 private:
-	typedef Uint8 FlagType;
+	typedef Uint16 FlagType;
 	static const FlagType mDamageAnimFlagMask;
 	static const FlagType mLDetectGroundFlagMask;
 	static const FlagType mRDetectGroundFlagMask;
@@ -30,6 +32,7 @@ private:
 	static const FlagType mDetectWallFlagMask;
 	static const FlagType mTackleFlagMask;
 	static const FlagType mKnockBackFlagMask;
+	static const FlagType mBeCapturedFlagMask;
 
 	static const float mTackleWait;
 
@@ -42,7 +45,7 @@ private:
 
 	const Vector3D mKnockBackVecLimit;
 
-	FlagType mFlags_EnemyTest;
+	FlagType mFlags_EnemyWalker;
 
 	FlagType mPrevFlags_EnemyTest;
 

@@ -11,14 +11,15 @@
 #include "Player.h"
 #include "Effect.h"
 
-const EnemyWalker::FlagType EnemyWalker::mDamageAnimFlagMask = 1 << 0;
+const EnemyWalker::FlagType EnemyWalker::mDamageAnimFlagMask	= 1 << 0;
 const EnemyWalker::FlagType EnemyWalker::mLDetectGroundFlagMask = 1 << 1;
 const EnemyWalker::FlagType EnemyWalker::mRDetectGroundFlagMask = 1 << 2;
-const EnemyWalker::FlagType EnemyWalker::mHitWallFlagMask = 1 << 3;
-const EnemyWalker::FlagType EnemyWalker::mDetectPlayerFlagMask = 1 << 4;
-const EnemyWalker::FlagType EnemyWalker::mDetectWallFlagMask = 1 << 5;
-const EnemyWalker::FlagType EnemyWalker::mTackleFlagMask = 1 << 6;
-const EnemyWalker::FlagType EnemyWalker::mKnockBackFlagMask = 1 << 7;
+const EnemyWalker::FlagType EnemyWalker::mHitWallFlagMask		= 1 << 3;
+const EnemyWalker::FlagType EnemyWalker::mDetectPlayerFlagMask	= 1 << 4;
+const EnemyWalker::FlagType EnemyWalker::mDetectWallFlagMask	= 1 << 5;
+const EnemyWalker::FlagType EnemyWalker::mTackleFlagMask		= 1 << 6;
+const EnemyWalker::FlagType EnemyWalker::mKnockBackFlagMask		= 1 << 7;
+const EnemyWalker::FlagType EnemyWalker::mBeCapturedFlagMask	= 1 << 8;
 
 const float EnemyWalker::mTackleWait = 0.8f;
 
@@ -26,7 +27,7 @@ using namespace BlockHitDirectionFlagMask;
 
 EnemyWalker::EnemyWalker():
 	EnemyBase(3),
-	mFlags_EnemyTest(0),
+	mFlags_EnemyWalker(0),
 	mTextureIndex(0),
 	mDamageAnimTimer(0.0f),
 	mTackleWaitTimer(0.0f),
@@ -114,7 +115,7 @@ EnemyWalker::EnemyWalker():
 
 	mBlockChecker = new BlockHitChecker(this, mBodyCollision);
 
-	mPrevFlags_EnemyTest = mFlags_EnemyTest;
+	mPrevFlags_EnemyTest = mFlags_EnemyWalker;
 
 	mFallSpeedRate = 1.0f;
 
@@ -128,7 +129,7 @@ EnemyWalker::~EnemyWalker()
 void EnemyWalker::UpdateEnemy0()
 {
 	// エフェクトの出現位置調整
-	if (mFlags_EnemyTest & mDetectPlayerFlagMask)
+	if (mFlags_EnemyWalker & mDetectPlayerFlagMask)
 	{
 		Vector3D effOffset = mEffectOffset * mScale;
 		effOffset.x *= (mFlags_Enemy & mLookRightFlagMask_EBase) ? -1.0f : 1.0f;
@@ -141,8 +142,8 @@ void EnemyWalker::UpdateEnemy0()
 	
 	const Uint8 blhit = mBlockChecker->GetHitDirectionFlags();
 
-	mFlags_EnemyTest |= blhit & mRDVerMask ? mRDetectGroundFlagMask : 0;
-	mFlags_EnemyTest |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
+	mFlags_EnemyWalker |= blhit & mRDVerMask ? mRDetectGroundFlagMask : 0;
+	mFlags_EnemyWalker |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
 	/*
 	if (mFlags_EnemyTest & mDamageAnimFlagMask)
 	{
@@ -169,7 +170,7 @@ void EnemyWalker::UpdateEnemy0()
 		mAnimChips->SetTextureIndex(mTextureIndex);
 	}
 	*/
-	const FlagType detectFlags = mFlags_EnemyTest & (mLDetectGroundFlagMask | mRDetectGroundFlagMask);
+	const FlagType detectFlags = mFlags_EnemyWalker & (mLDetectGroundFlagMask | mRDetectGroundFlagMask);
 	switch (detectFlags)
 	{
 	// 左だけ検知
@@ -204,7 +205,7 @@ void EnemyWalker::UpdateEnemy0()
 	// 両方検出
 	default:
 		// ノックバック時は例外
-		if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyTest & mKnockBackFlagMask))
+		if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyWalker & mKnockBackFlagMask))
 		{
 			mAutoMoveComp->SetActive(true);
 		}
@@ -212,7 +213,7 @@ void EnemyWalker::UpdateEnemy0()
 	}
 
 	// 着地中は重力の影響を受けない(ノックバック例外）
-	if (detectFlags != 0 && !(mFlags_EnemyTest & mKnockBackFlagMask))
+	if (detectFlags != 0 && !(mFlags_EnemyWalker & mKnockBackFlagMask))
 	{
 		SetAffectGravityFlag(false);
 	}
@@ -221,14 +222,14 @@ void EnemyWalker::UpdateEnemy0()
 	if (detectFlags != 0)
 	{
 		// ノックバックしたばかりでなければフラグを下す
-		if (mPrevFlags_EnemyTest & mFlags_EnemyTest & mKnockBackFlagMask)
+		if (mPrevFlags_EnemyTest & mFlags_EnemyWalker & mKnockBackFlagMask)
 		{
-			mFlags_EnemyTest &= ~mKnockBackFlagMask;
+			mFlags_EnemyWalker &= ~mKnockBackFlagMask;
 		}
 	}
 
 	// プレイヤー検知時にタックル準備処理
-	if (mFlags_EnemyTest & mDetectPlayerFlagMask)
+	if (mFlags_EnemyWalker & mDetectPlayerFlagMask)
 	{
 		TackleProcess();
 	}
@@ -242,7 +243,7 @@ void EnemyWalker::UpdateEnemy0()
 		}
 
 		// タックルしていたなら
-		if (mFlags_EnemyTest & mTackleFlagMask)
+		if (mFlags_EnemyWalker & mTackleFlagMask)
 		{
 			mAutoMoveComp->SetVelocity(mVelocity);
 			if (mFlags_Enemy & mLookRightFlagMask_EBase)
@@ -252,7 +253,7 @@ void EnemyWalker::UpdateEnemy0()
 
 			mClamper->SetLimit(mNormalVelocityLimit);
 
-			mFlags_EnemyTest &= ~mTackleFlagMask;
+			mFlags_EnemyWalker &= ~mTackleFlagMask;
 			mFlags_Enemy &= ~mAttackFlagMask_EBase;
 		}
 
@@ -261,7 +262,7 @@ void EnemyWalker::UpdateEnemy0()
 
 	// 自動移動が非アクティブなら水平方向移動ベクトルを0に
 	// ただし、ノックバックは除く
-	if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyTest & mKnockBackFlagMask))
+	if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyWalker & mKnockBackFlagMask))
 	{
 		mMoveVector.x = 0.0f;
 	}
@@ -279,7 +280,7 @@ void EnemyWalker::TackleProcess()
 	else
 	{
 		// 突進開始
-		mFlags_EnemyTest |= mTackleFlagMask;
+		mFlags_EnemyWalker |= mTackleFlagMask;
 		mFlags_Enemy |= mAttackFlagMask_EBase;
 
 		if (!(mPrevFlags_EnemyTest & mTackleFlagMask))
@@ -338,7 +339,7 @@ void EnemyWalker::OnBePressedByPlayer()
 
 void EnemyWalker::UpdateEnemy1()
 {
-	if (mFlags_EnemyTest & mKnockBackFlagMask)
+	if (mFlags_EnemyWalker & mKnockBackFlagMask)
 	{
 		if (!(mPrevFlags_EnemyTest & mKnockBackFlagMask))
 		{
@@ -348,15 +349,15 @@ void EnemyWalker::UpdateEnemy1()
 		mAutoMoveComp->SetActive(false);
 	}
 
-	if (mPrevFlags_EnemyTest & mKnockBackFlagMask && !(mFlags_EnemyTest & mKnockBackFlagMask))
+	if (mPrevFlags_EnemyTest & mKnockBackFlagMask && !(mFlags_EnemyWalker & mKnockBackFlagMask))
 	{
-		Vector3D lim = (mFlags_EnemyTest & mTackleFlagMask) ? mTackleVelocityLimit : mNormalVelocityLimit;
+		Vector3D lim = (mFlags_EnemyWalker & mTackleFlagMask) ? mTackleVelocityLimit : mNormalVelocityLimit;
 		mClamper->SetLimit(lim);
 		mClamper->SetClampDirectionFlags(true, false, false);
 	}
 
 	const Uint8 blhit = mBlockChecker->GetHitDirectionFlags();
-	if (blhit & mDownMask && !(mFlags_EnemyTest & mKnockBackFlagMask))
+	if (blhit & mDownMask && !(mFlags_EnemyWalker & mKnockBackFlagMask))
 	{
 		mMoveVector.z = 0;
 		SetAffectGravityFlag(false);
@@ -382,11 +383,11 @@ void EnemyWalker::UpdateEnemy1()
 		Flip();
 	}
 
-	mPrevFlags_EnemyTest = mFlags_EnemyTest;
+	mPrevFlags_EnemyTest = mFlags_EnemyWalker;
 
 	EnemyWalker::FlagType mask =
 		(mRDetectGroundFlagMask | mLDetectGroundFlagMask | mHitWallFlagMask | mDetectPlayerFlagMask | mDetectWallFlagMask);
-	mFlags_EnemyTest &= ~mask;
+	mFlags_EnemyWalker &= ~mask;
 }
 
 void EnemyWalker::OnFlip()
@@ -403,7 +404,7 @@ void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComp
 
 	OnBePushedByPlayer(caller, opponentAtt);
 
-	if (mFlags_EnemyTest & mTackleFlagMask && opponentAtt == ColAtt_Player)
+	if (mFlags_EnemyWalker & mTackleFlagMask && opponentAtt == ColAtt_Player)
 	{
 		Player * p = static_cast<Player*>(opponent->GetOwner());
 		p->Damage(1);
@@ -411,9 +412,9 @@ void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComp
 
 	if (caller == mBodyCollision && opponentAtt == ColliderAttribute::ColAtt_PlayerAttack)
 	{
-		mFlags_EnemyTest |= mDamageAnimFlagMask;
+		mFlags_EnemyWalker |= mDamageAnimFlagMask;
 		
-		mFlags_EnemyTest |= mKnockBackFlagMask;
+		mFlags_EnemyWalker |= mKnockBackFlagMask;
 		float x = opponent->GetOwner()->GetPosition().x - mPosition.x;
 		mKnockBackVector = mKnockBackRightVector;
 		mKnockBackVector.x *= (x < 0.0f) ? 1.0f : -1.0f;
@@ -431,7 +432,7 @@ void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComp
 
 		if (detector == caller && opponentAtt == cmpAtt)
 		{
-			mFlags_EnemyTest |= mask;
+			mFlags_EnemyWalker |= mask;
 
 			ret = true;
 		}
@@ -467,7 +468,7 @@ void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const Collide
 
 		if (detector == caller && opponentAtt == cmpAtt)
 		{
-			mFlags_EnemyTest |= mask;
+			mFlags_EnemyWalker |= mask;
 
 			ret = true;
 		}
@@ -486,4 +487,15 @@ void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const Collide
 	{
 		mWallDerection = opponent->GetOwner()->GetPosition() - mPosition;
 	}
+}
+
+void EnemyWalker::Capture()
+{
+	BitFlagFunc::SetFlagByBool(true, mFlags_EnemyWalker, mBeCapturedFlagMask);
+
+	mPlayerDetector->SetActive(false);
+
+	BitFlagFunc::SetFlagByBool(false, mFlags_EnemyWalker, mTackleFlagMask);
+
+	mClamper->SetActive(false);
 }

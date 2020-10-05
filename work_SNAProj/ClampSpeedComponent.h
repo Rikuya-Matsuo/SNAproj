@@ -2,7 +2,7 @@
 #include "ComponentBase.h"
 
 // 1秒に進む速さを制限するコンポーネントクラス
-class ClampSpeedComponent : ComponentBase
+class ClampSpeedComponent : public ComponentBase
 {
 public:
 	ClampSpeedComponent(Actor * owner, const Vector3D & limit = Vector3D(100, 100, 100));

@@ -20,6 +20,8 @@ public:
 
 	bool GetAttackFlag() const { return mFlags_Enemy & mAttackFlagMask_EBase; }
 
+	virtual void Capture() = 0;
+
 	friend EnemyManager;
 
 protected:
