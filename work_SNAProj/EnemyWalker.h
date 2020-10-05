@@ -8,11 +8,11 @@ class ClampSpeedComponent;
 class Effect;
 class BlockHitChecker;
 
-class EnemyTest : public EnemyBase
+class EnemyWalker : public EnemyBase
 {
 public:
-	EnemyTest();
-	~EnemyTest();
+	EnemyWalker();
+	~EnemyWalker();
 
 	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 

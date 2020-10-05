@@ -1,4 +1,4 @@
-﻿#include "EnemyTest.h"
+﻿#include "EnemyWalker.h"
 #include "Mesh.h"
 #include "System.h"
 #include "AnimationChips.h"
@@ -11,20 +11,20 @@
 #include "Player.h"
 #include "Effect.h"
 
-const EnemyTest::FlagType EnemyTest::mDamageAnimFlagMask = 1 << 0;
-const EnemyTest::FlagType EnemyTest::mLDetectGroundFlagMask = 1 << 1;
-const EnemyTest::FlagType EnemyTest::mRDetectGroundFlagMask = 1 << 2;
-const EnemyTest::FlagType EnemyTest::mHitWallFlagMask = 1 << 3;
-const EnemyTest::FlagType EnemyTest::mDetectPlayerFlagMask = 1 << 4;
-const EnemyTest::FlagType EnemyTest::mDetectWallFlagMask = 1 << 5;
-const EnemyTest::FlagType EnemyTest::mTackleFlagMask = 1 << 6;
-const EnemyTest::FlagType EnemyTest::mKnockBackFlagMask = 1 << 7;
+const EnemyWalker::FlagType EnemyWalker::mDamageAnimFlagMask = 1 << 0;
+const EnemyWalker::FlagType EnemyWalker::mLDetectGroundFlagMask = 1 << 1;
+const EnemyWalker::FlagType EnemyWalker::mRDetectGroundFlagMask = 1 << 2;
+const EnemyWalker::FlagType EnemyWalker::mHitWallFlagMask = 1 << 3;
+const EnemyWalker::FlagType EnemyWalker::mDetectPlayerFlagMask = 1 << 4;
+const EnemyWalker::FlagType EnemyWalker::mDetectWallFlagMask = 1 << 5;
+const EnemyWalker::FlagType EnemyWalker::mTackleFlagMask = 1 << 6;
+const EnemyWalker::FlagType EnemyWalker::mKnockBackFlagMask = 1 << 7;
 
-const float EnemyTest::mTackleWait = 0.8f;
+const float EnemyWalker::mTackleWait = 0.8f;
 
 using namespace BlockHitDirectionFlagMask;
 
-EnemyTest::EnemyTest():
+EnemyWalker::EnemyWalker():
 	EnemyBase(3),
 	mFlags_EnemyTest(0),
 	mTextureIndex(0),
@@ -121,11 +121,11 @@ EnemyTest::EnemyTest():
 	mFlags &= ~mAffectGravityFlagMask_Base;
 }
 
-EnemyTest::~EnemyTest()
+EnemyWalker::~EnemyWalker()
 {
 }
 
-void EnemyTest::UpdateEnemy0()
+void EnemyWalker::UpdateEnemy0()
 {
 	// エフェクトの出現位置調整
 	if (mFlags_EnemyTest & mDetectPlayerFlagMask)
@@ -267,7 +267,7 @@ void EnemyTest::UpdateEnemy0()
 	}
 }
 
-void EnemyTest::TackleProcess()
+void EnemyWalker::TackleProcess()
 {
 	if (mTackleWaitTimer < mTackleWait)
 	{
@@ -295,7 +295,7 @@ void EnemyTest::TackleProcess()
 	}
 }
 
-void EnemyTest::OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8 oppAtt)
+void EnemyWalker::OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8 oppAtt)
 {
 	if (caller != mBodyCollision || oppAtt != ColliderAttribute::ColAtt_Player)
 	{
@@ -330,13 +330,13 @@ void EnemyTest::OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8 o
 	}
 }
 
-void EnemyTest::OnBePressedByPlayer()
+void EnemyWalker::OnBePressedByPlayer()
 {
 	mFixVector.z -= mPushedVector.z;
 	mPushedVector.z = 0;
 }
 
-void EnemyTest::UpdateEnemy1()
+void EnemyWalker::UpdateEnemy1()
 {
 	if (mFlags_EnemyTest & mKnockBackFlagMask)
 	{
@@ -384,19 +384,19 @@ void EnemyTest::UpdateEnemy1()
 
 	mPrevFlags_EnemyTest = mFlags_EnemyTest;
 
-	EnemyTest::FlagType mask =
+	EnemyWalker::FlagType mask =
 		(mRDetectGroundFlagMask | mLDetectGroundFlagMask | mHitWallFlagMask | mDetectPlayerFlagMask | mDetectWallFlagMask);
 	mFlags_EnemyTest &= ~mask;
 }
 
-void EnemyTest::OnFlip()
+void EnemyWalker::OnFlip()
 {
 	bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
 	BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
 	mAutoMoveComp->ReverseVelocity();
 }
 
-void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
+void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
@@ -452,7 +452,7 @@ void EnemyTest::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 	}
 }
 
-void EnemyTest::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
+void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();

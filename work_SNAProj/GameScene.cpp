@@ -10,7 +10,7 @@
 #include "Block.h"
 #include "Stage.h"
 #include "BGObject.h"
-#include "EnemyTest.h"
+#include "EnemyWalker.h"
 #include "EnemyManager.h"
 #include "Input.h"
 #include "GameOverScene.h"

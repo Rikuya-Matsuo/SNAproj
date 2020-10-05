@@ -180,9 +180,6 @@
     <ClCompile Include="EnemyBase.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyTest.cpp">
-      <Filter>ソース ファイル\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
@@ -271,6 +268,9 @@
       <Filter>ソース ファイル\NinjaArts</Filter>
     </ClCompile>
     <ClCompile Include="ReelStringEdgeActor.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyWalker.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -392,9 +392,6 @@
     <ClInclude Include="ClampSpeedComponent.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyTest.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyBase.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
@@ -486,6 +483,9 @@
       <Filter>ヘッダー ファイル\NinjaArts</Filter>
     </ClInclude>
     <ClInclude Include="ReelStringEdgeActor.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyWalker.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 ﻿#include "EnemyManager.h"
-#include "EnemyTest.h"
+#include "EnemyWalker.h"
 #include "Stage.h"
 #include "AutoMoveComponent.h"
 #include "Block.h"
@@ -91,7 +91,7 @@ void EnemyManager::GenerateEnemy(int type, int inX, int inY)
 	}
 
 	// 生成
-	EnemyTest * enemy = new EnemyTest;
+	EnemyWalker * enemy = new EnemyWalker;
 	if (type == 1)
 	{
 		enemy->Flip();
