@@ -32,6 +32,8 @@ private:
 	// 忍術がまだ発動中であることを教える
 	void TellRunningNinjaArts();
 
-	// mEdgeに向かってプレイヤーを動かす
+	// mEdgeに向かってプレイヤーを動かす際の方向の計算
 	void CalculateDashVector();
+
+	void BringEnemy();
 };

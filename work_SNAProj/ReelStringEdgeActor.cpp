@@ -81,6 +81,12 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 	{
 		mHitEnemy = dynamic_cast<EnemyBase *>(opponent->GetOwner());
 
+		mHitEnemy->Capture();
+
+		mMoveVector = Vector3D::zero;
+
+		mAutoMoveComp->ReverseVelocity();
+
 		mReelState = ReelState::ReelState_Enemy;
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Block)

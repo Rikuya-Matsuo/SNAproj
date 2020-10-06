@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "ReelStringEdgeActor.h"
 #include "InputMoveComponent.h"
+#include "EnemyBase.h"
 
 NAReelString::NAReelString(Player * user):
 	NinjaArtsBase(user),
@@ -57,6 +58,12 @@ void NAReelString::TellRunningNinjaArts()
 		v = mDashVector;
 	}
 	mUser->SetMoveVector(v);
+
+
+	if (mEdge->GetReelState() == ReelStringEdgeActor::ReelState::ReelState_Enemy)
+	{
+		BringEnemy();
+	}
 }
 
 void NAReelString::CalculateDashVector()
@@ -65,4 +72,12 @@ void NAReelString::CalculateDashVector()
 
 	mDashVector = mRightDashVector;
 	mDashVector.x *= dir;
+}
+
+void NAReelString::BringEnemy()
+{
+	Actor * enemy = mEdge->GetHitEnemy();
+
+	const Vector3D & v = mEdge->GetMoveVector();
+	enemy->SetMoveVector(v);
 }
