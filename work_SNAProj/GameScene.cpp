@@ -44,14 +44,10 @@ GameScene::GameScene()
 	mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
 	mPlayer->SetScale(25.0f);
 
-	const bool genEnemy = true;
-	if (genEnemy)
-	{
-		EnemyManager * em = new EnemyManager(mStage);
-		em->LoadMapping("Map/Map0/enemyMapping.csv");
+	EnemyManager * em = new EnemyManager(mStage);
+	em->LoadMapping("Map/Map0/enemyMapping.csv");
 
-		delete em;
-	}
+	delete em;
 
 	Camera * cam = new Camera(mPlayer);
 	mCameras.emplace_back(cam);

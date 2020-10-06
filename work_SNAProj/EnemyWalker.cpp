@@ -138,38 +138,17 @@ void EnemyWalker::UpdateEnemy0()
 	}
 
 	// 画面外にいる間はプレイヤー検知装置を非アクティブに
-	mPlayerDetector->SetActive(GetInCameraFlag());
+	// ただし、忍術に捕まっていないときに限る
+	if (!(mFlags_EnemyWalker & mBeCapturedFlagMask))
+	{
+		mPlayerDetector->SetActive(GetInCameraFlag());
+	}
 	
 	const Uint8 blhit = mBlockChecker->GetHitDirectionFlags();
 
 	mFlags_EnemyWalker |= blhit & mRDVerMask ? mRDetectGroundFlagMask : 0;
 	mFlags_EnemyWalker |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
-	/*
-	if (mFlags_EnemyTest & mDamageAnimFlagMask)
-	{
-		mTextureIndex++;
-
-		if (mTextureIndex >= 2)
-		{
-			mDamageAnimTimer += System::GetInstance().GetDeltaTime();
-			const float damAniTime = 1.0f;
-
-			if (mDamageAnimTimer >= damAniTime)
-			{
-				mDamageAnimTimer = 0.0f;
-				mTextureIndex = 0;
-
-				mFlags_EnemyTest &= ~mDamageAnimFlagMask;
-			}
-			else
-			{
-				mTextureIndex = 2;
-			}
-		}
-
-		mAnimChips->SetTextureIndex(mTextureIndex);
-	}
-	*/
+	
 	const FlagType detectFlags = mFlags_EnemyWalker & (mLDetectGroundFlagMask | mRDetectGroundFlagMask);
 	switch (detectFlags)
 	{
@@ -498,4 +477,6 @@ void EnemyWalker::Capture()
 	BitFlagFunc::SetFlagByBool(false, mFlags_EnemyWalker, mTackleFlagMask);
 
 	mClamper->SetActive(false);
+
+	mAutoMoveComp->SetActive(false);
 }
