@@ -103,8 +103,6 @@ private:
 
 	FlagType mPrevFlags_Player;
 
-	FlagType mFlagsBeforeGiveControl;
-
 	std::list<EnemyBase *> mHitList;
 
 	// 床として接触したブロックへのポインタのリスト
