@@ -20,10 +20,12 @@ public:
 
 	void Capture() override;
 
+	void LetGo() override;
+
 	friend EnemyManager;
 
 private:
-	typedef Uint16 FlagType;
+	typedef Uint8 FlagType;
 	static const FlagType mDamageAnimFlagMask;
 	static const FlagType mLDetectGroundFlagMask;
 	static const FlagType mRDetectGroundFlagMask;
@@ -32,7 +34,6 @@ private:
 	static const FlagType mDetectWallFlagMask;
 	static const FlagType mTackleFlagMask;
 	static const FlagType mKnockBackFlagMask;
-	static const FlagType mBeCapturedFlagMask;
 
 	static const float mTackleWait;
 

@@ -421,7 +421,8 @@ void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
 			mHitList.emplace_back(enemy);
 
 			// ダメージを与える
-			enemy->Damage(mDashAttackPower);
+			char power = mDashAttackPower;
+			enemy->Damage(power);
 
 			// ヒットエフェクトの発生
 			AnimationEffect * hitEffect = FindNonActiveEffect(mHitEffects, mHitEffectMass);

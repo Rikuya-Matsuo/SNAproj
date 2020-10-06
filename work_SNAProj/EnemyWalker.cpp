@@ -19,7 +19,6 @@ const EnemyWalker::FlagType EnemyWalker::mDetectPlayerFlagMask	= 1 << 4;
 const EnemyWalker::FlagType EnemyWalker::mDetectWallFlagMask	= 1 << 5;
 const EnemyWalker::FlagType EnemyWalker::mTackleFlagMask		= 1 << 6;
 const EnemyWalker::FlagType EnemyWalker::mKnockBackFlagMask		= 1 << 7;
-const EnemyWalker::FlagType EnemyWalker::mBeCapturedFlagMask	= 1 << 8;
 
 const float EnemyWalker::mTackleWait = 0.8f;
 
@@ -64,36 +63,7 @@ EnemyWalker::EnemyWalker():
 	mBodyCollision->SetObjectBox(colBox);
 
 	const Vector3D boxSize = originalBox.mMax - originalBox.mMin;
-	/*
-	// 左側の地面検出装置
-	AABB detectorL = originalBox;
-	detectorL.mMax.z = detectorL.mMin.z;
-	detectorL.mMin.z -= 0.1f;
-	detectorL.mMax.x = detectorL.mMin.x;
-	detectorL.mMin.x -= boxSize.x / 3;
-	mLGroundDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
-	mLGroundDetector->SetObjectBox(detectorL);
-	mLGroundDetector->SetRotatableFlag(false);
-
-	// 右側の地面検出装置
-	AABB detectorR = originalBox;
-	detectorR.mMax.z = detectorR.mMin.z;
-	detectorR.mMin.z -= 0.1f;
-	detectorR.mMin.x = detectorR.mMax.x;
-	detectorR.mMax.x += boxSize.x / 3;
-	mRGroundDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
-	mRGroundDetector->SetObjectBox(detectorR);
-	mRGroundDetector->SetRotatableFlag(false);
-
-	// 進行方向の壁検出装置
-	AABB wallDetector = originalBox;
-	wallDetector.mMin.z += boxSize.z / 5;
-	wallDetector.mMax.z -= boxSize.z / 5;
-	wallDetector.mMax.x = wallDetector.mMin.x;
-	wallDetector.mMin.x -= 0.1f;
-	mWallDetector = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
-	mWallDetector->SetObjectBox(wallDetector);
-	*/
+	
 	// プレイヤー検出装置
 	AABB playerDetector = originalBox;
 	playerDetector.mMax.x = playerDetector.mMin.x;
@@ -139,7 +109,7 @@ void EnemyWalker::UpdateEnemy0()
 
 	// 画面外にいる間はプレイヤー検知装置を非アクティブに
 	// ただし、忍術に捕まっていないときに限る
-	if (!(mFlags_EnemyWalker & mBeCapturedFlagMask))
+	if (!(mFlags_Enemy & mBeCapturedFlagMask_EBase))
 	{
 		mPlayerDetector->SetActive(GetInCameraFlag());
 	}
@@ -470,7 +440,7 @@ void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const Collide
 
 void EnemyWalker::Capture()
 {
-	BitFlagFunc::SetFlagByBool(true, mFlags_EnemyWalker, mBeCapturedFlagMask);
+	EnemyBase::Capture();
 
 	mPlayerDetector->SetActive(false);
 
@@ -479,4 +449,17 @@ void EnemyWalker::Capture()
 	mClamper->SetActive(false);
 
 	mAutoMoveComp->SetActive(false);
+}
+
+void EnemyWalker::LetGo()
+{
+	EnemyBase::LetGo();
+
+	mPlayerDetector->SetActive(true);
+
+	BitFlagFunc::SetFlagByBool(true, mFlags_EnemyWalker, mTackleFlagMask);
+
+	mClamper->SetActive(true);
+
+	mAutoMoveComp->SetActive(true);
 }

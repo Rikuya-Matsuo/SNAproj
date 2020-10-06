@@ -4,6 +4,7 @@
 #include "AutoMoveComponent.h"
 #include "ClampSpeedComponent.h"
 #include "MeshComponent.h"
+#include "Mesh.h"
 #include "Player.h"
 #include "EnemyBase.h"
 #include "System.h"
@@ -22,8 +23,8 @@ ReelStringEdgeActor::ReelStringEdgeActor(NAReelString * ninjaArts):
 	mCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Detector);
 
 	AABB box;
-	box.mMin = Vector3D(-0.5f, -0.5f, -0.5f);
-	box.mMax = Vector3D(0.5f, 0.5f, 0.5f);
+	box.mMin = Vector3D(-0.5f, -0.5f, -0.1f);
+	box.mMax = Vector3D(0.5f, 0.5f, 0.1f);
 
 	mCollider->SetObjectBox(box);
 
@@ -33,6 +34,7 @@ ReelStringEdgeActor::ReelStringEdgeActor(NAReelString * ninjaArts):
 	ClampSpeedComponent * csc = new ClampSpeedComponent(this, Vector3D(300.0f, 0.0f, 0.0f));
 
 	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
+	mesh->LoadTexture("Assets/GoldKunai.png", System::GetInstance().GetRenderer(), this);
 
 	MeshComponent * mc = new MeshComponent(this, 500, false);
 	mc->SetMesh(mesh);
@@ -43,9 +45,11 @@ ReelStringEdgeActor::ReelStringEdgeActor(NAReelString * ninjaArts):
 
 	SetVisible(false);
 
-	mScale = 5.0f;
+	mScale = 10.0f;
 
 	SetPriority(mNinjaArts->GetUserPlayer()->GetPriority() + 100);
+
+	mRotationAxis = Vector3D(0.0f, 0.0f, 1.0f);
 }
 
 ReelStringEdgeActor::~ReelStringEdgeActor()
@@ -79,6 +83,12 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 
 	if (oppAtt == ColliderAttribute::ColAtt_Enemy)
 	{
+		// もう既にエネミーを捕えているなら無効
+		if (mReelState == ReelState::ReelState_Enemy)
+		{
+			return;
+		}
+
 		mHitEnemy = dynamic_cast<EnemyBase *>(opponent->GetOwner());
 
 		mHitEnemy->Capture();
@@ -110,6 +120,12 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 
 			// 忍術クラスに術が終了したことを教える。
 			mNinjaArts->TellEndNinjaArts();
+
+			// 敵が生きており、敵を捕らえていれば、捕えた状態から解放する
+			if (mHitEnemy && mHitEnemy->GetLife() > 0)
+			{
+				mHitEnemy->LetGo();
+			}
 		}
 	}
 }
@@ -125,6 +141,9 @@ void ReelStringEdgeActor::Launch(bool lookRight)
 	mReelState = ReelState::ReelState_Invalid;
 
 	mLaunchedXDirection = (lookRight) ? 1 : -1;
+
+	float angleDegrees = ((mLaunchedXDirection == 1) ? 0.0f : 180.0f);
+	mRotationAngle = Common::DegToRad(angleDegrees);
 
 	Vector3D v = mAutoMoveVector;
 	v.x *= mLaunchedXDirection;

@@ -15,12 +15,15 @@ public:
 	const char mLifeMax;
 
 	char GetLife() const { return mLife; }
-	void Damage(unsigned char damageValue) { mLife -= damageValue; }
+	void Damage(unsigned char damageValue);
 	void Recover(unsigned char recoverValue) { mLife += recoverValue; }
 
 	bool GetAttackFlag() const { return mFlags_Enemy & mAttackFlagMask_EBase; }
 
-	virtual void Capture() = 0;
+	virtual void Capture();
+
+	// Capture状態の解除
+	virtual void LetGo();
 
 	friend EnemyManager;
 
@@ -30,6 +33,7 @@ protected:
 	static const FlagType mImmortalFlagMask_EBase;
 	static const FlagType mLookRightFlagMask_EBase;
 	static const FlagType mAttackFlagMask_EBase;
+	static const FlagType mBeCapturedFlagMask_EBase;
 
 	static const float mDepth;
 
