@@ -116,16 +116,20 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		// 戻ってる状態か、ブロックにヒットしている状態なら非アクティブに
 		if (mAutoMoveComp->IsNowReverse() || mReelState == ReelState::ReelState_Block)
 		{
-			SetActive(false);
+			OnCompleteBringingUser();
+		}
+	}
+}
 
-			// 忍術クラスに術が終了したことを教える。
-			mNinjaArts->TellEndNinjaArts();
+void ReelStringEdgeActor::OnTouching(const ColliderComponentBase* caller, const ColliderComponentBase* opponent)
+{
+	ColliderAttribute oppAtt = opponent->GetColliderAttribute();
 
-			// 敵が生きており、敵を捕らえていれば、捕えた状態から解放する
-			if (mHitEnemy && mHitEnemy->GetLife() > 0)
-			{
-				mHitEnemy->LetGo();
-			}
+	if (oppAtt == ColliderAttribute::ColAtt_Player)
+	{
+		if (mAutoMoveComp->IsNowReverse() || mReelState == ReelState::ReelState_Block)
+		{
+			OnCompleteBringingUser();
 		}
 	}
 }
@@ -155,4 +159,18 @@ void ReelStringEdgeActor::Launch(bool lookRight)
 	SetActive(true);
 
 	SetVisible(true);
+}
+
+void ReelStringEdgeActor::OnCompleteBringingUser()
+{
+	SetActive(false);
+
+	// 忍術クラスに術が終了したことを教える。
+	mNinjaArts->TellEndNinjaArts();
+
+	// 敵が生きており、敵を捕らえていれば、捕えた状態から解放する
+	if (mHitEnemy && mHitEnemy->GetLife() > 0)
+	{
+		mHitEnemy->LetGo();
+	}
 }

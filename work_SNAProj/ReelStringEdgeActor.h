@@ -25,6 +25,8 @@ public:
 
 	void OnHit(const ColliderComponentBase* caller, const ColliderComponentBase* opponent) override;
 
+	void OnTouching(const ColliderComponentBase* caller, const ColliderComponentBase* opponent) override;
+
 	void Launch(bool lookRight);
 
 	ReelState GetReelState() const { return mReelState; }
@@ -51,4 +53,6 @@ private:
 
 	// 進んだ距離の累計
 	Vector3D mDistance;
+
+	void OnCompleteBringingUser();
 };
