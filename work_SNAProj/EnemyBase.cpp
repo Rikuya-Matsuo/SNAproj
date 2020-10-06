@@ -15,7 +15,7 @@ EnemyBase::EnemyBase(unsigned char lifeMax) :
 	mLife(lifeMax),
 	mFlags_Enemy(mAliveFlagMask_EBase)
 {
-	SetPriority(100);
+	SetPriority(500);
 
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 
