@@ -20,7 +20,11 @@ private:
 
 	const Vector3D mRightDashVector;
 
+	const float mDashSpeed;
+
 	Vector3D mDashVector;
+
+	Vector3D mUserSpeedLimitRecord;
 
 	////////////////////////////////////////////////
 	// ReelStringEdgeActor（以下、mEdge）専用

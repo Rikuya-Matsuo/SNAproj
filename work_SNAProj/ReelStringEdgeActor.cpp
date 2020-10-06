@@ -14,6 +14,7 @@ ReelStringEdgeActor::ReelStringEdgeActor(NAReelString * ninjaArts):
 	Actor(),
 	mNinjaArts(ninjaArts),
 	mHitEnemy(nullptr),
+	mHitBlock(nullptr),
 	mAutoMoveVector(Vector3D(10.0f, 0.0f, 0.0f)),
 	mLaunchedXDirection(0),
 	mDistance(Vector3D::zero),
@@ -101,6 +102,8 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Block)
 	{
+		mHitBlock = opponent->GetOwner();
+
 		mAutoMoveComp->SetVelocity(Vector3D::zero);
 
 		mMoveVector = Vector3D::zero;
@@ -140,7 +143,7 @@ void ReelStringEdgeActor::Launch(bool lookRight)
 
 	mDistance = mMoveVector = Vector3D::zero;
 
-	mHitEnemy = nullptr;
+	mHitBlock = mHitEnemy = nullptr;
 
 	mReelState = ReelState::ReelState_Invalid;
 

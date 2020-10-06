@@ -5,6 +5,7 @@ class Mesh;
 class InputMoveComponent;
 class BoxColliderComponent;
 class JumpComponent;
+class ClampSpeedComponent;
 class CompletionMeshActor;
 class EnemyBase;
 class AnimationEffect;
@@ -79,6 +80,8 @@ private:
 	const ColliderComponentBase * mWallPointer;
 
 	JumpComponent * mJumpComponent;
+
+	ClampSpeedComponent * mClampSpeedComponent;
 
 	CompletionMeshActor * mCompletionMeshActor;
 

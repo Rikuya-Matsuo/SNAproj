@@ -33,6 +33,8 @@ public:
 
 	EnemyBase * GetHitEnemy() const { return mHitEnemy; }
 
+	Actor * GetHitBlock() const { return mHitBlock; }
+
 private:
 	const Vector3D mAutoMoveVector;
 
@@ -41,6 +43,8 @@ private:
 	NAReelString * mNinjaArts;
 
 	EnemyBase * mHitEnemy;
+
+	Actor * mHitBlock;
 
 	BoxColliderComponent * mCollider;
 

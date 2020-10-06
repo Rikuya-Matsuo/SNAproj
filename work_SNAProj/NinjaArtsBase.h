@@ -3,6 +3,7 @@
 
 class Player;
 class InputMoveComponent;
+class ClampSpeedComponent;
 
 class NinjaArtsBase
 {
@@ -28,4 +29,6 @@ protected:
 	void SetActiveBrakeFlagOfUser(bool value);
 
 	InputMoveComponent * GetInputMoveComponent() const;
+
+	ClampSpeedComponent * GetClampSpeedComponent() const;
 };

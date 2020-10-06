@@ -146,8 +146,8 @@ Player::Player() :
 
 	// 最大速度を調整
 	Vector3D limitSpeed(170.0f, 0.0f, 100.0f);
-	ClampSpeedComponent * csc = new ClampSpeedComponent(this, limitSpeed);
-	csc->SetClampDirectionFlags(true, false, false);
+	mClampSpeedComponent = new ClampSpeedComponent(this, limitSpeed);
+	mClampSpeedComponent->SetClampDirectionFlags(true, false, false);
 
 	// 攻撃ヒットエフェクトの配列
 	mHitEffects = new AnimationEffect*[mHitEffectMass];
@@ -237,11 +237,6 @@ void Player::UpdateActor0()
 		{
 			mCurrentCursorNinjaArts->Use();
 		}
-	}
-
-	if (mCurrentCursorNinjaArts->IsUsed())
-	{
-		SDL_Delay(0);
 	}
 
 #ifdef DEBUG_SNA

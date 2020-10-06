@@ -2,12 +2,14 @@
 #include "Player.h"
 #include "ReelStringEdgeActor.h"
 #include "InputMoveComponent.h"
+#include "ClampSpeedComponent.h"
 #include "EnemyBase.h"
 
 NAReelString::NAReelString(Player * user):
 	NinjaArtsBase(user),
 	mRightDashVector(Vector3D(300.0f, 0.0f, 0.0f)),
-	mDashVector(Vector3D::zero)
+	mDashVector(Vector3D::zero),
+	mDashSpeed(300.0f)
 {
 	mEdge = new ReelStringEdgeActor(this);
 }
@@ -32,6 +34,8 @@ void NAReelString::Use()
 
 	SetActiveBrakeFlagOfUser(false);
 
+	mUserSpeedLimitRecord = GetClampSpeedComponent()->GetLimit();
+
 	mUser->SetMoveVector(Vector3D::zero);
 }
 
@@ -42,6 +46,8 @@ void NAReelString::TellEndNinjaArts()
 	SetAllowJumpFlagOfUser(true);
 
 	GetInputMoveComponent()->SetActive(true);
+
+	GetClampSpeedComponent()->SetLimit(mUserSpeedLimitRecord);
 
 	SetActiveBrakeFlagOfUser(true);
 
@@ -72,6 +78,16 @@ void NAReelString::CalculateDashVector()
 
 	mDashVector = mRightDashVector;
 	mDashVector.x *= dir;
+
+	GetClampSpeedComponent()->SetLimit(mDashVector);
+
+	Actor * hitBlock = mEdge->GetHitBlock();
+	float diffHeight = hitBlock->GetPosition().z - mUser->GetPosition().z;
+	if (diffHeight > 0.0f)
+	{
+		float distance = hitBlock->GetPosition().x - mUser->GetPosition().x;
+		mDashVector.z += diffHeight / distance;
+	}
 }
 
 void NAReelString::BringEnemy()
