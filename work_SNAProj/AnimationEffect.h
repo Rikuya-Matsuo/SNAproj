@@ -13,6 +13,8 @@ public:
 	void UpdateActor0() override;
 	void UpdateActor1() override;
 
+	void OnBecomeActive() override;
+
 	AnimationChips * GetAnimChips() const { return mAnimChip; }
 
 private:

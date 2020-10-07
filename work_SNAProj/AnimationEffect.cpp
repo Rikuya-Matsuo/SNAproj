@@ -36,3 +36,10 @@ void AnimationEffect::UpdateActor1()
 		mAnimChip->Reset();
 	}
 }
+
+void AnimationEffect::OnBecomeActive()
+{
+	Effect::OnBecomeActive();
+
+	mAnimChip->Reset();
+}
