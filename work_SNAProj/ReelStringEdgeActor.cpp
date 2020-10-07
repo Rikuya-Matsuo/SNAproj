@@ -90,6 +90,15 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		{
 			return;
 		}
+		// すでにブロックにヒットしているなら、理不尽な挙動を避けるため忍術をキャンセル
+		else if (mReelState == ReelState::ReelState_Block)
+		{
+			mHitEnemy = dynamic_cast<EnemyBase*>(opponent->GetOwner());
+
+			mNinjaArts->CancelNinjaArts();
+
+			return;
+		}
 
 		mHitEnemy = dynamic_cast<EnemyBase *>(opponent->GetOwner());
 
@@ -100,6 +109,8 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		mAutoMoveComp->ReverseVelocity();
 
 		mReelState = ReelState::ReelState_Enemy;
+
+		return;
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Block)
 	{
@@ -114,6 +125,8 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		mLaunchedXDirection = 0;
 
 		mReelState = ReelState::ReelState_Block;
+
+		return;
 	}
 	else if (oppAtt == ColliderAttribute::ColAtt_Player)
 	{
