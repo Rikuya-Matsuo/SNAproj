@@ -1,5 +1,6 @@
 ﻿#include "ReelStringEdgeActor.h"
 #include "NAReelString.h"
+#include "ReelStringStringActor.h"
 #include "BoxColliderComponent.h"
 #include "AutoMoveComponent.h"
 #include "ClampSpeedComponent.h"
@@ -40,11 +41,11 @@ ReelStringEdgeActor::ReelStringEdgeActor(NAReelString * ninjaArts):
 	MeshComponent * mc = new MeshComponent(this, 500, false);
 	mc->SetMesh(mesh);
 
+	mStringActor = new ReelStringStringActor(mNinjaArts, this);
+
 	SetAffectGravityFlag(false);
 
 	SetActive(false);
-
-	SetVisible(false);
 
 	mScale = 10.0f;
 
@@ -161,7 +162,7 @@ void ReelStringEdgeActor::Launch(bool lookRight)
 
 	SetActive(true);
 
-	SetVisible(true);
+	mStringActor->SetActive(true);
 }
 
 void ReelStringEdgeActor::Cancel()

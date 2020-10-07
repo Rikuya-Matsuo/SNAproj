@@ -5,6 +5,7 @@ class NAReelString;
 class EnemyBase;
 class BoxColliderComponent;
 class AutoMoveComponent;
+class ReelStringStringActor;
 
 class ReelStringEdgeActor final : public Actor
 {
@@ -47,6 +48,8 @@ private:
 	EnemyBase * mHitEnemy;
 
 	Actor * mHitBlock;
+
+	ReelStringStringActor * mStringActor;
 
 	BoxColliderComponent * mCollider;
 

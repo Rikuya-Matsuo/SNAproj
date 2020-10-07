@@ -273,6 +273,9 @@
     <ClCompile Include="EnemyWalker.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="ReelStringStringActor.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -486,6 +489,9 @@
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
     <ClInclude Include="EnemyWalker.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="ReelStringStringActor.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
