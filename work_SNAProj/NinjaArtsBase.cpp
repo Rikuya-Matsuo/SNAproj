@@ -15,6 +15,11 @@ void NinjaArtsBase::Use()
 	mIsUsedFlag = true;
 }
 
+void NinjaArtsBase::CancelNinjaArts()
+{
+	mIsUsedFlag = false;
+}
+
 void NinjaArtsBase::SetAllowJumpFlagOfUser(bool value)
 {
 	BitFlagFunc::SetFlagByBool(value, mUser->mFlags_Player, Player::mAllowJumpFlagMask);

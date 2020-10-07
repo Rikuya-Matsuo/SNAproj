@@ -29,6 +29,8 @@ public:
 
 	void Launch(bool lookRight);
 
+	void Cancel();
+
 	ReelState GetReelState() const { return mReelState; }
 
 	EnemyBase * GetHitEnemy() const { return mHitEnemy; }

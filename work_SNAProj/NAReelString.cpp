@@ -39,6 +39,11 @@ void NAReelString::Use()
 	mUser->SetMoveVector(Vector3D::zero);
 }
 
+void NAReelString::CancelNinjaArts()
+{
+	mEdge->Cancel();
+}
+
 void NAReelString::TellEndNinjaArts()
 {
 	mUser->SetAffectGravityFlag(true);

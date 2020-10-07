@@ -755,6 +755,12 @@ void Player::OnBeAttacked(const EnemyBase * enemy)
 		effect->SetPosition(mPosition);
 		effect->SetActive(true);
 	}
+
+	// 忍術のキャンセル
+	if (mCurrentCursorNinjaArts->IsUsed())
+	{
+		mCurrentCursorNinjaArts->CancelNinjaArts();
+	}
 }
 
 void Player::OnLifeRunOut()

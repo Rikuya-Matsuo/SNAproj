@@ -16,6 +16,8 @@ public:
 	bool IsUsed() const { return mIsUsedFlag; }
 
 	Player * GetUserPlayer() const { return mUser; }
+
+	virtual void CancelNinjaArts();
 	
 protected:
 	bool mIsUsedFlag;

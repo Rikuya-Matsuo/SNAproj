@@ -13,6 +13,8 @@ public:
 
 	void Use() override;
 
+	void CancelNinjaArts() override;
+
 	friend ReelStringEdgeActor;
 
 private:

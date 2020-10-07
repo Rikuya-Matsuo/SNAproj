@@ -164,6 +164,11 @@ void ReelStringEdgeActor::Launch(bool lookRight)
 	SetVisible(true);
 }
 
+void ReelStringEdgeActor::Cancel()
+{
+	OnCompleteBringingUser();
+}
+
 void ReelStringEdgeActor::OnCompleteBringingUser()
 {
 	SetActive(false);
