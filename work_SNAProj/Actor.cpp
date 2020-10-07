@@ -15,6 +15,9 @@ const Actor::FlagType Actor::mCalculateTransformFlagMask_Base		= 1 << 5;
 const Actor::FlagType Actor::mStopUpdateFlagMask_Base				= 1 << 6;
 const Actor::FlagType Actor::mInCameraFlagMask_Base					= 1 << 7;
 const Actor::FlagType Actor::mBuryDeeplyFlagMask_Base				= 1 << 8;
+const Actor::FlagType Actor::mFixXScaleFlagMask_Base				= 1 << 9;
+const Actor::FlagType Actor::mFixYScaleFlagMask_Base				= 1 << 10;
+const Actor::FlagType Actor::mFixZScaleFlagMask_Base				= 1 << 11;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
@@ -22,6 +25,7 @@ Actor::Actor():
 	mMoveVector(Vector3D::zero),
 	mRotationAxis(Vector3D(0.0f, 0.0f, 1.0f)),
 	mFixVector(Vector3D::zero),
+	mFixedScale(Vector3D::zero),
 	mPushedVector(Vector3D::zero),
 	mPriority(0),
 	mRotationAngle(0.0f),
@@ -227,7 +231,15 @@ void Actor::UpdateActor1()
 
 void Actor::CalculateWorldTransform()
 {
-	mWorldTransform = Matrix4::CreateScale(mScale);
+	bool fixX = mFlags & mFixXScaleFlagMask_Base;
+	bool fixY = mFlags & mFixYScaleFlagMask_Base;
+	bool fixZ = mFlags & mFixZScaleFlagMask_Base;
+	
+	float xScale = (fixX) ? mFixedScale.x : mScale;
+	float yScale = (fixY) ? mFixedScale.y : mScale;
+	float zScale = (fixZ) ? mFixedScale.z : mScale;
+
+	mWorldTransform = Matrix4::CreateScale(xScale, yScale, zScale);
 
 	mWorldTransform *= Matrix4::CreateFromQuaternion(mRotation);
 
@@ -238,6 +250,18 @@ void Actor::SetPriority(int value)
 {
 	mPriority = value;
 	System::GetInstance().RequestSortActor();
+}
+
+void Actor::SetFixScaleFlag(bool x, bool y, bool z)
+{
+	auto set = [this](bool flag, FlagType mask)
+	{
+		BitFlagFunc::SetFlagByBool(flag, this->mFlags, mask);
+	};
+
+	set(x, mFixXScaleFlagMask_Base);
+	set(y, mFixYScaleFlagMask_Base);
+	set(z, mFixZScaleFlagMask_Base);
 }
 
 void Actor::OnBecomeNotActive()

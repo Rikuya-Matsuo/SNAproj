@@ -26,6 +26,9 @@ protected:
 	static const FlagType mStopUpdateFlagMask_Base;				// 更新を止めるか否かのフラグマスク
 	static const FlagType mInCameraFlagMask_Base;
 	static const FlagType mBuryDeeplyFlagMask_Base;
+	static const FlagType mFixXScaleFlagMask_Base;
+	static const FlagType mFixYScaleFlagMask_Base;
+	static const FlagType mFixZScaleFlagMask_Base;
 
 	FlagType mFlags;
 
@@ -46,6 +49,9 @@ protected:
 
 	// 押し返しベクトルの総量
 	Vector3D mFixVector;
+
+	// スケールの各軸の固定値（各フラグが真のときのみ有効）
+	Vector3D mFixedScale;
 
 	Matrix4 mWorldTransform;
 
@@ -75,6 +81,10 @@ protected:
 	void CalculateWorldTransform();
 
 	void SetPriority(int value);
+
+	void SetFixScaleFlag(bool x, bool y, bool z);
+
+	void SetFixedScale(const Vector3D& scale) { mFixedScale = scale; }
 
 	virtual void OnBecomeNotActive();
 

@@ -19,6 +19,10 @@ ReelStringStringActor::ReelStringStringActor(NAReelString * ninjaArts, ReelStrin
 	MeshComponent* meshCmp = new MeshComponent(this, 100, false);
 	meshCmp->SetMesh(msh);
 
+	SetFixScaleFlag(false, false, true);
+
+	SetFixedScale(Vector3D(0.0f, 0.0f, 10.0f));
+
 	SetAffectGravityFlag(false);
 
 	SetActive(false);
