@@ -11,7 +11,7 @@ SpriteActor::SpriteActor(const char * texPath, int drawOrder):
 	{
 		mMesh->LoadTexture(texPath, System::GetInstance().GetRenderer(), this);
 	}
-	MeshComponent * mc = new MeshComponent(this, drawOrder, false, true);
+	MeshComponent * mc = new MeshComponent(this, drawOrder, false);
 	mc->SetMesh(mMesh);
 
 	mFlags &= ~mAffectGravityFlagMask_Base;

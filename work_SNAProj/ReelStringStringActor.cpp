@@ -16,7 +16,7 @@ ReelStringStringActor::ReelStringStringActor(NAReelString * ninjaArts, ReelStrin
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	msh->LoadTexture("Assets/ReelString.png", System::GetInstance().GetRenderer(), this);
 
-	MeshComponent* meshCmp = new MeshComponent(this, 100, false, false);
+	MeshComponent* meshCmp = new MeshComponent(this, 100, false);
 	meshCmp->SetMesh(msh);
 
 	SetAffectGravityFlag(false);

@@ -20,12 +20,11 @@ const MeshComponent::FlagType MeshComponent::mVisibleFlagMask = 1 << 0;
 const MeshComponent::FlagType MeshComponent::mIsSkeletalFlagMask = 1 << 1;
 const MeshComponent::FlagType MeshComponent::mAnimationModeFlagMask = 1 << 2;
 const MeshComponent::FlagType MeshComponent::mRangeOutDrawFlagMask = 1 << 3;
-const MeshComponent::FlagType MeshComponent::mUIFlagMask = 1 << 4;
 
 Vector3D MeshComponent::mCamOffset = Vector3D::zero;
 
 // メッシュコンポーネント　ownerとスキンメッシュかの情報入れる
-MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal, bool uiFlag)
+MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal)
 	:ComponentBase(owner)
 	, mMesh(nullptr)
 	, mDrawOrder(drawOrder)
@@ -62,19 +61,6 @@ void MeshComponent::Draw(Shader* shader)
 {
 	if ((mOwner->GetActiveFlag()) && (mMeshCompFlags & mVisibleFlagMask) && mMesh)
 	{
-		static bool forUISetting = false;
-		if (mMeshCompFlags & mUIFlagMask)
-		{
-			if (!forUISetting)
-			{
-				glDisable(GL_DEPTH_TEST);
-				glEnable(GL_BLEND);
-
-				//glOrtho(0, System::GetInstance().GetRenderer()->GetScreenWidth(), 0, System::GetInstance().GetRenderer()->GetScreenHeight(), -1000, 1000);
-				forUISetting = true;
-			}
-		}
-		else
 		{
 			static bool forBoardSetting = false;
 			bool isBoard = mMesh->GetIsBoardFlag();
@@ -101,10 +87,8 @@ void MeshComponent::Draw(Shader* shader)
 
 				forBoardSetting = false;
 			}
-			forUISetting = false;
 		}
 
-		if (!(mMeshCompFlags & mUIFlagMask))
 		{
 			// Set the world transform　ワールド変換をセット
 			shader->SetMatrixUniform("uWorldTransform",
@@ -123,32 +107,7 @@ void MeshComponent::Draw(Shader* shader)
 			// Draw　描画するー
 			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 		}
-		else
-		{
-			Texture * t = mMesh->GetTexture(mOwner);
-			Matrix4 scaleMat = Matrix4::CreateScale(
-				mOwner->GetScale(),
-				1.0f,
-				mOwner->GetScale());
-
-			Vector3D v = mOwner->GetPosition() + mCamOffset;
-			v.y = 0.0f;
-			Matrix4 transMat = Matrix4::CreateTranslation(v);
-
-			Matrix4 rot = Matrix4::CreateFromQuaternion(mOwner->GetRotation());
-			Matrix4 world = scaleMat * rot * transMat;
-
-			// Set the world transform　ワールド変換をセット
-			shader->SetMatrixUniform("uWorldTransform",
-				world);
-
-			t->SetActive();
-			// Set the mesh's vertex array as active　頂点配列をアクティブに
-			VertexArray* va = mMesh->GetVertexArray();
-			va->SetActive();
-			// Draw　描画するー
-			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
-		}
+		
 	}
 }
 
