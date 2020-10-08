@@ -231,7 +231,10 @@ void Player::UpdateActor0()
 
 	// 忍術の発動
 	// 忍術を使用中なら無効
-	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N) && !mCurrentCursorNinjaArts->IsUsed())
+	bool inputNinjaArtsCommand =
+		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N) ||
+		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_X);
+	if (inputNinjaArtsCommand && !mCurrentCursorNinjaArts->IsUsed())
 	{
 		if (mCurrentCursorNinjaArts)
 		{
