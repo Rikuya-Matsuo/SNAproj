@@ -15,7 +15,5 @@ public:
 
 private:
 	UIScreen * mUI;
-
-	Stage * mStage;
 };
 

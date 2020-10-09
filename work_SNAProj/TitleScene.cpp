@@ -8,19 +8,15 @@
 #include "TitleCameraTargetActor.h"
 #include "Stage.h"
 
-TitleScene::TitleScene()
+TitleScene::TitleScene():
+	SceneBase(),
+	mUI(new TitleUI)
 {
-	TitleCameraTargetActor * tcta = new TitleCameraTargetActor();
-	tcta->SetPosition(Vector3D(30.0f, 0.0f, 0.0f));
-	tcta->SetVelocity(Vector3D(1.0f, 0.0f, 0.0f));
-
-	mUI = new TitleUI;
-
-	mStage = new Stage;
+	mStage = new Stage();
 	mStage->SetBlockScale(0.3f);
 	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 	mStage->LoadBGObjectMap("Map/Map0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
-	Actor ** walls;
+	Actor** walls;
 	int wallMass = mStage->LoadBGObjectMap("Map/Map0/Wall.csv", 30, mStage->GetFloorHeight(), -75, 170, 0, &walls);
 
 	if (wallMass != -1)
@@ -35,6 +31,9 @@ TitleScene::TitleScene()
 
 		delete[] walls;
 	}
+
+	TitleCameraTargetActor* tcta = new TitleCameraTargetActor();
+	tcta->SetPosition(Vector3D(30.0f, 0.0f, 0.0f));
 
 	Camera * cam = new Camera(tcta);
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), tcta->GetPosition(), Vector3D(0.0f, 0.0f, 1.0f));

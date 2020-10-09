@@ -10,7 +10,7 @@ public:
 	TitleCameraTargetActor();
 	~TitleCameraTargetActor();
 
-	void SetVelocity(const Vector3D & moveVec);
+	void UpdateActor0() override;
 
 private:
 	AutoMoveComponent * mAutoMoveComponent;
