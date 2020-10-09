@@ -87,7 +87,7 @@ EnemyWalker::EnemyWalker():
 
 	mPrevFlags_EnemyTest = mFlags_EnemyWalker;
 
-	mFallSpeedRate = 1.0f;
+	mFallSpeedRate = 10.0f;
 
 	mFlags &= ~mAffectGravityFlagMask_Base;
 }
@@ -120,45 +120,22 @@ void EnemyWalker::UpdateEnemy0()
 	mFlags_EnemyWalker |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
 	
 	const FlagType detectFlags = mFlags_EnemyWalker & (mLDetectGroundFlagMask | mRDetectGroundFlagMask);
-	switch (detectFlags)
+	
+	// 左右どちらも床を検出できないかった
+	if (!detectFlags)
 	{
-	// 左だけ検知
-	case mLDetectGroundFlagMask:
-		if (mFlags_Enemy & mLookRightFlagMask_EBase)
-		{
-			//Flip();
-		}
-		break;
-
-	// 右だけ検知
-	case mRDetectGroundFlagMask:
-		if (!(mFlags_Enemy & mLookRightFlagMask_EBase))
-		{
-			//Flip();
-		}
-		break;
-
-	// どちらも検出できなかった
-	case 0:
 		// 空中では移動を行わない
 		if (mAutoMoveComp->GetActiveFlag())
 		{
 			mAutoMoveComp->SetActive(false);
 		}
-		if (!GetAffectGravityFlag())
+
+		// 重力のアクティブ化（忍術に捕らえられている際は例外）
+		bool isCaptured = mFlags_Enemy & mBeCapturedFlagMask_EBase;
+		if (!GetAffectGravityFlag() && !isCaptured)
 		{
 			SetAffectGravityFlag(true);
 		}
-		break;
-
-	// 両方検出
-	default:
-		// ノックバック時は例外
-		if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyWalker & mKnockBackFlagMask))
-		{
-			mAutoMoveComp->SetActive(true);
-		}
-		break;
 	}
 
 	// 着地中は重力の影響を受けない(ノックバック例外）
@@ -211,7 +188,9 @@ void EnemyWalker::UpdateEnemy0()
 
 	// 自動移動が非アクティブなら水平方向移動ベクトルを0に
 	// ただし、ノックバックは除く
-	if (!mAutoMoveComp->GetActiveFlag() && !(mFlags_EnemyWalker & mKnockBackFlagMask))
+	// 加えて、忍術に捕縛された場合も除く
+	bool exceptionCase = (mFlags_EnemyWalker & mKnockBackFlagMask) || (mFlags_Enemy & mBeCapturedFlagMask_EBase);
+	if (!mAutoMoveComp->GetActiveFlag() && !exceptionCase)
 	{
 		mMoveVector.x = 0.0f;
 	}
@@ -312,22 +291,15 @@ void EnemyWalker::UpdateEnemy1()
 		SetAffectGravityFlag(false);
 	}
 
-	if (mFlags_Enemy & mLookRightFlagMask_EBase)
-	{
-		if (blhit & mRightMask)
-		{
-			Flip();
-		}
-		else if (!(blhit & mRDVerMask) && blhit & mLDVerMask)
-		{
-			Flip();
-		}
-	}
-	else if (blhit & mLeftMask)
-	{
-		Flip();
-	}
-	else if (!(blhit & mLDVerMask) && blhit & mRDVerMask)
+	// 反転するか否かの判定
+	// ブロックにぶち当たった場合、もしくは行く先の足場ブロックがない場合true
+	bool flipFlag =
+		(mFlags_Enemy & mLookRightFlagMask_EBase) ?
+		(blhit & mRightMask) || (!(blhit & mRDVerMask) && blhit & mLDVerMask) :
+		(blhit & mLeftMask) || (!(blhit & mLDVerMask) && blhit & mRDVerMask);
+
+	// 反転を行うが、忍術に捕縛されている場合は除く
+	if (flipFlag && !(mFlags_Enemy & mBeCapturedFlagMask_EBase))
 	{
 		Flip();
 	}

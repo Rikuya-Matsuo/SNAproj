@@ -76,12 +76,6 @@ private:
 
 	BoxColliderComponent * mBodyCollision;
 
-	//BoxColliderComponent * mLGroundDetector;
-
-	//BoxColliderComponent * mRGroundDetector;
-
-	//BoxColliderComponent * mWallDetector;
-
 	BoxColliderComponent * mPlayerDetector;
 
 	ClampSpeedComponent * mClamper;
