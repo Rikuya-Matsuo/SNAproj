@@ -4,6 +4,8 @@
 #include "SceneBase.h"
 #include "Stage.h"
 #include "Block.h"
+#include "System.h"
+#include "Input.h"
 
 TitleCameraTargetActor::TitleCameraTargetActor():
 	Actor(),
@@ -26,7 +28,18 @@ TitleCameraTargetActor::~TitleCameraTargetActor()
 
 void TitleCameraTargetActor::UpdateActor0()
 {
-	bool goRightFlag = (mAutoMoveComponent->GetVelocity().x > 0.0f);
+	bool goRightFlag = !(mAutoMoveComponent->IsNowReverse());
+	float blockSize = mBelongScene->GetStage()->GetBlockScale() * Block::mModelSize;
+
+	// デバッグ用に、スペースキーで進行方向へ一定距離ワープする
+#ifdef DEBUG_SNA
+	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE))
+	{
+		float warpStride = blockSize * 10;
+		mPosition.x += (goRightFlag) ? warpStride : -warpStride;
+	}
+#endif // DEBUG_SNA
+
 	// 右へ向かっている場合
 	if (goRightFlag)
 	{
@@ -41,7 +54,6 @@ void TitleCameraTargetActor::UpdateActor0()
 	// 左へ向かっている場合
 	else
 	{
-		float blockSize = mBelongScene->GetStage()->GetBlockScale() * Block::mModelSize;
 		float line = blockSize * 3;
 
 		// ラインを超えているなら反転
