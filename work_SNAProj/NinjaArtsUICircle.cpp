@@ -22,9 +22,9 @@ bool NinjaArtsUICircle::GetPositionOf1Texture(size_t index, Vector2D & ret)
 	}
 
 	Vector2D offset;
-	float localAngle = mAngle + (2 * static_cast<float>(M_PI) / mTextures.size());
-	offset.x = cosf(localAngle);
-	offset.y = sinf(localAngle);
+	float angle = mAngle + (2 * static_cast<float>(M_PI) / mTextures.size()) * index;
+	offset.x = cosf(angle);
+	offset.y = sinf(angle);
 	offset *= mRadius;
 
 	ret = mCenterPosition + offset;
