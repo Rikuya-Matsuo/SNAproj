@@ -51,8 +51,15 @@ GameUI::GameUI(Player * player):
 
 	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");
 
-	mNinjaArtsUI = new NinjaArtsUICircle(Vector2D::zero, 4.0f);
+	float radius = 60.0f;
+	float halfScreenWidth = (System::GetInstance().GetRenderer()->GetScreenWidth() / 2);
+	float halfScreenHeight = (System::GetInstance().GetRenderer()->GetScreenHeight() / 2);
+	Vector2D pos;
+	pos.x = (4 * halfScreenWidth) / 5;
+	pos.y = -( 4 * halfScreenHeight) / 5;
+	mNinjaArtsUI = new NinjaArtsUICircle(pos, radius);
 	mPlayer->LinkNinjaArtsUICircle(mNinjaArtsUI);
+	mNinjaArtsUI->SetIconScale(0.4f);
 }
 
 GameUI::~GameUI()
@@ -80,7 +87,8 @@ void GameUI::Draw(Shader * shader) const
 		Texture * tex = mLifeAnimTextures[i].GetCurrentTexture();
 		if (!tex)
 		{
-			printf("Return is null...\n");
+			printf("GameUI Draw Function : Return is null...\n");
+			return;
 		}
 
 		float scale = 0.3f;
@@ -90,6 +98,23 @@ void GameUI::Draw(Shader * shader) const
 		pos.y = System::GetInstance().GetRenderer()->GetScreenHeight() / 2 - tex->GetHeight() * scale / 2 + tex->GetHeight() * scale / 5;
 
 		DrawTexture(shader, tex, pos, scale);
+	}
+
+	// 忍術UI
+	for (size_t i = 0; i < mNinjaArtsUI->GetTextures().size(); ++i)
+	{
+		Texture * tex = mNinjaArtsUI->GetTextures()[i];
+		if (!tex)
+		{
+			// テクスチャがnullだった場合、スキップする
+			continue;
+		}
+
+		Vector2D pos;
+		if (mNinjaArtsUI->GetPositionOf1Texture(i, pos))
+		{
+			DrawTexture(shader, tex, pos, mNinjaArtsUI->GetIconScale());
+		}
 	}
 
 	// ガイドUI

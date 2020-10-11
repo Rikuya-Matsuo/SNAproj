@@ -7,10 +7,13 @@
 
 const float NinjaArtsUICircle::mRotateSpeedRadPerSecond = Common::DegToRad(240.0f);
 
+const float NinjaArtsUICircle::mInitialAngle = static_cast<float>(M_PI / 2.0f);
+
 NinjaArtsUICircle::NinjaArtsUICircle(const Vector2D & centerPos, float radius):
 	mCenterPosition(centerPos),
-	mAngle(0.0f),
-	mRadius(radius)
+	mAngle(mInitialAngle),
+	mRadius(radius),
+	mIconScale(1.0f)
 {
 }
 
@@ -49,7 +52,7 @@ bool NinjaArtsUICircle::GetPositionOf1Texture(size_t index, Vector2D & ret)
 void NinjaArtsUICircle::Update()
 {
 	// 目標とする角度
-	float goalAngle = CalculatDistanceAngle() * mCurrentIconID;
+	float goalAngle = CalculatDistanceAngle() * mCurrentIconID + mInitialAngle;
 
 	// この時点で現在の角度と同じなら関数を抜ける
 	if (goalAngle == mAngle)

@@ -27,10 +27,16 @@ public:
 
 	void SetIconID(char id) { mCurrentIconID = id; }
 
+	float GetIconScale() const { return mIconScale; }
+
+	void SetIconScale(float scale) { mIconScale = scale; }
+
 	void Update();
 
 private:
 	static const float mRotateSpeedRadPerSecond;
+
+	static const float mInitialAngle;
 
 	std::vector<Texture *> mTextures;
 
@@ -43,6 +49,8 @@ private:
 	float mAngle;
 
 	char mCurrentIconID;
+
+	float mIconScale;
 
 	// アイコンが空けている角度の間隔の計算
 	float CalculatDistanceAngle() { return (2 * static_cast<float>(M_PI) / mTextures.size()); }

@@ -4,6 +4,8 @@
 #include "InputMoveComponent.h"
 #include "ClampSpeedComponent.h"
 #include "EnemyBase.h"
+#include "System.h"
+#include "Texture.h"
 
 NAReelString::NAReelString(Player * user):
 	NinjaArtsBase(user),
@@ -12,6 +14,8 @@ NAReelString::NAReelString(Player * user):
 	mDashSpeed(300.0f)
 {
 	mEdge = new ReelStringEdgeActor(this);
+
+	mIconTexture = System::GetInstance().GetRenderer()->GetTexture("Assets/NAReelStringUI.png");
 }
 
 NAReelString::~NAReelString()
