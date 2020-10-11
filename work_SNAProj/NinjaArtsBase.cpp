@@ -2,7 +2,9 @@
 #include "Player.h"
 
 NinjaArtsBase::NinjaArtsBase(Player * user):
-	mUser(user)
+	mUser(user),
+	mIconTexture(nullptr),
+	mIconID(-1)
 {
 }
 

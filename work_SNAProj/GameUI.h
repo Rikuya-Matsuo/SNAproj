@@ -3,11 +3,12 @@
 
 class Player;
 class AnimationChips;
+class NinjaArtsUICircle;
 
 class GameUI : public UIScreen
 {
 public:
-	GameUI(const Player * player);
+	GameUI(Player * player);
 	~GameUI();
 
 	void Update() override;
@@ -17,9 +18,11 @@ public:
 private:
 	const char mLifeMax;
 
-	const Player * mPlayer;
+	Player * mPlayer;
 
 	AnimationChips * mLifeAnimTextures;
 
 	Texture * mGuide;
+
+	NinjaArtsUICircle * mNinjaArtsUI;
 };

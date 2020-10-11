@@ -3,10 +3,11 @@
 #include "AnimationChips.h"
 #include "System.h"
 #include "Texture.h"
+#include "NinjaArtsUICircle.h"
 #include <vector>
 #include <cstdlib>
 
-GameUI::GameUI(const Player * player):
+GameUI::GameUI(Player * player):
 	UIScreen(),
 	mPlayer(player),
 	mLifeMax(player->GetLife())
@@ -49,6 +50,9 @@ GameUI::GameUI(const Player * player):
 	}
 
 	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");
+
+	mNinjaArtsUI = new NinjaArtsUICircle(Vector2D::zero, 4.0f);
+	mPlayer->LinkNinjaArtsUICircle(mNinjaArtsUI);
 }
 
 GameUI::~GameUI()
@@ -64,6 +68,8 @@ void GameUI::Update()
 	{
 		mLifeAnimTextures[i].Update();
 	}
+
+	mNinjaArtsUI->Update();
 }
 
 void GameUI::Draw(Shader * shader) const

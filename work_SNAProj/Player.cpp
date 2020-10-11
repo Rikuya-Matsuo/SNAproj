@@ -14,6 +14,7 @@
 #include "EnemyBase.h"
 #include "AnimationEffect.h"
 #include "NAReelString.h"
+#include "NinjaArtsUICircle.h"
 
 #ifdef DEBUG_SNA
 #define IMMORTAL_PLAYER
@@ -38,10 +39,10 @@ Player::Player() :
 	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlag),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
-	mCurrentCursorNinjaArts(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
 	mWallPointer(nullptr),
 	mLife(mLifeMax),
+	mCurrentNinjaArtsIndex(0),
 	mHitEffectMass(4)
 {
 	mPushedFlags.Init();
@@ -159,7 +160,9 @@ Player::Player() :
 	}
 
 	// 忍術の設定
-	mCurrentCursorNinjaArts = new NAReelString(this);
+	NinjaArtsBase * latestSetNA;
+	latestSetNA = new NAReelString(this);
+	mNinjaArts.emplace_back(latestSetNA);
 
 	// 落下スピード割合の調整
 	mFallSpeedRate = 25.0f;
@@ -173,6 +176,8 @@ Player::~Player()
 	// インスタンス自体はActorクラスを継承しているため、Systemクラスによってメモリ解放が行われる
 	delete[] mHitEffects;
 	mHitEffects = nullptr;
+
+	std::vector<NinjaArtsBase *>().swap(mNinjaArts);
 
 	SDL_Log("Player is deleted\n");
 }
@@ -234,11 +239,11 @@ void Player::UpdateActor0()
 	bool inputNinjaArtsCommand =
 		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N) ||
 		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_X);
-	if (inputNinjaArtsCommand && !mCurrentCursorNinjaArts->IsUsed())
+	if (inputNinjaArtsCommand && !mNinjaArts[mCurrentNinjaArtsIndex]->IsUsed())
 	{
-		if (mCurrentCursorNinjaArts)
+		if (mNinjaArts[mCurrentNinjaArtsIndex])
 		{
-			mCurrentCursorNinjaArts->Use();
+			mNinjaArts[mCurrentNinjaArtsIndex]->Use();
 		}
 	}
 
@@ -615,6 +620,22 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 }
 
+void Player::LinkNinjaArtsUICircle(NinjaArtsUICircle * naUi)
+{
+	mNinjaArtsUI = naUi;
+
+	mNinjaArtsUI->SetPlayer(this);
+
+	for (auto itr = mNinjaArts.begin(); itr != mNinjaArts.end(); ++itr)
+	{
+		Texture * icon = (*itr)->GetIconTexture();
+
+		char id = mNinjaArtsUI->ResisterTexture(icon);
+
+		(*itr)->SetIconId(id);
+	}
+}
+
 void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
 	// 壁の真下にあるブロックは地面として扱わない
@@ -760,9 +781,9 @@ void Player::OnBeAttacked(const EnemyBase * enemy)
 	}
 
 	// 忍術のキャンセル
-	if (mCurrentCursorNinjaArts->IsUsed())
+	if (mNinjaArts[mCurrentNinjaArtsIndex]->IsUsed())
 	{
-		mCurrentCursorNinjaArts->CancelNinjaArts();
+		mNinjaArts[mCurrentNinjaArtsIndex]->CancelNinjaArts();
 	}
 }
 

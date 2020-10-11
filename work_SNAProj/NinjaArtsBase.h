@@ -4,6 +4,7 @@
 class Player;
 class InputMoveComponent;
 class ClampSpeedComponent;
+class Texture;
 
 class NinjaArtsBase
 {
@@ -17,12 +18,22 @@ public:
 
 	Player * GetUserPlayer() const { return mUser; }
 
+	Texture * GetIconTexture() const { return mIconTexture; }
+
 	virtual void CancelNinjaArts();
 	
+	char GetIconID() const { return mIconID; }
+
+	void SetIconId(char id) { mIconID = id; }
+
 protected:
 	bool mIsUsedFlag;
 
 	Player * mUser;
+
+	Texture * mIconTexture;
+
+	char mIconID;
 
 	// ユーザーのジャンプ許可フラグをセットする関数
 	void SetAllowJumpFlagOfUser(bool value);

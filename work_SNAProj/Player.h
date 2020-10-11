@@ -10,6 +10,7 @@ class CompletionMeshActor;
 class EnemyBase;
 class AnimationEffect;
 class NinjaArtsBase;
+class NinjaArtsUICircle;
 
 class Player final : public Actor
 {
@@ -32,6 +33,8 @@ public:
 	void OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
 	void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
+
+	void LinkNinjaArtsUICircle(NinjaArtsUICircle * naUi);
 
 	static const char mLifeMax;
 
@@ -85,12 +88,16 @@ private:
 
 	CompletionMeshActor * mCompletionMeshActor;
 
-	NinjaArtsBase * mCurrentCursorNinjaArts;
+	std::vector<NinjaArtsBase *> mNinjaArts;
+
+	NinjaArtsUICircle * mNinjaArtsUI;
 
 	char mCurrentAnimation;
 
 	char mLife;
 	
+	Uint8 mCurrentNinjaArtsIndex;
+
 	// 押し返しが発生したフラグ。
 	// 正負によって方向を表す。
 	struct PushedFlag
