@@ -14,8 +14,12 @@ NinjaArtsUICircle::NinjaArtsUICircle(const Vector2D & centerPos, float radius):
 	mAngle(mInitialAngle),
 	mRadius(radius),
 	mIconScale(1.0f),
+	mButtonUIScale(1.0f),
 	mRRotateFlag(false)
 {
+	mPrevIconScale = mIconScale;
+
+	mButtonUITexture = System::GetInstance().GetRenderer()->GetTexture("Assets/pad_X.png");
 }
 
 NinjaArtsUICircle::~NinjaArtsUICircle()
@@ -50,8 +54,21 @@ bool NinjaArtsUICircle::GetPositionOf1Texture(size_t index, Vector2D & ret)
 	return true;
 }
 
-
 void NinjaArtsUICircle::Update()
+{
+	// 角度の更新
+	UpdateAngle();
+
+	// アイコンのスケールが変わっており、アイコンが1つ以上登録されていればボタンUIの表示位置を更新する
+	if (mPrevIconScale != mIconScale && mTextures.size())
+	{
+		UpdateButtonUIPosition();
+	}
+
+	mPrevIconScale = mIconScale;
+}
+
+void NinjaArtsUICircle::UpdateAngle()
 {
 	// 目標とする角度
 	float goalAngle = CalculatDistanceAngle() * mCurrentIconID + mInitialAngle;
@@ -98,4 +115,17 @@ void NinjaArtsUICircle::Update()
 
 	// 回転
 	mAngle += speed;
+}
+
+void NinjaArtsUICircle::UpdateButtonUIPosition()
+{
+	// アイコン画像のサイズ取得
+	// 正方形の画像が設定されていることを信じ、x軸の長さを取得する
+	int graphSize = mTextures[mCurrentIconID]->GetWidth();
+
+	// ボタンUIの位置を、現在選択されている忍術の上に一旦設定
+	GetPositionOf1Texture(mCurrentIconID, mButtonUIPosition);
+
+	// 調節
+
 }

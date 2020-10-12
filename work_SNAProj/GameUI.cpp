@@ -116,6 +116,8 @@ void GameUI::Draw(Shader * shader) const
 			DrawTexture(shader, tex, pos, mNinjaArtsUI->GetIconScale());
 		}
 	}
+	Texture * button = mNinjaArtsUI->GetButtonTexture();
+	DrawTexture(shader, button, mNinjaArtsUI->GetButtonUIPosition(), mNinjaArtsUI->GetButtonUIScale());
 
 	// ガイドUI
 	Vector2D guidePos;
