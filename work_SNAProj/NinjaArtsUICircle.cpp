@@ -63,6 +63,15 @@ void NinjaArtsUICircle::Update()
 	// 現在の角度と比較
 	float angleDiff = goalAngle - mAngle;
 
+	// 逆回転のほうが早く目標角度に到達できる場合、逆回転をする
+	// 目標角度と現在の角度の差をマイナス表記したもの。（例：270度 -> -90度、-30度 -> 330度）
+	float piTimes2 = static_cast<float>(2 * M_PI);
+	float angleDiffMinus = angleDiff - ((angleDiff > 0) ? piTimes2 : -piTimes2);
+	if (fabsf(angleDiff) > fabsf(angleDiffMinus))
+	{
+		angleDiff = angleDiffMinus;
+	}
+
 	// 回転速度の計算
 	float speed = mRotateSpeedRadPerSecond * System::GetInstance().GetDeltaTime();
 	if (angleDiff < 0.0f)

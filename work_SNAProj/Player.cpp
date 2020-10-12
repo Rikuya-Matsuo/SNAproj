@@ -164,6 +164,9 @@ Player::Player() :
 	latestSetNA = new NAReelString(this);
 	mNinjaArts.emplace_back(latestSetNA);
 
+	latestSetNA = new NAReelString(this);
+	mNinjaArts.emplace_back(latestSetNA);
+
 	// 落下スピード割合の調整
 	mFallSpeedRate = 25.0f;
 
@@ -177,6 +180,13 @@ Player::~Player()
 	delete[] mHitEffects;
 	mHitEffects = nullptr;
 
+	for (auto itr = mNinjaArts.begin(); itr != mNinjaArts.end(); ++itr)
+	{
+		delete (*itr);
+
+		(*itr) = nullptr;
+	}
+	mNinjaArts.clear();
 	std::vector<NinjaArtsBase *>().swap(mNinjaArts);
 
 	SDL_Log("Player is deleted\n");
@@ -233,6 +243,33 @@ void Player::UpdateActor0()
 
 		mAttackCollider->SetActive(true);
 	}
+
+	// 忍術の選択
+	bool ninjaArtsRRotateInput =
+		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_R) ||
+		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
+	bool ninjaArtsLRotateInput =
+		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_E) ||
+		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+
+	// 増加分の計算。Rボタンなら+1、Lボタンなら-1。同時押しなら0となるよう計算。
+	char addition = ninjaArtsRRotateInput;
+	addition -= ninjaArtsLRotateInput;
+	char naIndex = mCurrentNinjaArtsIndex + addition;
+
+	// インデックスの計算後、忍術コンテナの要素数を超えているか、0を下回った時調整
+	// 単純なクランプではなく、0を下回った時は最後尾のインデックスに、要素数を超えたときは0に戻る。
+	if (naIndex < 0)
+	{
+		naIndex = static_cast<char>(mNinjaArts.size() - 1);
+	}
+	else if (static_cast<Uint8>(naIndex) >= mNinjaArts.size())
+	{
+		naIndex = 0;
+	}
+
+	mCurrentNinjaArtsIndex = naIndex;
+	mNinjaArtsUI->SetIconID(mNinjaArts[mCurrentNinjaArtsIndex]->GetIconID());
 
 	// 忍術の発動
 	// 忍術を使用中なら無効
