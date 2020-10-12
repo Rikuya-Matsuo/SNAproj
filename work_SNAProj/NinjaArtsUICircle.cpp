@@ -119,13 +119,14 @@ void NinjaArtsUICircle::UpdateAngle()
 
 void NinjaArtsUICircle::UpdateButtonUIPosition()
 {
-	// アイコン画像のサイズ取得
+	// アイコン画像のサイズ取得 & スケール値を加味
 	// 正方形の画像が設定されていることを信じ、x軸の長さを取得する
-	int graphSize = mTextures[mCurrentIconID]->GetWidth();
+	float graphSize = mTextures[mCurrentIconID]->GetWidth() * mIconScale;
 
 	// ボタンUIの位置を、現在選択されている忍術の上に一旦設定
 	GetPositionOf1Texture(mCurrentIconID, mButtonUIPosition);
 
 	// 調節
-
+	mButtonUIPosition.x -= graphSize / 2.0f;
+	mButtonUIPosition.y += graphSize / 2.0f;
 }
