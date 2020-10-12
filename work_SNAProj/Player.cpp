@@ -271,6 +271,11 @@ void Player::UpdateActor0()
 	mCurrentNinjaArtsIndex = naIndex;
 	mNinjaArtsUI->SetIconID(mNinjaArts[mCurrentNinjaArtsIndex]->GetIconID());
 
+	if (ninjaArtsRRotateInput || ninjaArtsLRotateInput)
+	{
+		mNinjaArtsUI->SetRotateDirection(ninjaArtsRRotateInput);
+	}
+
 	// 忍術の発動
 	// 忍術を使用中なら無効
 	bool inputNinjaArtsCommand =

@@ -27,6 +27,10 @@ public:
 
 	void SetIconID(char id) { mCurrentIconID = id; }
 
+	// 右回転を行うか左回転を行うかをフラグによって指定する。
+	// しかし、表示アイコンが2つ以下の時のみ、フラグは機能する
+	void SetRotateDirection(bool rRotaFlag) { mRRotateFlag = rRotaFlag; }
+
 	float GetIconScale() const { return mIconScale; }
 
 	void SetIconScale(float scale) { mIconScale = scale; }
@@ -51,6 +55,8 @@ private:
 	char mCurrentIconID;
 
 	float mIconScale;
+
+	bool mRRotateFlag;
 
 	// アイコンが空けている角度の間隔の計算
 	float CalculatDistanceAngle() { return (2 * static_cast<float>(M_PI) / mTextures.size()); }

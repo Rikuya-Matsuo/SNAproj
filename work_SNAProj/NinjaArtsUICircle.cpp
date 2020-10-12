@@ -5,7 +5,7 @@
 #include "System.h"
 #include <cmath>
 
-const float NinjaArtsUICircle::mRotateSpeedRadPerSecond = Common::DegToRad(240.0f);
+const float NinjaArtsUICircle::mRotateSpeedRadPerSecond = Common::DegToRad(360.0f);
 
 const float NinjaArtsUICircle::mInitialAngle = static_cast<float>(M_PI / 2.0f);
 
@@ -13,7 +13,8 @@ NinjaArtsUICircle::NinjaArtsUICircle(const Vector2D & centerPos, float radius):
 	mCenterPosition(centerPos),
 	mAngle(mInitialAngle),
 	mRadius(radius),
-	mIconScale(1.0f)
+	mIconScale(1.0f),
+	mRRotateFlag(false)
 {
 }
 
@@ -49,6 +50,7 @@ bool NinjaArtsUICircle::GetPositionOf1Texture(size_t index, Vector2D & ret)
 	return true;
 }
 
+
 void NinjaArtsUICircle::Update()
 {
 	// 目標とする角度
@@ -70,6 +72,14 @@ void NinjaArtsUICircle::Update()
 	if (fabsf(angleDiff) > fabsf(angleDiffMinus))
 	{
 		angleDiff = angleDiffMinus;
+	}
+	// どちらの回転でも同じ場合（アイコンが2つの時）
+	// 上の条件文に倣い「絶対値が同じとき」とすると、float型特有のズレのせいで条件文がtrueにならないため、要素数で判断する
+	else if (mTextures.size() == 2)
+	{
+		// 右回転フラグが真なら大きい方、偽なら小さい方を角度差として使う
+		angleDiff = mRRotateFlag ?
+			Common::Larger(angleDiff, angleDiffMinus) : Common::Smaller(angleDiff, angleDiffMinus);
 	}
 
 	// 回転速度の計算
