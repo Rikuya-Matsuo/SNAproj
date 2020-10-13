@@ -1,11 +1,12 @@
 ﻿#include "NAReelString.h"
-#include "Player.h"
 #include "ReelStringEdgeActor.h"
 #include "InputMoveComponent.h"
 #include "ClampSpeedComponent.h"
 #include "EnemyBase.h"
 #include "System.h"
 #include "Texture.h"
+#include "Mesh.h"
+#include "AnimationChips.h"
 
 NAReelString::NAReelString(Player * user):
 	NinjaArtsBase(user),
@@ -38,6 +39,12 @@ void NAReelString::Use()
 
 	SetActiveBrakeFlagOfUser(false);
 
+	Player::AnimationPattern dashAtkAnim = Player::AnimationPattern::Anim_DashAttack;
+	SetAnimationIndex(dashAtkAnim);
+	AnimationChips * anim = GetMesh()->GetAnimChips(mUser, dashAtkAnim);
+	anim->Reset();
+	anim->StartPlaying();
+
 	mUserSpeedLimitRecord = GetClampSpeedComponent()->GetLimit();
 
 	mUser->SetMoveVector(Vector3D::zero);
@@ -60,6 +67,12 @@ void NAReelString::TellEndNinjaArts()
 
 	SetActiveBrakeFlagOfUser(true);
 
+	AnimationChips* atkAnim = GetMesh()->GetAnimChips(mUser, Player::AnimationPattern::Anim_DashAttack);
+	atkAnim->StartPlaying();
+
+	AnimationChips * runAnim = GetMesh()->GetAnimChips(mUser, Player::AnimationPattern::Anim_Run);
+	runAnim->StartPlaying();
+
 	mIsUsedFlag = false;
 }
 
@@ -71,6 +84,14 @@ void NAReelString::TellRunningNinjaArts()
 	if (mEdge->GetReelState() == ReelStringEdgeActor::ReelState::ReelState_Block)
 	{
 		v = mDashVector;
+
+		// キャラチップ設定
+		Player::AnimationPattern runAnim = Player::AnimationPattern::Anim_Run;
+		AnimationChips * anim = GetMesh()->GetAnimChips(mUser, runAnim);
+		SetAnimationIndex(runAnim);
+		GetMesh()->SetAnimIndex(mUser, runAnim);
+		anim->SetTextureIndex(0);
+		anim->StopPlaying();
 	}
 	mUser->SetMoveVector(v);
 

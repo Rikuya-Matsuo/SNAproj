@@ -15,6 +15,15 @@ class NinjaArtsUICircle;
 class Player final : public Actor
 {
 public:
+	enum AnimationPattern
+	{
+		Anim_Stay = 0,
+		Anim_DashAttack,
+		Anim_Run,
+		Anim_KnockBack,
+		Anim_Invalid
+	};
+
 	Player();
 	~Player();
 
@@ -52,18 +61,9 @@ private:
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
 	static const FlagType mAllowJumpFlagMask;
-	static const FlagType mActiveBrakeFlag;
+	static const FlagType mActiveBrakeFlagMask;
 
 	static const Vector3D mKnockBackVector;
-
-	enum AnimationPattern
-	{
-		Anim_Stay = 0,
-		Anim_DashAttack,
-		Anim_Run,
-		Anim_KnockBack,
-		Anim_Invalid
-	};
 
 	Mesh * mMesh;
 

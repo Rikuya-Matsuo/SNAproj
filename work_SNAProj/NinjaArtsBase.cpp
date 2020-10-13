@@ -1,5 +1,6 @@
 ﻿#include "NinjaArtsBase.h"
-#include "Player.h"
+#include "Mesh.h"
+#include "CompletionMeshActor.h"
 
 NinjaArtsBase::NinjaArtsBase(Player * user):
 	mUser(user),
@@ -20,24 +21,4 @@ void NinjaArtsBase::Use()
 void NinjaArtsBase::CancelNinjaArts()
 {
 	mIsUsedFlag = false;
-}
-
-void NinjaArtsBase::SetAllowJumpFlagOfUser(bool value)
-{
-	BitFlagFunc::SetFlagByBool(value, mUser->mFlags_Player, Player::mAllowJumpFlagMask);
-}
-
-void NinjaArtsBase::SetActiveBrakeFlagOfUser(bool value)
-{
-	BitFlagFunc::SetFlagByBool(value, mUser->mFlags_Player, Player::mActiveBrakeFlag);
-}
-
-InputMoveComponent * NinjaArtsBase::GetInputMoveComponent() const
-{
-	return mUser->mInputComponent;
-}
-
-ClampSpeedComponent* NinjaArtsBase::GetClampSpeedComponent() const
-{
-	return mUser->mClampSpeedComponent;
 }

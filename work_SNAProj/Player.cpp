@@ -23,20 +23,20 @@
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
-const Player::FlagType Player::mDetectWallFlagMask		= 1 << 0;
-const Player::FlagType Player::mDetectGroundFlagMask	= 1 << 1;
-const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
-const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
-const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
-const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
-const Player::FlagType Player::mAllowJumpFlagMask		= 1 << 6;
-const Player::FlagType Player::mActiveBrakeFlag			= 1 << 7;
+const Player::FlagType Player::mDetectWallFlagMask				= 1 << 0;
+const Player::FlagType Player::mDetectGroundFlagMask			= 1 << 1;
+const Player::FlagType Player::mLookRightFlagMask				= 1 << 2;
+const Player::FlagType Player::mImmortalFlagMask				= 1 << 3;
+const Player::FlagType Player::mAliveFlagMask					= 1 << 4;
+const Player::FlagType Player::mKnockBackFlagMask				= 1 << 5;
+const Player::FlagType Player::mAllowJumpFlagMask				= 1 << 6;
+const Player::FlagType Player::mActiveBrakeFlagMask				= 1 << 7;
 
 const Vector3D Player::mKnockBackVector = Vector3D(20.0f, 0.0f, 8.0f);
 
 Player::Player() :
 	Actor(),
-	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlag),
+	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlagMask),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
@@ -161,9 +161,6 @@ Player::Player() :
 
 	// 忍術の設定
 	NinjaArtsBase * latestSetNA;
-	latestSetNA = new NAReelString(this);
-	mNinjaArts.emplace_back(latestSetNA);
-
 	latestSetNA = new NAReelString(this);
 	mNinjaArts.emplace_back(latestSetNA);
 
@@ -349,7 +346,7 @@ void Player::UpdateActor1()
 	}
 	else
 	{
-		knockBackAnim->Reset();		
+		knockBackAnim->Reset();
 	}
 
 	// チップ補完アクターの設置方向を再設定
@@ -369,7 +366,7 @@ void Player::UpdateActor1()
 
 	// ブレーキ
 	bool isKnockingBack = (mFlags_Player & mKnockBackFlagMask);
-	bool isActiveBrake = (mFlags_Player & mActiveBrakeFlag);
+	bool isActiveBrake = (mFlags_Player & mActiveBrakeFlagMask);
 	if (!mInputComponent->GetHorizonInputFlag() && !isKnockingBack && isActiveBrake)
 	{
 		mMoveVector.x *= 0.05f;
@@ -674,7 +671,7 @@ void Player::LinkNinjaArtsUICircle(NinjaArtsUICircle * naUi)
 
 		char id = mNinjaArtsUI->ResisterTexture(icon);
 
-		(*itr)->SetIconId(id);
+		(*itr)->SetIconID(id);
 	}
 }
 

@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include "BitFlagFunc.h"
+#include "Player.h"
 
-class Player;
+class Mesh;
 class InputMoveComponent;
 class ClampSpeedComponent;
 class Texture;
@@ -24,7 +25,7 @@ public:
 	
 	char GetIconID() const { return mIconID; }
 
-	void SetIconId(char id) { mIconID = id; }
+	void SetIconID(char id) { mIconID = id; }
 
 protected:
 	bool mIsUsedFlag;
@@ -36,12 +37,16 @@ protected:
 	char mIconID;
 
 	// ユーザーのジャンプ許可フラグをセットする関数
-	void SetAllowJumpFlagOfUser(bool value);
+	void SetAllowJumpFlagOfUser(bool value) { BitFlagFunc::SetFlagByBool(value, mUser->mFlags_Player, Player::mAllowJumpFlagMask); }
 
 	// プレイヤーのブレーキ機能のアクティブ/非アクティブを切り替えられる関数
-	void SetActiveBrakeFlagOfUser(bool value);
+	void SetActiveBrakeFlagOfUser(bool value) { BitFlagFunc::SetFlagByBool(value, mUser->mFlags_Player, Player::mActiveBrakeFlagMask); }
+	
+	Mesh * GetMesh() const { return mUser->mMesh; }
 
-	InputMoveComponent * GetInputMoveComponent() const;
+	InputMoveComponent * GetInputMoveComponent() const { return mUser->mInputComponent; }
 
-	ClampSpeedComponent * GetClampSpeedComponent() const;
+	ClampSpeedComponent * GetClampSpeedComponent() const { return mUser->mClampSpeedComponent; }
+
+	void SetAnimationIndex(Player::AnimationPattern anim) { mUser->mCurrentAnimation = anim; }
 };
