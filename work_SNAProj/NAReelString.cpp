@@ -39,6 +39,8 @@ void NAReelString::Use()
 
 	SetActiveBrakeFlagOfUser(false);
 
+	SetSelfControlAnimationFlag(false);
+
 	Player::AnimationPattern dashAtkAnim = Player::AnimationPattern::Anim_DashAttack;
 	SetAnimationIndex(dashAtkAnim);
 	AnimationChips * anim = GetMesh()->GetAnimChips(mUser, dashAtkAnim);
@@ -67,6 +69,8 @@ void NAReelString::TellEndNinjaArts()
 
 	SetActiveBrakeFlagOfUser(true);
 
+	SetSelfControlAnimationFlag(true);
+
 	AnimationChips* atkAnim = GetMesh()->GetAnimChips(mUser, Player::AnimationPattern::Anim_DashAttack);
 	atkAnim->StartPlaying();
 
@@ -79,6 +83,15 @@ void NAReelString::TellEndNinjaArts()
 void NAReelString::TellRunningNinjaArts()
 {
 	mUser->SetAffectGravityFlag(false);
+
+	AnimationChips * currentAnim = GetMesh()->GetActiveAnimChips(mUser);
+	AnimationChips * atkAnim = GetMesh()->GetAnimChips(mUser, Player::AnimationPattern::Anim_DashAttack);
+	
+	// 発動時の剣を振るモーションを、振り切ったままで維持
+	if (atkAnim->GetCurrentTextureIndex() == atkAnim->GetFrameMass() - 2 && currentAnim == atkAnim)
+	{
+		atkAnim->StopPlaying();
+	}
 
 	Vector3D v = Vector3D::zero;
 	if (mEdge->GetReelState() == ReelStringEdgeActor::ReelState::ReelState_Block)

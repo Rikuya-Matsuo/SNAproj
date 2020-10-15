@@ -49,4 +49,6 @@ protected:
 	ClampSpeedComponent * GetClampSpeedComponent() const { return mUser->mClampSpeedComponent; }
 
 	void SetAnimationIndex(Player::AnimationPattern anim) { mUser->mCurrentAnimation = anim; }
+
+	void SetSelfControlAnimationFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mUser->mFlags_Player, Player::mSelfControlAnimationFlagMask); }
 };

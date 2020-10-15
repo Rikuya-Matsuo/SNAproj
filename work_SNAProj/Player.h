@@ -53,7 +53,7 @@ private:
 	static const char mDashAttackPower;
 
 
-	typedef Uint8 FlagType;
+	typedef Uint16 FlagType;
 	static const FlagType mDetectWallFlagMask;
 	static const FlagType mDetectGroundFlagMask;
 	static const FlagType mLookRightFlagMask;
@@ -62,6 +62,7 @@ private:
 	static const FlagType mKnockBackFlagMask;
 	static const FlagType mAllowJumpFlagMask;
 	static const FlagType mActiveBrakeFlagMask;
+	static const FlagType mSelfControlAnimationFlagMask;
 
 	static const Vector3D mKnockBackVector;
 
@@ -124,6 +125,8 @@ private:
 	void UpdateActor0() override;
 
 	void UpdateActor1() override;
+
+	void UpdateAnimation();
 
 	void OnAttackColliderHits(const ColliderComponentBase * opponent);
 

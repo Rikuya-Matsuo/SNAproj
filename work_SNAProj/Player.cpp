@@ -31,12 +31,13 @@ const Player::FlagType Player::mAliveFlagMask					= 1 << 4;
 const Player::FlagType Player::mKnockBackFlagMask				= 1 << 5;
 const Player::FlagType Player::mAllowJumpFlagMask				= 1 << 6;
 const Player::FlagType Player::mActiveBrakeFlagMask				= 1 << 7;
+const Player::FlagType Player::mSelfControlAnimationFlagMask	= 1 << 8;
 
 const Vector3D Player::mKnockBackVector = Vector3D(20.0f, 0.0f, 8.0f);
 
 Player::Player() :
 	Actor(),
-	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlagMask),
+	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlagMask | mSelfControlAnimationFlagMask),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
@@ -296,74 +297,6 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
-	// 走る
-	if (mInputComponent->GetHorizonInputFlag())
-	{
-		if (mCurrentAnimation != Anim_DashAttack)
-		{
-			mCurrentAnimation = AnimationPattern::Anim_Run;
-		}
-	}
-	else if (mCurrentAnimation != Anim_DashAttack)
-	{
-		mCurrentAnimation = Anim_Stay;
-	}
-
-	// ダッシュアタック終了判定
-	if (mCurrentAnimation == AnimationPattern::Anim_DashAttack && mMesh->GetAnimLoopEndFlag())
-	{
-		if (!(mCompletionMeshActor->GetMesh()->GetAnimLoopEndFlag()))
-		{
-			SDL_Log("Completion has not finish\n");
-		}
-
-		OnEndAttack();
-		
-		mMesh->GetActiveAnimChips(this)->Reset();
-
-		mCurrentAnimation = AnimationPattern::Anim_Stay;
-
-		mMesh->SetAnimIndex(this, mCurrentAnimation);
-	}
-
-	// ノックバックアニメーション
-	AnimationChips * knockBackAnim = mMesh->GetAnimChips(this, Anim_KnockBack);
-	if (mFlags_Player & mKnockBackFlagMask)
-	{
-		knockBackAnim->StartPlaying();
-
-		mCurrentAnimation = AnimationPattern::Anim_KnockBack;
-
-		if (knockBackAnim->GetLoopEndFlag())
-		{
-			knockBackAnim->StopPlaying();
-
-			knockBackAnim->SetTextureIndex(5);
-		}
-
-		// 攻撃を終了する
-		OnEndAttack();
-	}
-	else
-	{
-		knockBackAnim->Reset();
-	}
-
-	// チップ補完アクターの設置方向を再設定
-	if (mScale != mCompletionMeshActor->GetScale())
-	{
-		Mesh * completionMesh = mCompletionMeshActor->GetMesh();
-		AABB complMeshBox = completionMesh->GetCollisionBox();
-		float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
-		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
-		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
-
-		if (!(mFlags_Player & mLookRightFlagMask))
-		{
-			mCompletionMeshActor->FlipPositionOffset();
-		}
-	}
-
 	// ブレーキ
 	bool isKnockingBack = (mFlags_Player & mKnockBackFlagMask);
 	bool isActiveBrake = (mFlags_Player & mActiveBrakeFlagMask);
@@ -414,18 +347,8 @@ void Player::UpdateActor1()
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;
 
-	// メッシュにアニメーションの変更を伝える
-	mMesh->SetAnimIndex(this, mCurrentAnimation);
-
-	// チップ補完アクターにも現在のアニメーションを伝える
-	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
-
-	// テクスチャ番号を設定
-	if (mCompletionMeshActor->IsResisteredIndex(mCurrentAnimation))
-	{
-		size_t index = mMesh->GetActiveAnimChips(this)->GetCurrentTextureIndex();
-		mCompletionMeshActor->GetMesh()->GetAnimChips(mCompletionMeshActor, mCurrentAnimation)->SetTextureIndex(index);
-	}
+	// アニメーション更新
+	UpdateAnimation();
 
 	// フラグ記録
 	mPrevFlags_Player = mFlags_Player;
@@ -441,6 +364,93 @@ void Player::UpdateActor1()
 
 	// 壁ブロック記録のリセット
 	mWallPointer = nullptr;
+}
+
+void Player::UpdateAnimation()
+{
+	if (mFlags_Player & mSelfControlAnimationFlagMask)
+	{
+		// 走る
+		if (mInputComponent->GetHorizonInputFlag())
+		{
+			if (mCurrentAnimation != Anim_DashAttack)
+			{
+				mCurrentAnimation = AnimationPattern::Anim_Run;
+			}
+		}
+		else if (mCurrentAnimation != Anim_DashAttack)
+		{
+			mCurrentAnimation = Anim_Stay;
+		}
+
+		// ダッシュアタック終了判定
+		if (mCurrentAnimation == AnimationPattern::Anim_DashAttack && mMesh->GetAnimLoopEndFlag())
+		{
+			if (!(mCompletionMeshActor->GetMesh()->GetAnimLoopEndFlag()))
+			{
+				SDL_Log("Completion has not finish\n");
+			}
+
+			OnEndAttack();
+
+			mMesh->GetActiveAnimChips(this)->Reset();
+
+			mCurrentAnimation = AnimationPattern::Anim_Stay;
+
+			mMesh->SetAnimIndex(this, mCurrentAnimation);
+		}
+
+		// ノックバックアニメーション
+		AnimationChips * knockBackAnim = mMesh->GetAnimChips(this, Anim_KnockBack);
+		if (mFlags_Player & mKnockBackFlagMask)
+		{
+			knockBackAnim->StartPlaying();
+
+			mCurrentAnimation = AnimationPattern::Anim_KnockBack;
+
+			if (knockBackAnim->GetLoopEndFlag())
+			{
+				knockBackAnim->StopPlaying();
+
+				knockBackAnim->SetTextureIndex(5);
+			}
+
+			// 攻撃を終了する
+			OnEndAttack();
+		}
+		else
+		{
+			knockBackAnim->Reset();
+		}
+	}
+
+	// チップ補完アクターの設置方向を再設定
+	if (mScale != mCompletionMeshActor->GetScale())
+	{
+		Mesh * completionMesh = mCompletionMeshActor->GetMesh();
+		AABB complMeshBox = completionMesh->GetCollisionBox();
+		float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
+		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
+		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
+
+		if (!(mFlags_Player & mLookRightFlagMask))
+		{
+			mCompletionMeshActor->FlipPositionOffset();
+		}
+	}
+
+	// メッシュにアニメーションの変更を伝える
+	mMesh->SetAnimIndex(this, mCurrentAnimation);
+
+	// チップ補完アクターにも現在のアニメーションを伝える
+	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
+
+	// テクスチャ番号を設定
+	if (mCompletionMeshActor->IsResisteredIndex(mCurrentAnimation))
+	{
+		size_t index = mMesh->GetActiveAnimChips(this)->GetCurrentTextureIndex();
+		mCompletionMeshActor->GetMesh()->GetAnimChips(mCompletionMeshActor, mCurrentAnimation)->SetTextureIndex(index);
+	}
 }
 
 void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
