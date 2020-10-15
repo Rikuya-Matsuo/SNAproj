@@ -1,6 +1,5 @@
 ﻿#include "SDL/SDL.h"
 #include "System.h"
-#include "GameScene.h"
 #include "TitleScene.h"
 
 int main(int argc, char ** argv)

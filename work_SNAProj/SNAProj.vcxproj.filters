@@ -234,9 +234,6 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="TestScene01.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="GameUI.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
@@ -269,9 +266,6 @@
     </ClCompile>
     <ClCompile Include="NinjaArtsUICircle.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteTest.cpp">
-      <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,9 +443,6 @@
     <ClInclude Include="GameScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="TestScene01.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="GameUI.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
@@ -484,9 +475,6 @@
     </ClInclude>
     <ClInclude Include="NinjaArtsUICircle.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteTest.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
