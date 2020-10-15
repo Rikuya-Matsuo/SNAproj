@@ -17,7 +17,7 @@
 #include "NinjaArtsUICircle.h"
 
 #ifdef DEBUG_SNA
-#define IMMORTAL_PLAYER
+//#define IMMORTAL_PLAYER
 #endif
 
 const char Player::mLifeMax = 10;

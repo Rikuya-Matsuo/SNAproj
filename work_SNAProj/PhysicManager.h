@@ -67,6 +67,8 @@ private:
 
 	PhysicManager();
 
+	typedef std::lock_guard<std::mutex> MutexLocker;
+
 	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>> mColliders;
 
 	std::unordered_map<ColliderPair, char, HashColliderPair> mHitColliderPairState;

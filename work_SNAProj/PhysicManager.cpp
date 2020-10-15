@@ -18,7 +18,7 @@ static size_t checkCounter = 0;
 
 void PhysicManager::CheckHit()
 {
-	mColliderPairStateMutex.lock();
+	MutexLocker lock(mColliderPairStateMutex);
 
 	// 何かのアトリビュートでソートが要請されているならソートする
 	if (!mSortAttributeList.empty())
@@ -40,8 +40,6 @@ void PhysicManager::CheckHit()
 	{
 		CheckLoop(attCombi);
 	}
-
-	mColliderPairStateMutex.unlock();
 
 #ifdef COLLISION_CHECK
 	SDL_Log("The number of checked collider is %d\n", checkCounter);
@@ -443,6 +441,12 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 
 bool PhysicManager::CheckPrevHit(const ColliderPair& pair)
 {
+	// コライダーの接触情報が空なら、検索にヒットしない
+	if (mHitColliderPairState.empty())
+	{
+		return false;
+	}
+
 	// ペアを検索
 	auto itr = mHitColliderPairState.find(pair);
 
@@ -548,15 +552,12 @@ void PhysicManager::RefreshHitState()
 		auto itr = mHitColliderPairState.begin();
 		for (; itr != mHitColliderPairState.end(); ++itr)
 		{
-			mColliderPairStateMutex.lock();
+			MutexLocker lock(mColliderPairStateMutex);
 
 			if (itr->second == HitState::HitState_NoTouch)
 			{
 				itr = mHitColliderPairState.erase(itr);
-				itr--;
 			}
-
-			mColliderPairStateMutex.unlock();
 
 			if (!mContinueRefleshFlag)
 			{
