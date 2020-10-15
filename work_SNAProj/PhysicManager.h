@@ -111,4 +111,22 @@ private:
 	}
 
 	void SortColliders();
+
+
+
+	struct DebugIDColection
+	{
+		struct Data
+		{
+			size_t mHash;
+			ColliderComponentBase * mCollider[2];
+
+			void Init(ColliderComponentBase * col1, ColliderComponentBase * col2)
+			{
+				// Hoge
+			}
+		};
+
+		std::vector<Data> mDataContainer;
+	} mDebugIDColection;
 };
