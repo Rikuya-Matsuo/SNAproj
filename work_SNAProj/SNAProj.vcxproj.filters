@@ -147,9 +147,6 @@
     <ClCompile Include="ColliderComponentBase.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteTest.cpp">
-      <Filter>ソース ファイル\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="Block.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
@@ -216,12 +213,6 @@
     <ClCompile Include="AnimationEffect.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteComponent.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteActor.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
@@ -278,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="NinjaArtsUICircle.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteTest.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,9 +362,6 @@
     <ClInclude Include="BitFlagFunc.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteTest.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
@@ -437,12 +428,6 @@
     <ClInclude Include="AnimationEffect.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteComponent.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteActor.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
@@ -499,6 +484,9 @@
     </ClInclude>
     <ClInclude Include="NinjaArtsUICircle.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteTest.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

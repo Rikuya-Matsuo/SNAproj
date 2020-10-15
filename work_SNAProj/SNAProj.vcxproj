@@ -223,6 +223,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="NinjaArtsUICircle.cpp" />
     <ClCompile Include="ReelStringEdgeActor.cpp" />
     <ClCompile Include="ReelStringStringActor.cpp" />
+    <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="TitleCameraTargetActor.cpp" />
     <ClCompile Include="JumpComponent.cpp" />
     <ClCompile Include="LifeUIManager.cpp" />
@@ -240,10 +241,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkeletalMeshComponent.cpp" />
     <ClCompile Include="Skeleton.cpp" />
-    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteActor.cpp" />
-    <ClCompile Include="SpriteComponent.cpp" />
-    <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -297,6 +295,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="NinjaArtsUICircle.h" />
     <ClInclude Include="ReelStringEdgeActor.h" />
     <ClInclude Include="ReelStringStringActor.h" />
+    <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="TitleCameraTargetActor.h" />
     <ClInclude Include="JumpComponent.h" />
     <ClInclude Include="LifeUIManager.h" />
@@ -315,10 +314,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="Skeleton.h" />
-    <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteActor.h" />
-    <ClInclude Include="SpriteComponent.h" />
-    <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="GameScene.h" />

@@ -1,12 +1,4 @@
-﻿// ----------------------------------------------------------------
-// From Game Programming in C++ by Sanjay Madhav
-// Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
-// Released under the BSD License
-// See LICENSE in root directory for full details.
-// ----------------------------------------------------------------
-
-#pragma once
+﻿#pragma once
 #include "SDL/SDL.h"
 #include "Collision.h"
 #include "BitFlagFunc.h"
@@ -88,9 +80,6 @@ private:
 	std::unordered_map<const Actor*, AnimChipCollection> mAnimations;
 
 	std::unordered_map<const Actor *, int> mActiveAnimIndex;
-
-	// アニメーションが持ってるテクスチャをインデックスで管理
-	//std::unordered_map<int, std::vector<Texture *>> mAnimTex;
 
 	VertexArray* mVertexArray;                                        // メッシュの頂点配列
 

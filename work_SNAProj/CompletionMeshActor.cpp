@@ -20,7 +20,6 @@ CompletionMeshActor::CompletionMeshActor(const Actor * owner, int drawOrder):
 	mMesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	mMesh->SetAnimModeFlag(true);
 	mMeshComponent->SetMesh(mMesh);
-	//mMeshComponent->SetActive(false);
 
 	// 処理順の設定
 	// 所有者よりも後でなければならない

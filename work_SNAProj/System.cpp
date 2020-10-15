@@ -6,7 +6,6 @@
 #include "SceneBase.h"
 #include "Renderer.h"
 #include "Camera.h"
-#include "Sprite.h"
 #include "UIScreen.h"
 
 #include <cstdlib>
@@ -202,30 +201,6 @@ void System::UpdateDeltaTime()
 	timer += mDeltaTime;
 	SDL_Log("%lf", timer);
 #endif
-
-	/*
-	// 平均デルタタイム計算プロセス
-	mSampleDeltaTimes[mNextWriteSampleIndex++] = mDeltaTime;
-	if (mNextWriteSampleIndex >= mSampleDeltaTimeMass)
-	{
-		mNextWriteSampleIndex = 0;
-	}
-	Uint8 i = 0;
-	float sum = 0.0f;
-	for (; i < mSampleDeltaTimeMass; ++i)
-	{
-		if (mSampleDeltaTimes[i] >= 0.0f)
-		{
-			sum += mSampleDeltaTimes[i];
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	mAverageDeltaTime = sum / i;
-	*/
 }
 
 void System::SortActor()
@@ -267,21 +242,12 @@ void System::UpdateTopUI()
 
 void System::Draw()
 {
-	//SDL_SetRenderDrawColor(GetSDLRenderer(), 0, 0, 0, 255);
 	glClearColor(0.2f, 0.6f, 0.9f, 1.0f);
 	mRenderer->WindowClear();
 
 	mRenderer->Draw();
 
 	mRenderer->WindowFlip();
-}
-
-void System::DrawSprites()
-{
-	for (auto spr : mSpriteList)
-	{
-		spr->Draw();
-	}
 }
 
 void System::ChangeScene(bool & quitFlag)
@@ -337,17 +303,7 @@ void System::GravityFall()
 void System::ResisterActor(const Actor * in_act)
 {
 	Actor * actor = const_cast<Actor*>(in_act);
-/*
-	int priority = actor->GetPriority();
-	for (auto itr = mActorList.begin(); itr != mActorList.end(); ++itr)
-	{
-		if (priority < (*itr)->GetPriority())
-		{
-			mActorList.insert(itr, actor);
-			return;
-		}
-	}
-*/
+
 	mActorList.emplace_back(const_cast<Actor*>(actor));
 }
 
@@ -358,21 +314,6 @@ void System::DeresisterActor(const Actor * in_act)
 	if (target != mActorList.end())
 	{
 		mActorList.erase(target);
-	}
-}
-
-void System::ResisterSprite(const Sprite * in_spr)
-{
-	mSpriteList.emplace_back(const_cast<Sprite*>(in_spr));
-}
-
-void System::DeresisterSprite(const Sprite * in_spr)
-{
-	auto target = std::find(mSpriteList.begin(), mSpriteList.end(), const_cast<Sprite*>(in_spr));
-
-	if (target != mSpriteList.end())
-	{
-		mSpriteList.erase(target);
 	}
 }
 

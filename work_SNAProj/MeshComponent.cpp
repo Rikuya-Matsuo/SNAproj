@@ -1,12 +1,4 @@
-﻿// ----------------------------------------------------------------
-// From Game Programming in C++ by Sanjay Madhav
-// Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
-// Released under the BSD License
-// See LICENSE in root directory for full details.
-// ----------------------------------------------------------------
-
-#include "MeshComponent.h"
+﻿#include "MeshComponent.h"
 #include "System.h"
 #include "Shader.h"
 #include "Mesh.h"
@@ -32,8 +24,6 @@ MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal)
 	, mMeshCompFlags(mVisibleFlagMask | (isSkeletal ? mIsSkeletalFlagMask : 0))
 {
 	System::GetInstance().GetRenderer()->AddMeshComponent(this);
-
-	//printf("new MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), owner);
 }
 
 MeshComponent::~MeshComponent()
@@ -43,7 +33,6 @@ MeshComponent::~MeshComponent()
 		mMesh->DeleteActorInfo(mOwner);
 	}
 
-	//printf("remove MeshComponent : [%5d] owner->( 0x%p )\n", GetID(), mOwner);
 	System::GetInstance().GetRenderer()->RemoveMeshComponent(this);
 }
 
@@ -70,8 +59,6 @@ void MeshComponent::Draw(Shader* shader)
 				glDisable(GL_DEPTH_TEST);
 				glEnable(GL_BLEND);
 
-				//glMatrixMode(GL_PROJECTION);
-
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
@@ -82,8 +69,6 @@ void MeshComponent::Draw(Shader* shader)
 			{
 				glEnable(GL_DEPTH_TEST);
 				glDisable(GL_BLEND);
-
-				//glMatrixMode(GL_PROJECTION);
 
 				forBoardSetting = false;
 			}

@@ -49,10 +49,6 @@ public:
 
 	void RequestSortActor() { mSortActorFlag = true; }
 
-	void ResisterSprite(const Sprite * in_spr);
-
-	void DeresisterSprite(const Sprite * in_spr);
-
 	void ResisterUIScreen(const UIScreen * in_uiScr);
 
 	void DeresisterUIScreen(const UIScreen * in_uiScr);
@@ -103,8 +99,6 @@ private:
 	void UpdateTopUI();
 
 	void Draw();
-
-	void DrawSprites();
 
 	void ChangeScene(bool & quitFlag);
 

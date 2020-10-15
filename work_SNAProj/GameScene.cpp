@@ -6,7 +6,6 @@
 #include "Renderer.h"
 #include "Quaternion.h"
 #include "AnimSpriteTest.h"
-#include "SpriteTest.h"
 #include "Block.h"
 #include "Stage.h"
 #include "BGObject.h"
@@ -98,10 +97,6 @@ void GameScene::Update()
 	}
 
 #endif // DEBUG_SNA
-
-	mUI->Update();
-
-	//mLifeUI->Update();
 
 	if (!mPlayer->GetAliveFlag())
 	{

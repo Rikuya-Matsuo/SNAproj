@@ -162,9 +162,6 @@ void Renderer::Shutdown()
 
 void Renderer::Draw()
 {
-	//glEnable(GL_DEPTH_TEST);
-	//glDisable(GL_BLEND);
-
 	// 有効視野角のなかにあるかを調べるラムダ式
 	auto isInFieldOfView = [this](MeshComponent * mc)
 	{

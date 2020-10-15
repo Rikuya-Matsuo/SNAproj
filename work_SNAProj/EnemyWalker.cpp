@@ -40,14 +40,12 @@ EnemyWalker::EnemyWalker():
 	mKnockBackVecLimit(Vector3D(50.0f, 0.0f, 50.0f)),
 	mEffectOffset(Vector3D(0.5f, 0.0f, 0.5f))
 {
-	//mMesh->LoadDivTexture("Assets/AnimChipTest.png", System::GetInstance().GetRenderer(), this, 3, 3, 1, 32, 32, 0.0f, 0);
 	mMesh->LoadDivTexture("Assets/knight0.png", System::GetInstance().GetRenderer(), this, 6, 3, 2, 60, 60, 0.3f, 0);
 	MeshComponent * mc = new MeshComponent(this, 350);
 	mc->SetMesh(mMesh);
 	mAnimChips = mMesh->GetAnimChips(this, 0);
 	int routine[] = { 3,4,5,-1 };
 	mAnimChips->SetRoutine(routine);
-	//mAnimChips->StopPlaying();
 
 	mAutoMoveComp = new AutoMoveComponent(this, mVelocity);
 	mAutoMoveComp->SetReverseFlag(true, false, false);

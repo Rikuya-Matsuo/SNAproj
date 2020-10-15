@@ -17,7 +17,7 @@ GameUI::GameUI(Player * player):
 	{
 		const int frameMass = 9;
 
-		mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", frameMass, 3, 3, 1024, 1024, 0.1f);
+		mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", frameMass, 3, 3, 1024, 1024, 0.05f);
 
 		const bool useRandonFlame = true;
 		if (useRandonFlame)
