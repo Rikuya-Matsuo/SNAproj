@@ -14,6 +14,7 @@
 #include "EnemyBase.h"
 #include "AnimationEffect.h"
 #include "NAReelString.h"
+#include "NinjaArtsUICircle.h"
 
 #ifdef DEBUG_SNA
 #define IMMORTAL_PLAYER
@@ -22,26 +23,27 @@
 const char Player::mLifeMax = 10;
 const char Player::mDashAttackPower = 1;
 
-const Player::FlagType Player::mDetectWallFlagMask		= 1 << 0;
-const Player::FlagType Player::mDetectGroundFlagMask	= 1 << 1;
-const Player::FlagType Player::mLookRightFlagMask		= 1 << 2;
-const Player::FlagType Player::mImmortalFlagMask		= 1 << 3;
-const Player::FlagType Player::mAliveFlagMask			= 1 << 4;
-const Player::FlagType Player::mKnockBackFlagMask		= 1 << 5;
-const Player::FlagType Player::mAllowJumpFlagMask		= 1 << 6;
-const Player::FlagType Player::mActiveBrakeFlag			= 1 << 7;
+const Player::FlagType Player::mDetectWallFlagMask				= 1 << 0;
+const Player::FlagType Player::mDetectGroundFlagMask			= 1 << 1;
+const Player::FlagType Player::mLookRightFlagMask				= 1 << 2;
+const Player::FlagType Player::mImmortalFlagMask				= 1 << 3;
+const Player::FlagType Player::mAliveFlagMask					= 1 << 4;
+const Player::FlagType Player::mKnockBackFlagMask				= 1 << 5;
+const Player::FlagType Player::mAllowJumpFlagMask				= 1 << 6;
+const Player::FlagType Player::mActiveBrakeFlagMask				= 1 << 7;
+const Player::FlagType Player::mSelfControlAnimationFlagMask	= 1 << 8;
 
 const Vector3D Player::mKnockBackVector = Vector3D(20.0f, 0.0f, 8.0f);
 
 Player::Player() :
 	Actor(),
-	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlag),
+	mFlags_Player(mLookRightFlagMask | mAliveFlagMask | mAllowJumpFlagMask | mActiveBrakeFlagMask | mSelfControlAnimationFlagMask),
 	mGroundChecker(nullptr),
 	mAttackCollider(nullptr),
-	mCurrentCursorNinjaArts(nullptr),
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
 	mWallPointer(nullptr),
 	mLife(mLifeMax),
+	mCurrentNinjaArtsIndex(0),
 	mHitEffectMass(4)
 {
 	mPushedFlags.Init();
@@ -159,7 +161,9 @@ Player::Player() :
 	}
 
 	// 忍術の設定
-	mCurrentCursorNinjaArts = new NAReelString(this);
+	NinjaArtsBase * latestSetNA;
+	latestSetNA = new NAReelString(this);
+	mNinjaArts.emplace_back(latestSetNA);
 
 	// 落下スピード割合の調整
 	mFallSpeedRate = 25.0f;
@@ -173,6 +177,15 @@ Player::~Player()
 	// インスタンス自体はActorクラスを継承しているため、Systemクラスによってメモリ解放が行われる
 	delete[] mHitEffects;
 	mHitEffects = nullptr;
+
+	for (auto itr = mNinjaArts.begin(); itr != mNinjaArts.end(); ++itr)
+	{
+		delete (*itr);
+
+		(*itr) = nullptr;
+	}
+	mNinjaArts.clear();
+	std::vector<NinjaArtsBase *>().swap(mNinjaArts);
 
 	SDL_Log("Player is deleted\n");
 }
@@ -229,16 +242,48 @@ void Player::UpdateActor0()
 		mAttackCollider->SetActive(true);
 	}
 
+	// 忍術の選択
+	bool ninjaArtsRRotateInput =
+		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_R) ||
+		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
+	bool ninjaArtsLRotateInput =
+		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_E) ||
+		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+
+	// 増加分の計算。Rボタンなら+1、Lボタンなら-1。同時押しなら0となるよう計算。
+	char addition = ninjaArtsRRotateInput;
+	addition -= ninjaArtsLRotateInput;
+	char naIndex = mCurrentNinjaArtsIndex + addition;
+
+	// インデックスの計算後、忍術コンテナの要素数を超えているか、0を下回った時調整
+	// 単純なクランプではなく、0を下回った時は最後尾のインデックスに、要素数を超えたときは0に戻る。
+	if (naIndex < 0)
+	{
+		naIndex = static_cast<char>(mNinjaArts.size() - 1);
+	}
+	else if (static_cast<Uint8>(naIndex) >= mNinjaArts.size())
+	{
+		naIndex = 0;
+	}
+
+	mCurrentNinjaArtsIndex = naIndex;
+	mNinjaArtsUI->SetIconID(mNinjaArts[mCurrentNinjaArtsIndex]->GetIconID());
+
+	if (ninjaArtsRRotateInput || ninjaArtsLRotateInput)
+	{
+		mNinjaArtsUI->SetRotateDirection(ninjaArtsRRotateInput);
+	}
+
 	// 忍術の発動
 	// 忍術を使用中なら無効
 	bool inputNinjaArtsCommand =
 		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N) ||
 		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_X);
-	if (inputNinjaArtsCommand && !mCurrentCursorNinjaArts->IsUsed())
+	if (inputNinjaArtsCommand && !mNinjaArts[mCurrentNinjaArtsIndex]->IsUsed())
 	{
-		if (mCurrentCursorNinjaArts)
+		if (mNinjaArts[mCurrentNinjaArtsIndex])
 		{
-			mCurrentCursorNinjaArts->Use();
+			mNinjaArts[mCurrentNinjaArtsIndex]->Use();
 		}
 	}
 
@@ -252,77 +297,9 @@ void Player::UpdateActor0()
 
 void Player::UpdateActor1()
 {
-	// 走る
-	if (mInputComponent->GetHorizonInputFlag())
-	{
-		if (mCurrentAnimation != Anim_DashAttack)
-		{
-			mCurrentAnimation = AnimationPattern::Anim_Run;
-		}
-	}
-	else if (mCurrentAnimation != Anim_DashAttack)
-	{
-		mCurrentAnimation = Anim_Stay;
-	}
-
-	// ダッシュアタック終了判定
-	if (mCurrentAnimation == AnimationPattern::Anim_DashAttack && mMesh->GetAnimLoopEndFlag())
-	{
-		if (!(mCompletionMeshActor->GetMesh()->GetAnimLoopEndFlag()))
-		{
-			SDL_Log("Completion has not finish\n");
-		}
-
-		OnEndAttack();
-		
-		mMesh->GetActiveAnimChips(this)->Reset();
-
-		mCurrentAnimation = AnimationPattern::Anim_Stay;
-
-		mMesh->SetAnimIndex(this, mCurrentAnimation);
-	}
-
-	// ノックバックアニメーション
-	AnimationChips * knockBackAnim = mMesh->GetAnimChips(this, Anim_KnockBack);
-	if (mFlags_Player & mKnockBackFlagMask)
-	{
-		knockBackAnim->StartPlaying();
-
-		mCurrentAnimation = AnimationPattern::Anim_KnockBack;
-
-		if (knockBackAnim->GetLoopEndFlag())
-		{
-			knockBackAnim->StopPlaying();
-
-			knockBackAnim->SetTextureIndex(5);
-		}
-
-		// 攻撃を終了する
-		OnEndAttack();
-	}
-	else
-	{
-		knockBackAnim->Reset();		
-	}
-
-	// チップ補完アクターの設置方向を再設定
-	if (mScale != mCompletionMeshActor->GetScale())
-	{
-		Mesh * completionMesh = mCompletionMeshActor->GetMesh();
-		AABB complMeshBox = completionMesh->GetCollisionBox();
-		float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
-		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
-		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
-
-		if (!(mFlags_Player & mLookRightFlagMask))
-		{
-			mCompletionMeshActor->FlipPositionOffset();
-		}
-	}
-
 	// ブレーキ
 	bool isKnockingBack = (mFlags_Player & mKnockBackFlagMask);
-	bool isActiveBrake = (mFlags_Player & mActiveBrakeFlag);
+	bool isActiveBrake = (mFlags_Player & mActiveBrakeFlagMask);
 	if (!mInputComponent->GetHorizonInputFlag() && !isKnockingBack && isActiveBrake)
 	{
 		mMoveVector.x *= 0.05f;
@@ -370,18 +347,8 @@ void Player::UpdateActor1()
 	// 奥行きの情報を常に0に
 	mPosition.y = 0.0f;
 
-	// メッシュにアニメーションの変更を伝える
-	mMesh->SetAnimIndex(this, mCurrentAnimation);
-
-	// チップ補完アクターにも現在のアニメーションを伝える
-	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
-
-	// テクスチャ番号を設定
-	if (mCompletionMeshActor->IsResisteredIndex(mCurrentAnimation))
-	{
-		size_t index = mMesh->GetActiveAnimChips(this)->GetCurrentTextureIndex();
-		mCompletionMeshActor->GetMesh()->GetAnimChips(mCompletionMeshActor, mCurrentAnimation)->SetTextureIndex(index);
-	}
+	// アニメーション更新
+	UpdateAnimation();
 
 	// フラグ記録
 	mPrevFlags_Player = mFlags_Player;
@@ -397,6 +364,93 @@ void Player::UpdateActor1()
 
 	// 壁ブロック記録のリセット
 	mWallPointer = nullptr;
+}
+
+void Player::UpdateAnimation()
+{
+	if (mFlags_Player & mSelfControlAnimationFlagMask)
+	{
+		// 走る
+		if (mInputComponent->GetHorizonInputFlag())
+		{
+			if (mCurrentAnimation != Anim_DashAttack)
+			{
+				mCurrentAnimation = AnimationPattern::Anim_Run;
+			}
+		}
+		else if (mCurrentAnimation != Anim_DashAttack)
+		{
+			mCurrentAnimation = Anim_Stay;
+		}
+
+		// ダッシュアタック終了判定
+		if (mCurrentAnimation == AnimationPattern::Anim_DashAttack && mMesh->GetAnimLoopEndFlag())
+		{
+			if (!(mCompletionMeshActor->GetMesh()->GetAnimLoopEndFlag()))
+			{
+				SDL_Log("Completion has not finish\n");
+			}
+
+			OnEndAttack();
+
+			mMesh->GetActiveAnimChips(this)->Reset();
+
+			mCurrentAnimation = AnimationPattern::Anim_Stay;
+
+			mMesh->SetAnimIndex(this, mCurrentAnimation);
+		}
+
+		// ノックバックアニメーション
+		AnimationChips * knockBackAnim = mMesh->GetAnimChips(this, Anim_KnockBack);
+		if (mFlags_Player & mKnockBackFlagMask)
+		{
+			knockBackAnim->StartPlaying();
+
+			mCurrentAnimation = AnimationPattern::Anim_KnockBack;
+
+			if (knockBackAnim->GetLoopEndFlag())
+			{
+				knockBackAnim->StopPlaying();
+
+				knockBackAnim->SetTextureIndex(5);
+			}
+
+			// 攻撃を終了する
+			OnEndAttack();
+		}
+		else
+		{
+			knockBackAnim->Reset();
+		}
+	}
+
+	// チップ補完アクターの設置方向を再設定
+	if (mScale != mCompletionMeshActor->GetScale())
+	{
+		Mesh * completionMesh = mCompletionMeshActor->GetMesh();
+		AABB complMeshBox = completionMesh->GetCollisionBox();
+		float offsetX = (complMeshBox.mMax.x - complMeshBox.mMin.x) * mScale;
+		Vector3D cmaPosOffset = Vector3D(offsetX, 0, 0);
+		mCompletionMeshActor->SetPositionOffset(cmaPosOffset);
+
+		if (!(mFlags_Player & mLookRightFlagMask))
+		{
+			mCompletionMeshActor->FlipPositionOffset();
+		}
+	}
+
+	// メッシュにアニメーションの変更を伝える
+	mMesh->SetAnimIndex(this, mCurrentAnimation);
+
+	// チップ補完アクターにも現在のアニメーションを伝える
+	mCompletionMeshActor->SetAnimationIndex(mCurrentAnimation);
+
+	// テクスチャ番号を設定
+	if (mCompletionMeshActor->IsResisteredIndex(mCurrentAnimation))
+	{
+		size_t index = mMesh->GetActiveAnimChips(this)->GetCurrentTextureIndex();
+		mCompletionMeshActor->GetMesh()->GetAnimChips(mCompletionMeshActor, mCurrentAnimation)->SetTextureIndex(index);
+	}
 }
 
 void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
@@ -615,6 +669,22 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 }
 
+void Player::LinkNinjaArtsUICircle(NinjaArtsUICircle * naUi)
+{
+	mNinjaArtsUI = naUi;
+
+	mNinjaArtsUI->SetPlayer(this);
+
+	for (auto itr = mNinjaArts.begin(); itr != mNinjaArts.end(); ++itr)
+	{
+		Texture * icon = (*itr)->GetIconTexture();
+
+		char id = mNinjaArtsUI->ResisterTexture(icon);
+
+		(*itr)->SetIconID(id);
+	}
+}
+
 void Player::OnDetectGround(const ColliderComponentBase * opponent)
 {
 	// 壁の真下にあるブロックは地面として扱わない
@@ -760,9 +830,9 @@ void Player::OnBeAttacked(const EnemyBase * enemy)
 	}
 
 	// 忍術のキャンセル
-	if (mCurrentCursorNinjaArts->IsUsed())
+	if (mNinjaArts[mCurrentNinjaArtsIndex]->IsUsed())
 	{
-		mCurrentCursorNinjaArts->CancelNinjaArts();
+		mNinjaArts[mCurrentNinjaArtsIndex]->CancelNinjaArts();
 	}
 }
 

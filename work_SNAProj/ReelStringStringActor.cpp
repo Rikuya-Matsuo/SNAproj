@@ -1,4 +1,4 @@
-#include "ReelStringStringActor.h"
+ï»¿#include "ReelStringStringActor.h"
 #include "NAReelString.h"
 #include "ReelStringEdgeActor.h"
 #include "MeshComponent.h"
@@ -37,7 +37,7 @@ void ReelStringStringActor::UpdateActor0()
 
 	Player * player = mNinjaArts->GetUserPlayer();
 
-	// ƒvƒŒƒCƒ„[‚©‚çŒ©‚½Edge‚ÌxÀ•W‚Ì·
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰è¦‹ãŸEdgeã®xåº§æ¨™ã®å·®
 	float distance = mEdge->GetPosition().x - player->GetPosition().x;
 
 	SetPosition(player->GetPosition());

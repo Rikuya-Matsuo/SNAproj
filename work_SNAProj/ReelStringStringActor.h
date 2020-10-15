@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include "Actor.h"
 
 class NAReelString;
 class ReelStringEdgeActor;
 
-// ƒvƒŒƒCƒ„[‚Æ”Ep‚ÌƒGƒbƒW‚ÌŠÔ‚É…‚ğ•`‰æ‚·‚é‚½‚ß‚¾‚¯‚ÌƒAƒNƒ^[
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨å¿è¡“ã®ã‚¨ãƒƒã‚¸ã®é–“ã«ç³¸ã‚’æç”»ã™ã‚‹ãŸã‚ã ã‘ã®ã‚¢ã‚¯ã‚¿ãƒ¼
 class ReelStringStringActor : public Actor
 {
 public:

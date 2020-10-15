@@ -38,6 +38,10 @@ public:
 	void SetRoutine(const int * frameNumberArray, size_t arraySize);
 	void SetRoutine(const int * frameNumberArray);		// 末尾を-1にすること。
 
+	size_t GetFrameMass() const { return mChipTextures.size(); }
+
+	size_t GetRoutineMass() const { return mRoutine.size(); }
+
 private:
 	typedef Uint8 FlagType;
 	static const FlagType mLoopEndFlagMask;

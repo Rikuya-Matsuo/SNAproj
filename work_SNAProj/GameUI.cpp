@@ -3,10 +3,11 @@
 #include "AnimationChips.h"
 #include "System.h"
 #include "Texture.h"
+#include "NinjaArtsUICircle.h"
 #include <vector>
 #include <cstdlib>
 
-GameUI::GameUI(const Player * player):
+GameUI::GameUI(Player * player):
 	UIScreen(),
 	mPlayer(player),
 	mLifeMax(player->GetLife())
@@ -49,6 +50,16 @@ GameUI::GameUI(const Player * player):
 	}
 
 	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");
+
+	float radius = 60.0f;
+	float halfScreenWidth = (System::GetInstance().GetRenderer()->GetScreenWidth() / 2);
+	float halfScreenHeight = (System::GetInstance().GetRenderer()->GetScreenHeight() / 2);
+	Vector2D pos;
+	pos.x = (4 * halfScreenWidth) / 5;
+	pos.y = -( 4 * halfScreenHeight) / 5;
+	mNinjaArtsUI = new NinjaArtsUICircle(pos, radius);
+	mPlayer->LinkNinjaArtsUICircle(mNinjaArtsUI);
+	mNinjaArtsUI->SetIconScale(0.4f);
 }
 
 GameUI::~GameUI()
@@ -64,6 +75,8 @@ void GameUI::Update()
 	{
 		mLifeAnimTextures[i].Update();
 	}
+
+	mNinjaArtsUI->Update();
 }
 
 void GameUI::Draw(Shader * shader) const
@@ -74,7 +87,8 @@ void GameUI::Draw(Shader * shader) const
 		Texture * tex = mLifeAnimTextures[i].GetCurrentTexture();
 		if (!tex)
 		{
-			printf("Return is null...\n");
+			printf("GameUI Draw Function : Return is null...\n");
+			return;
 		}
 
 		float scale = 0.3f;
@@ -85,6 +99,25 @@ void GameUI::Draw(Shader * shader) const
 
 		DrawTexture(shader, tex, pos, scale);
 	}
+
+	// 忍術UI
+	for (size_t i = 0; i < mNinjaArtsUI->GetTextures().size(); ++i)
+	{
+		Texture * tex = mNinjaArtsUI->GetTextures()[i];
+		if (!tex)
+		{
+			// テクスチャがnullだった場合、スキップする
+			continue;
+		}
+
+		Vector2D pos;
+		if (mNinjaArtsUI->GetPositionOf1Texture(i, pos))
+		{
+			DrawTexture(shader, tex, pos, mNinjaArtsUI->GetIconScale());
+		}
+	}
+	Texture * button = mNinjaArtsUI->GetButtonTexture();
+	DrawTexture(shader, button, mNinjaArtsUI->GetButtonUIPosition(), mNinjaArtsUI->GetButtonUIScale());
 
 	// ガイドUI
 	Vector2D guidePos;

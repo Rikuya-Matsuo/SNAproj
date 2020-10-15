@@ -10,10 +10,20 @@ class CompletionMeshActor;
 class EnemyBase;
 class AnimationEffect;
 class NinjaArtsBase;
+class NinjaArtsUICircle;
 
 class Player final : public Actor
 {
 public:
+	enum AnimationPattern
+	{
+		Anim_Stay = 0,
+		Anim_DashAttack,
+		Anim_Run,
+		Anim_KnockBack,
+		Anim_Invalid
+	};
+
 	Player();
 	~Player();
 
@@ -33,6 +43,8 @@ public:
 
 	void OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 
+	void LinkNinjaArtsUICircle(NinjaArtsUICircle * naUi);
+
 	static const char mLifeMax;
 
 	friend NinjaArtsBase;
@@ -41,7 +53,7 @@ private:
 	static const char mDashAttackPower;
 
 
-	typedef Uint8 FlagType;
+	typedef Uint16 FlagType;
 	static const FlagType mDetectWallFlagMask;
 	static const FlagType mDetectGroundFlagMask;
 	static const FlagType mLookRightFlagMask;
@@ -49,18 +61,10 @@ private:
 	static const FlagType mAliveFlagMask;
 	static const FlagType mKnockBackFlagMask;
 	static const FlagType mAllowJumpFlagMask;
-	static const FlagType mActiveBrakeFlag;
+	static const FlagType mActiveBrakeFlagMask;
+	static const FlagType mSelfControlAnimationFlagMask;
 
 	static const Vector3D mKnockBackVector;
-
-	enum AnimationPattern
-	{
-		Anim_Stay = 0,
-		Anim_DashAttack,
-		Anim_Run,
-		Anim_KnockBack,
-		Anim_Invalid
-	};
 
 	Mesh * mMesh;
 
@@ -85,12 +89,16 @@ private:
 
 	CompletionMeshActor * mCompletionMeshActor;
 
-	NinjaArtsBase * mCurrentCursorNinjaArts;
+	std::vector<NinjaArtsBase *> mNinjaArts;
+
+	NinjaArtsUICircle * mNinjaArtsUI;
 
 	char mCurrentAnimation;
 
 	char mLife;
 	
+	Uint8 mCurrentNinjaArtsIndex;
+
 	// 押し返しが発生したフラグ。
 	// 正負によって方向を表す。
 	struct PushedFlag
@@ -117,6 +125,8 @@ private:
 	void UpdateActor0() override;
 
 	void UpdateActor1() override;
+
+	void UpdateAnimation();
 
 	void OnAttackColliderHits(const ColliderComponentBase * opponent);
 
