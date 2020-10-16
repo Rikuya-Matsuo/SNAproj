@@ -79,20 +79,25 @@ void System::Run()
 {
 	SDL_Log("System start running...\n");
 
+	// ゲームループ
 	bool quitFlag = false;
 	while (!quitFlag)
 	{
+		// デルタタイムの計算
 		UpdateDeltaTime();
 
+		// アクターのソートを要請された際は、ソートを行う
 		if (mSortActorFlag)
 		{
 			SortActor();
 			mSortActorFlag = false;
 		}
 
+		// 入力情報の取得
 		Input::GetInstance().Update();
 
 #ifdef DEBUG_SNA
+		// デバッグ時のみ、任意のタイミングでブレークポイントに突入するための記述
 		if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_TAB))
 		{
 			// ブレークポイント設置
@@ -100,15 +105,19 @@ void System::Run()
 		}
 #endif // DEBUG_SNA
 
+		// シーンの更新
 		UpdateScene();
 
+		// アクターの更新
 		UpdateActor();
 
+		// アクターに対する重力の適用
 		GravityFall();
 
 		// 当たり判定
 		PhysicManager::GetInstance().CheckHit();
 
+		// 各アクターに対し、当たり判定による押し返しの適用
 		FixActorPosition();
 
 		// UI更新
@@ -136,8 +145,10 @@ void System::Run()
 			quitFlag = true;
 		}
 
+		// 描画
 		Draw();
 
+		// このフレームにおける入力状態を保存
 		Input::GetInstance().LastUpdate();
 
 #ifdef DEBUG_SNA
@@ -255,12 +266,18 @@ void System::ChangeScene(bool & quitFlag)
 	// シーンが変更された際、接触情報をクリアする
 	PhysicManager::GetInstance().ClearHitState();
 
+	// 次のシーンを取得
 	SceneBase * nextScene = mCurrentScene->GetNextScene();
-	if (nextScene != nullptr)
+
+	// 次のシーンが設定されている場合
+	if (nextScene)
 	{
+		// 現在のシーンを削除し、次のシーンを現在のシーンに設定する
 		delete mCurrentScene;
 		mCurrentScene = nextScene;
 
+		// 前のシーンに所属するアクターを削除する
+		// ただし、シーンを飛び越えるフラグが真のものは削除しない
 		auto itr = mActorList.begin();
 		for (; itr != mActorList.end(); ++itr)
 		{
@@ -277,15 +294,21 @@ void System::ChangeScene(bool & quitFlag)
 			}
 			else
 			{
+				// シーンを飛び越えるフラグを偽にする
 				(*itr)->SetBeyondSceneFlag(false);
 			}
 		}
 
+		// シーンを飛び越えてきたアクターは、シーン跳躍時の関数を呼ぶ
 		for (itr = mActorList.begin(); itr != mActorList.end(); ++itr)
 		{
-			(*itr)->OnBeyondScene();
+			if ((*itr)->GetBeyondSceneFlag())
+			{
+				(*itr)->OnBeyondScene();
+			}
 		}
 	}
+	// 次のシーンが設定されていない場合
 	else
 	{
 		quitFlag = true;
