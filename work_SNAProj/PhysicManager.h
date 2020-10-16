@@ -54,6 +54,8 @@ public:
 
 	void RequestSortCollider(Uint8 attribute) { mSortAttributeList.emplace_back(attribute); }
 
+	void ClearHitState();
+
 	friend class HashColliderPair;
 
 private:
@@ -88,6 +90,8 @@ private:
 	std::mutex mColliderPairStateMutex;
 
 	bool mContinueRefleshFlag;
+
+	bool mResetRefreshLoopFlag;
 
 	void HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol);
 

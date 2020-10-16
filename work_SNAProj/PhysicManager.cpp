@@ -334,6 +334,15 @@ void PhysicManager::ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8
 	mCheckableAttributeCombination.emplace_back(pair);
 }
 
+void PhysicManager::ClearHitState()
+{
+	MutexLocker lock(mColliderPairStateMutex);
+
+	mHitColliderPairState.clear();
+
+	mResetRefreshLoopFlag = true;
+}
+
 // 奥行きを考えない押し戻し処理を使う
 void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol)
 {
@@ -554,14 +563,15 @@ void PhysicManager::RefreshHitState()
 		{
 			MutexLocker lock(mColliderPairStateMutex);
 
+			if (mResetRefreshLoopFlag || !mContinueRefleshFlag)
+			{
+				mResetRefreshLoopFlag = false;
+				break;
+			}
+
 			if (itr->second == HitState::HitState_NoTouch)
 			{
 				itr = mHitColliderPairState.erase(itr);
-			}
-
-			if (!mContinueRefleshFlag)
-			{
-				break;
 			}
 		}
 	}
@@ -585,7 +595,8 @@ void PhysicManager::SortColliders()
 }
 
 PhysicManager::PhysicManager():
-	mContinueRefleshFlag(true)
+	mContinueRefleshFlag(true),
+	mResetRefreshLoopFlag(false)
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)

@@ -252,6 +252,8 @@ void System::Draw()
 
 void System::ChangeScene(bool & quitFlag)
 {
+	PhysicManager::GetInstance().ClearHitState();
+
 	SceneBase * nextScene = mCurrentScene->GetNextScene();
 	if (nextScene != nullptr)
 	{
