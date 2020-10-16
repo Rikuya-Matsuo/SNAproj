@@ -54,6 +54,8 @@ public:
 
 	void RequestSortCollider(Uint8 attribute) { mSortAttributeList.emplace_back(attribute); }
 
+	void ClearHitState();
+
 	friend class HashColliderPair;
 
 private:
@@ -89,6 +91,8 @@ private:
 
 	bool mContinueRefleshFlag;
 
+	bool mResetRefreshLoopFlag;
+
 	void HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol);
 
 	bool CheckPrevHit(const ColliderPair& pair);
@@ -103,7 +107,7 @@ private:
 
 	void ResetHitState(const ColliderComponentBase * col);
 
-	// ループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除する関数
+	// 接触情報走査のループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除する関数
 	void RefreshHitState();
 	static void RefreshHitStateForThread()
 	{

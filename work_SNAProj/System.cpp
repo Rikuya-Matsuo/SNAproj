@@ -252,6 +252,9 @@ void System::Draw()
 
 void System::ChangeScene(bool & quitFlag)
 {
+	// シーンが変更された際、接触情報をクリアする
+	PhysicManager::GetInstance().ClearHitState();
+
 	SceneBase * nextScene = mCurrentScene->GetNextScene();
 	if (nextScene != nullptr)
 	{

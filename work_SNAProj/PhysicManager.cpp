@@ -334,6 +334,16 @@ void PhysicManager::ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8
 	mCheckableAttributeCombination.emplace_back(pair);
 }
 
+void PhysicManager::ClearHitState()
+{
+	MutexLocker lock(mColliderPairStateMutex);
+
+	mHitColliderPairState.clear();
+
+	// マルチスレッドで実行している接触情報整理ループをやり直すよう指示
+	mResetRefreshLoopFlag = true;
+}
+
 // 奥行きを考えない押し戻し処理を使う
 void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol)
 {
@@ -441,12 +451,6 @@ void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComp
 
 bool PhysicManager::CheckPrevHit(const ColliderPair& pair)
 {
-	// コライダーの接触情報が空なら、検索にヒットしない
-	if (mHitColliderPairState.empty())
-	{
-		return false;
-	}
-
 	// ペアを検索
 	auto itr = mHitColliderPairState.find(pair);
 
@@ -554,14 +558,17 @@ void PhysicManager::RefreshHitState()
 		{
 			MutexLocker lock(mColliderPairStateMutex);
 
-			if (itr->second == HitState::HitState_NoTouch)
+			// ループのやり直しを指示される or フラグがループの終了を示したとき、このfor文を抜ける
+			if (mResetRefreshLoopFlag || !mContinueRefleshFlag)
 			{
-				itr = mHitColliderPairState.erase(itr);
+				mResetRefreshLoopFlag = false;
+				break;
 			}
 
-			if (!mContinueRefleshFlag)
+			// 接触していないなら削除
+			if (itr->second == HitState::HitState_NoTouch)
 			{
-				break;
+				mHitColliderPairState.erase(itr);
 			}
 		}
 	}
@@ -585,7 +592,8 @@ void PhysicManager::SortColliders()
 }
 
 PhysicManager::PhysicManager():
-	mContinueRefleshFlag(true)
+	mContinueRefleshFlag(true),
+	mResetRefreshLoopFlag(false)
 {
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
