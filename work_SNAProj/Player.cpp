@@ -222,6 +222,7 @@ void Player::UpdateActor0()
 		SetAllComponentActive(false);
 	}
 
+	// ジャンプ
 	bool jumpInput = Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_SPACE) || Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A);
 	bool allowJumpFlag = mFlags_Player & mAllowJumpFlagMask;
 	if (jumpInput && detectGroundFlag && allowJumpFlag)
@@ -229,6 +230,7 @@ void Player::UpdateActor0()
 		mJumpComponent->Jump();
 	}
 
+	// 地面を検出していない間は重力を有効に
 	if (!(mFlags_Player & mDetectGroundFlagMask))
 	{
 		SetAffectGravityFlag(true);
@@ -266,9 +268,11 @@ void Player::UpdateActor0()
 		naIndex = 0;
 	}
 
+	// 計算結果代入、及びUIに選択中の忍術のアイコンIDを伝える
 	mCurrentNinjaArtsIndex = naIndex;
 	mNinjaArtsUI->SetIconID(mNinjaArts[mCurrentNinjaArtsIndex]->GetIconID());
 
+	// 左右どちらの回転を行うかをUIに指示
 	if (ninjaArtsRRotateInput || ninjaArtsLRotateInput)
 	{
 		mNinjaArtsUI->SetRotateDirection(ninjaArtsRRotateInput);
