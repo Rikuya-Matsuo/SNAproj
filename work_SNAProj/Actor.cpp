@@ -34,23 +34,27 @@ Actor::Actor():
 	mFallSpeedMax(30.0f),
 	mFlags(mAffectGravityFlagMask_Base | mMovalFlagMask_Base | mCalculateTransformFlagMask_Base)
 {
+	// 自身をシステムに登録
 	System::GetInstance().ResisterActor(this);
 
+	// 前フレーム情報を初期化
 	mPrevFlags = mFlags;
 	mPrevRotationAngle = mRotationAngle;
 
+	// 所属シーンを記録
 	mBelongScene = const_cast<SceneBase*>(SceneBase::GetLatestScene());
 }
 
 Actor::~Actor()
 {
+	// コンポーネントの削除
 	for (auto cmpList : mComponentLists)
 	{
-		// secondを使って書きたかったが、なぜか参照が本体と同期していないため、添え字で指定する方法を使う
 		Common::DeleteContainerOfPointer(mComponentLists[cmpList.first]);
 		std::list<ComponentBase *>().swap(mComponentLists[cmpList.first]);
 	}
 
+	// システムから自身を登録解除
 	System::GetInstance().DeresisterActor(this);
 }
 
@@ -81,6 +85,7 @@ void Actor::Update()
 		OnBecomeActive();
 	}
 
+	// 回転時の処理
 	if (mPrevRotationAngle != mRotationAngle)
 	{
 		mRotation = Quaternion(mRotationAxis, mRotationAngle);
@@ -90,6 +95,7 @@ void Actor::Update()
 		mPrevRotationAngle = mRotationAngle;
 	}
 
+	// 動いた際の行列計算
 	if (mFlags & mCalculateTransformFlagMask_Base)
 	{
 		CalculateWorldTransform();
@@ -97,12 +103,14 @@ void Actor::Update()
 		mFlags &= ~mCalculateTransformFlagMask_Base;
 	}
 
+	// アクティブであるとき、更新
 	bool isActive = !(mFlags & mStopUpdateFlagMask_Base);
 	if (isActive)
 	{
 		UpdateActor0();
 	}
 
+	// 回転時の処理
 	if (mPrevRotationAngle != mRotationAngle)
 	{
 		mRotation = Quaternion(mRotationAxis, mRotationAngle);
@@ -112,8 +120,10 @@ void Actor::Update()
 		mPrevRotationAngle = mRotationAngle;
 	}
 
+	// コンポーネントの処理
 	UpdateComponents(UpdateTiming::UpdateTiming_Normal);
 
+	// アクティブであるとき、更新（コンポーネントの更新後にしたい処理）
 	if (isActive)
 	{
 		UpdateActor1();
@@ -127,6 +137,7 @@ void Actor::Update()
 		mFlags |= mCalculateTransformFlagMask_Base;
 	}
 
+	// UpdateActor1の後にしたいコンポーネントの処理
 	UpdateComponents(UpdateTiming::UpdateTiming_AfterAddMoveVector);
 
 	// アップデート中にアクティブでなくなる可能性があるのでもう一度判定・処理を行う
@@ -136,6 +147,7 @@ void Actor::Update()
 		OnBecomeNotActive();
 	}
 
+	// 回転時の処理
 	if (mPrevRotationAngle != mRotationAngle)
 	{
 		mRotation = Quaternion(mRotationAxis, mRotationAngle);
@@ -145,6 +157,7 @@ void Actor::Update()
 		mPrevRotationAngle = mRotationAngle;
 	}
 
+	// 動いた際の行列処理
 	if (mFlags & mCalculateTransformFlagMask_Base)
 	{
 		CalculateWorldTransform();
@@ -158,15 +171,19 @@ void Actor::Update()
 
 void Actor::OnBeyondScene()
 {
+	// 所属シーンを更新
 	mBelongScene = const_cast<SceneBase*>(SceneBase::GetLatestScene());
 }
 
 void Actor::ResisterComponent(const ComponentBase * in_cmp)
 {
+	// コンポーネントの更新優先度数を取得
 	const int priority = in_cmp->GetPriority();
 
+	// 更新のタイミングを取得
 	const UpdateTiming timing = in_cmp->GetUpdateTiming();
 
+	// 更新順に並ぶように、リストに挿入する
 	for (auto itr : mComponentLists[timing])
 	{
 		if (priority < itr->GetPriority())
@@ -177,15 +194,19 @@ void Actor::ResisterComponent(const ComponentBase * in_cmp)
 		}
 	}
 
+	// 上の処理で挿入されなかった場合、最後に挿入する
 	mComponentLists[timing].emplace_back(const_cast<ComponentBase*>(in_cmp));
 }
 
 void Actor::DeresisterComponent(const ComponentBase * in_cmp)
 {
+	// 更新タイミングを取得
 	const UpdateTiming timing = in_cmp->GetUpdateTiming();
 
+	// 対象を検索
 	auto target = std::find(mComponentLists[timing].begin(), mComponentLists[timing].end(), const_cast<ComponentBase*>(in_cmp));
 
+	// 検索がヒットした場合、リストから削除する
 	if (target != mComponentLists[timing].end())
 	{
 		mComponentLists[timing].erase(target);
@@ -203,6 +224,7 @@ void Actor::UpdateComponents(UpdateTiming timing)
 		mFlags &= ~mRequestComponentSortMask_Base;
 	}
 
+	// 更新
 	for (auto component : mComponentLists[timing])
 	{
 		if (component != nullptr && component->GetActiveFlag())
@@ -231,14 +253,17 @@ void Actor::UpdateActor1()
 
 void Actor::CalculateWorldTransform()
 {
+	// 各軸のスケール値固定フラグを取得
 	bool fixX = mFlags & mFixXScaleFlagMask_Base;
 	bool fixY = mFlags & mFixYScaleFlagMask_Base;
 	bool fixZ = mFlags & mFixZScaleFlagMask_Base;
 	
+	// スケール値固定フラグに応じて、各軸のスケール値を設定
 	float xScale = (fixX) ? mFixedScale.x : mScale;
 	float yScale = (fixY) ? mFixedScale.y : mScale;
 	float zScale = (fixZ) ? mFixedScale.z : mScale;
 
+	// 行列の計算
 	mWorldTransform = Matrix4::CreateScale(xScale, yScale, zScale);
 
 	mWorldTransform *= Matrix4::CreateFromQuaternion(mRotation);
@@ -248,17 +273,22 @@ void Actor::CalculateWorldTransform()
 
 void Actor::SetPriority(int value)
 {
+	// アクター更新順を更新
 	mPriority = value;
+
+	// システムにアクターのソートを要請する
 	System::GetInstance().RequestSortActor();
 }
 
 void Actor::SetFixScaleFlag(bool x, bool y, bool z)
 {
+	// 可読性のためのラムダ式
 	auto set = [this](bool flag, FlagType mask)
 	{
 		BitFlagFunc::SetFlagByBool(flag, this->mFlags, mask);
 	};
 
+	// 各軸のスケール値固定フラグを設定
 	set(x, mFixXScaleFlagMask_Base);
 	set(y, mFixYScaleFlagMask_Base);
 	set(z, mFixZScaleFlagMask_Base);
@@ -266,16 +296,19 @@ void Actor::SetFixScaleFlag(bool x, bool y, bool z)
 
 void Actor::OnBecomeNotActive()
 {
+	// コンポーネントを一時休止する
 	SleepAllComponent();
 }
 
 void Actor::OnBecomeActive()
 {
+	// コンポーネントを再起動する
 	WakeAllComponent();
 }
 
 void Actor::SetAllComponentActive(bool active)
 {
+	// 全コンポーネントのアクティブ状態を設定する
 	for (auto list : mComponentLists)
 	{
 		for (auto cmp : list.second)
@@ -287,6 +320,7 @@ void Actor::SetAllComponentActive(bool active)
 
 void Actor::SleepAllComponent()
 {
+	// 全コンポーネントの一時休止
 	for (auto list : mComponentLists)
 	{
 		for (auto cmp : list.second)
@@ -298,6 +332,7 @@ void Actor::SleepAllComponent()
 
 void Actor::WakeAllComponent()
 {
+	// 全コンポーネントを再起動する
 	for (auto list : mComponentLists)
 	{
 		for (auto cmp : list.second)
@@ -309,23 +344,31 @@ void Actor::WakeAllComponent()
 
 void Actor::SetFixVector(const Vector3D & vec)
 {
+	// 押し返しベクトルの取得
 	mPushedVector = vec;
 
+	// 総合的な押し返しベクトルを計算
 	mFixVector += mPushedVector;
 }
 
 void Actor::FixPosition()
 {
+	// 押し返しが発生している場合処理を行う
 	if (mFixVector.LengthSq())
 	{
+		// 位置の調整
 		mPosition += mFixVector;
 
+		// 行列計算
 		CalculateWorldTransform();
+		
+		// 可読性のためのラムダ式
 		auto isMinus = [](float value)
 		{
 			return value < 0.0f;
 		};
 
+		// 各軸の移動の制限
 		if (mFixVector.x)
 		{
 			if (isMinus(mMoveVector.x) != isMinus(mFixVector.x))
@@ -348,6 +391,7 @@ void Actor::FixPosition()
 			}
 		}
 
+		// 押し返しベクトルの初期化
 		mFixVector = Vector3D::zero;
 	}
 }

@@ -7,6 +7,7 @@ AnimationEffect::AnimationEffect(int priority, const std::string & animPath, int
 	Effect(nullptr, priority),
 	mAnimChip(nullptr)
 {
+	// アニメーションチップのロード
 	bool success = mMesh->LoadDivTexture(animPath, System::GetInstance().GetRenderer(), this, allNum, xNum, yNum, chipW, chipH, secondPerFrame, 0);
 	if (success)
 	{
@@ -20,6 +21,7 @@ AnimationEffect::~AnimationEffect()
 
 void AnimationEffect::UpdateActor0()
 {
+	// 万が一奥に押し返しが発生した場合、エフェクト発生位置の奥行きに設定しなおす
 	if (mPosition.y != mDepth)
 	{
 		mPosition.y = mDepth;
@@ -29,6 +31,7 @@ void AnimationEffect::UpdateActor0()
 
 void AnimationEffect::UpdateActor1()
 {
+	// アニメーションチップを終端まで表示した際、アニメーションの進行を止めて初期化する
 	if (mAnimChip->GetLoopEndFlag())
 	{
 		StopProcess();
@@ -39,7 +42,9 @@ void AnimationEffect::UpdateActor1()
 
 void AnimationEffect::OnBecomeActive()
 {
+	// エフェクト同様のアクティブ時処理
 	Effect::OnBecomeActive();
 
+	// アニメーションチップの初期化
 	mAnimChip->Reset();
 }
