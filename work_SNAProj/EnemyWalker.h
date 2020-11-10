@@ -48,7 +48,7 @@ private:
 
 	FlagType mFlags_EnemyWalker;
 
-	FlagType mPrevFlags_EnemyTest;
+	FlagType mPrevFlags_EnemyWalker;
 
 	unsigned char mTextureIndex;
 
