@@ -33,14 +33,14 @@ bool Skeleton::Load(const std::string& fileName)
 
 	int ver = doc["version"].GetInt();
 
-	// Check the metadata　メタデータのチェック（バージョンチェック）
+	// メタデータのチェック（バージョンチェック）
 	if (ver != 1)
 	{
 		SDL_Log("Skeleton %s unknown format", fileName.c_str());
 		return false;
 	}
 
-	// bonecount ボーン数の取得
+	// ボーン数の取得
 	const rapidjson::Value& bonecount = doc["bonecount"];
 	if (!bonecount.IsUint())
 	{
@@ -86,15 +86,15 @@ bool Skeleton::Load(const std::string& fileName)
 			return false;
 		}
 
-		// "name" ボーン名
+		// name : ボーン名
 		const rapidjson::Value& name = bones[i]["name"];
 		temp.mName = name.GetString();
 
-		// "parent" 親ボーンID
+		// parent : 親ボーンID
 		const rapidjson::Value& parent = bones[i]["parent"];
 		temp.mParent = parent.GetInt();
 
-		// "bindpose" バインドポーズ
+		// bindpose : バインドポーズ
 		const rapidjson::Value& bindpose = bones[i]["bindpose"];
 		if (!bindpose.IsObject())
 		{
@@ -137,23 +137,23 @@ bool Skeleton::Load(const std::string& fileName)
 // 逆バインドポーズ行列の計算
 void Skeleton::ComputeGlobalInvBindPose()
 {
-	// Resize to number of bones, which automatically fills identity    mGlobalInvIndPoses配列を、ボーン数分確保＆自動的に単位行列で初期化
+	// mGlobalInvIndPoses配列を、ボーン数分確保＆自動的に単位行列で初期化
 	mGlobalInvBindPoses.resize(GetNumBones());
 
-	// Step 1: Compute global bind pose for each bone　　　　　　　　　　　ステップ１：それぞれのボーンのグローバルバインドポーズを計算
+	// ステップ１：それぞれのボーンのグローバルバインドポーズを計算
 
-	// The global bind pose for root is just the local bind pose         root ([0]のこと) のグローバルバインドポーズは、ローカルバインドポーズのことです。
+	// [0]のグローバルバインドポーズは、ローカルバインドポーズのことである
 	mGlobalInvBindPoses[0] = mBones[0].mLocalBindPose.ToMatrix();
 
-	// Each remaining bone's global bind pose is its local pose          残りの各ボーンのグローバルバインドポーズは、
-	// multiplied by the parent's global bind pose                       そのローカルポーズに親のグローバルバインドポーズを掛けたものです。
+	// 残りの各ボーンのグローバルバインドポーズは、
+	// そのローカルポーズに親のグローバルバインドポーズを掛けたものです。
 	for (size_t i = 1; i < mGlobalInvBindPoses.size(); i++)
 	{
 		Matrix4 localMat = mBones[i].mLocalBindPose.ToMatrix();                     // そのボーンのローカルバインドポーズを行列に変換して locakMatに代入
 		mGlobalInvBindPoses[i] = localMat * mGlobalInvBindPoses[mBones[i].mParent]; // localMat * 自分の親のグローバルバインドポーズ行列
 	}
 
-	// Step 2: Invert                                                   ステップ２：逆行列にする
+	// ステップ２：逆行列にする
 	for (size_t i = 0; i < mGlobalInvBindPoses.size(); i++)
 	{
 		mGlobalInvBindPoses[i].Invert();
