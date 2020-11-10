@@ -5,6 +5,7 @@
 
 GameClearBoard::GameClearBoard()
 {
+	// メッシュのロード
 	Mesh * mesh = const_cast<Mesh*>(mMeshComp->GetMesh());
 	mesh->LoadTexture("Assets/GameClear.png", System::GetInstance().GetRenderer(), this);
 }

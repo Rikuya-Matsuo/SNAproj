@@ -5,6 +5,7 @@
 
 Floor::Floor(const std::string & texturePath)
 {
+	// メッシュのロード
 	MeshComponent * mc = new MeshComponent(this, 0);
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	bool texLoadSucess = msh->LoadTexture(texturePath, System::GetInstance().GetRenderer(), this);
@@ -20,6 +21,8 @@ Floor::Floor(const std::string & texturePath)
 	else
 	{
 		mc->SetMesh(msh);
+
+		// 視野の範囲外にあっても描画するフラグを有効にする
 		mc->SetRangeOutDrawFlag(true);
 	}
 

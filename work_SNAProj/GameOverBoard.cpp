@@ -7,6 +7,7 @@
 GameOverBoard::GameOverBoard():
 	TitleBoard()
 {
+	// メッシュのロード
 	Mesh * mesh = const_cast<Mesh*>(mMeshComp->GetMesh());
 	mesh->LoadTexture("Assets/GameOver.png", System::GetInstance().GetRenderer(), this);
 }
