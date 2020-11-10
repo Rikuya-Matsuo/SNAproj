@@ -40,19 +40,24 @@ EnemyWalker::EnemyWalker():
 	mKnockBackVecLimit(Vector3D(50.0f, 0.0f, 50.0f)),
 	mEffectOffset(Vector3D(0.5f, 0.0f, 0.5f))
 {
+	// メッシュのロード・設定
 	mMesh->LoadDivTexture("Assets/knight0.png", System::GetInstance().GetRenderer(), this, 6, 3, 2, 60, 60, 0.3f, 0);
 	MeshComponent * mc = new MeshComponent(this, 350);
 	mc->SetMesh(mMesh);
 	mAnimChips = mMesh->GetAnimChips(this, 0);
+	// アニメーションチップの描画順を設定
 	int routine[] = { 3,4,5,-1 };
 	mAnimChips->SetRoutine(routine);
 
+	// 自動移動コンポーネントの生成・設定
 	mAutoMoveComp = new AutoMoveComponent(this, mVelocity);
 	mAutoMoveComp->SetReverseFlag(true, false, false);
 
+	// スピード制限コンポーネントの生成・設定
 	mClamper = new ClampSpeedComponent(this, mNormalVelocityLimit);
 	mClamper->SetClampDirectionFlags(true, false, false);
 
+	// コリジョン設定
 	const AABB originalBox = mMesh->GetCollisionBox();;
 	AABB colBox = mMesh->GetCollisionBox();
 	colBox.mMin.y -= EnemyBase::mDepth;
@@ -81,12 +86,16 @@ EnemyWalker::EnemyWalker():
 	// スケール
 	SetScale(25.0f);
 
+	// ステージデータを参照した当たり判定を行うコンポーネント
 	mBlockChecker = new BlockHitChecker(this, mBodyCollision);
 
-	mPrevFlags_EnemyTest = mFlags_EnemyWalker;
+	// 前フレームのフラグ状態変数を初期化
+	mPrevFlags_EnemyWalker = mFlags_EnemyWalker;
 
+	// 落下速度の設定
 	mFallSpeedRate = 10.0f;
 
+	// 重力を一時無効化
 	mFlags &= ~mAffectGravityFlagMask_Base;
 }
 
@@ -112,11 +121,14 @@ void EnemyWalker::UpdateEnemy0()
 		mPlayerDetector->SetActive(GetInCameraFlag());
 	}
 	
+	// ブロックにヒットした方向の取得
 	const Uint8 blhit = mBlockChecker->GetHitDirectionFlags();
 
+	// 左右の足元にブロックがあるかのフラグの設定
 	mFlags_EnemyWalker |= blhit & mRDVerMask ? mRDetectGroundFlagMask : 0;
 	mFlags_EnemyWalker |= blhit & mLDVerMask ? mLDetectGroundFlagMask : 0;
 	
+	// 足元のブロックフラグだけを抽出した値
 	const FlagType detectFlags = mFlags_EnemyWalker & (mLDetectGroundFlagMask | mRDetectGroundFlagMask);
 	
 	// 左右どちらも床を検出できないかった
@@ -146,7 +158,7 @@ void EnemyWalker::UpdateEnemy0()
 	if (detectFlags != 0)
 	{
 		// ノックバックしたばかりでなければフラグを下す
-		if (mPrevFlags_EnemyTest & mFlags_EnemyWalker & mKnockBackFlagMask)
+		if (mPrevFlags_EnemyWalker & mFlags_EnemyWalker & mKnockBackFlagMask)
 		{
 			mFlags_EnemyWalker &= ~mKnockBackFlagMask;
 		}
@@ -169,18 +181,22 @@ void EnemyWalker::UpdateEnemy0()
 		// タックルしていたなら
 		if (mFlags_EnemyWalker & mTackleFlagMask)
 		{
+			// 速度の設定
 			mAutoMoveComp->SetVelocity(mVelocity);
 			if (mFlags_Enemy & mLookRightFlagMask_EBase)
 			{
 				mAutoMoveComp->ReverseVelocity();
 			}
 
+			// 制限値の設定
 			mClamper->SetLimit(mNormalVelocityLimit);
 
+			// タックルに関するフラグを偽に
 			mFlags_EnemyWalker &= ~mTackleFlagMask;
 			mFlags_Enemy &= ~mAttackFlagMask_EBase;
 		}
 
+		// タイマー初期化
 		mTackleWaitTimer = 0.0f;
 	}
 
@@ -196,11 +212,16 @@ void EnemyWalker::UpdateEnemy0()
 
 void EnemyWalker::TackleProcess()
 {
+	// タックル待機時間中
 	if (mTackleWaitTimer < mTackleWait)
 	{
+		// タイマー計算
 		mTackleWaitTimer += System::GetInstance().GetDeltaTime();
+
+		// 自動移動を切る
 		mAutoMoveComp->SetActive(false);
 
+		// プレイヤー発見エフェクトを有効化
 		mFindPlayerEffect->SetActive(true);
 	}
 	else
@@ -209,14 +230,18 @@ void EnemyWalker::TackleProcess()
 		mFlags_EnemyWalker |= mTackleFlagMask;
 		mFlags_Enemy |= mAttackFlagMask_EBase;
 
-		if (!(mPrevFlags_EnemyTest & mTackleFlagMask))
+		// このフレームでタックルを始めた場合
+		if (!(mPrevFlags_EnemyWalker & mTackleFlagMask))
 		{
+			// 自動移動を有効化・速度の設定
 			mAutoMoveComp->SetActive(true);
 			float f = (mPlayerDirection.x > 0.0f) ? -1.0f : 1.0f;
 			mAutoMoveComp->SetVelocity(mTackleVelocity * f);
 
+			// 速度制限をタックル用に設定
 			mClamper->SetLimit(mTackleVelocityLimit);
 
+			// プレイヤー発見エフェクトを無効化
 			mFindPlayerEffect->SetActive(false);
 		}
 	}
@@ -224,23 +249,33 @@ void EnemyWalker::TackleProcess()
 
 void EnemyWalker::OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8 oppAtt)
 {
+	// 本体のコリジョンではない or 対象がプレイヤーではない場合、関数終了
 	if (caller != mBodyCollision || oppAtt != ColliderAttribute::ColAtt_Player)
 	{
 		return;
 	}
 
+	// 押されたのではなく、踏まれたのであれば別の関数を呼び、この関数を終了する
 	if (mPushedVector.z < 0.0f)
 	{
 		OnBePressedByPlayer();
 		return;
 	}
 
+	// 横方向に押された場合
 	if (mPushedVector.x)
 	{
+		// ネームスペースを一時的に省略
 		namespace hitDirMask = BlockHitDirectionFlagMask;
+
+		// 接触したブロックの方向を取得
 		Uint8 hitBlockDir = mBlockChecker->GetHitDirectionFlags();
 
+		// 押されたベクトルを無効化するケースに当たるかを検証する
 		bool pushInvalidateFlag = false;
+		
+		// 右に押されており、右にブロックがある or 左に押されており、左にブロックがある場合
+		// 押されたベクトルを無効化する
 		if (mPushedVector.x > 0.0f)
 		{
 			pushInvalidateFlag = (hitBlockDir & hitDirMask::mRightMask);
@@ -250,6 +285,7 @@ void EnemyWalker::OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8
 			pushInvalidateFlag = (hitBlockDir & hitDirMask::mLeftMask);
 		}
 
+		// フラグに応じて押し返しベクトルを無効化
 		if (pushInvalidateFlag)
 		{
 			mFixVector -= mPushedVector;
@@ -259,29 +295,37 @@ void EnemyWalker::OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8
 
 void EnemyWalker::OnBePressedByPlayer()
 {
+	// 縦方向の押し返しを無効化
 	mFixVector.z -= mPushedVector.z;
 	mPushedVector.z = 0;
 }
 
 void EnemyWalker::UpdateEnemy1()
 {
+	// ノックバック処理
 	if (mFlags_EnemyWalker & mKnockBackFlagMask)
 	{
-		if (!(mPrevFlags_EnemyTest & mKnockBackFlagMask))
+		// このフレームからノックバックを開始した場合移動ベクトルをノックバックに設定する
+		if (!(mPrevFlags_EnemyWalker & mKnockBackFlagMask))
 		{
 			mMoveVector = mKnockBackVector;
 		}
 		mMoveVector.x = mKnockBackVector.x;
+
+		// 自動移動を無効化
 		mAutoMoveComp->SetActive(false);
 	}
 
-	if (mPrevFlags_EnemyTest & mKnockBackFlagMask && !(mFlags_EnemyWalker & mKnockBackFlagMask))
+	// ノックバック終了時の処理
+	if (mPrevFlags_EnemyWalker & mKnockBackFlagMask && !(mFlags_EnemyWalker & mKnockBackFlagMask))
 	{
+		// 速度制限の設定
 		Vector3D lim = (mFlags_EnemyWalker & mTackleFlagMask) ? mTackleVelocityLimit : mNormalVelocityLimit;
 		mClamper->SetLimit(lim);
 		mClamper->SetClampDirectionFlags(true, false, false);
 	}
 
+	// 着地しているかの判定・処理
 	const Uint8 blhit = mBlockChecker->GetHitDirectionFlags();
 	if (blhit & mDownMask && !(mFlags_EnemyWalker & mKnockBackFlagMask))
 	{
@@ -302,8 +346,10 @@ void EnemyWalker::UpdateEnemy1()
 		Flip();
 	}
 
-	mPrevFlags_EnemyTest = mFlags_EnemyWalker;
+	// フラグ状態記録
+	mPrevFlags_EnemyWalker = mFlags_EnemyWalker;
 
+	// 当たり判定関連のフラグを偽にする
 	EnemyWalker::FlagType mask =
 		(mRDetectGroundFlagMask | mLDetectGroundFlagMask | mHitWallFlagMask | mDetectPlayerFlagMask | mDetectWallFlagMask);
 	mFlags_EnemyWalker &= ~mask;
@@ -311,32 +357,45 @@ void EnemyWalker::UpdateEnemy1()
 
 void EnemyWalker::OnFlip()
 {
+	// 右を向いているかのフラグ
 	bool lookRight = mFlags_Enemy & mLookRightFlagMask_EBase;
+
+	// フラグ反転
 	BitFlagFunc::SetFlagByBool(!lookRight, mFlags_Enemy, mLookRightFlagMask_EBase);
+
+	// 自動移動の向きを反転
 	mAutoMoveComp->ReverseVelocity();
 }
 
 void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
+	// アトリビュートの取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
 
+	// プレイヤーに押された処理
 	OnBePushedByPlayer(caller, opponentAtt);
 
+	// タックル中の処理
 	if (mFlags_EnemyWalker & mTackleFlagMask && opponentAtt == ColAtt_Player)
 	{
 		Player * p = static_cast<Player*>(opponent->GetOwner());
 		p->Damage(1);
 	}
 
+	// 被攻撃時の処理
 	if (caller == mBodyCollision && opponentAtt == ColliderAttribute::ColAtt_PlayerAttack)
 	{
+		// ダメージアニメーションフラグ設定
 		mFlags_EnemyWalker |= mDamageAnimFlagMask;
 		
+		// ノックバックフラグ設定
 		mFlags_EnemyWalker |= mKnockBackFlagMask;
+		// ノックバック方向設定
 		float x = opponent->GetOwner()->GetPosition().x - mPosition.x;
 		mKnockBackVector = mKnockBackRightVector;
 		mKnockBackVector.x *= (x < 0.0f) ? 1.0f : -1.0f;
+		// 速度制限設定
 		mClamper->SetLimit(mKnockBackVecLimit);
 		mClamper->SetClampDirectionFlags(true, false, true);
 
@@ -359,12 +418,14 @@ void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComp
 		return ret;
 	};
 
+	// プレイヤー検知処理
 	bool detPlayer = checkPointer(mPlayerDetector, mDetectPlayerFlagMask, ColliderAttribute::ColAtt_Player);
 	if (detPlayer)
 	{
 		mPlayerDirection = opponent->GetOwner()->GetPosition() - mPosition;
 	}
 
+	// 壁検知処理
 	bool detBlock = checkPointer(mPlayerDetector, mDetectWallFlagMask);
 	if (detBlock)
 	{
@@ -374,9 +435,11 @@ void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComp
 
 void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
+	// アトリビュートの取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 	Uint8 callerAtt = caller->GetColliderAttribute();
 
+	// プレイヤーに押された時の処理
 	OnBePushedByPlayer(caller, opponentAtt);
 
 	// 地面検出装置の処理
@@ -395,12 +458,14 @@ void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const Collide
 		return ret;
 	};
 
+	// プレイヤー検知処理
 	bool detPlayer = checkPointer(mPlayerDetector, mDetectPlayerFlagMask, ColliderAttribute::ColAtt_Player);
 	if (detPlayer)
 	{
 		mPlayerDirection = opponent->GetOwner()->GetPosition() - mPosition;
 	}
 
+	// 壁検知処理
 	bool detBlock = checkPointer(mPlayerDetector, mDetectWallFlagMask);
 	if (detBlock)
 	{
@@ -410,26 +475,36 @@ void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const Collide
 
 void EnemyWalker::Capture()
 {
+	// 基底クラスの同関数を呼ぶ
 	EnemyBase::Capture();
 
+	// プレイヤー検知コリジョンの無効化
 	mPlayerDetector->SetActive(false);
 
+	// タックルフラグの設定
 	BitFlagFunc::SetFlagByBool(false, mFlags_EnemyWalker, mTackleFlagMask);
 
+	// 速度制限の無効化
 	mClamper->SetActive(false);
 
+	// 自動移動の無効化
 	mAutoMoveComp->SetActive(false);
 }
 
 void EnemyWalker::LetGo()
 {
+	// 基底クラスの同関数を呼ぶ
 	EnemyBase::LetGo();
 
+	// プレイヤー検知コリジョンの有効化
 	mPlayerDetector->SetActive(true);
 
+	// タックルフラグを有効化
 	BitFlagFunc::SetFlagByBool(true, mFlags_EnemyWalker, mTackleFlagMask);
 
+	// 速度制限有効化
 	mClamper->SetActive(true);
 
+	// 自動移動有効化
 	mAutoMoveComp->SetActive(true);
 }

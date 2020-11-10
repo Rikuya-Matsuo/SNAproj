@@ -61,7 +61,7 @@ void Effect::OnBecomeActive()
 	// 加えて全コンポーネントアクティブ化
 	Actor::OnBecomeActive();
 
-	// 行列計算フラグを真にし、描画停止フラグを負にする
+	// 行列計算フラグを真にし、描画停止フラグを偽にする
 	mFlags |= mCalculateTransformFlagMask_Base;
 	mFlags &= ~mStopDrawFlagMask_Base;
 }
