@@ -12,6 +12,7 @@ ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute co
 	mFlags_CCBase(mMoveOnHitFlagMask | mPushOnHitFlagMask | mRotatableFlagMask),
 	mCheckOrder(100)
 {
+	// 検出装置として生成された場合
 	if (mAttribute == ColliderAttribute::ColAtt_Detector)
 	{
 		mPriority -= 50;
@@ -19,16 +20,19 @@ ColliderComponentBase::ColliderComponentBase(Actor * owner, ColliderAttribute co
 		mOwner->RequestSortComponents();
 	}
 
+	// 自身を物理マネージャに登録
 	PhysicManager::GetInstance().ResisterCollider(this);
 }
 
 ColliderComponentBase::~ColliderComponentBase()
 {
+	// 物理マネージャから登録解除
 	PhysicManager::GetInstance().DeresisterCollider(this);
 }
 
 void ColliderComponentBase::SetCheckOrder(int value)
 {
+	// 判定順を設定
 	mCheckOrder = value;
 
 	// ソートを要請

@@ -22,6 +22,7 @@ ClampSpeedComponent::~ClampSpeedComponent()
 
 void ClampSpeedComponent::SetClampDirectionFlags(bool x, bool y, bool z)
 {
+	// クランプする軸の設定
 	Uint8 xMask = x ? mClampXFlagMask : 0;
 	Uint8 yMask = y ? mClampYFlagMask : 0;
 	Uint8 zMask = z ? mClampZFlagMask : 0;
@@ -41,6 +42,7 @@ void ClampSpeedComponent::Update()
 		speed = Common::Clamp(speed, -absLim, absLim);
 	};
 
+	// 各軸の速度をクランプ
 	if (mClampDirectionFlag & mClampXFlagMask)
 	{
 		clamp(mOwnerMoveVector.x, mLimit.x);

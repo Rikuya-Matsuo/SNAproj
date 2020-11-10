@@ -11,6 +11,7 @@ BoxColliderComponent::~BoxColliderComponent()
 
 void BoxColliderComponent::Update()
 {
+	// ボックス計算
 	CalculateWorldBox();
 }
 
@@ -31,7 +32,6 @@ void BoxColliderComponent::CalculateWorldBox()
 
 	// 平行移動
 	Vector3D trans = mOwner->GetPosition();
-	//trans += mOwner->GetMoveVector();
 	mWorldBox.mMin += trans;
 	mWorldBox.mMax += trans;
 }
