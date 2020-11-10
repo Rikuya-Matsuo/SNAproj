@@ -11,11 +11,14 @@ TitleCameraTargetActor::TitleCameraTargetActor():
 	Actor(),
 	mAutoMoveComponent(new AutoMoveComponent(this))
 {
+	// 重力不適用
 	SetAffectGravityFlag(false);
 
+	// 自動移動の設定
 	mAutoMoveComponent->SetReverseFlag(true, false, false);
 	mAutoMoveComponent->SetVelocity(Vector3D(1.0f, 0.0f, 0.0f));
 
+	// 制限速度の設定
 	ClampSpeedComponent * clampComp = new ClampSpeedComponent(this);
 	clampComp->SetClampDirectionFlags(true, true, true);
 	float speedLimit = 30.0f;
