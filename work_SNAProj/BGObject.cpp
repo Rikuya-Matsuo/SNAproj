@@ -6,6 +6,7 @@
 BGObject::BGObject(const std::string & meshFileName):
 	mSucessToLoadFlag(false)
 {
+	// メッシュコンポーネントのロード
 	MeshComponent * mc = new MeshComponent(this, 0);
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh(meshFileName, this);
 	if (msh)
@@ -17,6 +18,7 @@ BGObject::BGObject(const std::string & meshFileName):
 		mModelSize = box.mMax - box.mMin;
 	}
 
+	// 重力の不適用と、当たり判定時の押し返され無効を設定
 	mFlags &= ~(mAffectGravityFlagMask_Base | mMovalFlagMask_Base);
 }
 

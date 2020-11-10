@@ -10,6 +10,7 @@ const float Block::mModelSize = 100.0f;
 Block::Block(const std::string & texturePath, bool isGroundBlock):
 	Actor()
 {
+	// メッシュのロード
 	mMeshComponent = new MeshComponent(this, 100);
 	Mesh * msh = System::GetInstance().GetRenderer()->GetMesh("Assets/Cube.gpmesh", this);
 	msh->LoadTexture(texturePath, System::GetInstance().GetRenderer(), this);
@@ -20,8 +21,10 @@ Block::Block(const std::string & texturePath, bool isGroundBlock):
 
 	mMeshComponent->SetMesh(msh);
 
+	// コリジョンの設定
 	AABB box = msh->GetCollisionBox();
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
+	// 一番下のコリジョンは、念のため下方向に深く大きくする
 	if (isGroundBlock)
 	{
 		Vector3D boxSize = box.mMax - box.mMin;
