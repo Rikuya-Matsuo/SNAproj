@@ -459,6 +459,7 @@ void Player::UpdateAnimation()
 
 void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
 {
+	// アトリビュート取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
 	// エネミーとの判定
@@ -499,6 +500,7 @@ void Player::OnAttackColliderHits(const ColliderComponentBase * opponent)
 
 void Player::OnGroundCheckerHits(const ColliderComponentBase * opponent)
 {
+	// アトリビュート取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
 	// ブロックとの判定
@@ -512,8 +514,10 @@ void Player::OnGroundCheckerHits(const ColliderComponentBase * opponent)
 
 void Player::OnWallCheckerHits(const ColliderComponentBase * opponent)
 {
+	// アトリビュート取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
+	// ブロックとの判定
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
@@ -525,8 +529,10 @@ void Player::OnWallCheckerHits(const ColliderComponentBase * opponent)
 
 void Player::OnBodyHits(const ColliderComponentBase * opponent)
 {
+	// アトリビュート取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
+	// 対象がブロックである場合
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
@@ -554,6 +560,7 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 		}
 	}
 
+	// 対象がエネミーである場合
 	bool isOpponentEnemy = (opponentAtt == ColliderAttribute::ColAtt_Enemy);
 	if (isOpponentEnemy)
 	{
@@ -569,6 +576,7 @@ void Player::OnBodyHits(const ColliderComponentBase * opponent)
 
 void Player::OnGroundCheckerTouching(const ColliderComponentBase * opponent)
 {
+	// アトリビュート取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
 	// ブロックとの判定
@@ -588,8 +596,10 @@ void Player::OnWallCheckerTouching(const ColliderComponentBase * opponent)
 
 void Player::OnBodyTouching(const ColliderComponentBase * opponent)
 {
+	// アトリビュート取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
 
+	// 対象がブロックである場合
 	bool isOpponentBlock = (opponentAtt == ColliderAttribute::ColAtt_Block);
 	if (isOpponentBlock)
 	{
@@ -675,10 +685,13 @@ void Player::OnApart(const ColliderComponentBase * caller, const ColliderCompone
 
 void Player::LinkNinjaArtsUICircle(NinjaArtsUICircle * naUi)
 {
+	// UI取得
 	mNinjaArtsUI = naUi;
 
+	// UIにプレイヤーを登録
 	mNinjaArtsUI->SetPlayer(this);
 
+	// アイコンを登録
 	for (auto itr = mNinjaArts.begin(); itr != mNinjaArts.end(); ++itr)
 	{
 		Texture * icon = (*itr)->GetIconTexture();
@@ -712,15 +725,19 @@ void Player::OnDetectGround(const ColliderComponentBase * opponent)
 		return;
 	}
 
+	// フラグ設定
 	mFlags_Player |= mDetectGroundFlagMask;
 
+	// ノックバック中なら、ノックバックを終了
 	if (mFlags_Player & mKnockBackFlagMask)
 	{
 		mFlags_Player &= ~mKnockBackFlagMask;
 	}
 
+	// 地面を記録
 	mGroundList.emplace_back(opponent);
 
+	// 重力無効化
 	SetAffectGravityFlag(false);
 }
 
@@ -784,17 +801,22 @@ void Player::OnCollideCeiling(const ColliderComponentBase * opponent)
 		return;
 	}
 
+	// 押し返し方向設定
 	mPushedFlags.vertical = -1;
+
+	// 重力有効化
 	SetAffectGravityFlag(true);
 }
 
 void Player::OnBePushedByWall()
 {
+	// 横方向に押されていないなら関数終了
 	if (!mPushedVector.x)
 	{
 		return;
 	}
 
+	// 押し返し方向の取得
 	char dir = (mPushedVector.x < 0.0f) ? -1 : 1;
 
 	// もし既に同じ方向から押し返しを受けていたらこのフレームで受けた力を無効化
@@ -842,16 +864,20 @@ void Player::OnBeAttacked(const EnemyBase * enemy)
 
 void Player::OnLifeRunOut()
 {
+	// 生存フラグを下す
 	mFlags_Player &= ~mAliveFlagMask;
 }
 
 void Player::OnEndAttack()
 {
+	// アニメーション初期化
 	mMesh->GetAnimChips(this, Anim_DashAttack)->Reset();
 	mCompletionMeshActor->ResetAnimation(AnimationPattern::Anim_DashAttack);
 
+	// 攻撃コライダーを無効化
 	mAttackCollider->SetActive(false);
 
+	// ヒットしたエネミーのリストをクリア
 	mHitList.clear();
 }
 
@@ -865,8 +891,10 @@ void Player::OnEndNinjaArts()
 
 AnimationEffect * Player::FindNonActiveEffect(AnimationEffect ** effArray, size_t mass) const
 {
+	// アクティブでないエフェクトを指す
 	AnimationEffect * ret = nullptr;
 
+	// アクティブでないエフェクトを探す
 	for (size_t i = 0; i < mass; ++i)
 	{
 		if (!effArray[i]->GetActiveFlag())
