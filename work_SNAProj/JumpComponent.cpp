@@ -28,6 +28,7 @@ JumpComponent::~JumpComponent()
 
 void JumpComponent::Update()
 {
+	// ブレークポイント突入用フラグの切り替え
 #ifdef DEBUG_SNA
 	if (Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_RCTRL))
 	{
@@ -35,8 +36,10 @@ void JumpComponent::Update()
 	}
 #endif // DEBUG_SNA
 
+	// ジャンプが指示された場合
 	if (mJumpFlags & mTimingFlagMask)
 	{
+		// デバッグ用ブレークポイント
 #ifdef DEBUG_SNA
 		if (debugFlag)
 		{
@@ -44,12 +47,16 @@ void JumpComponent::Update()
 		}
 #endif
 
+		// 移動ベクトル取得
 		Vector3D moveVec = mOwner->GetMoveVector();
 
+		// 上方向にジャンプ力を加算
 		moveVec.z += mPower;
 
+		// フラグを初期化
 		mJumpFlags &= ~mTimingFlagMask;
 
+		// 移動ベクトル設定
 		mOwner->SetMoveVector(moveVec);
 	}
 }

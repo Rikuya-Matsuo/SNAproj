@@ -15,7 +15,7 @@ const MeshComponent::FlagType MeshComponent::mRangeOutDrawFlagMask = 1 << 3;
 
 Vector3D MeshComponent::mCamOffset = Vector3D::zero;
 
-// メッシュコンポーネント　ownerとスキンメッシュかの情報入れる
+// メッシュコンポーネント : ownerとスキンメッシュかの情報入れる
 MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal)
 	:ComponentBase(owner)
 	, mMesh(nullptr)
@@ -23,23 +23,28 @@ MeshComponent::MeshComponent(Actor* owner, int drawOrder, bool isSkeletal)
 	, mTextureIndex(0)
 	, mMeshCompFlags(mVisibleFlagMask | (isSkeletal ? mIsSkeletalFlagMask : 0))
 {
+	// レンダラーに自身を登録
 	System::GetInstance().GetRenderer()->AddMeshComponent(this);
 }
 
 MeshComponent::~MeshComponent()
 {
+	// メッシュからアクター情報を削除
 	if (mMesh)
 	{
 		mMesh->DeleteActorInfo(mOwner);
 	}
 
+	// レンダラーから自身を登録解除
 	System::GetInstance().GetRenderer()->RemoveMeshComponent(this);
 }
 
 void MeshComponent::Update()
 {
+	// 描画フラグをアクターに合わせる
 	BitFlagFunc::SetFlagByBool(mOwner->GetVisibleFlag(), mMeshCompFlags, mVisibleFlagMask);
 
+	// アニメーションチップが設定されている場合、更新する
 	if (mMeshCompFlags & mAnimationModeFlagMask)
 	{
 		mMesh->Update(mOwner);
@@ -48,6 +53,7 @@ void MeshComponent::Update()
 
 void MeshComponent::Draw(Shader* shader)
 {
+	// アクターの描画フラグと、自身の描画フラグが真でかつ、メッシュがnullでない場合
 	if ((mOwner->GetActiveFlag()) && (mMeshCompFlags & mVisibleFlagMask) && mMesh)
 	{
 		{
@@ -75,21 +81,21 @@ void MeshComponent::Draw(Shader* shader)
 		}
 
 		{
-			// Set the world transform　ワールド変換をセット
+			// ワールド変換をセット
 			shader->SetMatrixUniform("uWorldTransform",
 				mOwner->GetWorldTransform());
-			// Set specular power　スペキュラ強度セット
+			// スペキュラ強度セット
 			shader->SetFloatUniform("uSpecPower", 100);
-			// Set the active texture　アクティブテクスチャセット
+			// アクティブテクスチャセット
 			Texture* t = mMesh->GetTexture(mOwner);
 			if (t)
 			{
 				t->SetActive();
 			}
-			// Set the mesh's vertex array as active　頂点配列をアクティブに
+			// 頂点配列をアクティブに
 			VertexArray* va = mMesh->GetVertexArray();
 			va->SetActive();
-			// Draw　描画するー
+			// 描画する
 			glDrawElements(GL_TRIANGLES, va->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 		}
 		
@@ -98,7 +104,9 @@ void MeshComponent::Draw(Shader* shader)
 
 void MeshComponent::SetMesh(Mesh * mesh)
 {
+	// 変数にセット
 	mMesh = mesh;
 
+	// メッシュにアニメーションチップが設定されているかをフラグに記録
 	BitFlagFunc::SetFlagByBool(mMesh->GetAnimModeFlag(), mMeshCompFlags, mAnimationModeFlagMask);
 }

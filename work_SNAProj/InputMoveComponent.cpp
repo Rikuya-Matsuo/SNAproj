@@ -24,8 +24,10 @@ InputMoveComponent::~InputMoveComponent()
 
 void InputMoveComponent::Update()
 {
+	// 所属アクターの移動ベクトル取得
 	Vector3D vec = mOwner->GetMoveVector();
 
+	// スピード計算
 	float speedHorizontal = mSpeedHorizontal * System::GetInstance().GetDeltaTime();
 	float speedVertical = mSpeedVertical * System::GetInstance().GetDeltaTime();
 
@@ -60,6 +62,7 @@ void InputMoveComponent::Update()
 	}
 
 	// 操作受付。エイリアスを通じて移動ベクトルをいじる。
+	// 左方向
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_LEFT)
 		|| Input::GetInstance().GetLStickX() < 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_LEFT))
@@ -69,13 +72,16 @@ void InputMoveComponent::Update()
 			*vecHorizontal -= speedHorizontal;
 		}
 		
+		// 入力フラグの設定
 		mInputFlags |= mLeftMask;
 	}
 	else
 	{
+		// 入力フラグの設定
 		mInputFlags &= ~mLeftMask;
 	}
 	
+	// 右方向
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_RIGHT)
 		|| Input::GetInstance().GetLStickX() > 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_RIGHT))
@@ -85,13 +91,16 @@ void InputMoveComponent::Update()
 			*vecHorizontal += speedHorizontal;
 		}
 
+		// 入力フラグの設定
 		mInputFlags |= mRightMask;
 	}
 	else
 	{
+		// 入力フラグの設定
 		mInputFlags &= ~mRightMask;
 	}
 
+	// 上方向
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_UP)
 		|| Input::GetInstance().GetLStickY() < 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_UP))
@@ -101,13 +110,16 @@ void InputMoveComponent::Update()
 			*vecVertical -= speedVertical;
 		}
 
+		// 入力フラグの設定
 		mInputFlags |= mUpMask;
 	}
 	else
 	{
+		// 入力フラグの設定
 		mInputFlags &= ~mUpMask;
 	}
 
+	// 下方向
 	if (Input::GetInstance().GetGamePadButtonPressed(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_DOWN)
 		|| Input::GetInstance().GetLStickY() > 0.0f
 		|| Input::GetInstance().GetKey(SDL_SCANCODE_DOWN))
@@ -117,10 +129,12 @@ void InputMoveComponent::Update()
 			*vecVertical += speedVertical;
 		}
 
+		// 入力フラグの設定
 		mInputFlags |= mDownMask;
 	}
 	else
 	{
+		// 入力フラグの設定
 		mInputFlags &= ~mDownMask;
 	}
 
