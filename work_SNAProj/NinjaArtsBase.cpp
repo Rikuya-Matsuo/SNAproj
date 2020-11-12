@@ -15,10 +15,12 @@ NinjaArtsBase::~NinjaArtsBase()
 
 void NinjaArtsBase::Use()
 {
+	// 使用中フラグの設定
 	mIsUsedFlag = true;
 }
 
 void NinjaArtsBase::CancelNinjaArts()
 {
+	// 使用中フラグの設定
 	mIsUsedFlag = false;
 }

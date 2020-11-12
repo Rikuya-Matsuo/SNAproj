@@ -40,6 +40,7 @@ Mesh::Mesh()
 
 Mesh::~Mesh()
 {
+	// アニメーションチップクラスのメモリ解放
 	for (auto anim : mAnimations)
 	{
 		for (auto chips : anim.second)
@@ -106,7 +107,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 	if (vertexFormat == "PosNormSkinTex")
 	{
 		layout = VertexArray::PosNormSkinTex;
-		// This is the number of "Vertex" unions, which is 8 + 2 (for skinning)s　1個の頂点の集合の数　８　＋　２（スキニング分）
+		// 1個の頂点の集合の数　８　＋　２（スキニング分）
 		// 3 (位置xyz) + 3(法線xyz) + 2(Boneと重み）＋　2(UV)  の計　10個分（40byte) 　
 		vertSize = 10;
 	}
@@ -208,7 +209,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 				vertices.emplace_back(v);
 			}
 
-			// Add skin information　スキン情報追加（ボーン番号:unsigned charの1バイト分）
+			// スキン情報追加（ボーン番号:unsigned charの1バイト分）
 			for (rapidjson::SizeType j = 6; j < 14; j += 4)  //ループとしては2回転する　1回転目はボーン番号、2回転目はボーンウェイトをintとして取ってくる（使用時に浮動小数化するっぽい）
 			{
 				v.b[0] = vert[j].GetUint();
@@ -218,7 +219,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 				vertices.emplace_back(v);
 			}
 
-			// Add tex coords　テクスチャ座標
+			// テクスチャ座標
 			for (rapidjson::SizeType j = 14; j < vert.Size(); j++)
 			{
 				v.f = static_cast<float>(vert[j].GetDouble());
@@ -227,10 +228,10 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 		}
 	}
 
-	// We were computing length squared earlier　バウンディングスフィアの半径を計算
+	// バウンディングスフィアの半径を計算
 	mRadius = sqrt(mRadius);
 
-	// Load in the indices　頂点インデックスをロード
+	// 頂点インデックスをロード
 	const rapidjson::Value& indJson = doc["indices"];
 	if (!indJson.IsArray() || indJson.Size() < 1)
 	{
@@ -238,7 +239,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 		return false;
 	}
 
-	//頂点インデックスを引っ張ってくる
+	// 頂点インデックスを引っ張ってくる
 	std::vector<unsigned int> indices;
 	indices.reserve(indJson.Size() * 3);
 	for (rapidjson::SizeType i = 0; i < indJson.Size(); i++)
@@ -255,7 +256,7 @@ bool Mesh::Load(const std::string & fileName, Renderer* renderer, const Actor * 
 		indices.emplace_back(ind[2].GetUint());
 	}
 
-	// Now create a vertex array　頂点配列を作成する
+	// 頂点配列を作成する
 	mVertexArray = new VertexArray(vertices.data(), static_cast<unsigned>(vertices.size()) / vertSize,
 		layout, indices.data(), static_cast<unsigned>(indices.size()));
 	return true;
@@ -292,12 +293,14 @@ void Mesh::Update(const Actor * actor)
 
 bool Mesh::LoadTexture(const std::string & fileName, Renderer * renderer, const Actor * actor)
 {
+	// テクスチャ取得
 	Texture * tex = renderer->GetTexture(fileName);
 	if (tex == nullptr)
 	{
 		return false;
 	}
 
+	// アクターごとのテクスチャとして代入
 	mCurrentTexture[actor] = tex;
 
 	return true;
@@ -307,17 +310,21 @@ bool Mesh::LoadDivTexture(const std::string & fileName, Renderer * renderer, con
 {
 	bool ret = false;
 
+	// アニメーションチップクラス生成・ロード
 	AnimationChips * animChips = new AnimationChips();
 	size_t frameMass = animChips->Load(renderer, fileName, allNum, xNum, yNum, chipW, chipH, secondPerFrame);
 
+	// 読み込み成功時
 	if (frameMass == allNum)
 	{
 		ret = true;
 
+		// アクターが指定のインデックスを使っていないか検索
 		if (mAnimations[actor].find(animIndex) != mAnimations[actor].end())
 		{
 			SDL_Log("Specified index has already been used.\n");
 		}
+		// 使っていなければ指定インデックスを添え字として、アニメーションチップを設定
 		else
 		{
 			mAnimations[actor][animIndex] = animChips;
@@ -334,6 +341,7 @@ Texture* Mesh::GetAnimFrameTexture(const Actor* actor, int index)
 {
 	Texture * ret = nullptr;
 
+	// 指定インデックスが使われていれば、返却値変数に代入
 	if (mAnimations[actor].count(index))
 	{
 		ret = mAnimations[actor][index]->GetCurrentTexture();
@@ -344,6 +352,7 @@ Texture* Mesh::GetAnimFrameTexture(const Actor* actor, int index)
 
 AnimationChips * Mesh::GetAnimChips(const Actor* actor, int index)
 {
+	// 指定インデックスが使われていれば、アニメーションチップクラスへのポインタを返却
 	if (mAnimations[actor].count(index))
 	{
 		return mAnimations[actor][index];
@@ -354,37 +363,48 @@ AnimationChips * Mesh::GetAnimChips(const Actor* actor, int index)
 
 bool Mesh::GetUseAnimFlag(const Actor * actor) const
 {
+	// 指定アクターのアニメーションチップを検索
 	if (mAnimations.find(actor) == mAnimations.end())
 	{
+		// 検索がヒットしなかった -> アニメーションを使っていない
 		return false;
 	}
 
+	// 検索がヒットした場合でも、アニメーションが空なら使われていない
 	return !mAnimations.at(actor).empty();
 }
 
 void Mesh::DeleteActorInfo(const Actor * actor)
 {
+	// アクターが使っていたテクスチャを検索（CT : CurrentTexture）
 	auto itrCT = mCurrentTexture.find(actor);
 	if (itrCT != mCurrentTexture.end())
 	{
+		// マップから削除
 		mCurrentTexture.erase(itrCT);
 	}
 
+	// アクターが使っていたアニメーションチップを検索（AC : AnimationChips）
 	auto itrAC = mAnimations.find(actor);
 	if (itrAC != mAnimations.end())
 	{
+		// アニメーションチップのメモリ解放
 		for (auto anims : itrAC->second)
 		{
 			delete anims.second;
 			anims.second = nullptr;
 		}
+
+		// アクターに関するアニメーションチップのマップをクリア・削除
 		itrAC->second.clear();
 		mAnimations.erase(itrAC);
 	}
 
+	// アクターの再生中アニメーションのインデックスを検索
 	auto itrACIndex = mActiveAnimIndex.find(actor);
 	if (itrACIndex != mActiveAnimIndex.end())
 	{
+		// マップから削除
 		mActiveAnimIndex.erase(itrACIndex);
 	}
 }
