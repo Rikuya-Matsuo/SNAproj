@@ -11,8 +11,10 @@ SceneBase::SceneBase():
 	mStage(nullptr),
 	mFlags(0)
 {
+	// カメラコンテナにメモリを確保
 	mCameras.reserve(1);
 
+	// 最後に生成したシーンとして、このポインタを静的変数に記録する
 	mLatestScene = this;
 }
 
