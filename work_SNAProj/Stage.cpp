@@ -185,6 +185,7 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 
 int Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos, float groundHeight, float depth, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors)
 {
+	// ファイルオープン
 	std::ifstream file;
 	file.open(bgObjMapFilePath.c_str());
 
@@ -194,12 +195,14 @@ int Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos
 		return -1;
 	}
 
+	// 文字列に関連付けたオブジェクトデータ（パレット）を記録する
 	std::unordered_map<std::string, BGObjectPallet> pallet;
 
 	bool successToLoadPallet = LoadBGObjectMapPallet(file, pallet);
 
 	if (successToLoadPallet)
 	{
+		// オブジェクトの配置データロード及びオブジェクトの生成
 		int objMass = LoadBGObjectMapPosition(file, pallet, xStartPos, groundHeight, depth, xEmptyCellScale, yEmptyCellScale, generatedActors);
 
 		return objMass;
@@ -210,6 +213,7 @@ int Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos
 
 bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
 {
+	// パレットの記録順序
 	enum Section
 	{
 		Key = 0,
@@ -234,8 +238,10 @@ bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 	char c;
 	while (true)
 	{
+		// ストリームから文字を取得
 		c = file.get();
 
+		// パレットロード時点ではファイル終端には至らないはずなので、エラーである
 		if (file.eof())
 		{
 			printf(errorMassage);
@@ -245,6 +251,7 @@ bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 		// 改行文字だったかを記録
 		isLastCharNewLine = (c == '\n');
 
+		// カンマでも改行文字でもなければ、バッファに記録
 		if (c != ',' && c != '\n')
 		{
 			buf += c;
@@ -257,12 +264,14 @@ bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 			continue;
 		}
 
+		// パレットの終わりを示す文字列であればロードを終了する
 		if (buf == "</pallet>")
 		{
 			palletEndFlag = true;
 			break;
 		}
 
+		// セクションに応じた記録を行う
 		switch (currentSection)
 		{
 		case Section::Key:
@@ -288,8 +297,6 @@ bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::
 
 			currentSection = Section::Key;
 
-			//ClearPallet(palletBuf);
-			
 			break;
 
 		default:
@@ -361,6 +368,7 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 	char c;
 	while (true)
 	{
+		// 文字の取得
 		c = file.get();
 
 		if (file.eof())
@@ -505,9 +513,11 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 		delete itr;
 	}
 
+	// 生成したオブジェクトの数を返却
 	return objectList.size();
 }
 
+// 使われていない
 void Stage::ClearPallet(BGObjectPallet & pallet)
 {
 	pallet.mModelFilePath.clear();
