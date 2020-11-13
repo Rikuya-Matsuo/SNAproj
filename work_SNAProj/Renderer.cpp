@@ -197,12 +197,13 @@ void Renderer::Draw()
 		mc->GetOwner()->SetInCameraFlag(inFOV);
 	}
 
-	// Draw any skinned meshes now
+	// シェーダのアクティブ化
 	mSkinnedShader->SetActive();
-	// Update view-projection matrix
+	// 行列更新
 	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
-	// Update lighting uniforms
+	// 光の設定
 	SetLightUniforms(mSkinnedShader);
+	// 描画
 	for (auto sk : mSkeletalMeshes)
 	{
 		bool inFOV = isInFieldOfView(sk);
@@ -214,12 +215,14 @@ void Renderer::Draw()
 		sk->GetOwner()->SetInCameraFlag(inFOV);
 	}
 
+	// 3次元表現を無効化・画像透過のためブレンドを有効化
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 
 	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
+	// UI描画のための設定および描画
 	mSpriteShader->SetActive();
 	mSpriteVerts->SetActive();
 	for (auto ui : mUIs)
@@ -232,20 +235,25 @@ void Renderer::Draw()
 Texture* Renderer::GetTexture(const std::string & fileName)
 {
 	Texture* tex = nullptr;
+
+	// 今までにロードしていればそのポインタを返す
 	auto iter = mTextures.find(fileName);
 	if (iter != mTextures.end())
 	{
 		tex = iter->second;
 	}
+	// 初めてロードする画像ならば、テクスチャデータを生成
 	else
 	{
 		tex = new Texture();
 		if (tex->Load(fileName))
 		{
+			// マップに登録
 			mTextures.emplace(fileName, tex);
 		}
 		else
 		{
+			// ロードに失敗。生成したインスタンスを解放
 			delete tex;
 			tex = nullptr;
 		}
@@ -260,24 +268,30 @@ Texture* Renderer::GetTexture(const std::string & fileName)
 
 Mesh* Renderer::GetMesh(const std::string & fileName, const Actor * actor)
 {
+	// これまでにロードされたメッシュを検索
 	Mesh* m = nullptr;
 	auto iter = mMeshs.find(fileName);
 
+	// これまでにロードがされていれば、そのポインタを返す
 	if (iter != mMeshs.end())
 	{
 		m = iter->second;
 
+		// アクターが使用するテクスチャをデフォルトに設定
 		m->DuplicateDefaultTexture(actor);
 	}
+	// 初めてロードするメッシュであればインスタンスを生成
 	else
 	{
 		m = new Mesh;
 		if (m->Load(fileName, this, actor))
 		{
+			// マップに登録
 			mMeshs.emplace(fileName, m);
 		}
 		else
 		{
+			// ロードに失敗。インスタンス解放
 			delete m;
 			m = nullptr;
 		}
@@ -288,11 +302,15 @@ Mesh* Renderer::GetMesh(const std::string & fileName, const Actor * actor)
 
 void Renderer::AddMeshComponent(MeshComponent* mesh)
 {
+	// スケルタルメッシュか否かで処理を分岐
 	if (mesh->GetIsSkeletal())
 	{
+		// スケルタルメッシュとしてキャスト
 		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
 
+		// 描画順を取得
 		const int drawOrder = sk->GetDrawOrder();
+		// 描画順の値が昇順となるようにコンテナに挿入
 		auto itr = mSkeletalMeshes.begin();
 		for (; itr != mSkeletalMeshes.end(); ++itr)
 		{
@@ -303,6 +321,7 @@ void Renderer::AddMeshComponent(MeshComponent* mesh)
 			}
 		}
 
+		// 挿入場所が見つからなかった場合、末尾に挿入
 		if (itr == mSkeletalMeshes.end())
 		{
 			mSkeletalMeshes.emplace_back(sk);
@@ -310,7 +329,9 @@ void Renderer::AddMeshComponent(MeshComponent* mesh)
 	}
 	else
 	{
+		// 描画順取得
 		const int drawOrder = mesh->GetDrawOrder();
+		// 描画順の値が昇順となるようにコンテナに挿入
 		auto itr = mMeshComponents.begin();
 		for (; itr != mMeshComponents.end(); ++itr)
 		{
@@ -321,6 +342,7 @@ void Renderer::AddMeshComponent(MeshComponent* mesh)
 			}
 		}
 
+		// 挿入場所が見つからなかった場合、末尾に挿入
 		if (itr == mMeshComponents.end())
 		{
 			mMeshComponents.emplace_back(mesh);
@@ -330,14 +352,17 @@ void Renderer::AddMeshComponent(MeshComponent* mesh)
 
 void Renderer::RemoveMeshComponent(MeshComponent* mesh)
 {
+	// スケルタルメッシュか否かで処理を分岐
 	if (mesh->GetIsSkeletal())
 	{
+		// 対象を走査し、コンテナから削除
 		SkeletalMeshComponent* sk = static_cast<SkeletalMeshComponent*>(mesh);
 		auto iter = std::find(mSkeletalMeshes.begin(), mSkeletalMeshes.end(), sk);
 		mSkeletalMeshes.erase(iter);
 	}
 	else
 	{
+		// 対象を走査し、コンテナから削除
 		auto iter = std::find(mMeshComponents.begin(), mMeshComponents.end(), mesh);
 		mMeshComponents.erase(iter);
 	}
@@ -365,13 +390,16 @@ void Renderer::SetWindowTitle(const std::string & title)
 
 void Renderer::AddUI(const UIScreen * ui)
 {
+	// UIの追加
 	mUIs.emplace_back(ui);
 }
 
 void Renderer::RemoveUI(const UIScreen * ui)
 {
+	// 対象を検索
 	auto itr = std::find(mUIs.begin(), mUIs.end(), ui);
 
+	// 検索ヒット時にコンテナから削除
 	if (itr != mUIs.end())
 	{
 		mUIs.erase(itr);
@@ -395,6 +423,7 @@ bool Renderer::LoadShaders()
 		                                        1.0f, 10000.0f);
 	mMeshShader->SetMatrixUniform("uViewProj", mView * mProjection);
 
+	// スキンシェーダー
 	mSkinnedShader = new Shader();
 	if (!mSkinnedShader->Load("Shaders/Skinned.vert", "Shaders/Phong.frag"))
 	{
@@ -403,6 +432,7 @@ bool Renderer::LoadShaders()
 	mSkinnedShader->SetActive();
 	mSkinnedShader->SetMatrixUniform("uViewProj", mView * mProjection);
 
+	// スプライトシェーダー
 	mSpriteShader = new Shader();
 	if (!mSpriteShader->Load("Shaders/Sprite.vert", "Shaders/Sprite.frag"))
 	{
@@ -433,6 +463,7 @@ void Renderer::SetLightUniforms(Shader* shader)
 
 void Renderer::CreateSpriteVerts()
 {
+	// UI用の頂点データ作成
 	float vertices[] = {
 		-0.5f, 0.5f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
 		0.5f, 0.5f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f,
@@ -514,6 +545,7 @@ const Animation* Renderer::GetAnimation(const char* fileName, bool loop)
 
 bool GLErrorHandle(const char* location)
 {
+	// エラーへの対処
 	GLenum error_code = glGetError();
 	if (error_code == GL_NO_ERROR)
 	{

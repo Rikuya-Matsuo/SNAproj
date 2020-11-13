@@ -76,13 +76,13 @@ void Texture::CreateFromSurface(SDL_Surface* surface)
 	mWidth = surface->w;
 	mHeight = surface->h;
 
-	// Generate a GL texture
+	// GLテクスチャの生成
 	glGenTextures(1, &mTextureID);
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA,
 		GL_UNSIGNED_BYTE, surface->pixels);
 
-	// Use linear filtering
+	// リニアフィルタリングを使用
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
@@ -92,6 +92,7 @@ void Texture::SetActive()
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 }
 
+// 不要
 void Texture::BlitSurfaceProcess(SDL_Surface *& surface)
 {
 	// マスクの取得
@@ -108,6 +109,7 @@ void Texture::BlitSurfaceProcess(SDL_Surface *& surface)
 	aMask = 0xFF000000;
 #endif
 
+	// SDLサーフェイスの生成
 	SDL_Surface * blited =
 		SDL_CreateRGBSurface(0, surface->w, surface->h, 32, rMask, gMask, bMask, aMask);
 
