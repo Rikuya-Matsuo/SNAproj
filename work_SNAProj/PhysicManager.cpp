@@ -18,6 +18,7 @@ static size_t checkCounter = 0;
 
 void PhysicManager::CheckHit()
 {
+	// ミューテックスをロック
 	MutexLocker lock(mColliderPairStateMutex);
 
 	// 何かのアトリビュートでソートが要請されているならソートする
@@ -294,22 +295,28 @@ void PhysicManager::DeresisterCollider(const ColliderComponentBase * in_colCmp)
 
 void PhysicManager::GravityAffect(Actor * actor) const
 {
+	// 移動ベクトル取得
 	Vector3D vec = actor->GetMoveVector();
 
+	// 重力分高さを下げる
 	vec.z -= mGravityAcceleration * actor->GetFallSpeedRate() * System::GetInstance().GetDeltaTime();
+	// アクターごとに決められた最大落下スピードを超えているなら調節
 	const float limiter = actor->GetFallSpeedMax();
 	if (vec.z < -fabsf(limiter))
 	{
 		vec.z = -limiter;
 	}
 
+	// 移動ベクトルセット
 	actor->SetMoveVector(vec);
 }
 
 void PhysicManager::ResisterCheckableAttributeCombination(Uint8 att1, Uint8 att2)
 {
+	// Uint8型二つのペアを定義
 	std::pair<Uint8, Uint8> pair = std::make_pair(att1, att2);
 
+	// 組み合わせを登録
 	ResisterCheckableAttributeCombination(pair);
 }
 
@@ -336,8 +343,10 @@ void PhysicManager::ResisterCheckableAttributeCombination(std::pair<Uint8, Uint8
 
 void PhysicManager::ClearHitState()
 {
+	// ミューテックスをロック
 	MutexLocker lock(mColliderPairStateMutex);
 
+	// 全ての接触情報をクリア
 	mHitColliderPairState.clear();
 
 	// マルチスレッドで実行している接触情報整理ループをやり直すよう指示
@@ -518,6 +527,7 @@ void PhysicManager::ApartProcess(ColliderPair & pair)
 
 void PhysicManager::SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair)
 {
+	// 値が小さい方をfirstにする
 	if (pair.first > pair.second)
 	{
 		Uint8 tmp = pair.first;
@@ -556,6 +566,7 @@ void PhysicManager::RefreshHitState()
 		auto itr = mHitColliderPairState.begin();
 		for (; itr != mHitColliderPairState.end(); ++itr)
 		{
+			// ミューテックスをロック
 			MutexLocker lock(mColliderPairStateMutex);
 
 			// ループのやり直しを指示される or フラグがループの終了を示したとき、このfor文を抜ける
@@ -595,12 +606,14 @@ PhysicManager::PhysicManager():
 	mContinueRefleshFlag(true),
 	mResetRefreshLoopFlag(false)
 {
+	// コライダーコンポーネントのマップのメモリを確保
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
 	{
 		mColliders[i].reserve(128);
 	}
 
+	// 各コンテナのメモリを確保
 	mColliderID.reserve(256);
 	mHitColliderPairState.reserve(32);
 
@@ -612,12 +625,14 @@ PhysicManager::PhysicManager():
 	ResisterCheckableAttributeCombination(ColAtt_PlayerAttack, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_EnemyAttack, ColAtt_Player);
 
+	// マルチスレッド作成およびメンバ変数へ引き渡し
 	std::thread th(RefreshHitStateForThread);
 	mRefreshThread.swap(th);
 }
 
 PhysicManager::~PhysicManager()
 {
+	// コライダーコンポーネントのマップをクリア
 	for (int i = 0; i < ColliderAttribute::ColAtt_Invalid; ++i)
 	{
 		mColliders[i].clear();
@@ -626,11 +641,14 @@ PhysicManager::~PhysicManager()
 	}
 	std::unordered_map<Uint8, std::vector<ColliderComponentBase *>>().swap(mColliders);
 
+	// コライダーIDのマップをクリア
 	std::unordered_map<ColliderComponentBase *, unsigned short>().swap(mColliderID);
 
+	// マルチスレッドを終了させる
 	mContinueRefleshFlag = false;
 	mRefreshThread.join();
 
+	// 各コンテナクリア
 	std::unordered_map<ColliderPair, char, HashColliderPair>().swap(mHitColliderPairState);
 
 	std::list<std::pair<Uint8, Uint8>>().swap(mCheckableAttributeCombination);
@@ -642,6 +660,7 @@ PhysicManager::~PhysicManager()
 
 size_t HashColliderPair::operator()(const ColliderPair & pair) const
 {
+	// 物理マネージャの独立参照
 	PhysicManager& physic = PhysicManager::GetInstance();
 
 	// ハッシュ値として、上２バイトと下２バイトにそれぞれのID値を入れたunsigned int型の値を生成する

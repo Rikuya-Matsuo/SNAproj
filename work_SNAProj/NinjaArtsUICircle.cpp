@@ -17,20 +17,25 @@ NinjaArtsUICircle::NinjaArtsUICircle(const Vector2D & centerPos, float radius):
 	mButtonUIScale(1.0f),
 	mRRotateFlag(false)
 {
+	// 前フレームでのアイコンのスケール値を初期化
 	mPrevIconScale = mIconScale;
 
+	// ボタンUIのテクスチャ
 	mButtonUITexture = System::GetInstance().GetRenderer()->GetTexture("Assets/pad_X.png");
 }
 
 NinjaArtsUICircle::~NinjaArtsUICircle()
 {
+	// コンテナのクリア
 	std::vector<Texture *>().swap(mTextures);
 }
 
 char NinjaArtsUICircle::ResisterTexture(Texture * tex)
 {
+	// 挿入後の添え字となる数値
 	char index = static_cast<char>(mTextures.size());
 
+	// テクスチャを挿入
 	mTextures.emplace_back(tex);
 
 	return index;
@@ -38,11 +43,13 @@ char NinjaArtsUICircle::ResisterTexture(Texture * tex)
 
 bool NinjaArtsUICircle::GetPositionOf1Texture(size_t index, Vector2D & ret)
 {
+	// indexが登録されているテクスチャの数以上の数値なら取得失敗として関数終了
 	if (index >= mTextures.size())
 	{
 		return false;
 	}
 
+	// 指定テクスチャの位置を計算
 	Vector2D offset;
 	float angle = mAngle + CalculatDistanceAngle() * index;
 	offset.x = cosf(angle);
@@ -65,6 +72,7 @@ void NinjaArtsUICircle::Update()
 		UpdateButtonUIPosition();
 	}
 
+	// スケール値記録
 	mPrevIconScale = mIconScale;
 }
 
