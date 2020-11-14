@@ -21,6 +21,7 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::LoadMapping(const std::string & path)
 {
+	// ファイルオープン
 	std::ifstream file;
 	file.open(path.c_str());
 
@@ -38,13 +39,16 @@ void EnemyManager::LoadMapping(const std::string & path)
 	char c;
 	while (true)
 	{
+		// ストリームから文字を取得
 		c = file.get();
 
+		// ファイル終端に至ったとき、ループ終了
 		if (file.eof())
 		{
 			break;
 		}
 
+		// デバッグ用のエネミー生成数上限に至ったかの評価
 #ifdef DEBUG_SNA
 
 		if (debugEnemyMassLimit >= 0 && enemyMass >= debugEnemyMassLimit)
@@ -54,25 +58,33 @@ void EnemyManager::LoadMapping(const std::string & path)
 
 #endif // DEBUG_SNA
 
+		// カンマでも改行文字でもなければバッファに文字を記録
 		if (c != ',' && c != '\n')
 		{
 			buf += c;
 		}
+		// csvセルの内容が終わりの場合
 		else
 		{
+			// エネミータイプを取得
 			int type = std::stoi(buf);
 			buf.clear();
 
+			// タイプに応じてエネミー生成
 			GenerateEnemy(type, x, y);
 			if (type >= 0)
 			{
+				// エネミーの数を記録
 				enemyMass++;
 			}
 
+			// セルの座標を一つ右にずらす
 			x++;
 
+			// 改行文字だった場合
 			if (c == '\n')
 			{
+				// セルの座標を一つ下に下げ、一番左に移動
 				y++;
 				x = 0;
 			}
@@ -80,11 +92,13 @@ void EnemyManager::LoadMapping(const std::string & path)
 		}
 	}
 
+	// ファイルを閉じる
 	file.close();
 }
 
 void EnemyManager::GenerateEnemy(int type, int inX, int inY)
 {
+	// エネミータイプが負の値の場合は、エネミーを生成しない
 	if (type < 0)
 	{
 		return;

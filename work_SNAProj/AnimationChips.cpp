@@ -20,10 +20,12 @@ AnimationChips::AnimationChips():
 
 AnimationChips::~AnimationChips()
 {
+	// コマのコンテナをクリア
 	mChipTextures.clear();
 	mChipTextures.shrink_to_fit();
 	std::vector<Texture*>().swap(mChipTextures);
 
+	// 描画順のコンテナをクリア
 	mRoutine.clear();
 	mRoutine.shrink_to_fit();
 	std::vector<size_t>().swap(mRoutine);
@@ -96,6 +98,7 @@ void AnimationChips::Update()
 
 void AnimationChips::Reset()
 {
+	// 変数初期化
 	mCurrentTextureIndex = 0;
 	mTimer = 0.0f;
 
@@ -173,7 +176,7 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 
 			dRect.x = dRect.y = 0;
 
-			// 転写！
+			// 転写
 			int errorCode = SDL_BlitSurface(srcSurface, &sRect, dstSurface, &dRect);
 			if (errorCode)
 			{
@@ -198,7 +201,7 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 			// 履行回数が指定されたチップの総数以上になったらループを終了
 			if (y * xNum + (x + 1) >= allNum)
 			{
-				// 上層のループ継続条件を未成立にすることで、条件評価時にループを終了させるという新たな技！
+				// 上層のループ継続条件を未成立にすることで、条件評価時にループを終了させるという新たな技
 				// 利点：ループ終了フラグが必要ない上に、if文を省略できる。
 				// 欠点：上層ループの変数をいじるのはいかがなものか
 				y = yNum - 1;
@@ -232,6 +235,7 @@ size_t AnimationChips::Load(Renderer * renderer, const std::string & fileName, i
 
 void AnimationChips::SetTextureIndex(size_t num)
 {
+	// numがコマの数以上の数値でないかを評価してからセット
 	if (num < mChipTextures.size())
 	{
 		mCurrentTextureIndex = num;
@@ -240,9 +244,13 @@ void AnimationChips::SetTextureIndex(size_t num)
 
 void AnimationChips::SetRoutine(const int * frameNumberArray, size_t arraySize)
 {
+	// Routineを初期化
 	mRoutine.clear();
+
+	// 与えられた配列の値をコンテナ末尾に挿入していく
 	for (size_t i = 0; i < arraySize; ++i)
 	{
+		// 負の値であればループを終了
 		if (frameNumberArray[i] < 0)
 		{
 			break;
@@ -254,5 +262,6 @@ void AnimationChips::SetRoutine(const int * frameNumberArray, size_t arraySize)
 
 void AnimationChips::SetRoutine(const int * frameNumberArray)
 {
+	// 配列の最後は負の値であることを信用し、符号なし32ビット整数型の最大値をループ回数として指定
 	SetRoutine(frameNumberArray, UINT32_MAX);
 }

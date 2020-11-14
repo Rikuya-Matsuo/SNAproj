@@ -25,11 +25,13 @@ Camera::Camera(Actor * target):
 	}
 	mViewMatrix = Matrix4::CreateLookAt(mPosition, targetVec, Vector3D(0, 0, 1));
 
+	// このカメラをアクティブに
 	SetActive();
 }
 
 Camera::~Camera()
 {
+	// カメラの破棄をシステムに通告
 	SDL_Log("A camera object is deleted.\n");
 	System::GetInstance().ReportCameraDelete(this);
 }
@@ -92,6 +94,7 @@ void Camera::Update()
 
 void Camera::Init(const Vector3D & cameraPos, const Vector3D & targetPos, const Vector3D & upVec)
 {
+	// 各種変数初期化
 	mPosition = cameraPos;
 	mViewTarget = targetPos;
 	mViewVector = targetPos - cameraPos;
@@ -103,5 +106,6 @@ void Camera::Init(const Vector3D & cameraPos, const Vector3D & targetPos, const 
 
 void Camera::SetActive()
 {
+	// このカメラをアクティブカメラとしてセット
 	System::GetInstance().SetActiveCamera(this);
 }
