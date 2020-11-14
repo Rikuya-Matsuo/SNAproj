@@ -8,8 +8,10 @@ Input::Input() :
 	mLStickY(0.0f),
 	mLStickDeadZone(0.9f)
 {
+	// キーボード状態初期化
 	mStates = SDL_GetKeyboardState(NULL);
 
+	// 前フレームのキーボード状態は、押されていないものとして初期化
 	for (int i = 0; i < SDL_NUM_SCANCODES; ++i)
 	{
 		mPrevStates[i] = 0;
@@ -29,19 +31,23 @@ Input::Input() :
 		}
 	}
 
+	// SDLのゲームコントローラーイベントを無効化
 	SDL_GameControllerEventState(SDL_IGNORE);
 }
 
 Input::~Input()
 {
+	// 0番目のパッドを接続解除
 	DisconnectGamePad(0);
 }
 
 void Input::Update()
 {
+	// SDLイベント対処
 	SDL_Event sdlEvent;
 	while (SDL_PollEvent(&sdlEvent))
 	{
+		// 終了フラグを立てる
 		if (sdlEvent.type == SDL_QUIT)
 		{
 			mQuitEventFlag = true;
@@ -79,18 +85,21 @@ void Input::LastUpdate()
 
 bool Input::GetKeyPressDown(int scanCode) const
 {
+	// このフレームで押されており、前フレームで押されていないとき真
 	bool ret = (GetKey(scanCode) && !mPrevStates[scanCode]);
 	return ret;
 }
 
 bool Input::GetKeyPressUp(int scanCode) const
 {
+	// このフレームで押されておらず、前フレームで押されているとき真
 	bool ret = (!GetKey(scanCode) && mPrevStates[scanCode]);
 	return ret;
 }
 
 void Input::ConnectGamePad(int padIndex)
 {
+	// コントローラー取得
 	mGamePad = SDL_GameControllerOpen(padIndex);
 	if (mGamePad == NULL)
 	{
@@ -101,6 +110,7 @@ void Input::ConnectGamePad(int padIndex)
 		SDL_Log("Success to get game controller.\n");
 	}
 
+	// コントローラーマッピング取得
 	mGamePadMapping = SDL_GameControllerMapping(mGamePad);
 	if (mGamePadMapping == NULL)
 	{
@@ -114,6 +124,7 @@ void Input::ConnectGamePad(int padIndex)
 
 bool Input::GetAnyButtonPressedDown() const
 {
+	// このフレームでボタンが押されており、前のフレームよりも変数の値が大きければ真
 	bool nowPressed = mGamePadButtonFlags > 0;
 	bool pressedDown = mGamePadButtonFlags > mPrevGamePadButtonFlags;
 
@@ -122,6 +133,7 @@ bool Input::GetAnyButtonPressedDown() const
 
 void Input::UpdateGamePad()
 {
+	// SDL上のゲームコントローラー情報の更新
 	SDL_GameControllerUpdate();
 
 	// 初期化
@@ -159,12 +171,14 @@ void Input::UpdateGamePad()
 
 void Input::DisconnectGamePad(int padIndex)
 {
+	// マッピング解放
 	if (mGamePadMapping != NULL)
 	{
 		SDL_free(mGamePadMapping);
 		mGamePadMapping = NULL;
 	}
 
+	// ゲームパッドの接続解除
 	if (mGamePad != NULL)
 	{
 		SDL_GameControllerClose(mGamePad);
