@@ -12,13 +12,17 @@ GameUI::GameUI(Player * player):
 	mPlayer(player),
 	mLifeMax(player->GetLife())
 {
+	// HP表示UI
 	mLifeAnimTextures = new AnimationChips[mLifeMax];
 	for (char i = 0; i < mLifeMax; ++i)
 	{
+		// アニメーションチップのコマ数
 		const int frameMass = 9;
 
+		// ロード
 		mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", frameMass, 3, 3, 1024, 1024, 0.05f);
 
+		// 切り替えられるようにフラグを定義
 		const bool useRandonFlame = true;
 		if (useRandonFlame)
 		{
@@ -49,8 +53,10 @@ GameUI::GameUI(Player * player):
 		}
 	}
 
+	// ガイドの画像
 	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");
 
+	// 忍術アイコンUI
 	float radius = 60.0f;
 	float halfScreenWidth = (System::GetInstance().GetRenderer()->GetScreenWidth() / 2);
 	float halfScreenHeight = (System::GetInstance().GetRenderer()->GetScreenHeight() / 2);
@@ -69,13 +75,16 @@ GameUI::~GameUI()
 
 void GameUI::Update()
 {
+	// 基底クラス更新
 	UIScreen::Update();
 
+	// HP表示UIの更新
 	for (char i = 0; i < mLifeMax; ++i)
 	{
 		mLifeAnimTextures[i].Update();
 	}
 
+	// 忍術UI更新
 	mNinjaArtsUI->Update();
 }
 
@@ -84,6 +93,7 @@ void GameUI::Draw(Shader * shader) const
 	// 体力UI
 	for (char i = 0; i < mPlayer->GetLife(); ++i)
 	{
+		// テクスチャ取得
 		Texture * tex = mLifeAnimTextures[i].GetCurrentTexture();
 		if (!tex)
 		{
@@ -91,12 +101,15 @@ void GameUI::Draw(Shader * shader) const
 			return;
 		}
 
+		// 大きさ
 		float scale = 0.3f;
 
+		// 表示位置計算
 		Vector2D pos;
 		pos.x = -(System::GetInstance().GetRenderer()->GetScreenWidth() / 2) + (tex->GetWidth() / 3 * scale / 2) + (tex->GetWidth() / 3 * scale * i);
 		pos.y = System::GetInstance().GetRenderer()->GetScreenHeight() / 2 - tex->GetHeight() * scale / 2 + tex->GetHeight() * scale / 5;
 
+		// 描画
 		DrawTexture(shader, tex, pos, scale);
 	}
 
@@ -110,12 +123,14 @@ void GameUI::Draw(Shader * shader) const
 			continue;
 		}
 
+		// アイコンの表示位置を取得し、描画
 		Vector2D pos;
 		if (mNinjaArtsUI->GetPositionOf1Texture(i, pos))
 		{
 			DrawTexture(shader, tex, pos, mNinjaArtsUI->GetIconScale());
 		}
 	}
+	// 忍術発動ボタンをUI上で表示
 	Texture * button = mNinjaArtsUI->GetButtonTexture();
 	DrawTexture(shader, button, mNinjaArtsUI->GetButtonUIPosition(), mNinjaArtsUI->GetButtonUIScale());
 
@@ -123,6 +138,6 @@ void GameUI::Draw(Shader * shader) const
 	Vector2D guidePos;
 	guidePos.x = 0.0f;
 	guidePos.y = -System::GetInstance().GetRenderer()->GetScreenHeight() / 2 + mGuide->GetHeight() / 2;
-
+	// 描画
 	DrawTexture(shader, mGuide, guidePos);
 }
