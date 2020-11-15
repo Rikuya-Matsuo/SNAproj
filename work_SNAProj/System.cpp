@@ -35,24 +35,29 @@ bool System::Init()
 {
 	SDL_Log("Start to initialize.\n");
 
+	// SDLの初期化
 	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
 	{
 		SDL_Log("Failed to initialize SDL.\n--%s--\n", SDL_GetError());
 		return false;
 	}
 
+	// 画像関係ライブラリの初期化
 	if (IMG_Init(IMG_INIT_PNG) == 0)
 	{
 		SDL_Log("Failed to initialize SDL_image.\n--%s--\n", SDL_GetError());
 		return false;
 	}
 
+	// 前フレームの時間を初期化
 	mPrevTicksCount = SDL_GetTicks();
 
 	SDL_Log("Success to initialize SDL\n");
 
+	// レンダラー生成
 	mRenderer = new Renderer;
 
+	// リリース版でのみフルスクリーン
 	bool fullScreen;
 #ifdef DEBUG_SNA
 	fullScreen = false;
@@ -60,6 +65,7 @@ bool System::Init()
 	fullScreen = true;
 #endif
 
+	// レンダラー初期化
 	if (!mRenderer->Initialize(mWindowWidth, mWindowHeight, fullScreen))
 	{
 		SDL_Log("Failed to initialize the renderer.\n");
@@ -161,20 +167,24 @@ void System::Run()
 
 void System::Finish()
 {
+	// アクターコンテナをクリア
 	Common::DeleteContainerOfPointer(mActorList);
 	std::list<Actor *>().swap(mActorList);
 
+	// シーンの削除
 	if (mCurrentScene != nullptr)
 	{
 		delete mCurrentScene;
 	}
 
+	// レンダラー削除
 	if (mRenderer != nullptr)
 	{
 		mRenderer->Shutdown();
 		delete mRenderer;
 	}
 
+	// 画像関係ライブラリとSDLの終了
 	IMG_Quit();
 	SDL_Quit();
 
@@ -186,6 +196,7 @@ void System::Finish()
 
 void System::UpdateDeltaTime()
 {
+	// 30FPSで固定する
 	mDeltaTime = 0.0f;
 	Uint32 ticksCount = SDL_GetTicks();
 	while (mDeltaTime < mMaxDeltaTime)
@@ -216,11 +227,13 @@ void System::UpdateDeltaTime()
 
 void System::SortActor()
 {
+	// 更新優先順が昇順となるようにソート
 	mActorList.sort([](const Actor * lhs, const Actor * rhs) { return lhs->GetPriority() <= rhs->GetPriority(); });
 }
 
 void System::FixActorPosition()
 {
+	// 各アクターの当たり判定押し返しを適用
 	for (auto actor : mActorList)
 	{
 		actor->FixPosition();
@@ -229,6 +242,7 @@ void System::FixActorPosition()
 
 void System::UpdateScene()
 {
+	// シーンがnullでない限り、シーン更新
 	if (mCurrentScene != nullptr)
 	{
 		mCurrentScene->Update();
@@ -237,6 +251,7 @@ void System::UpdateScene()
 
 void System::UpdateActor()
 {
+	// アクター更新
 	for (auto actor : mActorList)
 	{
 		actor->Update();
@@ -245,6 +260,7 @@ void System::UpdateActor()
 
 void System::UpdateTopUI()
 {
+	// 最前面のUIのみ更新
 	if (!mActiveUIList.empty())
 	{
 		mActiveUIList.back()->Update();
@@ -253,11 +269,16 @@ void System::UpdateTopUI()
 
 void System::Draw()
 {
+	// 背景色設定
 	glClearColor(0.2f, 0.6f, 0.9f, 1.0f);
+
+	// 裏画面をクリア
 	mRenderer->WindowClear();
 
+	// 裏画面に描画
 	mRenderer->Draw();
 
+	// 裏画面を表画面に表示
 	mRenderer->WindowFlip();
 }
 
@@ -317,6 +338,7 @@ void System::ChangeScene(bool & quitFlag)
 
 void System::GravityFall()
 {
+	// 重力適用対象のアクターに、重力を適用
 	for (auto actor : mActorList)
 	{
 		if (actor->GetAffectGravityFlag())
@@ -328,6 +350,7 @@ void System::GravityFall()
 
 void System::ResisterActor(const Actor * in_act)
 {
+	// アクターを挿入
 	Actor * actor = const_cast<Actor*>(in_act);
 
 	mActorList.emplace_back(const_cast<Actor*>(actor));
@@ -335,8 +358,10 @@ void System::ResisterActor(const Actor * in_act)
 
 void System::DeresisterActor(const Actor * in_act)
 {
+	// アクターを検索
 	auto target = std::find(mActorList.begin(), mActorList.end(), const_cast<Actor*>(in_act));
 	
+	// 検索がヒットすればコンテナから削除
 	if (target != mActorList.end())
 	{
 		mActorList.erase(target);
@@ -345,13 +370,16 @@ void System::DeresisterActor(const Actor * in_act)
 
 void System::ResisterUIScreen(const UIScreen * in_uiScr)
 {
+	// UIの登録
 	mActiveUIList.emplace_back(const_cast<UIScreen*>(in_uiScr));
 }
 
 void System::DeresisterUIScreen(const UIScreen * in_uiScr)
 {
+	// UIを検索
 	auto target = std::find(mActiveUIList.begin(), mActiveUIList.end(), const_cast<UIScreen*>(in_uiScr));
 
+	// 検索がヒットすればコンテナから削除
 	if (target != mActiveUIList.end())
 	{
 		mActiveUIList.erase(target);
@@ -360,6 +388,7 @@ void System::DeresisterUIScreen(const UIScreen * in_uiScr)
 
 void System::ReportCameraDelete(const Camera * cam)
 {
+	// 現在のアクティブカメラをnullに
 	if (mActiveCamera == cam)
 	{
 		mActiveCamera = nullptr;
