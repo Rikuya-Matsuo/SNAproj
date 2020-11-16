@@ -21,6 +21,4 @@ private:
 	unsigned int mTextureID;                                     // テクスチャID
 	int mWidth;                                                  // テクスチャ幅
 	int mHeight;                                                 // テクスチャ高さ
-
-	void BlitSurfaceProcess(SDL_Surface * & surface);
 };
