@@ -2,7 +2,6 @@
 #include "Input.h"
 #include "TitleScene.h"
 #include "Camera.h"
-#include "GuideUI.h"
 #include "GameOverUI.h"
 
 GameOverScene::GameOverScene()
@@ -14,9 +13,6 @@ GameOverScene::GameOverScene()
 	Camera * cam = new Camera();
 	cam->Init(Vector3D(0.0f, -50.0f, 0.0f), Vector3D::zero, Vector3D(0.0f, 0.0f, 1.0f));
 	cam->SetActive();
-
-	// 多分不要
-	GuideUI * guideUI = new GuideUI("Assets/resultGuide.png");
 }
 
 GameOverScene::~GameOverScene()

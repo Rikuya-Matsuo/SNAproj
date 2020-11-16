@@ -13,8 +13,6 @@
 #include "Input.h"
 #include "GameOverScene.h"
 #include "GameClearScene.h"
-#include "LifeUIManager.h"
-#include "GuideUI.h"
 #include "GameUI.h"
 
 GameScene::GameScene()
