@@ -5,7 +5,6 @@
 #include "Input.h"
 #include "Renderer.h"
 #include "Quaternion.h"
-#include "AnimSpriteTest.h"
 #include "Block.h"
 #include "Stage.h"
 #include "BGObject.h"
