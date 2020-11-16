@@ -207,10 +207,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="EnemyWalker.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="Floor.cpp" />
-    <ClCompile Include="GameClearBoard.cpp" />
     <ClCompile Include="GameClearScene.cpp" />
     <ClCompile Include="GameClearUI.cpp" />
-    <ClCompile Include="GameOverBoard.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameOverUI.cpp" />
     <ClCompile Include="GamePadAxis.cpp" />
@@ -242,7 +240,6 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="TestUIScreen.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="TitleBoard.cpp" />
     <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="UIScreen.cpp" />
     <ClCompile Include="Vector.cpp" />
@@ -271,10 +268,8 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="EnemyWalker.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="Floor.h" />
-    <ClInclude Include="GameClearBoard.h" />
     <ClInclude Include="GameClearScene.h" />
     <ClInclude Include="GameClearUI.h" />
-    <ClInclude Include="GameOverBoard.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameOverUI.h" />
     <ClInclude Include="GamePadAxis.h" />
@@ -308,7 +303,6 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="TestUIScreen.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="TitleBoard.h" />
     <ClInclude Include="TitleUI.h" />
     <ClInclude Include="UIScreen.h" />
     <ClInclude Include="Vector.h" />
