@@ -206,6 +206,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="EnemyWalker.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="FireActor.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="GameClearScene.cpp" />
     <ClCompile Include="GameClearUI.cpp" />
@@ -215,6 +216,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="GameUI.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputMoveComponent.cpp" />
+    <ClCompile Include="NAFire.cpp" />
     <ClCompile Include="NAReelString.cpp" />
     <ClCompile Include="NinjaArtsUICircle.cpp" />
     <ClCompile Include="ReelStringEdgeActor.cpp" />
@@ -267,6 +269,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EnemyWalker.h" />
     <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="FireActor.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="GameClearScene.h" />
     <ClInclude Include="GameClearUI.h" />
@@ -277,6 +280,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="GameUI.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputMoveComponent.h" />
+    <ClInclude Include="NAFire.h" />
     <ClInclude Include="NAReelString.h" />
     <ClInclude Include="NinjaArtsUICircle.h" />
     <ClInclude Include="Player.h" />

@@ -14,6 +14,7 @@
 #include "EnemyBase.h"
 #include "AnimationEffect.h"
 #include "NAReelString.h"
+#include "NAFire.h"
 #include "NinjaArtsUICircle.h"
 
 #ifdef DEBUG_SNA
@@ -163,6 +164,9 @@ Player::Player() :
 	// 忍術の設定
 	NinjaArtsBase * latestSetNA;
 	latestSetNA = new NAReelString(this);
+	mNinjaArts.emplace_back(latestSetNA);
+
+	latestSetNA = new NAFire(this);
 	mNinjaArts.emplace_back(latestSetNA);
 
 	// 落下スピード割合の調整
