@@ -17,8 +17,6 @@ FireActor::FireActor(Player * user):
 	MeshComponent * mc = new MeshComponent(this, 100, false);
 	mc->SetMesh(mesh);
 
-	mScale = 100.0f;
-
 	// 非アクティブ
 	SetActive(false);
 

@@ -11,5 +11,6 @@ public:
 	void Use() override;
 
 private:
+	// 火のアクター
 	FireActor * mFire;
 };
