@@ -10,6 +10,7 @@ enum ColliderAttribute
 	ColAtt_Enemy,
 	ColAtt_EnemyAttack,
 	ColAtt_Block,
+	ColAtt_Fire,
 	ColAtt_Detector,		// トリガー。接近検知装置。ヒット時の押し返しなし。
 	ColAtt_Invalid
 };
