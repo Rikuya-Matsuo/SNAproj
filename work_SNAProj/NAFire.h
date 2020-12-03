@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "NinjaArtsBase.h"
 
 class FireActor;
@@ -11,6 +11,6 @@ public:
 	void Use() override;
 
 private:
-	// �΂̃A�N�^�[
+	// 火のアクター
 	FireActor * mFire;
 };

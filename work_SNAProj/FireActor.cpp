@@ -1,4 +1,4 @@
-#include "FireActor.h"
+ï»¿#include "FireActor.h"
 #include "System.h"
 #include "MeshComponent.h"
 #include "Mesh.h"
@@ -8,19 +8,19 @@ const float FireActor::mTimeLimit = 3.0f;
 FireActor::FireActor(Player * user):
 	mTimer(0.0f)
 {
-	// ƒƒbƒVƒ…“Ç‚İ‚İ
+	// ãƒ¡ãƒƒã‚·ãƒ¥èª­ã¿è¾¼ã¿
 	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
 	mesh->LoadDivTexture("Assets/flame_parts1.png", System::GetInstance().GetRenderer(), this,
 		9, 3, 3, 1024, 1024, 0.05f, 0);
 	
-	// ƒƒbƒVƒ…ƒRƒ“ƒ|[ƒlƒ“ƒgƒ[ƒh
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆãƒ­ãƒ¼ãƒ‰
 	MeshComponent * mc = new MeshComponent(this, 100, false);
 	mc->SetMesh(mesh);
 
-	// ”ñƒAƒNƒeƒBƒu
+	// éã‚¢ã‚¯ãƒ†ã‚£ãƒ–
 	SetActive(false);
 
-	// ƒfƒoƒbƒO‚Ì‚½‚ßAd—Í–³Œø
+	// ãƒ‡ãƒãƒƒã‚°ã®ãŸã‚ã€é‡åŠ›ç„¡åŠ¹
 	SetAffectGravityFlag(false);
 }
 
@@ -30,10 +30,10 @@ FireActor::~FireActor()
 
 void FireActor::UpdateActor0()
 {
-	// ƒ^ƒCƒ}[Œv‘ª
+	// ã‚¿ã‚¤ãƒãƒ¼è¨ˆæ¸¬
 	mTimer += System::GetInstance().GetDeltaTime();
 
-	// ‹K’èŠÔ‚ª‰ß‚¬‚ê‚Î”ñƒAƒNƒeƒBƒu‰»
+	// è¦å®šæ™‚é–“ãŒéãã‚Œã°éã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
 	if (mTimer >= mTimeLimit)
 	{
 		SetActive(false);
@@ -42,10 +42,10 @@ void FireActor::UpdateActor0()
 
 void FireActor::OnBecomeActive()
 {
-	// Šî’êƒNƒ‰ƒX‚Ì“¯ŠÖ”‚ğŒÄ‚Ô
+	// åŸºåº•ã‚¯ãƒ©ã‚¹ã®åŒé–¢æ•°ã‚’å‘¼ã¶
 	Actor::OnBecomeActive();
 
-	// ƒ^ƒCƒ}[‰Šú‰»
+	// ã‚¿ã‚¤ãƒãƒ¼åˆæœŸåŒ–
 	mTimer = 0.0f;
 }
 

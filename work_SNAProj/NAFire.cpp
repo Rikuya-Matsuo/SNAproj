@@ -1,20 +1,20 @@
-#include "NAFire.h"
+ï»¿#include "NAFire.h"
 #include "System.h"
 #include "FireActor.h"
 
 NAFire::NAFire(Player * player):
 	NinjaArtsBase(player)
 {
-	// UIƒAƒCƒRƒ“ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh
+	// UIã‚¢ã‚¤ã‚³ãƒ³ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰
 	mIconTexture = System::GetInstance().GetRenderer()->GetTexture("Assets/NAFireUI.png");
 
-	// ‰Î‚ÌƒAƒNƒ^[‚ðŽ‚Â
+	// ç«ã®ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’æŒã¤
 	mFire = new FireActor(player);
 }
 
 void NAFire::Use()
 {
-	// ‰Î‚ÌƒAƒNƒeƒBƒu‰»EˆÊ’u‚ÆƒXƒP[ƒ‹’²®
+	// ç«ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–ãƒ»ä½ç½®ã¨ã‚¹ã‚±ãƒ¼ãƒ«èª¿æ•´
 	mFire->SetActive(true);
 	mFire->SetPosition(mUser->GetPosition());
 	mFire->SetScale(mUser->GetScale());

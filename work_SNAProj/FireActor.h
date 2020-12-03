@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Actor.h"
 
 class Player;
@@ -10,13 +10,13 @@ public:
 	~FireActor();
 
 private:
-	// ‘¶İ‚µ‚Ä‚¢‚ç‚ê‚éŠÔ(s)
+	// å­˜åœ¨ã—ã¦ã„ã‚‰ã‚Œã‚‹æ™‚é–“(s)
 	static const float mTimeLimit;
 
-	// ƒ^ƒCƒ}[
+	// ã‚¿ã‚¤ãƒãƒ¼
 	float mTimer;
 
-	// g—pÒ
+	// ä½¿ç”¨è€…
 	Player * mUser;
 
 	void UpdateActor0() override;
