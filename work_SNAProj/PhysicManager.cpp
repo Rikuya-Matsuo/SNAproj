@@ -617,6 +617,7 @@ PhysicManager::PhysicManager():
 	mColliderID.reserve(256);
 	mHitColliderPairState.reserve(32);
 
+	// 当たり判定を行うアトリビュートの組み合わせを登録
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Block);
 	ResisterCheckableAttributeCombination(ColAtt_Player, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Block);
@@ -624,6 +625,8 @@ PhysicManager::PhysicManager():
 	ResisterCheckableAttributeCombination(ColAtt_Detector, ColAtt_Player);
 	ResisterCheckableAttributeCombination(ColAtt_PlayerAttack, ColAtt_Enemy);
 	ResisterCheckableAttributeCombination(ColAtt_EnemyAttack, ColAtt_Player);
+	ResisterCheckableAttributeCombination(ColAtt_Fire, ColAtt_Enemy);
+	ResisterCheckableAttributeCombination(ColAtt_Fire, ColAtt_Block);
 
 	// マルチスレッド作成およびメンバ変数へ引き渡し
 	std::thread th(RefreshHitStateForThread);
