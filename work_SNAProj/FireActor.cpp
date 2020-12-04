@@ -56,14 +56,14 @@ void FireActor::OnBecomeActive()
 	mTimer = 0.0f;
 }
 
-void FireActor::OnHit(const ColliderComponentBase* caller, const ColliderComponentBase* opponent)
+void FireActor::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 }
 
-void FireActor::OnTouching(const ColliderComponentBase* caller, const ColliderComponentBase* opponent)
+void FireActor::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 }
 
-void FireActor::OnApart(const ColliderComponentBase* caller, const ColliderComponentBase* opponent)
+void FireActor::OnApart(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 }
