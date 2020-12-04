@@ -371,7 +371,6 @@ void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComp
 {
 	// アトリビュートの取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
-	Uint8 callerAtt = caller->GetColliderAttribute();
 
 	// プレイヤーに押された処理
 	OnBePushedByPlayer(caller, opponentAtt);
@@ -384,7 +383,8 @@ void EnemyWalker::OnHit(const ColliderComponentBase * caller, const ColliderComp
 	}
 
 	// 被攻撃時の処理
-	if (caller == mBodyCollision && opponentAtt == ColliderAttribute::ColAtt_PlayerAttack)
+	bool isAttacked = (opponentAtt == ColliderAttribute::ColAtt_PlayerAttack || opponentAtt == ColliderAttribute::ColAtt_Fire);
+	if (caller == mBodyCollision && isAttacked)
 	{
 		// ダメージアニメーションフラグ設定
 		mFlags_EnemyWalker |= mDamageAnimFlagMask;
@@ -437,7 +437,6 @@ void EnemyWalker::OnTouching(const ColliderComponentBase * caller, const Collide
 {
 	// アトリビュートの取得
 	Uint8 opponentAtt = opponent->GetColliderAttribute();
-	Uint8 callerAtt = caller->GetColliderAttribute();
 
 	// プレイヤーに押された時の処理
 	OnBePushedByPlayer(caller, opponentAtt);
