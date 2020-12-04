@@ -14,8 +14,12 @@ NAFire::NAFire(Player * player):
 
 void NAFire::Use()
 {
-	// 火のアクティブ化・位置とスケール調整
-	mFire->SetActive(true);
-	mFire->SetPosition(mUser->GetPosition());
-	mFire->SetScale(mUser->GetScale());
+	// 火のアクターが非アクティブの時のみ
+	if (!mFire->GetActiveFlag())
+	{
+		// 火のアクティブ化・位置とスケール調整
+		mFire->SetActive(true);
+		mFire->SetPosition(mUser->GetPosition());
+		mFire->SetScale(mUser->GetScale());
+	}
 }

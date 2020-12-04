@@ -2,6 +2,7 @@
 #include "System.h"
 #include "MeshComponent.h"
 #include "Mesh.h"
+#include "BoxColliderComponent.h"
 
 const float FireActor::mTimeLimit = 3.0f;
 
@@ -13,15 +14,25 @@ FireActor::FireActor(Player * user):
 	mesh->LoadDivTexture("Assets/flame_parts1.png", System::GetInstance().GetRenderer(), this,
 		9, 3, 3, 1024, 1024, 0.05f, 0);
 	
-	// メッシュコンポーネントロード
+	// メッシュコンポーネント生成
 	MeshComponent * mc = new MeshComponent(this, 100, false);
 	mc->SetMesh(mesh);
+
+	// ボックスコライダー生成
+	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_PlayerAttack);
+	AABB colBox = mesh->GetCollisionBox();
+	bcc->SetObjectBox(colBox);
+
+	// 落下スピード設定
+	mFallSpeedRate = 15.0f;
+	mFallSpeedMax = 3.0f;
 
 	// 非アクティブ
 	SetActive(false);
 
 	// デバッグのため、重力無効
-	SetAffectGravityFlag(false);
+	//SetAffectGravityFlag(false);
+
 }
 
 FireActor::~FireActor()
