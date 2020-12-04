@@ -19,7 +19,7 @@ FireActor::FireActor(Player * user):
 	mc->SetMesh(mesh);
 
 	// ボックスコライダー生成
-	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_PlayerAttack);
+	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Fire);
 	AABB colBox = mesh->GetCollisionBox();
 	bcc->SetObjectBox(colBox);
 
@@ -29,10 +29,6 @@ FireActor::FireActor(Player * user):
 
 	// 非アクティブ
 	SetActive(false);
-
-	// デバッグのため、重力無効
-	//SetAffectGravityFlag(false);
-
 }
 
 FireActor::~FireActor()
