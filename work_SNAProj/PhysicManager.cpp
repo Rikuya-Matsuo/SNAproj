@@ -604,7 +604,9 @@ void PhysicManager::SortColliders()
 
 PhysicManager::PhysicManager():
 	mContinueRefleshFlag(true),
-	mResetRefreshLoopFlag(false)
+	mResetRefreshLoopFlag(false),
+	mLoopCount(0),
+	mRefleshLoopCount(0)
 {
 	// コライダーコンポーネントのマップのメモリを確保
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
