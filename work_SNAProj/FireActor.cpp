@@ -3,12 +3,14 @@
 #include "MeshComponent.h"
 #include "Mesh.h"
 #include "BoxColliderComponent.h"
+#include "Player.h"
 #include "EnemyBase.h"
 
 const float FireActor::mTimeLimit = 3.0f;
 
 FireActor::FireActor(Player * user):
-	mTimer(0.0f)
+	mTimer(0.0f),
+	mUser(user)
 {
 	// メッシュ読み込み
 	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
@@ -30,6 +32,9 @@ FireActor::FireActor(Player * user):
 
 	// 非アクティブ
 	SetActive(false);
+
+	// 更新順をプレイヤーよりも後に設定
+	SetPriority(mUser->GetPriority() + 50);
 }
 
 FireActor::~FireActor()
