@@ -3,6 +3,7 @@
 #include "MeshComponent.h"
 #include "Mesh.h"
 #include "BoxColliderComponent.h"
+#include "EnemyBase.h"
 
 const float FireActor::mTimeLimit = 3.0f;
 
@@ -58,6 +59,14 @@ void FireActor::OnBecomeActive()
 
 void FireActor::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
+	Uint8 opponentAtt = opponent->GetColliderAttribute();
+
+	if (opponentAtt == ColliderAttribute::ColAtt_Enemy)
+	{
+		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
+
+		enemy->Damage(1);
+	}
 }
 
 void FireActor::OnTouching(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
