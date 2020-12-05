@@ -70,7 +70,11 @@ void FireActor::OnHit(const ColliderComponentBase * caller, const ColliderCompon
 	{
 		EnemyBase * enemy = static_cast<EnemyBase*>(opponent->GetOwner());
 
+		// エネミーにダメージを与える
 		enemy->Damage(1);
+
+		// エネミーからの押し返しは無効
+		mFixVector -= mPushedVector;
 	}
 }
 
