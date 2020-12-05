@@ -128,7 +128,7 @@ Player::Player() :
 	AABB attackCol = mMesh->GetCollisionBox();
 	float bodyColSizeX = bodyCol.mMax.x - bodyCol.mMin.x;
 	attackCol.mMin.x += bodyColSizeX;
-	attackCol.mMax.x += bodyColSizeX;
+	attackCol.mMax.x += bodyColSizeX * 0.25f;
 	mAttackCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_PlayerAttack);
 	mAttackCollider->SetObjectBox(attackCol);
 	mAttackCollider->SetActive(false);
