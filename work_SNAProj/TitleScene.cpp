@@ -14,13 +14,13 @@ TitleScene::TitleScene():
 	// ステージの生成
 	mStage = new Stage();
 	mStage->SetBlockScale(0.3f);
-	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
+	mStage->LoadMap("Map/TestMap0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 	// 背景の崖の生成
-	mStage->LoadBGObjectMap("Map/Map0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
+	mStage->LoadBGObjectMap("Map/TestMap0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
 	// 背景の壁の生成
 	// 壁のポインタを配列として取得し、回転させる
 	Actor** walls;
-	int wallMass = mStage->LoadBGObjectMap("Map/Map0/Wall.csv", 30, mStage->GetFloorHeight(), -75, 170, 0, &walls);
+	int wallMass = mStage->LoadBGObjectMap("Map/TestMap0/Wall.csv", 30, mStage->GetFloorHeight(), -75, 170, 0, &walls);
 
 	if (wallMass != -1)
 	{
