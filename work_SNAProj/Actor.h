@@ -29,6 +29,7 @@ protected:
 	static const FlagType mFixXScaleFlagMask_Base;
 	static const FlagType mFixYScaleFlagMask_Base;
 	static const FlagType mFixZScaleFlagMask_Base;
+	static const FlagType mBurnableFlagMask_Base;
 
 	FlagType mFlags;
 

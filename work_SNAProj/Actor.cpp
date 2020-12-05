@@ -18,6 +18,7 @@ const Actor::FlagType Actor::mBuryDeeplyFlagMask_Base				= 1 << 8;
 const Actor::FlagType Actor::mFixXScaleFlagMask_Base				= 1 << 9;
 const Actor::FlagType Actor::mFixYScaleFlagMask_Base				= 1 << 10;
 const Actor::FlagType Actor::mFixZScaleFlagMask_Base				= 1 << 11;
+const Actor::FlagType Actor::mBurnableFlagMask_Base					= 1 << 12;
 
 Actor::Actor():
 	mPosition(Vector3D::zero),
