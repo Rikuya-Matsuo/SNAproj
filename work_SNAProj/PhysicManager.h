@@ -93,6 +93,14 @@ private:
 
 	bool mResetRefreshLoopFlag;
 
+	// 当たり判定ループを行った回数のカウンター
+	// 255を超えるときに0に戻す
+	uint8_t mLoopCount;
+
+	// RefreshHitState()内のループ終了時、mLoopCountの値を代入する
+	// mLoopCountと比較して、値が異なる場合のみ、接触情報の整理を行う
+	uint8_t mRefleshLoopCount;
+
 	void HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol);
 
 	bool CheckPrevHit(const ColliderPair& pair);

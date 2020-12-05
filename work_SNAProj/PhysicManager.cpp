@@ -42,6 +42,16 @@ void PhysicManager::CheckHit()
 		CheckLoop(attCombi);
 	}
 
+	// ループ回数の記録。オーバーフロー対策で条件分岐する。
+	if (mLoopCount != UINT8_MAX)
+	{
+		++mLoopCount;
+	}
+	else
+	{
+		mLoopCount = 0;
+	}
+
 #ifdef COLLISION_CHECK
 	SDL_Log("The number of checked collider is %d\n", checkCounter);
 	checkCounter = 0;
@@ -563,24 +573,29 @@ void PhysicManager::RefreshHitState()
 {
 	while (mContinueRefleshFlag)
 	{
-		auto itr = mHitColliderPairState.begin();
-		for (; itr != mHitColliderPairState.end(); ++itr)
+		if (mLoopCount != mRefleshLoopCount)
 		{
 			// ミューテックスをロック
 			MutexLocker lock(mColliderPairStateMutex);
 
-			// ループのやり直しを指示される or フラグがループの終了を示したとき、このfor文を抜ける
-			if (mResetRefreshLoopFlag || !mContinueRefleshFlag)
+			auto itr = mHitColliderPairState.begin();
+			for (; itr != mHitColliderPairState.end(); ++itr)
 			{
-				mResetRefreshLoopFlag = false;
-				break;
+				// ループのやり直しを指示される or フラグがループの終了を示したとき、このfor文を抜ける
+				if (mResetRefreshLoopFlag || !mContinueRefleshFlag)
+				{
+					mResetRefreshLoopFlag = false;
+					break;
+				}
+
+				// 接触していないなら削除
+				if (itr->second == HitState::HitState_NoTouch)
+				{
+					mHitColliderPairState.erase(itr);
+				}
 			}
 
-			// 接触していないなら削除
-			if (itr->second == HitState::HitState_NoTouch)
-			{
-				mHitColliderPairState.erase(itr);
-			}
+			mRefleshLoopCount = mLoopCount;
 		}
 	}
 }
@@ -604,7 +619,9 @@ void PhysicManager::SortColliders()
 
 PhysicManager::PhysicManager():
 	mContinueRefleshFlag(true),
-	mResetRefreshLoopFlag(false)
+	mResetRefreshLoopFlag(false),
+	mLoopCount(0),
+	mRefleshLoopCount(0)
 {
 	// コライダーコンポーネントのマップのメモリを確保
 	mColliders.reserve(ColliderAttribute::ColAtt_Invalid);
