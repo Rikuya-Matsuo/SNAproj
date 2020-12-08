@@ -34,6 +34,8 @@ public:
 
 	Uint8 **const GetBlocks() const { return mBlocks; }
 
+	const std::list<std::string> & GetDecorationFileNames() { return mDecorationFileNames; }
+
 protected:
 	Uint8 ** mBlocks;
 
@@ -49,6 +51,8 @@ protected:
 	// ブロック配置配列に基づいてブロックのインスタンスを生成する。
 	void Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
+	std::list<std::string> mDecorationFileNames;
+
 private:
 	struct BGObjectPallet
 	{
@@ -61,4 +65,9 @@ private:
 	int LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors);
 
 	void ClearPallet(BGObjectPallet & pallet);
+
+	// 装飾物配置データ名のロード
+	int LoadDecorFileName(std::ifstream & file);
+
+	void OnEndDecorTag(std::ifstream & file);
 };

@@ -63,6 +63,13 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 		}
 		else
 		{
+			if (buf == "<decor>")
+			{
+				LoadDecorFileName(mapFile);
+				buf.clear();
+				continue;
+			}
+
 			// マップ幅記録（マップ幅　=　カンマ、改行の読まれた数　より）
 			mapWidth++;
 
@@ -523,4 +530,57 @@ void Stage::ClearPallet(BGObjectPallet & pallet)
 {
 	pallet.mModelFilePath.clear();
 	pallet.mScale = 0.0f;
+}
+
+int Stage::LoadDecorFileName(std::ifstream & file)
+{
+	char c;
+
+	std::string buf;
+	buf.resize(32);
+
+	while (true)
+	{
+		// 文字取得
+		c = file.get();
+
+		// 文字の類であった場合
+		if (c != ',' && c != '\n')
+		{
+			buf += c;
+			continue;
+		}
+
+		// ここから先は、cがカンマか改行文字である場合しか進めない
+
+		// 終端文字追加
+		buf += '\0';
+
+		// 装飾物配置ファイルの記載終了タグを発見した場合
+		if (buf == "</decor>")
+		{
+			OnEndDecorTag(file);
+			break;
+		}
+
+		// バッファが空文字列でなければ記録
+		if (buf != "")
+		{
+			mDecorationFileNames.emplace_back(buf);
+			buf.clear();
+		}
+	}
+
+	return mDecorationFileNames.size();
+}
+
+void Stage::OnEndDecorTag(std::ifstream & file)
+{
+	char c = '\0';
+
+	// 行末までストリームを進める
+	while (c != '\n')
+	{
+		c = file.get();
+	}
 }

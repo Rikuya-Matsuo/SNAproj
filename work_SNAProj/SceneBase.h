@@ -44,4 +44,8 @@ protected:
 	SceneBase * mNextScene;
 
 	Stage * mStage;
+
+	Stage * LoadStage(const std::string & mapFilePath,
+		const std::string & blockTextureFilePath,
+		const std::string & floorTextureFilePath, float blockScale);
 };

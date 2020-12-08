@@ -1,6 +1,7 @@
 ﻿#include "SceneBase.h"
 #include "Actor.h"
 #include "Camera.h"
+#include "Stage.h"
 
 const SceneBase::FlagType SceneBase::mSceneChangeFlagMask = 1 << 0;
 
@@ -37,4 +38,15 @@ SceneBase::~SceneBase()
 
 void SceneBase::Draw()
 {
+}
+
+Stage * SceneBase::LoadStage(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath, float blockScale)
+{
+	Stage * stage = new Stage;
+
+	stage->SetBlockScale(blockScale);
+
+	stage->LoadMap(mapFilePath, blockTextureFilePath, floorTextureFilePath);
+
+	return stage;
 }
