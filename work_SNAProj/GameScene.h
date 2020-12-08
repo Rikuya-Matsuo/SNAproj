@@ -16,4 +16,14 @@ private:
 	Player * mPlayer;
 
 	UIScreen * mUI;
+
+	Uint8 mStageProgress;
+
+	void LoadNextStage();
+
+	void LoadStage0();
+
+	void LoadStage1();
+	
+	void LoadStage2();
 };

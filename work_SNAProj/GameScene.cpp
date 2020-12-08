@@ -15,7 +15,8 @@
 #include "GameClearScene.h"
 #include "GameUI.h"
 
-GameScene::GameScene()
+GameScene::GameScene():
+	mStageProgress(0)
 {
 	// ステージの生成
 	mStage = new Stage;
@@ -128,4 +129,36 @@ void GameScene::Update()
 		mNextScene = new GameClearScene;
 		mFlags |= mSceneChangeFlagMask;
 	}
+}
+
+void GameScene::LoadNextStage()
+{
+	switch (mStageProgress)
+	{
+	case 0:
+		LoadStage0();
+		break;
+	case 1:
+		LoadStage1();
+		break;
+	case 2:
+		LoadStage2();
+		break;
+	default:
+		break;
+	}
+
+	++mStageProgress;
+}
+
+void GameScene::LoadStage0()
+{
+}
+
+void GameScene::LoadStage1()
+{
+}
+
+void GameScene::LoadStage2()
+{
 }
