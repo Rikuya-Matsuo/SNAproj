@@ -24,7 +24,7 @@ GameScene::GameScene()
 	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 	// 背景の崖を生成
 	float blockSize = Block::mModelSize * blockScale;
-	mStage->LoadBGObjectMap("Map/Map0/background.csv", 0, mStage->GetFloorHeight(), 0, blockSize, blockSize);
+	mStage->LoadBGObjectMap("Map/Map0/background.csv", blockSize / 2, mStage->GetFloorHeight(), -blockSize, blockSize, blockSize);
 	// 背景の壁を生成
 	// 生成した壁のアクターを配列として取得し、モデルデータを回転させる
 	Actor** walls;

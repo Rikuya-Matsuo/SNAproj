@@ -354,7 +354,7 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 	bool isLastCharNewLine = false;
 
 	// 改行文字を読んだときのラムダ式
-	auto onLoadNewLine = [&xCell, &xCellMax, &yCell]()
+	auto onLoadNewLine = [&xCell, &xCellMax, &yCell, &xOffset]()
 	{
 		if (xCellMax < xCell)
 		{
@@ -363,6 +363,8 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 
 		xCell = 0;
 		++yCell;
+
+		xOffset = 0.0f;
 	};
 
 	char c;
@@ -387,24 +389,22 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 
 		// ここから先へはcが','か'\n'の場合しか進めない
 
-		// 空白（オブジェクトを生成しないセル）と指定された場合、バッファをクリアしてスキップする
-		if (buf == "-1")
+		// 空白（オブジェクトを生成しないセル）or空文字列を指定された場合、バッファをクリアしてスキップする
+		if (buf == "-1" || buf == "")
 		{
 			xOffset += xEmptyCellScale;
 
-			buf.clear();
-			continue;
-		}
-
-		// 空文字列はスキップ
-		if (buf == "")
-		{
 			// 読んだ文字が改行文字なら、その時の処理はここでしておく。
 			if (isLastCharNewLine)
 			{
 				onLoadNewLine();
 			}
+			else
+			{
+				++xCell;
+			}
 
+			buf.clear();
 			continue;
 		}
 
@@ -477,14 +477,7 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 
 		// 前に調整したオブジェクトから現在調整中のオブジェクトの間の、オブジェクトを生成しないセルの数
 		int notGenCellMass;
-		if (lastAdjustYCell.size())
-		{
-			notGenCellMass = (lastAdjustYCell[x] - y) - 1;
-		}
-		else
-		{
-			notGenCellMass = x;
-		}
+		notGenCellMass = (lastAdjustYCell[x] - y) - 1;
 
 		// 調整後の高さ
 		float newHeight = groundHeight + yOffsets[x] + yEmptyCellScale * notGenCellMass;
