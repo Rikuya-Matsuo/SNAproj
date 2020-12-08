@@ -476,7 +476,15 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 		int y = data->yCell;
 
 		// 前に調整したオブジェクトから現在調整中のオブジェクトの間の、オブジェクトを生成しないセルの数
-		int notGenCellMass = (lastAdjustYCell[x] - y) - 1;
+		int notGenCellMass;
+		if (lastAdjustYCell.size())
+		{
+			notGenCellMass = (lastAdjustYCell[x] - y) - 1;
+		}
+		else
+		{
+			notGenCellMass = x;
+		}
 
 		// 調整後の高さ
 		float newHeight = groundHeight + yOffsets[x] + yEmptyCellScale * notGenCellMass;

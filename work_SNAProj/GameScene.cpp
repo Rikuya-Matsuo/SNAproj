@@ -19,10 +19,12 @@ GameScene::GameScene()
 {
 	// ステージの生成
 	mStage = new Stage;
-	mStage->SetBlockScale(0.3f);
+	float blockScale = 0.3f;
+	mStage->SetBlockScale(blockScale);
 	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
 	// 背景の崖を生成
-	mStage->LoadBGObjectMap("Map/TestMap0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
+	float blockSize = Block::mModelSize * blockScale;
+	mStage->LoadBGObjectMap("Map/Map0/background.csv", 0, mStage->GetFloorHeight(), 0, blockSize, blockSize);
 	// 背景の壁を生成
 	// 生成した壁のアクターを配列として取得し、モデルデータを回転させる
 	Actor** walls;
