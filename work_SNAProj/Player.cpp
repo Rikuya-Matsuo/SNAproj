@@ -44,7 +44,6 @@ Player::Player() :
 	mCurrentAnimation(AnimationPattern::Anim_Stay),
 	mWallPointer(nullptr),
 	mLife(mLifeMax),
-	mCurrentNinjaArtsIndex(0),
 	mHitEffectMass(4)
 {
 	mPushedFlags.Init();
@@ -164,9 +163,11 @@ Player::Player() :
 	// 忍術の設定
 	NinjaArtsBase * latestSetNA;
 	latestSetNA = new NAReelString(this);
+	mNAReelStringIndex = static_cast<Uint8>(mNinjaArts.size());
 	mNinjaArts.emplace_back(latestSetNA);
 
 	latestSetNA = new NAFire(this);
+	mNAFireIndex = static_cast<Uint8>(mNinjaArts.size());
 	mNinjaArts.emplace_back(latestSetNA);
 
 	// 落下スピード割合の調整
@@ -248,51 +249,25 @@ void Player::UpdateActor0()
 		mAttackCollider->SetActive(true);
 	}
 
-	// 忍術の選択
-	bool ninjaArtsRRotateInput =
-		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_R) ||
-		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
-	bool ninjaArtsLRotateInput =
+	// 忍術発動処理
+	// クナイ出すやつ
+	bool useReelString =
 		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_E) ||
-		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
-
-	// 増加分の計算。Rボタンなら+1、Lボタンなら-1。同時押しなら0となるよう計算。
-	char addition = ninjaArtsRRotateInput;
-	addition -= ninjaArtsLRotateInput;
-	char naIndex = mCurrentNinjaArtsIndex + addition;
-
-	// インデックスの計算後、忍術コンテナの要素数を超えているか、0を下回った時調整
-	// 単純なクランプではなく、0を下回った時は最後尾のインデックスに、要素数を超えたときは0に戻る。
-	if (naIndex < 0)
+		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_Y);
+	NinjaArtsBase * reelString = mNinjaArts[mNAReelStringIndex];
+	if (useReelString && !(reelString->IsUsed()))
 	{
-		naIndex = static_cast<char>(mNinjaArts.size() - 1);
-	}
-	else if (static_cast<Uint8>(naIndex) >= mNinjaArts.size())
-	{
-		naIndex = 0;
+		reelString->Use();
 	}
 
-	// 計算結果代入、及びUIに選択中の忍術のアイコンIDを伝える
-	mCurrentNinjaArtsIndex = naIndex;
-	mNinjaArtsUI->SetIconID(mNinjaArts[mCurrentNinjaArtsIndex]->GetIconID());
-
-	// 左右どちらの回転を行うかをUIに指示
-	if (ninjaArtsRRotateInput || ninjaArtsLRotateInput)
-	{
-		mNinjaArtsUI->SetRotateDirection(ninjaArtsRRotateInput);
-	}
-
-	// 忍術の発動
-	// 忍術を使用中なら無効
-	bool inputNinjaArtsCommand =
-		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_N) ||
+	// 火遁の術
+	bool useFire =
+		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_R) ||
 		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_X);
-	if (inputNinjaArtsCommand && !mNinjaArts[mCurrentNinjaArtsIndex]->IsUsed())
+	NinjaArtsBase * fire = mNinjaArts[mNAFireIndex];
+	if (useFire && !(fire->IsUsed()))
 	{
-		if (mNinjaArts[mCurrentNinjaArtsIndex])
-		{
-			mNinjaArts[mCurrentNinjaArtsIndex]->Use();
-		}
+		fire->Use();
 	}
 
 #ifdef DEBUG_SNA
@@ -860,9 +835,9 @@ void Player::OnBeAttacked(const EnemyBase * enemy)
 	}
 
 	// 忍術のキャンセル
-	if (mNinjaArts[mCurrentNinjaArtsIndex]->IsUsed())
+	for (auto ninjaArts = mNinjaArts.begin(); ninjaArts != mNinjaArts.end(); ++ninjaArts)
 	{
-		mNinjaArts[mCurrentNinjaArtsIndex]->CancelNinjaArts();
+		(*ninjaArts)->OnBeDamaged();
 	}
 }
 

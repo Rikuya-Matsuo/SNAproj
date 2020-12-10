@@ -5,12 +5,14 @@
 #include "BoxColliderComponent.h"
 #include "Player.h"
 #include "EnemyBase.h"
+#include "NinjaArtsBase.h"
 
 const float FireActor::mTimeLimit = 3.0f;
 
 FireActor::FireActor(Player * user):
 	mTimer(0.0f),
-	mUser(user)
+	mUser(user),
+	mOwnerNinjaArts(nullptr)
 {
 	// メッシュ読み込み
 	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Board.gpmesh", this);
@@ -50,6 +52,12 @@ void FireActor::UpdateActor0()
 	if (mTimer >= mTimeLimit)
 	{
 		SetActive(false);
+
+		// 忍術に通知
+		if (mOwnerNinjaArts)
+		{
+			mOwnerNinjaArts->EndNinjaArts();
+		}
 	}
 }
 

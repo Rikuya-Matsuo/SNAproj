@@ -10,6 +10,7 @@ NAFire::NAFire(Player * player):
 
 	// 火のアクターを持つ
 	mFire = new FireActor(player);
+	mFire->SetOwnerNinjaArts(this);
 }
 
 void NAFire::Use()

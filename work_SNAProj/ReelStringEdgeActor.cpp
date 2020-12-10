@@ -107,7 +107,7 @@ void ReelStringEdgeActor::OnHit(const ColliderComponentBase* caller, const Colli
 		{
 			mHitEnemy = dynamic_cast<EnemyBase*>(opponent->GetOwner());
 
-			mNinjaArts->CancelNinjaArts();
+			mNinjaArts->EndNinjaArts();
 
 			return;
 		}

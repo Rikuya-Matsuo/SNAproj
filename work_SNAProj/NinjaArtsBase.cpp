@@ -19,8 +19,12 @@ void NinjaArtsBase::Use()
 	mIsUsedFlag = true;
 }
 
-void NinjaArtsBase::CancelNinjaArts()
+void NinjaArtsBase::EndNinjaArts()
 {
 	// 使用中フラグの設定
 	mIsUsedFlag = false;
+}
+
+void NinjaArtsBase::OnBeDamaged()
+{
 }

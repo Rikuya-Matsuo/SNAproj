@@ -17,7 +17,9 @@ public:
 
 	const std::vector<Texture *> & GetTextures() const { return mTextures; }
 
-	Texture * GetButtonTexture() const { return mButtonUITexture; }
+	Texture * GetButtonTexture_X() const { return mButtonUITexture_X; }
+
+	Texture * GetButtonTexture_Y() const { return mButtonUITexture_Y; }
 
 	// テクスチャの位置を取得する
 	// indexがテクスチャコンテナの要素数異常の数値ならばfalseを返す
@@ -25,7 +27,9 @@ public:
 
 	const Vector2D & GetCenterPosition() const { return mCenterPosition; }
 
-	const Vector2D & GetButtonUIPosition() const { return mButtonUIPosition; }
+	const Vector2D & GetButtonUIPosition_X() const { return mButtonUIPosition_X; }
+
+	const Vector2D & GetButtonUIPosition_Y() const { return mButtonUIPosition_Y; }
 
 	void SetPlayer(Player * player) { mLinkedPlayer = player; }
 
@@ -52,11 +56,15 @@ private:
 
 	const Player * mLinkedPlayer;
 
-	Texture * mButtonUITexture;
+	Texture * mButtonUITexture_X;
+
+	Texture * mButtonUITexture_Y;
 
 	Vector2D mCenterPosition;
 
-	Vector2D mButtonUIPosition;
+	Vector2D mButtonUIPosition_X;
+
+	Vector2D mButtonUIPosition_Y;
 
 	float mRadius;
 

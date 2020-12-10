@@ -130,9 +130,13 @@ void GameUI::Draw(Shader * shader) const
 			DrawTexture(shader, tex, pos, mNinjaArtsUI->GetIconScale());
 		}
 	}
-	// 忍術発動ボタンをUI上で表示
-	Texture * button = mNinjaArtsUI->GetButtonTexture();
-	DrawTexture(shader, button, mNinjaArtsUI->GetButtonUIPosition(), mNinjaArtsUI->GetButtonUIScale());
+	// 忍術発動ボタンをUI上で表示(Yボタン)
+	Texture * button = mNinjaArtsUI->GetButtonTexture_Y();
+	DrawTexture(shader, button, mNinjaArtsUI->GetButtonUIPosition_Y(), mNinjaArtsUI->GetButtonUIScale());
+
+	// (Xボタン)
+	button = mNinjaArtsUI->GetButtonTexture_X();
+	DrawTexture(shader, button, mNinjaArtsUI->GetButtonUIPosition_X(), mNinjaArtsUI->GetButtonUIScale());
 
 	// ガイドUI
 	Vector2D guidePos;

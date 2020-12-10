@@ -21,8 +21,10 @@ public:
 
 	Texture * GetIconTexture() const { return mIconTexture; }
 
-	virtual void CancelNinjaArts();
+	virtual void EndNinjaArts();
 	
+	virtual void OnBeDamaged();
+
 	char GetIconID() const { return mIconID; }
 
 	void SetIconID(char id) { mIconID = id; }
