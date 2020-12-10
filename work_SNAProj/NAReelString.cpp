@@ -65,10 +65,15 @@ void NAReelString::Use()
 	mUser->SetMoveVector(Vector3D::zero);
 }
 
-void NAReelString::CancelNinjaArts()
+void NAReelString::EndNinjaArts()
 {
 	// Edgeのキャンセル関数を呼ぶ
 	mEdge->Cancel();
+}
+
+void NAReelString::OnBeDamaged()
+{
+	EndNinjaArts();
 }
 
 void NAReelString::TellEndNinjaArts()

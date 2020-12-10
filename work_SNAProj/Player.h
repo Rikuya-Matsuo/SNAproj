@@ -97,7 +97,8 @@ private:
 
 	char mLife;
 	
-	Uint8 mCurrentNinjaArtsIndex;
+	Uint8 mNAReelStringIndex;
+	Uint8 mNAFireIndex;
 
 	// 押し返しが発生したフラグ。
 	// 正負によって方向を表す。

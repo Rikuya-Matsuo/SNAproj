@@ -13,7 +13,9 @@ public:
 
 	void Use() override;
 
-	void CancelNinjaArts() override;
+	void EndNinjaArts() override;
+
+	void OnBeDamaged() override;
 
 	friend ReelStringEdgeActor;
 
