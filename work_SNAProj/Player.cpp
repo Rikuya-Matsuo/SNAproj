@@ -250,6 +250,7 @@ void Player::UpdateActor0()
 	}
 
 	// 忍術発動処理
+	// クナイ出すやつ
 	bool useReelString =
 		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_E) ||
 		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_Y);
@@ -259,6 +260,7 @@ void Player::UpdateActor0()
 		reelString->Use();
 	}
 
+	// 火遁の術
 	bool useFire =
 		Input::GetInstance().GetKeyPressDown(SDL_SCANCODE_R) ||
 		Input::GetInstance().GetGamePadButtonPressDown(SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_X);

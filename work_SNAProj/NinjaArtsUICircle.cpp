@@ -7,7 +7,7 @@
 
 const float NinjaArtsUICircle::mRotateSpeedRadPerSecond = Common::DegToRad(360.0f);
 
-const float NinjaArtsUICircle::mInitialAngle = static_cast<float>(M_PI / 2.0f);
+const float NinjaArtsUICircle::mInitialAngle = static_cast<float>(M_PI / 4.0f);
 
 NinjaArtsUICircle::NinjaArtsUICircle(const Vector2D & centerPos, float radius):
 	mCenterPosition(centerPos),
@@ -21,7 +21,8 @@ NinjaArtsUICircle::NinjaArtsUICircle(const Vector2D & centerPos, float radius):
 	mPrevIconScale = mIconScale;
 
 	// ボタンUIのテクスチャ
-	mButtonUITexture = System::GetInstance().GetRenderer()->GetTexture("Assets/pad_X.png");
+	mButtonUITexture_X = System::GetInstance().GetRenderer()->GetTexture("Assets/pad_X.png");
+	mButtonUITexture_Y = System::GetInstance().GetRenderer()->GetTexture("Assets/pad_Y.png");
 }
 
 NinjaArtsUICircle::~NinjaArtsUICircle()
@@ -131,10 +132,19 @@ void NinjaArtsUICircle::UpdateButtonUIPosition()
 	// 正方形の画像が設定されていることを信じ、x軸の長さを取得する
 	float graphSize = mTextures[mCurrentIconID]->GetWidth() * mIconScale;
 
-	// ボタンUIの位置を、現在選択されている忍術の上に一旦設定
-	GetPositionOf1Texture(mCurrentIconID, mButtonUIPosition);
+	// ボタン表示位置設定(Yボタン)
+	// ボタンUIの位置を、0番の忍術の上に一旦設定
+	GetPositionOf1Texture(0, mButtonUIPosition_Y);
 
 	// 調節
-	mButtonUIPosition.x -= graphSize / 2.0f;
-	mButtonUIPosition.y += graphSize / 2.0f;
+	mButtonUIPosition_Y.x -= graphSize / 2.0f;
+	mButtonUIPosition_Y.y += graphSize / 2.0f;
+
+	// ボタン表示位置設定(Xボタン)
+	// ボタンUIの位置を、1番の忍術の上に一旦設定
+	GetPositionOf1Texture(1, mButtonUIPosition_X);
+
+	// 調節
+	mButtonUIPosition_X.x -= graphSize / 2.0f;
+	mButtonUIPosition_X.y += graphSize / 2.0f;
 }
