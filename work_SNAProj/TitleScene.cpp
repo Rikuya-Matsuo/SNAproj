@@ -1,7 +1,7 @@
 ﻿#include "TitleScene.h"
 #include "Camera.h"
 #include "Input.h"
-#include "GameScene.h"
+#include "GameSceneStage1.h"
 #include "Common.h"
 #include "TitleUI.h"
 #include "TitleCameraTargetActor.h"
@@ -67,7 +67,7 @@ void TitleScene::Update()
 		Input::GetInstance().GetGamePadButtonPressDown(SDL_CONTROLLER_BUTTON_A))
 	{
 		// 次シーンとしてゲームシーンを生成
-		mNextScene = new GameScene;
+		mNextScene = new GameSceneStage1;
 
 		// シーン変更フラグを真に
 		mFlags |= mSceneChangeFlagMask;

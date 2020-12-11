@@ -7,23 +7,15 @@ class UIScreen;
 class GameScene : public SceneBase
 {
 public:
-	GameScene();
-	~GameScene();
+	GameScene(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath);
+	virtual ~GameScene();
 
 	void Update() override;
 
-private:
+protected:
 	Player * mPlayer;
 
 	UIScreen * mUI;
 
-	Uint8 mStageProgress;
-
-	void LoadNextStage();
-
-	void LoadStage0();
-
-	void LoadStage1();
-	
-	void LoadStage2();
+	void LoadStage(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath);
 };

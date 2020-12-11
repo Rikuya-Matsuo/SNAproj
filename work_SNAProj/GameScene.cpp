@@ -15,35 +15,10 @@
 #include "GameClearScene.h"
 #include "GameUI.h"
 
-GameScene::GameScene():
-	mStageProgress(0)
+GameScene::GameScene(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath)
 {
-	// ステージの生成
-	mStage = new Stage;
-	float blockScale = 0.3f;
-	mStage->SetBlockScale(blockScale);
-	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
-	// 背景の崖を生成
-	float blockSize = Block::mModelSize * blockScale;
-	mStage->LoadBGObjectMap("Map/Map0/background.csv", blockSize / 2, mStage->GetFloorHeight(), -blockSize, blockSize, blockSize);
-	// 背景の壁を生成
-	// 生成した壁のアクターを配列として取得し、モデルデータを回転させる
-	Actor** walls;
-	int wallMass = mStage->LoadBGObjectMap("Map/TestMap0/Wall.csv", 30, mStage->GetFloorHeight(), -75, 170, 0, &walls);
-	if (wallMass != -1)
-	{
-		// 設定する角度
-		const Quaternion wallRota = Quaternion(Vector3D(0, 0, 1), static_cast<float>(M_PI / 2.0f));
-
-		// 全ての壁を回転させる
-		for (int i = 0; i < wallMass; ++i)
-		{
-			walls[i]->SetRotation(wallRota);
-		}
-
-		// ロード関数内で作られたActor*の配列のインスタンスを解放する
-		delete[] walls;
-	}
+	// ステージのロード
+	LoadStage(mapFilePath, blockTexPath, floorTexPath);
 
 	// プレイヤーの生成・設定
 	mPlayer = new Player;
@@ -131,34 +106,11 @@ void GameScene::Update()
 	}
 }
 
-void GameScene::LoadNextStage()
+void GameScene::LoadStage(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath)
 {
-	switch (mStageProgress)
-	{
-	case 0:
-		LoadStage0();
-		break;
-	case 1:
-		LoadStage1();
-		break;
-	case 2:
-		LoadStage2();
-		break;
-	default:
-		break;
-	}
-
-	++mStageProgress;
-}
-
-void GameScene::LoadStage0()
-{
-}
-
-void GameScene::LoadStage1()
-{
-}
-
-void GameScene::LoadStage2()
-{
+	// ステージの生成
+	mStage = new Stage;
+	float blockScale = 0.3f;
+	mStage->SetBlockScale(blockScale);
+	mStage->LoadMap(mapFilePath, blockTexPath, floorTexPath);
 }
