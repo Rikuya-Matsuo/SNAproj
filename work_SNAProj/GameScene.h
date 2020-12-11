@@ -22,4 +22,6 @@ protected:
 	void LoadStage(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath);
 
 	virtual void OnGoal();
+
+	void LoadUI(Player * player);
 };

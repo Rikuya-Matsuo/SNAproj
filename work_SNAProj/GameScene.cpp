@@ -35,9 +35,6 @@ GameScene::GameScene(const std::string & mapFilePath, const std::string & blockT
 	cam->SetChaseTargetFlag(true);
 	cam->SetActive();
 
-	// UIの生成
-	mUI = new GameUI(mPlayer);
-
 	// 光の設定
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
@@ -112,4 +109,10 @@ void GameScene::OnGoal()
 	// ゲームクリアシーンにジャンプする
 	mNextScene = new GameClearScene;
 	mFlags |= mSceneChangeFlagMask;
+}
+
+void GameScene::LoadUI(Player * player)
+{
+	// UIの生成
+	mUI = new GameUI(mPlayer);
 }

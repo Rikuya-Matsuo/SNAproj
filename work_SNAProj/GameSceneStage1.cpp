@@ -16,6 +16,9 @@ GameSceneStage1::GameSceneStage1():
 	mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
 	mPlayer->SetScale(25.0f);
 	mPlayer->SetBeyondSceneFlag(true);
+
+	// UIのロード
+	LoadUI(mPlayer);
 }
 
 GameSceneStage1::~GameSceneStage1()
