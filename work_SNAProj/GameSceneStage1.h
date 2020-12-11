@@ -7,6 +7,7 @@ public:
 	GameSceneStage1();
 	~GameSceneStage1();
 
-
+private:
+	//void OnGoal() override;
 };
 

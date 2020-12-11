@@ -20,12 +20,6 @@ GameScene::GameScene(const std::string & mapFilePath, const std::string & blockT
 	// ステージのロード
 	LoadStage(mapFilePath, blockTexPath, floorTexPath);
 
-	// プレイヤーの生成・設定
-	mPlayer = new Player;
-	mActors.emplace_back(mPlayer);
-	mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
-	mPlayer->SetScale(25.0f);
-
 	// エネミーのロード
 	EnemyManager * em = new EnemyManager(mStage);
 	em->LoadMapping("Map/TestMap0/enemyMapping.csv");
@@ -100,9 +94,7 @@ void GameScene::Update()
 	// ゴール時
 	if (mPlayer->GetPosition().x >= mStage->GetGoalLine())
 	{
-		// ゲームクリアシーンにジャンプする
-		mNextScene = new GameClearScene;
-		mFlags |= mSceneChangeFlagMask;
+		OnGoal();
 	}
 }
 
@@ -113,4 +105,11 @@ void GameScene::LoadStage(const std::string & mapFilePath, const std::string & b
 	float blockScale = 0.3f;
 	mStage->SetBlockScale(blockScale);
 	mStage->LoadMap(mapFilePath, blockTexPath, floorTexPath);
+}
+
+void GameScene::OnGoal()
+{
+	// ゲームクリアシーンにジャンプする
+	mNextScene = new GameClearScene;
+	mFlags |= mSceneChangeFlagMask;
 }
