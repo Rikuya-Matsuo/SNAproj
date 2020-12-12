@@ -17,6 +17,9 @@ GameSceneStage1::GameSceneStage1():
 	mPlayer->SetScale(25.0f);
 	mPlayer->SetBeyondSceneFlag(true);
 
+	// カメラのロード
+	LoadCamera(mPlayer);
+
 	// UIのロード
 	LoadUI(mPlayer);
 }

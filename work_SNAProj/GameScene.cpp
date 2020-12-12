@@ -27,14 +27,6 @@ GameScene::GameScene(const std::string & mapFilePath, const std::string & blockT
 	// マネージャのインスタンスは不要なのでメモリを解放
 	delete em;
 
-	// カメラの生成
-	Camera * cam = new Camera(mPlayer);
-	mCameras.emplace_back(cam);
-	cam->Init(Vector3D(0, 100, 100), mPlayer->GetPosition(), Vector3D(0, 0, 1));
-	cam->SetDistanceVector(Vector3D(0, 150, 50));
-	cam->SetChaseTargetFlag(true);
-	cam->SetActive();
-
 	// 光の設定
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
@@ -109,6 +101,17 @@ void GameScene::OnGoal()
 	// ゲームクリアシーンにジャンプする
 	mNextScene = new GameClearScene;
 	mFlags |= mSceneChangeFlagMask;
+}
+
+void GameScene::LoadCamera(Player* player)
+{
+	// カメラの生成
+	Camera* cam = new Camera(player);
+	mCameras.emplace_back(cam);
+	cam->Init(Vector3D(0, 100, 100), player->GetPosition(), Vector3D(0, 0, 1));
+	cam->SetDistanceVector(Vector3D(0, 150, 50));
+	cam->SetChaseTargetFlag(true);
+	cam->SetActive();
 }
 
 void GameScene::LoadUI(Player * player)
