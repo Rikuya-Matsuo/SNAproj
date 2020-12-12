@@ -195,6 +195,15 @@ Player::~Player()
 	SDL_Log("Player is deleted\n");
 }
 
+void Player::SetBeyondSceneFlag(bool value)
+{
+	// 基底クラスの同関数を呼ぶ
+	Actor::SetBeyondSceneFlag(value);
+
+	// 補完アクターも同様にシーンをまたぐよう設定
+	mCompletionMeshActor->SetBeyondSceneFlag(value);
+}
+
 void Player::UpdateActor0()
 {
 	// （壁走りバグ対策）

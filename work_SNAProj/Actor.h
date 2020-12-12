@@ -137,7 +137,7 @@ public:
 	void SetVisible(bool value) { BitFlagFunc::SetFlagByBool(!value, mFlags, mStopDrawFlagMask_Base); }
 	bool GetVisibleFlag() const { return !(mFlags & mStopDrawFlagMask_Base); }
 
-	void SetBeyondSceneFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mBeyondSceneFlagMask_Base); }
+	virtual void SetBeyondSceneFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mBeyondSceneFlagMask_Base); }
 	bool GetBeyondSceneFlag() const { return mFlags & mBeyondSceneFlagMask_Base; }
 
 	void SetAffectGravityFlag(bool value) { BitFlagFunc::SetFlagByBool(value, mFlags, mAffectGravityFlagMask_Base); }
