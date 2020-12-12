@@ -15,7 +15,7 @@ GameSceneStage1::GameSceneStage1():
 	mActors.emplace_back(mPlayer);
 	mPlayer->SetPosition(Vector3D(30.0f, 0.0f, 50.0f));
 	mPlayer->SetScale(25.0f);
-	mPlayer->SetBeyondSceneFlag(true);
+	//mPlayer->SetBeyondSceneFlag(true);
 
 	// カメラのロード
 	LoadCamera(mPlayer);
