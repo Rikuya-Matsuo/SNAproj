@@ -29,6 +29,9 @@ public:
 
 	bool IsPlayer() const override { return true; }
 
+	// シーンを飛ばす処理のオーバーライド
+	void SetBeyondSceneFlag(bool value) override;
+
 	bool GetAliveFlag() const { return mFlags_Player & mAliveFlagMask; }
 
 	char GetLife() const { return mLife; }
