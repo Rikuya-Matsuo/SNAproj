@@ -12,10 +12,8 @@ public:
 
 	void Update() override;
 
-	void SetPlayer(Player * player) { mPlayer = player; }
-
 protected:
-	Player * mPlayer;
+	static Player * mPlayer;
 
 	UIScreen * mUI;
 

@@ -8,6 +8,6 @@ public:
 	~GameSceneStage1();
 
 private:
-	//void OnGoal() override;
+	void OnGoal() override;
 };
 

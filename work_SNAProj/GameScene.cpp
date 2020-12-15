@@ -15,6 +15,8 @@
 #include "GameClearScene.h"
 #include "GameUI.h"
 
+Player * GameScene::mPlayer = nullptr;
+
 GameScene::GameScene(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath)
 {
 	// ステージのロード
@@ -101,6 +103,8 @@ void GameScene::OnGoal()
 	// ゲームクリアシーンにジャンプする
 	mNextScene = new GameClearScene;
 	mFlags |= mSceneChangeFlagMask;
+
+	mPlayer = nullptr;
 }
 
 void GameScene::LoadCamera(Player* player)
