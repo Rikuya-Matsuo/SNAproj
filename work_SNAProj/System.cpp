@@ -313,11 +313,6 @@ void System::ChangeScene(bool & quitFlag)
 
 				itr--;
 			}
-			else
-			{
-				// シーンを飛び越えるフラグを偽にする
-				(*itr)->SetBeyondSceneFlag(false);
-			}
 		}
 
 		// シーンを飛び越えてきたアクターは、シーン跳躍時の関数を呼ぶ
@@ -325,6 +320,8 @@ void System::ChangeScene(bool & quitFlag)
 		{
 			if ((*itr)->GetBeyondSceneFlag())
 			{
+				// シーンを飛び越えるフラグを偽にする
+				(*itr)->SetBeyondSceneFlag(false);
 				(*itr)->OnBeyondScene();
 			}
 		}
