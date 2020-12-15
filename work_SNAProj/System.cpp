@@ -318,7 +318,7 @@ void System::ChangeScene(bool & quitFlag)
 		// シーンを飛び越えてきたアクターは、シーン跳躍時の関数を呼ぶ
 		for (itr = mActorList.begin(); itr != mActorList.end(); ++itr)
 		{
-			if ((*itr)->GetBeyondSceneFlag())
+			if ((*itr)->GetBeyondSceneFlag() && (*itr)->GetBelongScene() != mCurrentScene)
 			{
 				// シーンを飛び越えるフラグを偽にする
 				(*itr)->SetBeyondSceneFlag(false);
