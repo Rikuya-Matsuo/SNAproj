@@ -16,6 +16,7 @@ NAReelString::NAReelString(Player * user):
 {
 	// Edgeのアクターを生成
 	mEdge = new ReelStringEdgeActor(this);
+	mActorList.emplace_back(mEdge);
 
 	// アイコン画像読み込み
 	mIconTexture = System::GetInstance().GetRenderer()->GetTexture("Assets/NAReelStringUI.png");
