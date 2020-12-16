@@ -202,6 +202,11 @@ void Player::SetBeyondSceneFlag(bool value)
 
 	// 補完アクターも同様にシーンをまたぐよう設定
 	mCompletionMeshActor->SetBeyondSceneFlag(value);
+
+	for (auto itr = mNinjaArts.begin(); itr != mNinjaArts.end(); ++itr)
+	{
+		(*itr)->SetBeyondSceneFlag(value);
+	}
 }
 
 void Player::UpdateActor0()

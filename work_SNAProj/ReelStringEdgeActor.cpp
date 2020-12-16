@@ -216,6 +216,13 @@ void ReelStringEdgeActor::Cancel()
 	OnCompleteBringingUser();
 }
 
+void ReelStringEdgeActor::SetBeyondSceneFlag(bool value)
+{
+	Actor::SetBeyondSceneFlag(value);
+
+	mStringActor->SetBeyondSceneFlag(value);
+}
+
 void ReelStringEdgeActor::OnCompleteBringingUser()
 {
 	// 非アクティブ化

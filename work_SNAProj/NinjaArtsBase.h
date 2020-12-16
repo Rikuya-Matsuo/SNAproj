@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "BitFlagFunc.h"
 #include "Player.h"
+#include <list>
 
 class Mesh;
 class InputMoveComponent;
@@ -29,6 +30,8 @@ public:
 
 	void SetIconID(char id) { mIconID = id; }
 
+	void SetBeyondSceneFlag(bool value);
+
 protected:
 	bool mIsUsedFlag;
 
@@ -37,6 +40,8 @@ protected:
 	Texture * mIconTexture;
 
 	char mIconID;
+
+	std::list<Actor*> mActorList;
 
 	// ユーザーのジャンプ許可フラグをセットする関数
 	void SetAllowJumpFlagOfUser(bool value) { BitFlagFunc::SetFlagByBool(value, mUser->mFlags_Player, Player::mAllowJumpFlagMask); }

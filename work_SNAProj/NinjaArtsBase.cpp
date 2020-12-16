@@ -28,3 +28,11 @@ void NinjaArtsBase::EndNinjaArts()
 void NinjaArtsBase::OnBeDamaged()
 {
 }
+
+void NinjaArtsBase::SetBeyondSceneFlag(bool value)
+{
+	for (auto itr = mActorList.begin(); itr != mActorList.end(); ++itr)
+	{
+		(*itr)->SetBeyondSceneFlag(value);
+	}
+}

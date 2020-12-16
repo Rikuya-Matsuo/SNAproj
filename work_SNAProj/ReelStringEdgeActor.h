@@ -38,6 +38,8 @@ public:
 
 	Actor * GetHitBlock() const { return mHitBlock; }
 
+	void SetBeyondSceneFlag(bool value) override;
+
 private:
 	const Vector3D mAutoMoveVector;
 
