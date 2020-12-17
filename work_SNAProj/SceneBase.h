@@ -27,6 +27,8 @@ public:
 
 	static const SceneBase * GetLatestScene() { return mLatestScene; }
 
+	virtual bool IsGameScene() const { return false; }
+
 protected:
 	typedef Uint8 FlagType;
 

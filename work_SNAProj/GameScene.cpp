@@ -17,7 +17,8 @@
 
 Player * GameScene::mPlayer = nullptr;
 
-GameScene::GameScene(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath)
+GameScene::GameScene(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath):
+	mClearFlag(false)
 {
 	// ステージのロード
 	LoadStage(mapFilePath, blockTexPath, floorTexPath);

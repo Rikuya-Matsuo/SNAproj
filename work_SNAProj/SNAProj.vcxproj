@@ -223,6 +223,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="NinjaArtsUICircle.cpp" />
     <ClCompile Include="ReelStringEdgeActor.cpp" />
     <ClCompile Include="ReelStringStringActor.cpp" />
+    <ClCompile Include="StageClearBoxActor.cpp" />
     <ClCompile Include="TitleCameraTargetActor.cpp" />
     <ClCompile Include="JumpComponent.cpp" />
     <ClCompile Include="main.cpp" />
@@ -290,6 +291,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="Player.h" />
     <ClInclude Include="ReelStringEdgeActor.h" />
     <ClInclude Include="ReelStringStringActor.h" />
+    <ClInclude Include="StageClearBoxActor.h" />
     <ClInclude Include="TitleCameraTargetActor.h" />
     <ClInclude Include="JumpComponent.h" />
     <ClInclude Include="MathExpantion.h" />
