@@ -16,6 +16,12 @@ GoalBoxActor::GoalBoxActor():
 	AABB box = mesh->GetCollisionBox();
 	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
 	bcc->SetObjectBox(box);
+
+	// d—Í–³Œø
+	SetAffectGravityFlag(false);
+
+	// ÚG‘Šè‚©‚ç‚Ì‰Ÿ‚µ•Ô‚µ‚ğó‚¯‚È‚¢
+	mFlags &= ~mMovalFlagMask_Base;
 }
 
 GoalBoxActor::~GoalBoxActor()
