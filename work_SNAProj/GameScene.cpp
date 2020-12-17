@@ -22,13 +22,6 @@ GameScene::GameScene(const std::string & mapFilePath, const std::string & blockT
 	// ステージのロード
 	LoadStage(mapFilePath, blockTexPath, floorTexPath);
 
-	// エネミーのロード
-	EnemyManager * em = new EnemyManager(mStage);
-	em->LoadMapping("Map/TestMap0/enemyMapping.csv");
-
-	// マネージャのインスタンスは不要なのでメモリを解放
-	delete em;
-
 	// 光の設定
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
@@ -122,4 +115,14 @@ void GameScene::LoadUI(Player * player)
 {
 	// UIの生成
 	mUI = new GameUI(mPlayer);
+}
+
+void GameScene::LoadEnemy(const std::string & enemyMappingDataPath)
+{
+	// エネミーのロード
+	EnemyManager * em = new EnemyManager(mStage);
+	em->LoadMapping(enemyMappingDataPath);
+
+	// マネージャのインスタンスは不要なのでメモリを解放
+	delete em;
 }

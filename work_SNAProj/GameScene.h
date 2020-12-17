@@ -21,6 +21,8 @@ protected:
 
 	void LoadUI(Player * player);
 
+	void LoadEnemy(const std::string & enemyMappingDataPath);
+
 	virtual void OnGoal();
 
 	virtual void LoadCamera(Player * player);
