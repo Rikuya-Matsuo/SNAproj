@@ -3,11 +3,11 @@
 
 class GameScene;
 
-class StageClearBoxActor : public Actor
+class GoalBoxActor : public Actor
 {
 public:
-	StageClearBoxActor();
-	~StageClearBoxActor();
+	GoalBoxActor();
+	~GoalBoxActor();
 
 	void OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent) override;
 };

@@ -14,7 +14,7 @@ public:
 
 	bool IsGameScene() const override final { return true; }
 
-	void TellStageClear() { mClearFlag = true; }
+	void TellStageClear() { mGoalFlag = true; }
 
 protected:
 	static Player * mPlayer;
@@ -32,5 +32,5 @@ protected:
 	virtual void LoadCamera(Player * player);
 
 private:
-	bool mClearFlag;
+	bool mGoalFlag;
 };

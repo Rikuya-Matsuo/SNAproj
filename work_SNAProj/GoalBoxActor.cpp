@@ -1,10 +1,10 @@
-#include "StageClearBoxActor.h"
+#include "GoalBoxActor.h"
 #include "System.h"
 #include "Mesh.h"
 #include "BoxColliderComponent.h"
 #include "GameScene.h"
 
-StageClearBoxActor::StageClearBoxActor():
+GoalBoxActor::GoalBoxActor():
 	Actor()
 {
 	// ブロックに使われているものと同じメッシュを取得
@@ -18,11 +18,11 @@ StageClearBoxActor::StageClearBoxActor():
 	bcc->SetObjectBox(box);
 }
 
-StageClearBoxActor::~StageClearBoxActor()
+GoalBoxActor::~GoalBoxActor()
 {
 }
 
-void StageClearBoxActor::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
+void GoalBoxActor::OnHit(const ColliderComponentBase * caller, const ColliderComponentBase * opponent)
 {
 	// ゲームシーン所属でなければ関数を抜ける
 	if (!mBelongScene->IsGameScene())

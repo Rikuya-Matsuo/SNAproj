@@ -255,7 +255,7 @@
     <ClCompile Include="GameSceneStage2.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="StageClearBoxActor.cpp">
+    <ClCompile Include="GoalBoxActor.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -455,7 +455,7 @@
     <ClInclude Include="GameSceneStage2.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="StageClearBoxActor.h">
+    <ClInclude Include="GoalBoxActor.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>

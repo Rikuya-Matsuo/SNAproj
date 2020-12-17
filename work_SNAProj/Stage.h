@@ -32,9 +32,11 @@ public:
 	int GetBlockMassX() const { return mBlockMassX; }
 	int GetBlockMassY() const { return mBlockMassY; }
 
-	Uint8 **const GetBlocks() const { return mBlocks; }
+	Uint8 ** const GetBlocks() const { return mBlocks; }
 
-protected:
+	bool GetGoalBlockFlag() const { return mGoalBlockFlag; }
+
+private:
 	Uint8 ** mBlocks;
 
 	int mBlockMassX;
@@ -46,10 +48,13 @@ protected:
 
 	float mFloorHeight;
 
+	// マップ内にクリアブロックが存在するかのフラグ
+	// Construct関数内で設定される
+	bool mGoalBlockFlag;
+
 	// ブロック配置配列に基づいてブロックのインスタンスを生成する。
 	void Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
-private:
 	struct BGObjectPallet
 	{
 		std::string mModelFilePath;
@@ -58,7 +63,10 @@ private:
 
 	bool LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet> & ret);
 
-	int LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet, float xScale, float yScale, float zPos, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors);
+	int LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_map<std::string, BGObjectPallet> & pallet,
+		float xScale, float yScale, float zPos, float xEmptyCellScale, float yEmptyCellScale, Actor *** generatedActors);
 
-	void ClearPallet(BGObjectPallet & pallet);
+	// 数値に応じた種類のブロックの生成を行う一種のファクトリメソッド
+	// Construct関数内で使う
+	Actor * GenerateBlock(int num, const std::string & blockTexFilePath, bool isGroundBlock);
 };

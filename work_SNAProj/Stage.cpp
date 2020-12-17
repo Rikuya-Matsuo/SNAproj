@@ -1,5 +1,6 @@
 ﻿#include "Stage.h"
 #include "Block.h"
+#include "GoalBoxActor.h"
 #include "Floor.h"
 #include "BGObject.h"
 #include <vector>
@@ -9,7 +10,8 @@ float Stage::mBlockScale = 1.0f;
 Stage::Stage():
 	mBlocks(nullptr),
 	mBlockMassX(0),
-	mBlockMassY(0)
+	mBlockMassY(0),
+	mGoalBlockFlag(false)
 {
 }
 
@@ -136,15 +138,18 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 		{
 			const Uint8 blockType = mBlocks[yBlock][xBlock];
 
-			// ブロック配置データ内の値が0であれば生成しない
-			if (!blockType)
+			// 生成
+			bool isGroundBlock = yBlock == mBlockMassY - 1;
+			Actor * block = GenerateBlock(blockType, blockTextureFilePath, isGroundBlock);
+
+			// メソッドが生成を行わなかった場合continue
+			if (!block)
 			{
 				continue;
 			}
 
-			// 生成
-			Block * const bk = new Block(blockTextureFilePath, yBlock == mBlockMassY - 1);
-			bk->SetScale(mBlockScale);
+			// スケール設定
+			block->SetScale(mBlockScale);
 
 			// ブロックの高さの半分を計算
 			const float blockHalfHeight = blockSize / 2;
@@ -157,7 +162,7 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 				Block::mModelSize * mBlockScale * (mBlockMassY - (yBlock + 1)) - blockHalfHeight);
 
 			// 位置情報代入
-			bk->SetPosition(pos);
+			block->SetPosition(pos);
 		}
 	}
 
@@ -518,9 +523,24 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 	return objectList.size();
 }
 
-// 使われていない
-void Stage::ClearPallet(BGObjectPallet & pallet)
+Actor * Stage::GenerateBlock(int num, const std::string & blockTexFilePath, bool isGroundBlock)
 {
-	pallet.mModelFilePath.clear();
-	pallet.mScale = 0.0f;
+	Actor * product = nullptr;
+
+	switch (num)
+	{
+	case 1:
+		product = new Block(blockTexFilePath, isGroundBlock);
+		break;
+
+	case 9:
+		product = new GoalBoxActor();
+		mGoalBlockFlag = true;
+		break;
+
+	default:
+		break;
+	}
+
+	return product;
 }

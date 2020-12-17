@@ -18,7 +18,7 @@
 Player * GameScene::mPlayer = nullptr;
 
 GameScene::GameScene(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath):
-	mClearFlag(false)
+	mGoalFlag(false)
 {
 	// ステージのロード
 	LoadStage(mapFilePath, blockTexPath, floorTexPath);
@@ -77,7 +77,10 @@ void GameScene::Update()
 	}
 
 	// ゴール時
-	if (mPlayer->GetPosition().x >= mStage->GetGoalLine())
+	// 条件は、メンバーのゴールフラグが真 or ゴールブロックが設置されていないマップでプレイヤーがゴールラインを超えていること
+	bool goal = mGoalFlag ||
+		(!mStage->GetGoalBlockFlag() && mPlayer->GetPosition().x >= mStage->GetGoalLine());
+	if (goal)
 	{
 		OnGoal();
 	}
