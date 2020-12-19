@@ -8,9 +8,22 @@ GameSceneTest::GameSceneTest():
 {
 	// 背景の崖を生成
 	float blockSize = Block::mModelSize * mStage->GetBlockScale();
-	mStage->LoadBGObjectMap("Map/TestMap0/Cliff.csv", blockSize / 2, mStage->GetFloorHeight(), -blockSize, blockSize, blockSize);
+	mStage->LoadBGObjectMap("Map/TestMap0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
 	Actor ** walls;
-	//mStage->LoadBGObjectMap("Map/TestMap0/Wall.csv", )
+	int wallMass = mStage->LoadBGObjectMap("Map/TestMap0/Wall.csv", 30, mStage->GetFloorHeight(), -75, 170, 0, &walls);
+	if (wallMass != -1)
+	{
+		const Quaternion wallRota = Quaternion(Vector3D(0, 0, 1), static_cast<float>(M_PI / 2.0f));
+
+		// 全ての壁を回転させる
+		for (int i = 0; i < wallMass; ++i)
+		{
+			walls[i]->SetRotation(wallRota);
+		}
+
+		// ロード関数内で作られたActor*の配列のインスタンスを解放する
+		delete[] walls;
+	}
 
 	// プレイヤーの生成・設定
 	mPlayer = new Player;
@@ -19,13 +32,14 @@ GameSceneTest::GameSceneTest():
 	mPlayer->SetScale(25.0f);
 	mPlayer->SetBeyondSceneFlag(true);
 
+	LoadEnemy("Map/TestMap0/enemyMapping.csv");
+
 	// カメラのロード
 	LoadCamera(mPlayer);
 
 	// UIのロード
 	LoadUI(mPlayer);
 }
-
 
 GameSceneTest::~GameSceneTest()
 {

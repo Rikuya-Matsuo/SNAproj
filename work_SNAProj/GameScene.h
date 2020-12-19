@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "SceneBase.h"
+#include "System.h"
 
 class Player;
 class UIScreen;
@@ -34,3 +35,11 @@ protected:
 private:
 	bool mGoalFlag;
 };
+
+#ifdef DEBUG_SNA
+
+// テストシーンを生成するマクロ
+// 本番用シーンを生成する際はコメントアウト
+//#define GEN_TEST_SCENE
+
+#endif // DEBUG_SNA
