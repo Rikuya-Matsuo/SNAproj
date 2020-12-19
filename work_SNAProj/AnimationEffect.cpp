@@ -5,7 +5,8 @@
 
 AnimationEffect::AnimationEffect(int priority, const std::string & animPath, int allNum, int xNum, int yNum, int chipW, int chipH, float secondPerFrame):
 	Effect(nullptr, priority),
-	mAnimChip(nullptr)
+	mAnimChip(nullptr),
+	mEndlessLoopFlag(false)
 {
 	// アニメーションチップのロード
 	bool success = mMesh->LoadDivTexture(animPath, System::GetInstance().GetRenderer(), this, allNum, xNum, yNum, chipW, chipH, secondPerFrame, 0);
@@ -32,7 +33,8 @@ void AnimationEffect::UpdateActor0()
 void AnimationEffect::UpdateActor1()
 {
 	// アニメーションチップを終端まで表示した際、アニメーションの進行を止めて初期化する
-	if (mAnimChip->GetLoopEndFlag())
+	// ただし、アニメーションを永久ループさせる場合を除く
+	if (mAnimChip->GetLoopEndFlag() && !mEndlessLoopFlag)
 	{
 		StopProcess();
 

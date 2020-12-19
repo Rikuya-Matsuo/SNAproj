@@ -17,6 +17,12 @@ public:
 
 	AnimationChips * GetAnimChips() const { return mAnimChip; }
 
+	bool GetEndlessLoopFlag() const { return mEndlessLoopFlag; }
+
+	void SetEndlessLoopFlag(bool value) { mEndlessLoopFlag = value; }
+
 private:
 	AnimationChips * mAnimChip;
+
+	bool mEndlessLoopFlag;
 };
