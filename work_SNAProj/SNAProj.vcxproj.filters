@@ -258,6 +258,9 @@
     <ClCompile Include="GoalBoxActor.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="GameSceneTest.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -457,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="GoalBoxActor.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSceneTest.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
