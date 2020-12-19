@@ -120,6 +120,7 @@ void EnemyWalker::UpdateEnemy0()
 
 		Vector3D dashEffPos = mPosition;
 		mDashEffect->SetPosition(dashEffPos);
+		mDashEffect->SetRotation(mRotation);
 	}
 
 	// 画面外にいる間はプレイヤー検知装置を非アクティブに
