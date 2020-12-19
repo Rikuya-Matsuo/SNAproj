@@ -6,6 +6,7 @@ class AutoMoveComponent;
 class BoxColliderComponent;
 class ClampSpeedComponent;
 class Effect;
+class AnimationEffect;
 class BlockHitChecker;
 
 class EnemyWalker : public EnemyBase
@@ -66,11 +67,13 @@ private:
 
 	Vector3D mWallDerection;
 
-	Vector3D mEffectOffset;
+	Vector3D mFindEffectOffset;
 
 	AnimationChips * mAnimChips;
 
 	Effect * mFindPlayerEffect;
+
+	AnimationEffect * mDashEffect;
 
 	AutoMoveComponent * mAutoMoveComp;
 

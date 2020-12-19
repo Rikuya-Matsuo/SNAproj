@@ -10,6 +10,7 @@
 #include "Input.h"
 #include "Player.h"
 #include "Effect.h"
+#include "AnimationEffect.h"
 
 const EnemyWalker::FlagType EnemyWalker::mDamageAnimFlagMask	= 1 << 0;
 const EnemyWalker::FlagType EnemyWalker::mLDetectGroundFlagMask = 1 << 1;
@@ -38,7 +39,7 @@ EnemyWalker::EnemyWalker():
 	mTackleVelocityLimit(Vector3D(70.0f, 0.0f, 50.0f)),
 	mKnockBackRightVector(Vector3D(10.0f, 0.0, 10.0f)),
 	mKnockBackVecLimit(Vector3D(50.0f, 0.0f, 50.0f)),
-	mEffectOffset(Vector3D(0.5f, 0.0f, 0.5f))
+	mFindEffectOffset(Vector3D(0.5f, 0.0f, 0.5f))
 {
 	// メッシュのロード・設定
 	mMesh->LoadDivTexture("Assets/knight0.png", System::GetInstance().GetRenderer(), this, 6, 3, 2, 60, 60, 0.3f, 0);
@@ -86,6 +87,10 @@ EnemyWalker::EnemyWalker():
 	// スケール
 	SetScale(25.0f);
 
+	// 突進時のエフェクト
+	mDashEffect = new AnimationEffect(mPriority + 50, "Assets/EnemyDashEff4Fr.png", 4, 4, 1, 64, 64, 0.1f);
+	mDashEffect->SetScale(mScale);
+
 	// ステージデータを参照した当たり判定を行うコンポーネント
 	mBlockChecker = new BlockHitChecker(this, mBodyCollision);
 
@@ -108,10 +113,13 @@ void EnemyWalker::UpdateEnemy0()
 	// エフェクトの出現位置調整
 	if (mFlags_EnemyWalker & mDetectPlayerFlagMask)
 	{
-		Vector3D effOffset = mEffectOffset * mScale;
-		effOffset.x *= (mFlags_Enemy & mLookRightFlagMask_EBase) ? -1.0f : 1.0f;
-		Vector3D effPos = mPosition + effOffset;
-		mFindPlayerEffect->SetPosition(effPos);
+		Vector3D findEffOffset = mFindEffectOffset * mScale;
+		findEffOffset.x *= (mFlags_Enemy & mLookRightFlagMask_EBase) ? -1.0f : 1.0f;
+		Vector3D findEffPos = mPosition + findEffOffset;
+		mFindPlayerEffect->SetPosition(findEffPos);
+
+		Vector3D dashEffPos = mPosition;
+		mDashEffect->SetPosition(dashEffPos);
 	}
 
 	// 画面外にいる間はプレイヤー検知装置を非アクティブに
@@ -194,6 +202,9 @@ void EnemyWalker::UpdateEnemy0()
 			// タックルに関するフラグを偽に
 			mFlags_EnemyWalker &= ~mTackleFlagMask;
 			mFlags_Enemy &= ~mAttackFlagMask_EBase;
+
+			// エフェクト無効化
+			mDashEffect->SetActive(false);
 		}
 
 		// タイマー初期化
@@ -243,6 +254,9 @@ void EnemyWalker::TackleProcess()
 
 			// プレイヤー発見エフェクトを無効化
 			mFindPlayerEffect->SetActive(false);
+
+			// 突進エフェクトを有効化
+			mDashEffect->SetActive(true);
 		}
 	}
 }

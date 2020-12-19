@@ -40,6 +40,6 @@ private:
 
 // テストシーンを生成するマクロ
 // 本番用シーンを生成する際はコメントアウト
-//#define GEN_TEST_SCENE
+#define GEN_TEST_SCENE
 
 #endif // DEBUG_SNA
