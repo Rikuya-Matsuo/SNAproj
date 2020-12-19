@@ -851,7 +851,12 @@ void Player::OnBeAttacked(const EnemyBase * enemy)
 	// 忍術のキャンセル
 	for (auto ninjaArts = mNinjaArts.begin(); ninjaArts != mNinjaArts.end(); ++ninjaArts)
 	{
-		(*ninjaArts)->OnBeDamaged();
+		NinjaArtsBase * nab = (*ninjaArts);
+
+		if (nab->IsUsed())
+		{
+			nab->OnBeDamaged();
+		}
 	}
 }
 
