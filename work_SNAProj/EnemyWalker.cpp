@@ -90,6 +90,7 @@ EnemyWalker::EnemyWalker():
 	// 突進時のエフェクト
 	mDashEffect = new AnimationEffect(mPriority + 50, "Assets/EnemyDashEff4Fr.png", 4, 4, 1, 64, 64, 0.1f);
 	mDashEffect->SetScale(mScale);
+	mDashEffect->SetEndlessLoopFlag(true);
 
 	// ステージデータを参照した当たり判定を行うコンポーネント
 	mBlockChecker = new BlockHitChecker(this, mBodyCollision);
