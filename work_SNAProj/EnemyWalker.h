@@ -96,4 +96,6 @@ private:
 	void OnBePushedByPlayer(const ColliderComponentBase * caller, Uint8 oppAtt);
 
 	void OnBePressedByPlayer();
+
+	void OnLifeRunOut() override;
 };

@@ -316,6 +316,15 @@ void EnemyWalker::OnBePressedByPlayer()
 	mPushedVector.z = 0;
 }
 
+void EnemyWalker::OnLifeRunOut()
+{
+	// 基底クラスの同関数を呼ぶ
+	EnemyBase::OnLifeRunOut();
+
+	// 突進エフェクトの無効化
+	mDashEffect->SetActive(false);
+}
+
 void EnemyWalker::UpdateEnemy1()
 {
 	// ノックバック処理
