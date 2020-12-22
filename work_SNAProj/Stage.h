@@ -10,8 +10,15 @@ class Actor;
 class Stage
 {
 public:
+	// ブロックの種類のIDの型
+	typedef Uint16 BlockKindIDType;
+
 	Stage();
 	~Stage();
+
+	static const BlockKindIDType mNormalBlockID;
+
+	static const BlockKindIDType mGoalID;
 
 	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
@@ -32,12 +39,12 @@ public:
 	int GetBlockMassX() const { return mBlockMassX; }
 	int GetBlockMassY() const { return mBlockMassY; }
 
-	Uint8 ** const GetBlocks() const { return mBlocks; }
+	BlockKindIDType ** const GetBlocks() const { return mBlocks; }
 
 	bool GetGoalBlockFlag() const { return mGoalBlockFlag; }
 
 private:
-	Uint8 ** mBlocks;
+	BlockKindIDType ** mBlocks;
 
 	int mBlockMassX;
 	int mBlockMassY;
@@ -51,6 +58,16 @@ private:
 	// マップ内にクリアブロックが存在するかのフラグ
 	// Construct関数内で設定される
 	bool mGoalBlockFlag;
+
+	// ステージデータ内の文字列をUint8に変換するためのデータ
+	static std::unordered_map<std::string, BlockKindIDType> mBlockID;
+
+	// マップデータのギミックの最大個数
+	static const Uint8 mGimmickIDNum = 10;
+
+	// ろうそく＆ギミックの番号ごとのID
+	BlockKindIDType mCandleIDs[mGimmickIDNum];
+	BlockKindIDType mVanishBlockIDs[mGimmickIDNum];
 
 	// ブロック配置配列に基づいてブロックのインスタンスを生成する。
 	void Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
@@ -69,4 +86,6 @@ private:
 	// 数値に応じた種類のブロックの生成を行う一種のファクトリメソッド
 	// Construct関数内で使う
 	Actor * GenerateBlock(int num, const std::string & blockTexFilePath, bool isGroundBlock);
+
+	static BlockKindIDType GetBlockKindID(const std::string & str);
 };

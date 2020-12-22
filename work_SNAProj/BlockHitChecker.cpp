@@ -25,7 +25,7 @@ void BlockHitChecker::Update()
 	}
 
 	// ブロック情報取得
-	Uint8 **const blockArray = stage->GetBlocks();
+	Stage::BlockKindIDType **const blockArray = stage->GetBlocks();
 	const float blockSize = stage->GetBlockScale() * Block::mModelSize;
 	const float highest = stage->GetFloorHeight() + (stage->GetBlockMassY() * blockSize);
 

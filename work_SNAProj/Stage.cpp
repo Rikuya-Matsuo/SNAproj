@@ -4,8 +4,13 @@
 #include "Floor.h"
 #include "BGObject.h"
 #include <vector>
+#include <cstring>
 
 float Stage::mBlockScale = 1.0f;
+
+const Stage::BlockKindIDType Stage::mNormalBlockID = Stage::GetBlockKindID("b");
+
+const Stage::BlockKindIDType Stage::mGoalID = Stage::GetBlockKindID("g");
 
 Stage::Stage():
 	mBlocks(nullptr),
@@ -13,6 +18,16 @@ Stage::Stage():
 	mBlockMassY(0),
 	mGoalBlockFlag(false)
 {
+	std::string candleBuf;
+	std::string vanishBlockBuf;
+	for (Uint8 i = 0; i < mGimmickIDNum; ++i)
+	{
+		candleBuf = "c" + static_cast<short>(i);
+		vanishBlockBuf = "v" + static_cast<short>(i);
+
+		mCandleIDs[i] = GetBlockKindID(candleBuf);
+		mVanishBlockIDs[i] = GetBlockKindID(vanishBlockBuf);
+	}
 }
 
 Stage::~Stage()
@@ -20,7 +35,7 @@ Stage::~Stage()
 	// メモリ削除
 	if (mBlocks != nullptr)
 	{
-		for (Uint8 i = 0; i < mBlockMassY; ++i)
+		for (BlockKindIDType i = 0; i < mBlockMassY; ++i)
 		{
 			delete[] mBlocks[i];
 		}
@@ -42,7 +57,7 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 		return;
 	}
 
-	std::vector<int> numArray;		// 配列が決まるまで一時的にここに格納する
+	std::vector<BlockKindIDType> numArray;		// 配列が決まるまで一時的にここに格納する
 	std::string buf;				// 数字文字を格納
 	buf.reserve(4);
 	int mapWidth = 0;				// マップの幅を記録
@@ -82,17 +97,17 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 			}
 
 			// 数字文字をint型の値として記録
-			int num = std::stoi(buf);
+			BlockKindIDType num = GetBlockKindID(buf);
 			numArray.emplace_back(num);
 			buf.clear();
 		}
 	}
 
 	// メモリ確保
-	mBlocks = new Uint8*[mBlockMassY];
+	mBlocks = new BlockKindIDType*[mBlockMassY];
 	for (int i = 0; i < mBlockMassY; ++i)
 	{
-		mBlocks[i] = new Uint8[mBlockMassX];
+		mBlocks[i] = new BlockKindIDType[mBlockMassX];
 	}
 
 	// 代入
@@ -105,7 +120,7 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 		}
 	}
 
-	std::vector<int>().swap(numArray);
+	std::vector<BlockKindIDType>().swap(numArray);
 
 	mapFile.close();
 
@@ -136,7 +151,7 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 	{
 		for (int xBlock = 0; xBlock < mBlockMassX; ++xBlock)
 		{
-			const Uint8 blockType = mBlocks[yBlock][xBlock];
+			const BlockKindIDType blockType = mBlocks[yBlock][xBlock];
 
 			// 生成
 			bool isGroundBlock = yBlock == mBlockMassY - 1;
@@ -527,20 +542,52 @@ Actor * Stage::GenerateBlock(int num, const std::string & blockTexFilePath, bool
 {
 	Actor * product = nullptr;
 
-	switch (num)
+	auto eq = [num](BlockKindIDType x)
 	{
-	case 1:
-		product = new Block(blockTexFilePath, isGroundBlock);
-		break;
+		return num == x;
+	};
 
-	case 9:
+	if (eq(mNormalBlockID))
+	{
+		product = new Block(blockTexFilePath, isGroundBlock);
+	}
+	else if (eq(mGoalID))
+	{
 		product = new GoalBoxActor();
 		mGoalBlockFlag = true;
-		break;
-
-	default:
-		break;
 	}
 
 	return product;
+}
+
+Stage::BlockKindIDType Stage::GetBlockKindID(const std::string & str)
+{
+	static const size_t size = sizeof(BlockKindIDType);
+	
+	union IDData
+	{
+		BlockKindIDType mValue;
+		char mStr[size];
+	} id;
+
+	auto loopCondition = [str](size_t i) -> bool
+	{
+		return i < size && i < str.size();
+	};
+
+	size_t i;
+	for (i = 0; loopCondition(i); ++i)
+	{
+		id.mStr[i] = str[i];
+	}
+
+	if (i < size)
+	{
+		for (size_t j = 0; j < size - i; ++j)
+		{
+			id.mStr[j] = '\0';
+		}
+	}
+
+	return id.mValue;
 }
