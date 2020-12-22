@@ -4,13 +4,14 @@
 #include "Floor.h"
 #include "BGObject.h"
 #include <vector>
-#include <cstring>
 
 float Stage::mBlockScale = 1.0f;
 
 const Stage::BlockKindIDType Stage::mNormalBlockID = Stage::GetBlockKindID("b");
 
 const Stage::BlockKindIDType Stage::mGoalID = Stage::GetBlockKindID("g");
+
+const Stage::BlockKindIDType Stage::mEmptyID = Stage::GetBlockKindID("0");
 
 Stage::Stage():
 	mBlocks(nullptr),
@@ -22,8 +23,11 @@ Stage::Stage():
 	std::string vanishBlockBuf;
 	for (Uint8 i = 0; i < mGimmickIDNum; ++i)
 	{
-		candleBuf = "c" + static_cast<short>(i);
-		vanishBlockBuf = "v" + static_cast<short>(i);
+		short si = static_cast<short>(i);
+		std::string numbuf = std::to_string(si);
+
+		candleBuf = "c" + numbuf;
+		vanishBlockBuf = "v" + numbuf;
 
 		mCandleIDs[i] = GetBlockKindID(candleBuf);
 		mVanishBlockIDs[i] = GetBlockKindID(vanishBlockBuf);
@@ -98,6 +102,13 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 
 			// 数字文字をint型の値として記録
 			BlockKindIDType num = GetBlockKindID(buf);
+
+			// ブロックを生成しないセルであった場合、numを0に
+			if (num == mEmptyID)
+			{
+				num = 0;
+			}
+
 			numArray.emplace_back(num);
 			buf.clear();
 		}
@@ -538,8 +549,14 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 	return objectList.size();
 }
 
-Actor * Stage::GenerateBlock(int num, const std::string & blockTexFilePath, bool isGroundBlock)
+Actor * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock)
 {
+	// ブロックを生成しない場合関数を抜ける
+	if (!num)
+	{
+		return nullptr;
+	}
+
 	Actor * product = nullptr;
 
 	auto eq = [num](BlockKindIDType x)
@@ -583,7 +600,7 @@ Stage::BlockKindIDType Stage::GetBlockKindID(const std::string & str)
 
 	if (i < size)
 	{
-		for (size_t j = 0; j < size - i; ++j)
+		for (size_t j = i; j < size; ++j)
 		{
 			id.mStr[j] = '\0';
 		}

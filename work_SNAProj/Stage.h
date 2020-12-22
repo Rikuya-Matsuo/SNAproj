@@ -20,6 +20,8 @@ public:
 
 	static const BlockKindIDType mGoalID;
 
+	static const BlockKindIDType mEmptyID;
+
 	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
 	// 背景物の位置データcsvから、背景物を読み込む
@@ -85,7 +87,7 @@ private:
 
 	// 数値に応じた種類のブロックの生成を行う一種のファクトリメソッド
 	// Construct関数内で使う
-	Actor * GenerateBlock(int num, const std::string & blockTexFilePath, bool isGroundBlock);
+	Actor * GenerateBlock(BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock);
 
 	static BlockKindIDType GetBlockKindID(const std::string & str);
 };
