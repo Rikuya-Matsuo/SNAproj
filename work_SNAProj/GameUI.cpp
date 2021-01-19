@@ -10,48 +10,16 @@
 GameUI::GameUI(Player * player):
 	UIScreen(),
 	mPlayer(player),
-	mLifeMax(player->GetLife())
+	mLifeMax(player->GetLife()),
+	mCurrentJewelColor(JewelColor::Green)
 {
 	// HP表示UI
-	mLifeAnimTextures = new AnimationChips[mLifeMax];
-	for (char i = 0; i < mLifeMax; ++i)
-	{
-		// アニメーションチップのコマ数
-		const int frameMass = 9;
+	mLifeJewelTextures[JewelColor::Green] = System::GetInstance().GetRenderer()->GetTexture("Assets/magatamaGrn.png");
+	mLifeJewelTextures[JewelColor::Yellow] = System::GetInstance().GetRenderer()->GetTexture("Assets/magatamaYel.png");
+	mLifeJewelTextures[JewelColor::Red] = System::GetInstance().GetRenderer()->GetTexture("Assets/magatamaRed.png");
 
-		// ロード
-		mLifeAnimTextures[i].Load(System::GetInstance().GetRenderer(), "Assets/flame_parts1.png", frameMass, 3, 3, 1024, 1024, 0.05f);
-
-		// 切り替えられるようにフラグを定義
-		const bool useRandonFlame = true;
-		if (useRandonFlame)
-		{
-			// アニメーションチップの順番を個体ごとのランダムにする
-			std::vector<int> routine;
-
-			// 最初のフレームのインデックスを設定
-			int tmp = rand() % frameMass;
-			routine.emplace_back(tmp);
-
-			// 上で設定したフレームと合わせて、6~8フレームのルーチンとする
-			int routineFrameMass = 5 + rand() % 3;
-
-			for (int j = 0; j < routineFrameMass; ++j)
-			{
-				// 前のフレームより1~2フレーム進めたものをインデックスとして設定する
-				tmp += 1 + rand() % 2;
-
-				// tmpがフレーム数を超えて入れば、それ以内に収める
-				tmp %= frameMass;
-
-				// 設定
-				routine.emplace_back(tmp);
-			}
-
-			// routineに記録されたフレームの順番をmLifeAnimTextures[i]に登録
-			mLifeAnimTextures[i].SetRoutine(routine.data(), routine.size());
-		}
-	}
+	// 「命」表示
+	mInochiTexture = System::GetInstance().GetRenderer()->GetTexture("Assets/Inochi.png");
 
 	// ガイドの画像
 	mGuide = System::GetInstance().GetRenderer()->GetTexture("Assets/guide.png");
@@ -70,7 +38,6 @@ GameUI::GameUI(Player * player):
 
 GameUI::~GameUI()
 {
-	delete[] mLifeAnimTextures;
 }
 
 void GameUI::Update()
@@ -78,23 +45,42 @@ void GameUI::Update()
 	// 基底クラス更新
 	UIScreen::Update();
 
-	// HP表示UIの更新
-	for (char i = 0; i < mLifeMax; ++i)
-	{
-		mLifeAnimTextures[i].Update();
-	}
-
 	// 忍術UI更新
 	mNinjaArtsUI->Update();
+
+	// プレイヤーの体力取得
+	const char life = mPlayer->GetLife();
+	if (life <= 3)
+	{
+		mCurrentJewelColor = JewelColor::Red;
+	}
+	else if (life <= 6)
+	{
+		mCurrentJewelColor = JewelColor::Yellow;
+	}
 }
 
 void GameUI::Draw(Shader * shader) const
 {
+	// 画面の大きさを取得
+	Vector2D screenSize(System::GetInstance().GetRenderer()->GetScreenWidth(), System::GetInstance().GetRenderer()->GetScreenHeight());
+
+	// 「命」表示
+	float inochiScale = 2.f;
+	Vector2D inochiSize(static_cast<float>(mInochiTexture->GetWidth()), static_cast<float>(mInochiTexture->GetHeight()));
+	Vector2D inochiRealSize = inochiSize * inochiScale;
+	Vector2D inochiPos;
+	inochiPos.x = (inochiRealSize.x / 2) - (screenSize.x / 2);
+	inochiPos.y = -(inochiRealSize.y / 2) + (screenSize.y / 2);
+
+	// 描画
+	DrawTexture(shader, mInochiTexture, inochiPos, inochiScale);
+
 	// 体力UI
 	for (char i = 0; i < mPlayer->GetLife(); ++i)
 	{
 		// テクスチャ取得
-		Texture * tex = mLifeAnimTextures[i].GetCurrentTexture();
+		Texture * tex = mLifeJewelTextures[mCurrentJewelColor];
 		if (!tex)
 		{
 			printf("GameUI Draw Function : Return is null...\n");
@@ -102,12 +88,14 @@ void GameUI::Draw(Shader * shader) const
 		}
 
 		// 大きさ
-		float scale = 0.3f;
+		float scale = 1.0f;
 
 		// 表示位置計算
+		Vector2D texSize(static_cast<float>(tex->GetWidth()), static_cast<float>(tex->GetHeight()));
+		Vector2D texRealSize = texSize * scale;
 		Vector2D pos;
-		pos.x = -(System::GetInstance().GetRenderer()->GetScreenWidth() / 2) + (tex->GetWidth() / 3 * scale / 2) + (tex->GetWidth() / 3 * scale * i);
-		pos.y = System::GetInstance().GetRenderer()->GetScreenHeight() / 2 - tex->GetHeight() * scale / 2 + tex->GetHeight() * scale / 5;
+		pos.x = (texRealSize.x / 2) + (texRealSize.x * i) - (screenSize.x / 2) + inochiRealSize.x;
+		pos.y = -(texRealSize.y / 2) + (screenSize.y / 2);
 
 		// 描画
 		DrawTexture(shader, tex, pos, scale);
