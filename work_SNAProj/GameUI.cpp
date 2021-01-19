@@ -66,7 +66,7 @@ void GameUI::Draw(Shader * shader) const
 	Vector2D screenSize(System::GetInstance().GetRenderer()->GetScreenWidth(), System::GetInstance().GetRenderer()->GetScreenHeight());
 
 	// 「命」表示
-	float inochiScale = 2.f;
+	float inochiScale = 1.5f;
 	Vector2D inochiSize(static_cast<float>(mInochiTexture->GetWidth()), static_cast<float>(mInochiTexture->GetHeight()));
 	Vector2D inochiRealSize = inochiSize * inochiScale;
 	Vector2D inochiPos;
@@ -88,7 +88,7 @@ void GameUI::Draw(Shader * shader) const
 		}
 
 		// 大きさ
-		float scale = 1.0f;
+		float scale = inochiScale / 2;
 
 		// 表示位置計算
 		Vector2D texSize(static_cast<float>(tex->GetWidth()), static_cast<float>(tex->GetHeight()));
