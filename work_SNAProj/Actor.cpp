@@ -343,6 +343,10 @@ void Actor::WakeAllComponent()
 	}
 }
 
+void Actor::OnBurn()
+{
+}
+
 void Actor::SetFixVector(const Vector3D & vec)
 {
 	// 押し返しベクトルの取得
