@@ -73,6 +73,10 @@ void GameScene::Update()
 	{
 		// ゲームオーバーシーンにジャンプする
 		mNextScene = new GameOverScene;
+
+		// プレイヤーのシーン跨ぎフラグは忘れずに切っておく
+		mPlayer->SetBeyondSceneFlag(false);
+
 		mFlags |= mSceneChangeFlagMask;
 	}
 
