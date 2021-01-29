@@ -77,6 +77,19 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 			continue;
 		}
 
+		// コライダーの持ち主のアクターが、接触一時無視リストにattCombi.secondを登録していないかを確認
+		std::list<Uint8>& ignore1 = mHitIgnoreLists[collider1->GetOwner()];
+		auto ignoreItr1 = std::find(ignore1.begin(), ignore1.end(), attCombi.second);
+		bool ignoreFlag1 = (ignoreItr1 != ignore1.end());
+
+		// 接触一時無視リスト内にattCombi.secondがあった場合、判定を行わない。
+		if (ignoreFlag1)
+		{
+			ResetHitState(collider1, attCombi.second);
+
+			continue;
+		}
+
 		// 形のデータを受け取る
 		const AABB * IBox = collider1->GetWorldBox();
 		const Sphere * ISphere = collider1->GetSphere();
@@ -122,6 +135,19 @@ void PhysicManager::CheckLoop(const std::pair<Uint8, Uint8>& attCombi)
 			if (!collider2->GetActiveFlag())
 			{
 				ResetHitState(collider2);
+
+				continue;
+			}
+
+			// コライダーの持ち主のアクターが、接触一時無視リストにattCombi.firstを登録していないかを確認
+			std::list<Uint8>& ignore2 = mHitIgnoreLists[collider2->GetOwner()];
+			auto ignoreItr2 = std::find(ignore2.begin(), ignore2.end(), attCombi.first);
+			bool ignoreFlag2 = (ignoreItr2 != ignore2.end());
+
+			// 接触一時無視リスト内にattCombi.firstがあった場合、判定を行わない。
+			if (ignoreFlag2)
+			{
+				ResetHitState(collider2, attCombi.first);
 
 				continue;
 			}
@@ -363,6 +389,33 @@ void PhysicManager::ClearHitState()
 	mResetRefreshLoopFlag = true;
 }
 
+void PhysicManager::ResisterHitIgnoreAttribute(const Actor * actor, Uint8 att)
+{
+	std::list<Uint8>& lst = mHitIgnoreLists[actor];
+
+	// リスト内に存在しない場合のみ登録する
+	auto itr = std::find(lst.begin(), lst.end(), att);
+
+	if (itr == lst.end())
+	{
+		mHitIgnoreLists[actor].emplace_back(att);
+	}
+}
+
+void PhysicManager::DeresisterHitIgnoreAttribute(const Actor * actor, Uint8 att)
+{
+	std::list<Uint8>& lst = mHitIgnoreLists[actor];
+
+	// 検索
+	auto itr = std::find(lst.begin(), lst.end(), att);
+
+	// 検索がヒットした場合削除
+	if (itr != lst.end())
+	{
+		mHitIgnoreLists[actor].erase(itr);
+	}
+}
+
 // 奥行きを考えない押し戻し処理を使う
 void PhysicManager::HitPush(ColliderComponentBase * movalCol, const ColliderComponentBase * fixedCol)
 {
@@ -563,8 +616,33 @@ void PhysicManager::ResetHitState(const ColliderComponentBase * col)
 		if (itr->second != HitState::HitState_NoTouch)
 		{
 			ApartProcess(pair);
+		}
+	}
+}
 
-			itr->second = HitState::HitState_NoTouch;
+void PhysicManager::ResetHitState(const ColliderComponentBase * col, Uint8 att)
+{
+	// そのコライダーが関わった接触情報を探す
+	auto itr = mHitColliderPairState.begin();
+	for (; itr != mHitColliderPairState.end(); ++itr)
+	{
+		// そのコライダーが関係なければcontinue
+		ColliderPair pair = itr->first;
+		bool colIs1st = (pair.first == col);
+		bool colIs2nd = (pair.second == col);
+		if (!colIs1st && !colIs2nd)
+		{
+			continue;
+		}
+
+		// colでない方のアトリビュートを取得
+		Uint8 attOfAnother =
+			(colIs1st) ? pair.second->GetColliderAttribute() : pair.first->GetColliderAttribute();
+
+		// 接触状態で且つ、colでない方のアトリビュートがattと同値であった場合、接触解除
+		if (itr->second != HitState::HitState_NoTouch && attOfAnother == att)
+		{
+			ApartProcess(pair);
 		}
 	}
 }
