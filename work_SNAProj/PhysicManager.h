@@ -60,6 +60,8 @@ public:
 
 	void DeresisterHitIgnoreAttribute(const Actor * actor, Uint8 att);
 
+	void ClearHitIgnoreAttribute(const Actor * actor) { mHitIgnoreLists[actor].clear(); }
+
 	friend class HashColliderPair;
 
 private:
