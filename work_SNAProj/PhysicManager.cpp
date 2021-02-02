@@ -12,7 +12,7 @@ const float PhysicManager::mGravityAcceleration = 1.0f;
 const float PhysicManager::mBuryRate = 2.0f / 3.0f;
 
 #ifdef DEBUG_SNA
-//#define COLLISION_CHECK
+#define COLLISION_CHECK
 static size_t checkCounter = 0;
 #endif
 
