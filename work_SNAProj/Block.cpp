@@ -49,15 +49,19 @@ void Block::UpdateActor0()
 		return;
 	}
 
-	// カメラに映っていない場合、プレイヤーとの接触を無視する
+	// カメラに映っていない場合、プレイヤー及び検知装置との接触を無視する
 	if (!GetInCameraFlag())
 	{
 		PhysicManager::GetInstance().ResisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Player);
+
+		PhysicManager::GetInstance().ResisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Detector);
 	}
 	// 映っている場合、当然無視を解除
 	else
 	{
 		PhysicManager::GetInstance().DeresisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Player);
+
+		PhysicManager::GetInstance().DeresisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Detector);
 	}
 }
 
