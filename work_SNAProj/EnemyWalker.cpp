@@ -128,7 +128,9 @@ void EnemyWalker::UpdateEnemy0()
 	// ただし、忍術に捕まっていないときに限る
 	if (!(mFlags_Enemy & mBeCapturedFlagMask_EBase))
 	{
-		mPlayerDetector->SetActive(GetInCameraFlag());
+		bool isInCamera = GetInCameraFlag();
+
+		mPlayerDetector->SetActive(isInCamera);
 	}
 	
 	// ブロックにヒットした方向の取得
