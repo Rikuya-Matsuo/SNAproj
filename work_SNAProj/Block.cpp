@@ -4,11 +4,13 @@
 #include "MeshComponent.h"
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
+#include "PhysicManager.h"
 
 const float Block::mModelSize = 100.0f;
 
 Block::Block(const std::string & texturePath, bool isGroundBlock):
-	Actor()
+	Actor(),
+	mPrevInCameraFlag(true)
 {
 	// メッシュのロード
 	mMeshComponent = new MeshComponent(this, 100);
@@ -38,4 +40,32 @@ Block::Block(const std::string & texturePath, bool isGroundBlock):
 
 Block::~Block()
 {
+}
+
+void Block::UpdateActor0()
+{
+	if (mPrevInCameraFlag == GetInCameraFlag())
+	{
+		return;
+	}
+
+	// カメラに映っていない場合、プレイヤー及び検知装置との接触を無視する
+	if (!GetInCameraFlag())
+	{
+		PhysicManager::GetInstance().ResisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Player);
+
+		PhysicManager::GetInstance().ResisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Detector);
+	}
+	// 映っている場合、当然無視を解除
+	else
+	{
+		PhysicManager::GetInstance().DeresisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Player);
+
+		PhysicManager::GetInstance().DeresisterHitIgnoreAttribute(this, ColliderAttribute::ColAtt_Detector);
+	}
+}
+
+void Block::UpdateActor1()
+{
+	mPrevInCameraFlag = GetInCameraFlag();
 }

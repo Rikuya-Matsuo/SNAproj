@@ -56,6 +56,12 @@ public:
 
 	void ClearHitState();
 
+	void ResisterHitIgnoreAttribute(const Actor * actor, Uint8 att);
+
+	void DeresisterHitIgnoreAttribute(const Actor * actor, Uint8 att);
+
+	void ClearHitIgnoreAttribute(const Actor * actor) { mHitIgnoreLists[actor].clear(); }
+
 	friend class HashColliderPair;
 
 private:
@@ -83,6 +89,12 @@ private:
 	std::list<Uint8> mDetectSubjectList;
 
 	std::list<Uint8> mSortAttributeList;
+
+	// アクターが特定のアトリビュートと接触しなくなるよう一時的に設定できる機能のための変数群
+	// どのアクターがどのアトリビュートと接触を一時無視するのか記録するための型
+	typedef std::unordered_map<const Actor*, std::list<Uint8>> HitIgnoreList;
+
+	HitIgnoreList mHitIgnoreLists;
 
 	// NoTouch状態の接触情報を削除し続けるスレッド
 	std::thread mRefreshThread;
@@ -114,6 +126,9 @@ private:
 	void SetAttCombiSmallerFirst(std::pair<Uint8, Uint8>& pair);
 
 	void ResetHitState(const ColliderComponentBase * col);
+
+	// コライダーcolの接触記録をアトリビュートattに関するものだけNoTouchに設定する
+	void ResetHitState(const ColliderComponentBase * col, Uint8 att);
 
 	// 接触情報走査のループ回数が余計に増えるのを防ぐため、NoTouch状態の接触情報を全削除する関数
 	void RefreshHitState();

@@ -97,6 +97,8 @@ protected:
 
 	void WakeAllComponent();
 
+	virtual void OnBurn();
+
 public:
 	Actor();
 	virtual ~Actor();

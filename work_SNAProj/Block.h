@@ -11,7 +11,13 @@ public:
 
 	static const float mModelSize;
 
+	void UpdateActor0() override;
+	
+	void UpdateActor1() override;
+
 private:
 	MeshComponent * mMeshComponent;
+
+	bool mPrevInCameraFlag;
 };
 
