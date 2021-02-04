@@ -7,6 +7,8 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "AnimationChips.h"
+#include "PhysicManager.h"
+#include "ColliderComponentBase.h"
 
 NAReelString::NAReelString(Player * user):
 	NinjaArtsBase(user),
@@ -52,6 +54,9 @@ void NAReelString::Use()
 	// プレイヤー自身によるアニメーション制御を無効化
 	SetSelfControlAnimationFlag(false);
 
+	// 使用者とブロックとの当たり判定を無効化
+	PhysicManager::GetInstance().ResisterHitIgnoreAttribute(mUser, ColliderAttribute::ColAtt_Block);
+	
 	// 攻撃アニメーション再生開始
 	Player::AnimationPattern dashAtkAnim = Player::AnimationPattern::Anim_DashAttack;
 	SetAnimationIndex(dashAtkAnim);
@@ -96,6 +101,9 @@ void NAReelString::TellEndNinjaArts()
 
 	// プレイヤー自身のアニメーション制御を有効化
 	SetSelfControlAnimationFlag(true);
+
+	// 使用者のブロックとの当たり判定を有効化
+	PhysicManager::GetInstance().DeresisterHitIgnoreAttribute(mUser, ColliderAttribute::ColAtt_Block);
 
 	// 停止させていたアニメーションを再生する
 	AnimationChips* atkAnim = GetMesh()->GetAnimChips(mUser, Player::AnimationPattern::Anim_DashAttack);
