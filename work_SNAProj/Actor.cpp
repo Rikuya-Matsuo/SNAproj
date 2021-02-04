@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "ComponentBase.h"
 #include "SceneBase.h"
+#include "PhysicManager.h"
 #include <algorithm>
 #include <cmath>
 
@@ -54,6 +55,9 @@ Actor::~Actor()
 		Common::DeleteContainerOfPointer(mComponentLists[cmpList.first]);
 		std::list<ComponentBase *>().swap(mComponentLists[cmpList.first]);
 	}
+
+	// 接触無視リストの情報をクリア
+	PhysicManager::GetInstance().ClearHitIgnoreAttribute(this);
 
 	// システムから自身を登録解除
 	System::GetInstance().DeresisterActor(this);
@@ -341,6 +345,10 @@ void Actor::WakeAllComponent()
 			cmp->Wake();
 		}
 	}
+}
+
+void Actor::OnBurn()
+{
 }
 
 void Actor::SetFixVector(const Vector3D & vec)

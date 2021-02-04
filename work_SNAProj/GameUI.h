@@ -20,7 +20,18 @@ private:
 
 	Player * mPlayer;
 
-	AnimationChips * mLifeAnimTextures;
+	enum JewelColor : Uint8
+	{
+		Green = 0,
+		Yellow,
+		Red,
+		Invalid
+	};
+	Texture * mLifeJewelTextures[JewelColor::Invalid];
+
+	JewelColor mCurrentJewelColor;
+
+	Texture * mInochiTexture;
 
 	Texture * mGuide;
 
