@@ -25,14 +25,14 @@ Block::Block(const std::string & texturePath, bool isGroundBlock):
 
 	// コリジョンの設定
 	AABB box = msh->GetCollisionBox();
-	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
+	mCollider = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
 	// 一番下のコリジョンは、念のため下方向に深く大きくする
 	if (isGroundBlock)
 	{
 		Vector3D boxSize = box.mMax - box.mMin;
 		box.mMin.z -= boxSize.z * 3.0f;
 	}
-	bcc->SetObjectBox(box);
+	mCollider->SetObjectBox(box);
 
 	// 重力落下を行わない。ヒット時に押し返されない。
 	mFlags &= ~(mAffectGravityFlagMask_Base | mMovalFlagMask_Base);

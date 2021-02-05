@@ -10,6 +10,7 @@ enum ColliderAttribute
 	ColAtt_Enemy,
 	ColAtt_EnemyAttack,
 	ColAtt_Block,
+	ColAtt_FriableBlock,
 	ColAtt_Fire,
 	ColAtt_Detector,		// トリガー。接近検知装置。ヒット時の押し返しなし。
 	ColAtt_Invalid
@@ -59,6 +60,11 @@ public:
 
 	int GetCheckOrder() const { return mCheckOrder; }
 
+	// アトリビュートの変更
+	// 変数の変更だけでなく、物理マネージャへの登録のやり直しなど、
+	// 普通のセッターよりもコストがかかるため注意
+	void ChangeAttribute(Uint8 newAtt);
+
 protected:
 	typedef Uint8 FlagType;
 	static const FlagType mMoveOnHitFlagMask;
@@ -66,9 +72,9 @@ protected:
 	static const FlagType mRotatableFlagMask;
 
 
-	const Uint8 mAttribute;
-
 	const Uint8 mShape;
+
+	Uint8 mAttribute;
 
 	FlagType mFlags_CCBase;
 

@@ -2,6 +2,7 @@
 #include "Actor.h"
 
 class MeshComponent;
+class BoxColliderComponent;
 
 class Block : public Actor
 {
@@ -15,8 +16,10 @@ public:
 	
 	void UpdateActor1() override;
 
-private:
+protected:
 	MeshComponent * mMeshComponent;
+
+	BoxColliderComponent * mCollider;
 
 	bool mPrevInCameraFlag;
 };

@@ -261,6 +261,9 @@
     <ClCompile Include="GameSceneTest.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="FriableBlock.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -463,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="GameSceneTest.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="FriableBlock.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

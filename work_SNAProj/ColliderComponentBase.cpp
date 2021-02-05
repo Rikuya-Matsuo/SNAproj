@@ -38,3 +38,21 @@ void ColliderComponentBase::SetCheckOrder(int value)
 	// ソートを要請
 	PhysicManager::GetInstance().RequestSortCollider(mAttribute);
 }
+
+void ColliderComponentBase::ChangeAttribute(Uint8 newAtt)
+{
+	// 変更の必要がない場合、関数を終了
+	if (mAttribute == newAtt)
+	{
+		return;
+	}
+
+	// 物理マネージャから登録解除
+	PhysicManager::GetInstance().DeresisterCollider(this);
+
+	// アトリビュート更新
+	mAttribute = newAtt;
+
+	// 物理マネージャに再登録
+	PhysicManager::GetInstance().ResisterCollider(this);
+}
