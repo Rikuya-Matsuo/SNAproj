@@ -22,6 +22,10 @@ public:
 
 	static const BlockKindIDType mEmptyID;
 
+	static const BlockKindIDType mBombID;
+
+	static const BlockKindIDType mFriableID;
+
 	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
 
 	// 背景物の位置データcsvから、背景物を読み込む

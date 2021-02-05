@@ -13,6 +13,10 @@ const Stage::BlockKindIDType Stage::mGoalID = Stage::GetBlockKindID("g");
 
 const Stage::BlockKindIDType Stage::mEmptyID = Stage::GetBlockKindID("0");
 
+const Stage::BlockKindIDType Stage::mBombID = Stage::GetBlockKindID("bo");
+
+const Stage::BlockKindIDType Stage::mFriableID = Stage::GetBlockKindID("f");
+
 Stage::Stage():
 	mBlocks(nullptr),
 	mBlockMassX(0),
@@ -572,6 +576,14 @@ Actor * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blo
 	{
 		product = new GoalBoxActor();
 		mGoalBlockFlag = true;
+	}
+	else if (eq(mBombID))
+	{
+		//product;
+	}
+	else if (eq(mFriableID))
+	{
+		//product;
 	}
 
 	return product;
