@@ -104,14 +104,8 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 				mapWidth = 0;
 			}
 
-			// 数字文字をint型の値として記録
-			BlockKindIDType num = GetBlockKindID(buf);
-
-			// ブロックを生成しないセルであった場合、numを0に
-			if (num == mEmptyID)
-			{
-				num = 0;
-			}
+			// 数字文字を値として記録
+			BlockKindIDType num = ((buf == "") ? mEmptyID : GetBlockKindID(buf));
 
 			numArray.emplace_back(num);
 			buf.clear();
@@ -556,7 +550,7 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 Actor * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock)
 {
 	// ブロックを生成しない場合関数を抜ける
-	if (!num)
+	if (num == mEmptyID)
 	{
 		return nullptr;
 	}

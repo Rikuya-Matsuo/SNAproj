@@ -75,7 +75,7 @@ void BlockHitChecker::Update()
 			return false;
 		}
 
-		bool ret = blockArray[y][x];
+		bool ret = (blockArray[y][x] != Stage::mEmptyID);
 		return ret;
 	};
 
