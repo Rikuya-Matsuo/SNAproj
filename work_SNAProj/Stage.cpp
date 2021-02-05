@@ -164,13 +164,16 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 
 			// 生成
 			bool isGroundBlock = yBlock == mBlockMassY - 1;
-			Actor * block = GenerateBlock(blockType, blockTextureFilePath, isGroundBlock);
+			Block * block = GenerateBlock(blockType, blockTextureFilePath, isGroundBlock);
 
 			// メソッドが生成を行わなかった場合continue
 			if (!block)
 			{
 				continue;
 			}
+
+			// ブロック自身に、ステージのどこにいるのかを記録する
+			block->SetPositionOnStage(xBlock, yBlock);
 
 			// スケール設定
 			block->SetScale(mBlockScale);
@@ -547,7 +550,7 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 	return objectList.size();
 }
 
-Actor * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock)
+Block * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock)
 {
 	// ブロックを生成しない場合関数を抜ける
 	if (num == mEmptyID)
@@ -555,7 +558,7 @@ Actor * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blo
 		return nullptr;
 	}
 
-	Actor * product = nullptr;
+	Block * product = nullptr;
 
 	auto eq = [num](BlockKindIDType x)
 	{

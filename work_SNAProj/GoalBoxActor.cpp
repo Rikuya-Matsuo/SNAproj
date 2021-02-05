@@ -1,24 +1,14 @@
 #include "GoalBoxActor.h"
 #include "System.h"
 #include "Mesh.h"
+#include "MeshComponent.h"
 #include "BoxColliderComponent.h"
 #include "GameScene.h"
 
 GoalBoxActor::GoalBoxActor():
-	Actor()
+	Block("", false)
 {
-	// ブロックに使われているものと同じメッシュを取得
-	// 描画は行わないのでメッシュにアクター情報は必要ない。即座に消去する
-	Mesh * mesh = System::GetInstance().GetRenderer()->GetMesh("Assets/Cube.gpmesh", this);
-	mesh->DeleteActorInfo(this);
-
-	// メッシュからコリジョンを生成
-	AABB box = mesh->GetCollisionBox();
-	BoxColliderComponent * bcc = new BoxColliderComponent(this, ColliderAttribute::ColAtt_Block);
-	bcc->SetObjectBox(box);
-
-	// 重力無効
-	SetAffectGravityFlag(false);
+	mFlags |= mStopDrawFlagMask_Base;
 
 	// 接触相手からの押し返しを受けない
 	mFlags &= ~mMovalFlagMask_Base;

@@ -6,6 +6,7 @@
 #include <fstream>
 
 class Actor;
+class Block;
 
 class Stage
 {
@@ -91,7 +92,7 @@ private:
 
 	// 数値に応じた種類のブロックの生成を行う一種のファクトリメソッド
 	// Construct関数内で使う
-	Actor * GenerateBlock(BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock);
+	Block * GenerateBlock(BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock);
 
 	static BlockKindIDType GetBlockKindID(const std::string & str);
 };

@@ -69,3 +69,9 @@ void Block::UpdateActor1()
 {
 	mPrevInCameraFlag = GetInCameraFlag();
 }
+
+void Block::SetPositionOnStage(Uint16 x, Uint16 y)
+{
+	mPositionOnStage.mX = x;
+	mPositionOnStage.mY = y;
+}

@@ -1,9 +1,9 @@
 #pragma once
-#include "Actor.h"
+#include "Block.h"
 
 class GameScene;
 
-class GoalBoxActor : public Actor
+class GoalBoxActor : public Block
 {
 public:
 	GoalBoxActor();

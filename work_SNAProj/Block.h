@@ -16,11 +16,19 @@ public:
 	
 	void UpdateActor1() override;
 
+	void SetPositionOnStage(Uint16 x, Uint16 y);
+
 protected:
 	MeshComponent * mMeshComponent;
 
 	BoxColliderComponent * mCollider;
 
 	bool mPrevInCameraFlag;
+
+	struct PositionOnStage
+	{
+		Uint16 mX;
+		Uint16 mY;
+	} mPositionOnStage;
 };
 
