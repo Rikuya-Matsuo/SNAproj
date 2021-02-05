@@ -50,6 +50,8 @@ public:
 
 	bool GetGoalBlockFlag() const { return mGoalBlockFlag; }
 
+	void ChangeToEmptyBlock(Uint16 x, Uint16 y);
+
 private:
 	BlockKindIDType ** mBlocks;
 

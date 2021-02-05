@@ -5,6 +5,7 @@
 #include "BoxColliderComponent.h"
 #include "InputMoveComponent.h"
 #include "PhysicManager.h"
+#include "Stage.h"
 
 const float Block::mModelSize = 100.0f;
 
@@ -74,4 +75,12 @@ void Block::SetPositionOnStage(Uint16 x, Uint16 y)
 {
 	mPositionOnStage.mX = x;
 	mPositionOnStage.mY = y;
+}
+
+void Block::VanishFromStage() const
+{
+	if (mBelongStage)
+	{
+		mBelongStage->ChangeToEmptyBlock(mPositionOnStage.mX, mPositionOnStage.mY);
+	}
 }

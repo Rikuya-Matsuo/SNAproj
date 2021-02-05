@@ -3,6 +3,7 @@
 
 class MeshComponent;
 class BoxColliderComponent;
+class Stage;
 
 class Block : public Actor
 {
@@ -18,6 +19,8 @@ public:
 
 	void SetPositionOnStage(Uint16 x, Uint16 y);
 
+	void SetStage(Stage * st) { mBelongStage = st; }
+
 protected:
 	MeshComponent * mMeshComponent;
 
@@ -25,10 +28,14 @@ protected:
 
 	bool mPrevInCameraFlag;
 
+	Stage * mBelongStage;
+
 	struct PositionOnStage
 	{
 		Uint16 mX;
 		Uint16 mY;
 	} mPositionOnStage;
+
+	void VanishFromStage() const;
 };
 

@@ -172,6 +172,9 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 				continue;
 			}
 
+			// 生成したブロックが所属するステージクラスへのポインタを記録する
+			block->SetStage(this);
+
 			// ブロック自身に、ステージのどこにいるのかを記録する
 			block->SetPositionOnStage(xBlock, yBlock);
 
@@ -241,6 +244,11 @@ int Stage::LoadBGObjectMap(const std::string & bgObjMapFilePath, float xStartPos
 	}
 
 	return -1;
+}
+
+void Stage::ChangeToEmptyBlock(Uint16 x, Uint16 y)
+{
+	mBlocks[y][x] = Stage::mEmptyID;
 }
 
 bool Stage::LoadBGObjectMapPallet(std::ifstream & file, std::unordered_map<std::string, BGObjectPallet>& ret)
