@@ -194,6 +194,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClCompile Include="BGObject.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockHitChecker.cpp" />
+    <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="BoneTransform.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -261,6 +262,7 @@ xcopy "$(ProjectDir)\..\..\libraries\GLEW\lib\win\x86\*.dll" "$(OutDir)" /i /s /
     <ClInclude Include="BGObject.h" />
     <ClInclude Include="BitFlagFunc.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Bomb.h" />
     <ClInclude Include="BoneTransform.h" />
     <ClInclude Include="BoxColliderComponent.h" />
     <ClInclude Include="Camera.h" />

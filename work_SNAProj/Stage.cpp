@@ -2,6 +2,7 @@
 #include "Block.h"
 #include "GoalBoxActor.h"
 #include "FriableBlock.h"
+#include "Bomb.h"
 #include "Floor.h"
 #include "BGObject.h"
 #include <vector>
@@ -575,7 +576,7 @@ Block * Stage::GenerateBlock(Stage::BlockKindIDType num, bool isGroundBlock)
 	}
 	else if (eq(mBombID))
 	{
-		//product;
+		product = new Bomb();
 	}
 	else if (eq(mFriableID))
 	{

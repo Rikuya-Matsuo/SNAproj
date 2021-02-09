@@ -264,6 +264,9 @@
     <ClCompile Include="FriableBlock.cpp">
       <Filter>ソース ファイル\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="Bomb.cpp">
+      <Filter>ソース ファイル\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -468,6 +471,9 @@
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="FriableBlock.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Bomb.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
