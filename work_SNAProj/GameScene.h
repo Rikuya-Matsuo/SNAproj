@@ -8,7 +8,7 @@ class UIScreen;
 class GameScene : public SceneBase
 {
 public:
-	GameScene(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath);
+	GameScene();
 	virtual ~GameScene();
 
 	void Update() override;
@@ -22,7 +22,7 @@ protected:
 
 	UIScreen * mUI;
 
-	void LoadStage(const std::string & mapFilePath, const std::string & blockTexPath, const std::string & floorTexPath);
+	void LoadStage(const std::string & mapFilePath, const std::string & floorTexPath);
 
 	void LoadUI(Player * player);
 

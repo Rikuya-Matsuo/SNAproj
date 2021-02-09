@@ -27,7 +27,11 @@ public:
 
 	static const BlockKindIDType mFriableID;
 
-	virtual void LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
+	// ブロックのテクスチャをデフォルト設定から変えることができる。
+	// LoadMap()を呼ぶ前に設定しておかなければ適用されない
+	void SetBlockTexturePath(BlockKindIDType blockID, const std::string & path) { mTextureOnBlockType[blockID] = path; }
+
+	virtual void LoadMap(const std::string & mapFilePath, const std::string & floorTextureFilePath);
 
 	// 背景物の位置データcsvから、背景物を読み込む
 	// generatedActors :	生成されたオブジェクトへのポインタの配列へのポインタへのポインタ。
@@ -74,12 +78,11 @@ private:
 	// マップデータのギミックの最大個数
 	static const Uint8 mGimmickIDNum = 10;
 
-	// ろうそく＆ギミックの番号ごとのID
-	BlockKindIDType mCandleIDs[mGimmickIDNum];
-	BlockKindIDType mVanishBlockIDs[mGimmickIDNum];
+	// ブロックごとのテクスチャパス
+	std::unordered_map<BlockKindIDType, std::string> mTextureOnBlockType;
 
 	// ブロック配置配列に基づいてブロックのインスタンスを生成する。
-	void Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath);
+	void Construct(const std::string & floorTextureFilePath);
 
 	struct BGObjectPallet
 	{
@@ -94,7 +97,7 @@ private:
 
 	// 数値に応じた種類のブロックの生成を行う一種のファクトリメソッド
 	// Construct関数内で使う
-	Block * GenerateBlock(BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock);
+	Block * GenerateBlock(BlockKindIDType num, bool isGroundBlock);
 
 	static BlockKindIDType GetBlockKindID(const std::string & str);
 };

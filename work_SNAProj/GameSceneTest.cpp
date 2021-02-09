@@ -4,8 +4,11 @@
 #include "Stage.h"
 
 GameSceneTest::GameSceneTest():
-	GameScene("Map/TestMap0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png")
+	GameScene()
 {
+	// ƒXƒe[ƒW‚Ìƒ[ƒh
+	LoadStage("Map/TestMap0/map.csv", "Assets/SM_Snow_Rock_Wall_A.png");
+
 	// ”wŒi‚ÌŠR‚ð¶¬
 	float blockSize = Block::mModelSize * mStage->GetBlockScale();
 	mStage->LoadBGObjectMap("Map/TestMap0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);

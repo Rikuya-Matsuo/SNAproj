@@ -1,6 +1,7 @@
 ﻿#include "Stage.h"
 #include "Block.h"
 #include "GoalBoxActor.h"
+#include "FriableBlock.h"
 #include "Floor.h"
 #include "BGObject.h"
 #include <vector>
@@ -23,19 +24,9 @@ Stage::Stage():
 	mBlockMassY(0),
 	mGoalBlockFlag(false)
 {
-	std::string candleBuf;
-	std::string vanishBlockBuf;
-	for (Uint8 i = 0; i < mGimmickIDNum; ++i)
-	{
-		short si = static_cast<short>(i);
-		std::string numbuf = std::to_string(si);
-
-		candleBuf = "c" + numbuf;
-		vanishBlockBuf = "v" + numbuf;
-
-		mCandleIDs[i] = GetBlockKindID(candleBuf);
-		mVanishBlockIDs[i] = GetBlockKindID(vanishBlockBuf);
-	}
+	// ブロックのテクスチャをデフォルトとして設定
+	mTextureOnBlockType[mNormalBlockID] = "Assets/SM_Ice_RuinedWalls.png";
+	mTextureOnBlockType[mFriableID] = "Assets/SM_Ice_RuinedWalls_brittle.png";
 }
 
 Stage::~Stage()
@@ -51,7 +42,7 @@ Stage::~Stage()
 	}
 }
 
-void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)
+void Stage::LoadMap(const std::string & mapFilePath, const std::string & floorTextureFilePath)
 {
 	mBlockMassX = mBlockMassY = 0;
 
@@ -134,10 +125,10 @@ void Stage::LoadMap(const std::string & mapFilePath, const std::string & blockTe
 	mapFile.close();
 
 	// 生成
-	Construct(blockTextureFilePath, floorTextureFilePath);
+	Construct(floorTextureFilePath);
 }
 
-void Stage::Construct(const std::string & blockTextureFilePath, const std::string & floorTextureFilePath)
+void Stage::Construct(const std::string & floorTextureFilePath)
 {
 	// ブロックがnullなら行わない
 	if (mBlocks == nullptr)
@@ -164,7 +155,7 @@ void Stage::Construct(const std::string & blockTextureFilePath, const std::strin
 
 			// 生成
 			bool isGroundBlock = yBlock == mBlockMassY - 1;
-			Block * block = GenerateBlock(blockType, blockTextureFilePath, isGroundBlock);
+			Block * block = GenerateBlock(blockType, isGroundBlock);
 
 			// メソッドが生成を行わなかった場合continue
 			if (!block)
@@ -558,7 +549,7 @@ int Stage::LoadBGObjectMapPosition(std::ifstream & file, const std::unordered_ma
 	return objectList.size();
 }
 
-Block * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blockTexFilePath, bool isGroundBlock)
+Block * Stage::GenerateBlock(Stage::BlockKindIDType num, bool isGroundBlock)
 {
 	// ブロックを生成しない場合関数を抜ける
 	if (num == mEmptyID)
@@ -575,7 +566,7 @@ Block * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blo
 
 	if (eq(mNormalBlockID))
 	{
-		product = new Block(blockTexFilePath, isGroundBlock);
+		product = new Block(mTextureOnBlockType[mNormalBlockID], isGroundBlock);
 	}
 	else if (eq(mGoalID))
 	{
@@ -588,7 +579,7 @@ Block * Stage::GenerateBlock(Stage::BlockKindIDType num, const std::string & blo
 	}
 	else if (eq(mFriableID))
 	{
-		//product;
+		product = new FriableBlock(mTextureOnBlockType[mFriableID], isGroundBlock);
 	}
 
 	return product;

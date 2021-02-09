@@ -15,7 +15,7 @@ TitleScene::TitleScene():
 	// ステージの生成
 	mStage = new Stage();
 	mStage->SetBlockScale(0.3f);
-	mStage->LoadMap("Map/TestMap0/map.csv", "Assets/SM_Ice_RuinedWalls.png", "Assets/SM_Snow_Rock_Wall_A.png");
+	mStage->LoadMap("Map/TestMap0/map.csv", "Assets/SM_Snow_Rock_Wall_A.png");
 	// 背景の崖の生成
 	mStage->LoadBGObjectMap("Map/TestMap0/Cliff.csv", -100, mStage->GetFloorHeight(), -100, 0.f, 0.f);
 	// 背景の壁の生成
