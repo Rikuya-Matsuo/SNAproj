@@ -7,7 +7,7 @@ GameSceneTest::GameSceneTest():
 	GameScene()
 {
 	// ƒXƒe[ƒW‚Ìƒ[ƒh
-	LoadStage("Map/TestMap0/map.csv", "Assets/SM_Snow_Rock_Wall_A.png");
+	mStage->LoadMap("Map/TestMap0/map.csv", "Assets/SM_Snow_Rock_Wall_A.png");
 
 	// ”wŒi‚ÌŠR‚ð¶¬
 	float blockSize = Block::mModelSize * mStage->GetBlockScale();

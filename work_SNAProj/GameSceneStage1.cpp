@@ -8,7 +8,7 @@ GameSceneStage1::GameSceneStage1():
 	GameScene()
 {
 	// ステージのロード
-	LoadStage("Map/Map0/map.csv", "Assets/SM_Snow_Rock_Wall_A.png");
+	mStage->LoadMap("Map/Map0/map.csv", "Assets/SM_Snow_Rock_Wall_A.png");
 
 	// 背景の崖を生成
 	float blockSize = Block::mModelSize * mStage->GetBlockScale();

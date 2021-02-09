@@ -22,8 +22,6 @@ protected:
 
 	UIScreen * mUI;
 
-	void LoadStage(const std::string & mapFilePath, const std::string & floorTexPath);
-
 	void LoadUI(Player * player);
 
 	void LoadEnemy(const std::string & enemyMappingDataPath);

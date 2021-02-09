@@ -20,6 +20,11 @@ Player * GameScene::mPlayer = nullptr;
 GameScene::GameScene():
 	mGoalFlag(false)
 {
+	// ステージの生成
+	mStage = new Stage;
+	float blockScale = 0.3f;
+	mStage->SetBlockScale(blockScale);
+
 	// 光の設定
 	DirectionalLight& dir = System::GetInstance().GetRenderer()->GetDirectionalLight();
 	dir.mDirection = Vector3D(0.7f, -0.7f, -0.7f);
@@ -89,15 +94,6 @@ void GameScene::Update()
 	{
 		OnGoal();
 	}
-}
-
-void GameScene::LoadStage(const std::string & mapFilePath, const std::string & floorTexPath)
-{
-	// ステージの生成
-	mStage = new Stage;
-	float blockScale = 0.3f;
-	mStage->SetBlockScale(blockScale);
-	mStage->LoadMap(mapFilePath, floorTexPath);
 }
 
 void GameScene::OnGoal()
